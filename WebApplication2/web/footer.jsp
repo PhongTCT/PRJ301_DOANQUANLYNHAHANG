@@ -12,6 +12,15 @@
                     <a href="#" class="btn btn-quiet btn-sm me-2" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
                     <a href="#" class="btn btn-quiet btn-sm" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
                 </div>
+                <div class="d-flex justify-content-lg-end justify-content-start align-items-center gap-2 mb-2">
+                    <button type="button" class="theme-circle-btn" data-day="1" style="background:#00b86b;"></button>
+                    <button type="button" class="theme-circle-btn" data-day="2" style="background:#0066ff;"></button>
+                    <button type="button" class="theme-circle-btn" data-day="3" style="background:#ff5e00;"></button>
+                    <button type="button" class="theme-circle-btn" data-day="4" style="background:#9400d3;"></button>
+                    <button type="button" class="theme-circle-btn" data-day="5" style="background:#ff0055;"></button>
+                    <button type="button" class="theme-circle-btn" data-day="6" style="background:#d68000;"></button>
+                    <button type="button" class="theme-circle-btn" data-day="0" style="background:#e62e6b;"></button>
+                </div>
                 <span class="muted small">&copy; 2026 Le Royal Team.</span>
             </div>
         </div>
