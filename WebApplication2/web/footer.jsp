@@ -1,14 +1,20 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<footer class="mt-5 py-4 text-center" style="background:#0b0c0f;border-top:1px solid rgba(212,175,55,0.14);">
+<footer class="mt-5 py-5 section-band">
     <div class="container">
-        <h5 class="mb-1" style="color:var(--gold);">LE ROYAL FINE DINING</h5>
-        <p class="muted small mb-3">Restaurant management and online booking system for PRJ301.</p>
-        <div class="mb-3">
-            <a href="#" class="text-light me-3"><i class="fa-brands fa-facebook"></i></a>
-            <a href="#" class="text-light me-3"><i class="fa-brands fa-instagram"></i></a>
-            <a href="#" class="text-light"><i class="fa-brands fa-tiktok"></i></a>
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-6">
+                <h5 class="fw-bold mb-2" style="color:var(--accent-dark);">LE ROYAL FINE DINING</h5>
+                <p class="muted mb-0">Bright dining spaces, seasonal food, and simple online reservation for every gathering.</p>
+            </div>
+            <div class="col-lg-6 text-lg-end">
+                <div class="mb-3">
+                    <a href="#" class="btn btn-quiet btn-sm me-2" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#" class="btn btn-quiet btn-sm me-2" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="btn btn-quiet btn-sm" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+                </div>
+                <span class="muted small">&copy; 2026 Le Royal Team.</span>
+            </div>
         </div>
-        <span class="muted small">&copy; 2026 Le Royal Team.</span>
     </div>
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

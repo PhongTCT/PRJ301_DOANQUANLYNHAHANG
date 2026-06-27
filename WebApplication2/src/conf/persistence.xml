@@ -7,7 +7,7 @@
       <property name="javax.persistence.jdbc.url" value="jdbc:sqlserver://localhost:1433;databaseName=RestaurantManagement"/>
       <property name="javax.persistence.jdbc.user" value="sa"/>
       <property name="javax.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
-      <property name="javax.persistence.jdbc.password" value="123456"/>
+      <property name="javax.persistence.jdbc.password" value="12345"/>
       <!-- Disable auto table creation to preserve our custom SQL setup & seed data -->
       <property name="javax.persistence.schema-generation.database.action" value="none"/>
     </properties>
