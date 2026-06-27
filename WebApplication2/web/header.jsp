@@ -1,7 +1,16 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<c:if test="${not empty param.lang}">
+    <c:set var="lang" value="${param.lang}" scope="session" />
+</c:if>
+<c:if test="${empty sessionScope.lang}">
+    <c:set var="lang" value="vi" scope="session" />
+</c:if>
+<fmt:setLocale value="${sessionScope.lang}" scope="session" />
+<fmt:setBundle basename="i18n.messages" scope="session" />
 <!DOCTYPE html>
-<html lang="en">
+<html lang="${sessionScope.lang}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -356,20 +365,24 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto gap-lg-1">
-                <li class="nav-item"><a class="nav-link" href="MainController?action=home">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="MainController?action=menu">Menu</a></li>
-                <li class="nav-item"><a class="nav-link" href="MainController?action=booking">Booking</a></li>
+                <li class="nav-item"><a class="nav-link" href="MainController?action=home"><fmt:message key="nav.home"/></a></li>
+                <li class="nav-item"><a class="nav-link" href="MainController?action=menu"><fmt:message key="nav.menu"/></a></li>
+                <li class="nav-item"><a class="nav-link" href="MainController?action=booking"><fmt:message key="nav.booking"/></a></li>
             </ul>
             <div class="d-flex align-items-center gap-2">
+                <div class="btn-group me-1" role="group" aria-label="Language switcher">
+                    <a href="MainController?action=${not empty param.action ? param.action : 'home'}&lang=vi" class="btn btn-sm ${sessionScope.lang == 'vi' ? 'btn-brand' : 'btn-quiet'} px-2 py-1" style="border-radius: 6px 0 0 6px; font-weight: 600;">🇻🇳 VI</a>
+                    <a href="MainController?action=${not empty param.action ? param.action : 'home'}&lang=en" class="btn btn-sm ${sessionScope.lang == 'en' ? 'btn-brand' : 'btn-quiet'} px-2 py-1" style="border-radius: 0 6px 6px 0; font-weight: 600;">🇬🇧 EN</a>
+                </div>
                 <c:choose>
                     <c:when test="${not empty sessionScope.currentUser}">
                         <span class="small muted">
                             <i class="fa-regular fa-user me-1" style="color: var(--accent);"></i>${sessionScope.currentUser.fullName}
                         </span>
-                        <a href="MainController?action=logout" class="btn btn-quiet btn-sm px-3">Logout</a>
+                        <a href="MainController?action=logout" class="btn btn-quiet btn-sm px-3"><fmt:message key="nav.logout"/></a>
                     </c:when>
                     <c:otherwise>
-                        <a href="MainController?action=login" class="btn btn-brand btn-sm px-4">Login</a>
+                        <a href="MainController?action=login" class="btn btn-brand btn-sm px-4"><fmt:message key="nav.login"/></a>
                     </c:otherwise>
                 </c:choose>
             </div>

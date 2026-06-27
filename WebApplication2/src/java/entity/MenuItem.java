@@ -69,4 +69,28 @@ public class MenuItem implements Serializable {
     public boolean isAvailable() { return Boolean.TRUE.equals(isAvailable); }
     public void setIsAvailable(Boolean isAvailable) { this.isAvailable = isAvailable; }
     public Date getCreatedAt() { return createdAt; }
+
+    public String getItemNameEn() {
+        if (itemName == null) return "";
+        if (itemName.contains("Gỏi Ngó Sen") || itemName.contains("Lotus")) return "Lotus Stem Salad with Shrimp & Pork";
+        if (itemName.contains("Súp Măng Tây") || itemName.contains("Crab")) return "Crab & Green Asparagus Soup";
+        if (itemName.contains("Bò Úc Nướng") || itemName.contains("Beef")) return "Grilled Australian Beef Tenderloin";
+        if (itemName.contains("Cá Hồi") || itemName.contains("Salmon")) return "Pan Seared Salmon with Passion Fruit";
+        if (itemName.contains("Nước Cam") || itemName.contains("Orange")) return "Fresh Squeezed Orange Juice";
+        if (itemName.contains("Rượu Vang") || itemName.contains("Wine")) return "Imported Bordeaux Red Wine";
+        return itemName;
+    }
+
+    public String getDescriptionEn() {
+        if (description == null) return "";
+        if (itemName != null) {
+            if (itemName.contains("Gỏi Ngó Sen") || itemName.contains("Lotus")) return "Crunchy lotus stem salad tossed with fresh tiger shrimp and savory pork belly";
+            if (itemName.contains("Súp Măng Tây") || itemName.contains("Crab")) return "Hot rich soup served with shredded fresh crab meat and tender green asparagus";
+            if (itemName.contains("Bò Úc Nướng") || itemName.contains("Beef")) return "Premium Australian beef tenderloin grilled to perfection with rich black pepper sauce";
+            if (itemName.contains("Cá Hồi") || itemName.contains("Salmon")) return "Fresh Atlantic salmon seared with golden butter and tangy passion fruit sauce";
+            if (itemName.contains("Nước Cam") || itemName.contains("Orange")) return "100% fresh squeezed sweet orange juice served chilled";
+            if (itemName.contains("Rượu Vang") || itemName.contains("Wine")) return "Premium French red wine with deep berry aroma and smooth finish";
+        }
+        return description;
+    }
 }

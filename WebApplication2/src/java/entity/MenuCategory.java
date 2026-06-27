@@ -37,4 +37,13 @@ public class MenuCategory implements Serializable {
     public String getCategoryName() { return categoryName; }
     public MealTime getMealTime() { return mealTime; }
     public MenuCategoryType getCategoryType() { return categoryType; }
+
+    public String getCategoryNameEn() {
+        if (categoryName == null) return "";
+        if (categoryName.contains("Khai Vị") || categoryName.contains("Appetizer")) return "Appetizer";
+        if (categoryName.contains("Chính") || categoryName.contains("Main")) return "Main Course";
+        if (categoryName.contains("Tráng Miệng") || categoryName.contains("Dessert")) return "Dessert";
+        if (categoryName.contains("Uống") || categoryName.contains("Drink")) return "Drink";
+        return categoryName;
+    }
 }

@@ -40,4 +40,13 @@ public class Room implements Serializable {
     public Area getArea() { return area; }
     public String getRoomName() { return roomName; }
     public RoomType getRoomType() { return roomType; }
+
+    public String getRoomNameEn() {
+        if (roomName == null) return "";
+        if (roomName.contains("Khu chung") || roomName.contains("Standard")) return "Standard Dining Area";
+        if (roomName.contains("VIP") && roomName.contains("Vàng")) return "Golden VIP Room";
+        if (roomName.contains("Sân Vườn") || roomName.contains("Garden")) return "Rose Garden Patio";
+        if (roomName.contains("Biệt Thự") || roomName.contains("Villa")) return "Royal VVIP Villa";
+        return roomName;
+    }
 }

@@ -1,6 +1,9 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<fmt:setLocale value="${sessionScope.lang}" scope="session" />
+<fmt:setBundle basename="i18n.messages" scope="session" />
 <jsp:include page="header.jsp" />
 
 <main>
@@ -8,17 +11,17 @@
         <div class="container">
             <div class="row align-items-center g-4">
                 <div class="col-lg-7">
-                    <span class="eyebrow mb-2"><i class="fa-solid fa-book-open"></i> Menu catalog</span>
-                    <h1 class="display-5 fw-bold mb-3">Active Dishes</h1>
-                    <p class="muted mb-0">Seasonal dishes, fresh drinks, and favorites prepared for every dining occasion.</p>
+                    <span class="eyebrow mb-2"><i class="fa-solid fa-book-open"></i> <fmt:message key="menupage.eyebrow"/></span>
+                    <h1 class="display-5 fw-bold mb-3"><fmt:message key="menupage.title"/></h1>
+                    <p class="muted mb-0"><fmt:message key="menupage.desc"/></p>
                 </div>
                 <div class="col-lg-5">
                     <div class="surface-soft p-3">
                         <div class="d-flex align-items-center gap-3">
                             <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=500&q=80" class="rounded-4" style="width:96px;height:96px;object-fit:cover;" alt="Fresh ingredients">
                             <div>
-                                <div class="fw-bold">Kitchen ready</div>
-                                <div class="small muted">Order ahead when you reserve a table.</div>
+                                <div class="fw-bold"><fmt:message key="menupage.ready.title"/></div>
+                                <div class="small muted"><fmt:message key="menupage.ready.desc"/></div>
                             </div>
                         </div>
                     </div>
@@ -51,16 +54,40 @@
                             </c:otherwise>
                         </c:choose>
                         <div class="d-flex justify-content-between gap-3 mb-2">
-                            <h2 class="h5 fw-bold mb-0">${item.itemName}</h2>
+                            <h2 class="h5 fw-bold mb-0">
+                                <c:choose>
+                                    <c:when test="${sessionScope.lang == 'en' and fn:contains(item.itemName, 'Gỏi Ngó Sen')}">Lotus Stem Salad with Shrimp & Pork</c:when>
+                                    <c:when test="${sessionScope.lang == 'en' and fn:contains(item.itemName, 'Súp Măng Tây')}">Crab & Green Asparagus Soup</c:when>
+                                    <c:when test="${sessionScope.lang == 'en' and fn:contains(item.itemName, 'Bò Úc Nướng')}">Grilled Australian Beef Tenderloin</c:when>
+                                    <c:when test="${sessionScope.lang == 'en' and fn:contains(item.itemName, 'Cá Hồi')}">Pan Seared Salmon with Passion Fruit</c:when>
+                                    <c:otherwise>${item.itemName}</c:otherwise>
+                                </c:choose>
+                            </h2>
                             <span class="badge price-badge align-self-start">
                                 <fmt:formatNumber value="${item.basePrice}" pattern="#,##0"/> VND
                             </span>
                         </div>
-                        <p class="muted small mb-3">${item.description}</p>
+                        <p class="muted small mb-3">
+                            <c:choose>
+                                <c:when test="${sessionScope.lang == 'en' and fn:contains(item.itemName, 'Gỏi Ngó Sen')}">Crunchy lotus stem salad tossed with fresh tiger shrimp and savory pork belly</c:when>
+                                <c:when test="${sessionScope.lang == 'en' and fn:contains(item.itemName, 'Súp Măng Tây')}">Hot rich soup served with shredded fresh crab meat and tender green asparagus</c:when>
+                                <c:when test="${sessionScope.lang == 'en' and fn:contains(item.itemName, 'Bò Úc Nướng')}">Premium Australian beef tenderloin grilled to perfection with rich black pepper sauce</c:when>
+                                <c:when test="${sessionScope.lang == 'en' and fn:contains(item.itemName, 'Cá Hồi')}">Fresh Atlantic salmon seared with golden butter and tangy passion fruit sauce</c:when>
+                                <c:otherwise>${item.description}</c:otherwise>
+                            </c:choose>
+                        </p>
                         <div class="d-flex justify-content-between align-items-center">
-                            <span class="category-pill small">${item.category.categoryName}</span>
+                            <span class="category-pill small">
+                                <c:choose>
+                                    <c:when test="${sessionScope.lang == 'en' and fn:contains(item.category.categoryName, 'Khai Vị')}">Appetizer</c:when>
+                                    <c:when test="${sessionScope.lang == 'en' and fn:contains(item.category.categoryName, 'Chính')}">Main Course</c:when>
+                                    <c:when test="${sessionScope.lang == 'en' and fn:contains(item.category.categoryName, 'Tráng Miệng')}">Dessert</c:when>
+                                    <c:when test="${sessionScope.lang == 'en' and fn:contains(item.category.categoryName, 'Uống')}">Drink</c:when>
+                                    <c:otherwise>${item.category.categoryName}</c:otherwise>
+                                </c:choose>
+                            </span>
                             <a href="MainController?action=booking" class="btn btn-outline-brand btn-sm px-3">
-                                <i class="fa-solid fa-plus me-1"></i>Add
+                                <i class="fa-solid fa-plus me-1"></i><fmt:message key="menupage.btn.add"/>
                             </a>
                         </div>
                     </article>

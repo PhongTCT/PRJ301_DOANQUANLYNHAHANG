@@ -1,10 +1,12 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<fmt:setBundle basename="i18n.messages" scope="session" />
 <footer class="mt-5 py-5 section-band">
     <div class="container">
         <div class="row g-4 align-items-center">
             <div class="col-lg-6">
                 <h5 class="fw-bold mb-2" style="color:var(--accent-dark);">LE ROYAL FINE DINING</h5>
-                <p class="muted mb-0">Bright dining spaces, seasonal food, and simple online reservation for every gathering.</p>
+                <p class="muted mb-0"><fmt:message key="footer.desc"/></p>
             </div>
             <div class="col-lg-6 text-lg-end">
                 <div class="mb-3">
@@ -21,7 +23,7 @@
                     <button type="button" class="theme-circle-btn" data-day="6" style="background:#d68000;"></button>
                     <button type="button" class="theme-circle-btn" data-day="0" style="background:#e62e6b;"></button>
                 </div>
-                <span class="muted small">&copy; 2026 Le Royal Team.</span>
+                <span class="muted small">&copy; 2026 <fmt:message key="footer.copyright"/></span>
             </div>
         </div>
     </div>
