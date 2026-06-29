@@ -5,10 +5,19 @@ import dao.EventTypeDAO;
 import dto.BookingDraft;
 import entity.DiningTable;
 import entity.EventType;
+import entity.Reservation;
+import entity.ReservationTable;
+import entity.User;
+import enums.ReservationStatus;
+import enums.TableStatus;
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import util.JPAUtil;
 
 public class BookingService {
     private final DiningTableDAO diningTableDAO = new DiningTableDAO();
@@ -32,7 +41,117 @@ public class BookingService {
         draft.setAdultsCount(parseInt(request.getParameter("adultsCount"), 1));
         draft.setChildrenCount(parseInt(request.getParameter("childrenCount"), 0));
         draft.setEventTypeId(parseInt(request.getParameter("eventTypeId"), null));
+        validateDraft(draft);
         return draft;
+    }
+
+    public Reservation selectTable(BookingDraft draft, Integer tableId, User currentUser) {
+        if (draft == null) {
+            throw new IllegalArgumentException("Please save your booking details before selecting a table.");
+        }
+        if (currentUser == null || currentUser.getId() == null) {
+            throw new IllegalArgumentException("Please login before selecting a table.");
+        }
+        if (tableId == null) {
+            throw new IllegalArgumentException("Please select a valid table.");
+        }
+
+        validateDraft(draft);
+
+        EntityManager em = JPAUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+
+            DiningTable table = em.find(DiningTable.class, tableId);
+            if (table == null || !Boolean.TRUE.equals(table.getIsActive())) {
+                throw new IllegalArgumentException("Selected table is not available.");
+            }
+            if (table.getStatus() != TableStatus.AVAILABLE) {
+                throw new IllegalArgumentException("This table has already been reserved.");
+            }
+
+            int guests = safeCount(draft.getAdultsCount()) + safeCount(draft.getChildrenCount());
+            if (table.getCapacity() != null && guests > table.getCapacity()) {
+                throw new IllegalArgumentException("Selected table does not have enough seats.");
+            }
+
+            EventType eventType = em.find(EventType.class, draft.getEventTypeId());
+            if (eventType == null) {
+                throw new IllegalArgumentException("Please select a valid event type.");
+            }
+
+            User user = em.find(User.class, currentUser.getId());
+            if (user == null) {
+                throw new IllegalArgumentException("User account is no longer available.");
+            }
+
+            Reservation reservation = new Reservation();
+            reservation.setUser(user);
+            reservation.setGuestName(user.getFullName());
+            reservation.setGuestPhone(user.getPhone());
+            reservation.setEventType(eventType);
+            reservation.setReservationDate(draft.getReservationDate());
+            reservation.setReservationTime(parseTime(draft.getReservationTime()));
+            reservation.setAdultsCount(draft.getAdultsCount());
+            reservation.setChildrenCount(draft.getChildrenCount());
+            reservation.setHasChildren(safeCount(draft.getChildrenCount()) > 0);
+            reservation.setStatus(ReservationStatus.PENDING);
+            reservation.setIsOnline(true);
+
+            em.persist(reservation);
+
+            ReservationTable reservationTable = new ReservationTable();
+            reservationTable.setReservation(reservation);
+            reservationTable.setDiningTable(table);
+            em.persist(reservationTable);
+
+            table.setStatus(TableStatus.RESERVED);
+            em.merge(table);
+
+            tx.commit();
+            draft.setSelectedTableId(tableId);
+            return reservation;
+        } catch (RuntimeException e) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
+    public Integer parseTableId(HttpServletRequest request) {
+        return parseInt(request.getParameter("tableId"), null);
+    }
+
+    private void validateDraft(BookingDraft draft) {
+        if (draft.getReservationDate() == null) {
+            throw new IllegalArgumentException("Please choose a reservation date.");
+        }
+        if (draft.getReservationTime() == null || draft.getReservationTime().trim().isEmpty()) {
+            throw new IllegalArgumentException("Please choose a reservation time.");
+        }
+        if (draft.getEventTypeId() == null) {
+            throw new IllegalArgumentException("Please choose an event type.");
+        }
+        if (safeCount(draft.getAdultsCount()) < 1) {
+            throw new IllegalArgumentException("At least one adult guest is required.");
+        }
+        parseTime(draft.getReservationTime());
+    }
+
+    private Time parseTime(String value) {
+        String normalized = value == null ? "" : value.trim();
+        if (normalized.length() == 5) {
+            normalized += ":00";
+        }
+        return Time.valueOf(normalized);
+    }
+
+    private int safeCount(Integer count) {
+        return count == null ? 0 : count;
     }
 
     private Integer parseInt(String value, Integer fallback) {

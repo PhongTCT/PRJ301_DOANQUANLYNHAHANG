@@ -9,6 +9,7 @@ public class BookingDraft implements Serializable {
     private Integer adultsCount;
     private Integer childrenCount;
     private Integer eventTypeId;
+    private Integer selectedTableId;
 
     public Date getReservationDate() { return reservationDate; }
     public void setReservationDate(Date reservationDate) { this.reservationDate = reservationDate; }
@@ -20,4 +21,6 @@ public class BookingDraft implements Serializable {
     public void setChildrenCount(Integer childrenCount) { this.childrenCount = childrenCount; }
     public Integer getEventTypeId() { return eventTypeId; }
     public void setEventTypeId(Integer eventTypeId) { this.eventTypeId = eventTypeId; }
+    public Integer getSelectedTableId() { return selectedTableId; }
+    public void setSelectedTableId(Integer selectedTableId) { this.selectedTableId = selectedTableId; }
 }

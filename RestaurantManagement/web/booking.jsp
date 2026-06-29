@@ -5,6 +5,9 @@
 <fmt:setLocale value="${sessionScope.lang}" scope="session" />
 <fmt:setBundle basename="i18n.messages" scope="session" />
 <jsp:include page="header.jsp" />
+<c:if test="${not empty sessionScope.bookingDraft.reservationDate}">
+    <fmt:formatDate value="${sessionScope.bookingDraft.reservationDate}" pattern="yyyy-MM-dd" var="draftDate" />
+</c:if>
 
 <main>
     <section class="section-band py-5">
@@ -45,25 +48,32 @@
             <div class="row g-3 align-items-end">
                 <div class="col-md-3">
                     <label class="form-label small fw-bold"><fmt:message key="booking.date"/></label>
-                    <input type="date" name="reservationDate" class="form-control" required>
+                    <input type="date" name="reservationDate" class="form-control" value="${draftDate}" required>
                 </div>
                 <div class="col-md-2">
                     <label class="form-label small fw-bold"><fmt:message key="booking.time"/></label>
-                    <input type="time" name="reservationTime" class="form-control" required>
+                    <input type="time" name="reservationTime" class="form-control" value="${sessionScope.bookingDraft.reservationTime}" required>
                 </div>
                 <div class="col-md-2">
                     <label class="form-label small fw-bold"><fmt:message key="booking.adults"/></label>
-                    <input type="number" min="1" name="adultsCount" value="2" class="form-control" required>
+                    <input type="number" min="1" name="adultsCount" value="${not empty sessionScope.bookingDraft.adultsCount ? sessionScope.bookingDraft.adultsCount : 2}" class="form-control" required>
                 </div>
                 <div class="col-md-2">
                     <label class="form-label small fw-bold"><fmt:message key="booking.children"/></label>
-                    <input type="number" min="0" name="childrenCount" value="0" class="form-control">
+                    <input type="number" min="0" name="childrenCount" value="${not empty sessionScope.bookingDraft.childrenCount ? sessionScope.bookingDraft.childrenCount : 0}" class="form-control">
                 </div>
                 <div class="col-md-3">
                     <label class="form-label small fw-bold"><fmt:message key="booking.event"/></label>
                     <select name="eventTypeId" class="form-select">
                         <c:forEach items="${eventTypes}" var="eventType">
-                            <option value="${eventType.id}">${eventType.name}</option>
+                            <c:choose>
+                                <c:when test="${sessionScope.bookingDraft.eventTypeId == eventType.id}">
+                                    <option value="${eventType.id}" selected>${eventType.name}</option>
+                                </c:when>
+                                <c:otherwise>
+                                    <option value="${eventType.id}">${eventType.name}</option>
+                                </c:otherwise>
+                            </c:choose>
                         </c:forEach>
                     </select>
                 </div>
@@ -122,9 +132,13 @@
                                 </span>
                             </div>
                         </div>
-                        <button class="btn ${tb.status == 'AVAILABLE' ? 'btn-brand' : 'btn-quiet'} btn-sm w-100" ${tb.status == 'AVAILABLE' ? '' : 'disabled'}>
-                            <fmt:message key="booking.btn.select"/>
-                        </button>
+                        <form action="MainController" method="POST">
+                            <input type="hidden" name="action" value="selectTable">
+                            <input type="hidden" name="tableId" value="${tb.id}">
+                            <button type="submit" class="btn ${tb.status == 'AVAILABLE' ? 'btn-brand' : 'btn-quiet'} btn-sm w-100" ${tb.status == 'AVAILABLE' ? '' : 'disabled'}>
+                                <fmt:message key="booking.btn.select"/>
+                            </button>
+                        </form>
                     </article>
                 </div>
             </c:forEach>

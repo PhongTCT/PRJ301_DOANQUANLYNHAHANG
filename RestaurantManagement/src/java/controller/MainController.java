@@ -23,6 +23,10 @@ public class MainController extends HttpServlet {
         switch (action) {
             case "login":
             case "dologin":
+            case "googleLogin":
+            case "completeGoogleProfile":
+            case "facebookLogin":
+            case "completeFacebookProfile":
             case "logout":
                 url = "LoginController";
                 break;
@@ -31,6 +35,7 @@ public class MainController extends HttpServlet {
                 break;
             case "booking":
             case "dobooking":
+            case "selectTable":
                 url = "BookingController";
                 break;
             case "home":

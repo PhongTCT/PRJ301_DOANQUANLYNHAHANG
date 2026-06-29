@@ -1,10 +1,14 @@
 package controller;
 
+import dto.BookingDraft;
+import entity.Reservation;
+import entity.User;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import service.BookingService;
 
 public class BookingController extends HttpServlet {
@@ -22,8 +26,26 @@ public class BookingController extends HttpServlet {
                 request.getSession().setAttribute("bookingDraft", bookingService.buildDraft(request));
                 request.setAttribute("success", "Booking draft saved. Please choose a table to continue.");
             } catch (Exception e) {
-                request.setAttribute("error", "Booking information is invalid.");
+                request.setAttribute("error", e.getMessage() == null ? "Booking information is invalid." : e.getMessage());
             }
+        }
+
+        if ("selectTable".equals(action)) {
+            try {
+                HttpSession session = request.getSession();
+                BookingDraft draft = (BookingDraft) session.getAttribute("bookingDraft");
+                User currentUser = (User) session.getAttribute("currentUser");
+                Reservation reservation = bookingService.selectTable(draft, bookingService.parseTableId(request), currentUser);
+                request.setAttribute("success", "Table selected successfully. Reservation #" + reservation.getId() + " is pending confirmation.");
+            } catch (Exception e) {
+                request.setAttribute("error", e.getMessage() == null ? "Could not select this table." : e.getMessage());
+            }
+        }
+
+        Object bookingDraftError = request.getSession().getAttribute("bookingDraftError");
+        if (bookingDraftError != null && request.getAttribute("error") == null) {
+            request.setAttribute("error", bookingDraftError);
+            request.getSession().removeAttribute("bookingDraftError");
         }
 
         try {

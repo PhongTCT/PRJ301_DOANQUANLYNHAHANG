@@ -17,4 +17,10 @@ public class ReservationTable implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "dining_table_id", nullable = false)
     private DiningTable diningTable;
+
+    public Long getId() { return id; }
+    public Reservation getReservation() { return reservation; }
+    public void setReservation(Reservation reservation) { this.reservation = reservation; }
+    public DiningTable getDiningTable() { return diningTable; }
+    public void setDiningTable(DiningTable diningTable) { this.diningTable = diningTable; }
 }
