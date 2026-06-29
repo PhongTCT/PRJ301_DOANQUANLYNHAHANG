@@ -17,7 +17,9 @@
     <title>Le Royal - Restaurant Booking</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100;300;400;500;700&family=Noto+Serif:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --page-bg: #f7fbf8;
@@ -51,7 +53,7 @@
         }
 
         body {
-            font-family: 'Outfit', Arial, sans-serif;
+            font-family: 'Be Vietnam Pro', sans-serif;
             background: var(--page-bg);
             color: var(--ink);
             min-height: 100vh;
@@ -150,6 +152,73 @@
             border-color: var(--accent);
         }
 
+        .language-switcher .language-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 32px;
+            line-height: 1;
+            font-weight: 700 !important;
+        }
+
+        .flag {
+            position: relative;
+            display: inline-block;
+            width: 22px;
+            height: 15px;
+            border-radius: 2px;
+            overflow: hidden;
+            flex: 0 0 auto;
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.14) inset;
+        }
+
+        .flag-vn {
+            background: #da251d;
+        }
+
+        .flag-vn::before {
+            content: "";
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            left: 50%;
+            top: 50%;
+            background: #ffdd00;
+            transform: translate(-50%, -50%);
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 56%, 79% 91%, 50% 69%, 21% 91%, 32% 56%, 2% 35%, 39% 35%);
+        }
+
+        .flag-us {
+            background: repeating-linear-gradient(
+                to bottom,
+                #b22234 0,
+                #b22234 1.15px,
+                #ffffff 1.15px,
+                #ffffff 2.3px
+            );
+        }
+
+        .flag-us::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 10px;
+            height: 8px;
+            background: #3c3b6e;
+        }
+
+        .flag-us::after {
+            content: "";
+            position: absolute;
+            left: 1.5px;
+            top: 1.2px;
+            width: 7px;
+            height: 5.5px;
+            background-image: radial-gradient(#ffffff 0.6px, transparent 0.7px);
+            background-size: 2.4px 2px;
+        }
+
         .surface {
             background: var(--surface);
             border: 1px solid var(--line);
@@ -198,6 +267,12 @@
             line-height: 0.96;
             font-weight: 800;
             color: var(--ink);
+        }
+
+        h1, h2, .logo, .navbar-brand, .hero-title, .btn, .btn-brand, .eyebrow {
+            font-family: 'Noto Serif', 'Be Vietnam Pro', serif !important;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .hero-copy {
@@ -370,9 +445,15 @@
                 <li class="nav-item"><a class="nav-link" href="MainController?action=booking"><fmt:message key="nav.booking"/></a></li>
             </ul>
             <div class="d-flex align-items-center gap-2">
-                <div class="btn-group me-1" role="group" aria-label="Language switcher">
-                    <a href="MainController?action=${not empty param.action ? param.action : 'home'}&lang=vi" class="btn btn-sm ${sessionScope.lang == 'vi' ? 'btn-brand' : 'btn-quiet'} px-2 py-1" style="border-radius: 6px 0 0 6px; font-weight: 600;">🇻🇳 VI</a>
-                    <a href="MainController?action=${not empty param.action ? param.action : 'home'}&lang=en" class="btn btn-sm ${sessionScope.lang == 'en' ? 'btn-brand' : 'btn-quiet'} px-2 py-1" style="border-radius: 0 6px 6px 0; font-weight: 600;">🇬🇧 EN</a>
+                <div class="btn-group me-1 language-switcher" role="group" aria-label="Language switcher">
+                    <a href="MainController?action=${not empty param.action ? param.action : 'home'}&lang=vi" class="btn btn-sm language-btn ${sessionScope.lang == 'vi' ? 'btn-brand' : 'btn-quiet'} px-2 py-1" style="border-radius: 6px 0 0 6px;">
+                        <span class="flag flag-vn" aria-hidden="true"></span>
+                        <span>VI</span>
+                    </a>
+                    <a href="MainController?action=${not empty param.action ? param.action : 'home'}&lang=en" class="btn btn-sm language-btn ${sessionScope.lang == 'en' ? 'btn-brand' : 'btn-quiet'} px-2 py-1" style="border-radius: 0 6px 6px 0;">
+                        <span class="flag flag-us" aria-hidden="true"></span>
+                        <span>EN</span>
+                    </a>
                 </div>
                 <c:choose>
                     <c:when test="${not empty sessionScope.currentUser}">

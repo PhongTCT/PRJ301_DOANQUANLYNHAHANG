@@ -39,6 +39,18 @@
         <filter-name>AuthFilter</filter-name>
         <url-pattern>/customer/*</url-pattern>
     </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/MainController</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/BookingController</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/booking.jsp</url-pattern>
+    </filter-mapping>
 
     <filter>
         <filter-name>RoleFilter</filter-name>

@@ -34,12 +34,22 @@ public class LoginController extends HttpServlet {
                 session.setAttribute("loginUser", user);
                 session.setAttribute("userRole", user.getRole());
                 session.setAttribute("userName", user.getFullName());
-                response.sendRedirect("MainController?action=home");
+                String redirectAfterLogin = (String) session.getAttribute("redirectAfterLogin");
+                session.removeAttribute("redirectAfterLogin");
+
+                if (redirectAfterLogin != null && redirectAfterLogin.startsWith("/")) {
+                    response.sendRedirect(request.getContextPath() + redirectAfterLogin);
+                } else {
+                    response.sendRedirect("MainController?action=home");
+                }
             } catch (IllegalArgumentException e) {
                 request.setAttribute("error", e.getMessage());
                 request.getRequestDispatcher("login.jsp").forward(request, response);
             }
         } else {
+            if ("1".equals(request.getParameter("required"))) {
+                request.setAttribute("notice", "Please login before using this feature.");
+            }
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
     }

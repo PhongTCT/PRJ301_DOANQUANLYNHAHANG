@@ -22,6 +22,9 @@
                 <c:if test="${not empty error}">
                     <div class="alert alert-danger py-2 small">${error}</div>
                 </c:if>
+                <c:if test="${not empty notice}">
+                    <div class="alert alert-info py-2 small">${notice}</div>
+                </c:if>
 
                 <form action="MainController" method="POST">
                     <input type="hidden" name="action" value="dologin">
