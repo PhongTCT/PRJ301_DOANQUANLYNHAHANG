@@ -45,15 +45,15 @@ public class BookingService {
         return draft;
     }
 
-    public Reservation selectTable(BookingDraft draft, Integer tableId, User currentUser) {
+    public Reservation selectTables(BookingDraft draft, List<Integer> tableIds, User currentUser) {
         if (draft == null) {
             throw new IllegalArgumentException("Please save your booking details before selecting a table.");
         }
         if (currentUser == null || currentUser.getId() == null) {
             throw new IllegalArgumentException("Please login before selecting a table.");
         }
-        if (tableId == null) {
-            throw new IllegalArgumentException("Please select a valid table.");
+        if (tableIds == null || tableIds.isEmpty()) {
+            throw new IllegalArgumentException("Please select at least one valid table.");
         }
 
         validateDraft(draft);
@@ -63,17 +63,26 @@ public class BookingService {
         try {
             tx.begin();
 
-            DiningTable table = em.find(DiningTable.class, tableId);
-            if (table == null || !Boolean.TRUE.equals(table.getIsActive())) {
-                throw new IllegalArgumentException("Selected table is not available.");
-            }
-            if (table.getStatus() != TableStatus.AVAILABLE) {
-                throw new IllegalArgumentException("This table has already been reserved.");
+            java.util.List<DiningTable> selectedTables = new java.util.ArrayList<>();
+            int totalCapacity = 0;
+
+            for (Integer id : tableIds) {
+                DiningTable table = em.find(DiningTable.class, id);
+                if (table == null || !Boolean.TRUE.equals(table.getIsActive())) {
+                    throw new IllegalArgumentException("One of the selected tables is not available.");
+                }
+                if (table.getStatus() != TableStatus.AVAILABLE) {
+                    throw new IllegalArgumentException("One of the tables has already been reserved.");
+                }
+                selectedTables.add(table);
+                if (table.getCapacity() != null) {
+                    totalCapacity += table.getCapacity();
+                }
             }
 
             int guests = safeCount(draft.getAdultsCount()) + safeCount(draft.getChildrenCount());
-            if (table.getCapacity() != null && guests > table.getCapacity()) {
-                throw new IllegalArgumentException("Selected table does not have enough seats.");
+            if (totalCapacity > 0 && guests > totalCapacity) {
+                throw new IllegalArgumentException("Selected tables do not have enough seats.");
             }
 
             EventType eventType = em.find(EventType.class, draft.getEventTypeId());
@@ -101,16 +110,18 @@ public class BookingService {
 
             em.persist(reservation);
 
-            ReservationTable reservationTable = new ReservationTable();
-            reservationTable.setReservation(reservation);
-            reservationTable.setDiningTable(table);
-            em.persist(reservationTable);
+            for (DiningTable table : selectedTables) {
+                ReservationTable reservationTable = new ReservationTable();
+                reservationTable.setReservation(reservation);
+                reservationTable.setDiningTable(table);
+                em.persist(reservationTable);
 
-            table.setStatus(TableStatus.RESERVED);
-            em.merge(table);
+                table.setStatus(TableStatus.RESERVED);
+                em.merge(table);
+            }
 
             tx.commit();
-            draft.setSelectedTableId(tableId);
+            draft.setSelectedTableIds(tableIds);
             return reservation;
         } catch (RuntimeException e) {
             if (tx.isActive()) {
@@ -122,8 +133,16 @@ public class BookingService {
         }
     }
 
-    public Integer parseTableId(HttpServletRequest request) {
-        return parseInt(request.getParameter("tableId"), null);
+    public List<Integer> parseTableIds(HttpServletRequest request) {
+        String[] tableIdParams = request.getParameterValues("tableId");
+        List<Integer> list = new java.util.ArrayList<>();
+        if (tableIdParams != null) {
+            for (String p : tableIdParams) {
+                Integer id = parseInt(p, null);
+                if (id != null) list.add(id);
+            }
+        }
+        return list;
     }
 
     private void validateDraft(BookingDraft draft) {

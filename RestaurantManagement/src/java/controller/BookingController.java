@@ -35,8 +35,8 @@ public class BookingController extends HttpServlet {
                 HttpSession session = request.getSession();
                 BookingDraft draft = (BookingDraft) session.getAttribute("bookingDraft");
                 User currentUser = (User) session.getAttribute("currentUser");
-                Reservation reservation = bookingService.selectTable(draft, bookingService.parseTableId(request), currentUser);
-                request.setAttribute("success", "Table selected successfully. Reservation #" + reservation.getId() + " is pending confirmation.");
+                Reservation reservation = bookingService.selectTables(draft, bookingService.parseTableIds(request), currentUser);
+                request.setAttribute("success", "Table(s) selected successfully. Reservation #" + reservation.getId() + " is pending confirmation.");
             } catch (Exception e) {
                 request.setAttribute("error", e.getMessage() == null ? "Could not select this table." : e.getMessage());
             }
