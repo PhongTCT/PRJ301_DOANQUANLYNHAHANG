@@ -57,6 +57,22 @@ public class BookingController extends HttpServlet {
             }
         }
 
+        if ("saveStep3".equals(action)) {
+            try {
+                if (draft == null) {
+                    response.sendRedirect("MainController?action=booking&step=1");
+                    return;
+                }
+                bookingService.processStep3(draft, request);
+                // Go to step 4 (Review) - Assuming it will be step=4
+                response.sendRedirect("MainController?action=booking&step=4");
+                return;
+            } catch (Exception e) {
+                request.setAttribute("error", e.getMessage() == null ? "Could not save menu selections." : e.getMessage());
+                step = 3;
+            }
+        }
+
         Object bookingDraftError = session.getAttribute("bookingDraftError");
         if (bookingDraftError != null && request.getAttribute("error") == null) {
             request.setAttribute("error", bookingDraftError);
@@ -68,6 +84,10 @@ public class BookingController extends HttpServlet {
                 request.setAttribute("eventTypes", bookingService.getActiveEventTypes());
             } else if (step == 2) {
                 request.setAttribute("tables", bookingService.getAvailableTables()); // Ideally filter by date/time
+            } else if (step == 3) {
+                request.setAttribute("menuItems", bookingService.getActiveMenuItems());
+                request.setAttribute("menuSets", bookingService.getActiveMenuSets());
+                request.setAttribute("addons", bookingService.getActiveAddons());
             }
         } catch (Exception e) {
             request.setAttribute("pageError", "Booking data is temporarily unavailable.");

@@ -29,4 +29,19 @@ public class AddonService implements Serializable {
 
     @OneToMany(mappedBy = "addonService", fetch = FetchType.LAZY)
     private List<ReservationAddon> reservationAddons;
+
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+    public String getServiceName() { return serviceName; }
+    public void setServiceName(String serviceName) { this.serviceName = serviceName; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public BigDecimal getPrice() { return price; }
+    public void setPrice(BigDecimal price) { this.price = price; }
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public Boolean getIsAvailable() { return isAvailable; }
+    public void setIsAvailable(Boolean isAvailable) { this.isAvailable = isAvailable; }
+    public List<ReservationAddon> getReservationAddons() { return reservationAddons; }
+    public void setReservationAddons(List<ReservationAddon> reservationAddons) { this.reservationAddons = reservationAddons; }
 }

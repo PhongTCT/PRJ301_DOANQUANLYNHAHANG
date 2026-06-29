@@ -8,6 +8,12 @@ import entity.EventType;
 import entity.Reservation;
 import entity.ReservationTable;
 import entity.User;
+import entity.MenuItem;
+import entity.MenuSet;
+import entity.AddonService;
+import dao.MenuItemDAO;
+import dao.MenuSetDAO;
+import dao.AddonServiceDAO;
 import enums.ReservationStatus;
 import enums.TableStatus;
 import java.sql.Time;
@@ -22,6 +28,9 @@ import util.JPAUtil;
 public class BookingService {
     private final DiningTableDAO diningTableDAO = new DiningTableDAO();
     private final EventTypeDAO eventTypeDAO = new EventTypeDAO();
+    private final MenuItemDAO menuItemDAO = new MenuItemDAO();
+    private final MenuSetDAO menuSetDAO = new MenuSetDAO();
+    private final AddonServiceDAO addonServiceDAO = new AddonServiceDAO();
 
     public List<DiningTable> getAvailableTables() {
         return diningTableDAO.ListAll();
@@ -29,6 +38,18 @@ public class BookingService {
 
     public List<EventType> getActiveEventTypes() {
         return eventTypeDAO.ListAll();
+    }
+
+    public List<MenuItem> getActiveMenuItems() {
+        return menuItemDAO.ListAll();
+    }
+
+    public List<MenuSet> getActiveMenuSets() {
+        return menuSetDAO.findActiveSets();
+    }
+
+    public List<AddonService> getActiveAddons() {
+        return addonServiceDAO.findActiveAddons();
     }
 
     public BookingDraft buildDraft(HttpServletRequest request) throws ParseException {
@@ -145,9 +166,53 @@ public class BookingService {
         return list;
     }
 
+    public void processStep3(BookingDraft draft, HttpServletRequest request) {
+        if (draft == null) {
+            throw new IllegalArgumentException("Booking session expired. Please start over.");
+        }
+        
+        List<BookingDraft.CartItemDTO> menuItems = new java.util.ArrayList<>();
+        String[] menuItemIds = request.getParameterValues("menuItemId");
+        String[] menuItemQtys = request.getParameterValues("menuItemQty");
+        if (menuItemIds != null && menuItemQtys != null) {
+            for (int i = 0; i < menuItemIds.length; i++) {
+                BookingDraft.CartItemDTO item = new BookingDraft.CartItemDTO();
+                item.setMenuItemId(parseInt(menuItemIds[i], null));
+                item.setQuantity(parseInt(i < menuItemQtys.length ? menuItemQtys[i] : "1", 1));
+                if (item.getMenuItemId() != null && item.getQuantity() > 0) {
+                    menuItems.add(item);
+                }
+            }
+        }
+        draft.setMenuItems(menuItems);
+
+        List<BookingDraft.CartAddonDTO> addons = new java.util.ArrayList<>();
+        String[] addonIds = request.getParameterValues("addonId");
+        String[] addonQtys = request.getParameterValues("addonQty");
+        if (addonIds != null && addonQtys != null) {
+            for (int i = 0; i < addonIds.length; i++) {
+                BookingDraft.CartAddonDTO addon = new BookingDraft.CartAddonDTO();
+                addon.setAddonId(parseInt(addonIds[i], null));
+                addon.setQuantity(parseInt(i < addonQtys.length ? addonQtys[i] : "1", 1));
+                if (addon.getAddonId() != null && addon.getQuantity() > 0) {
+                    addons.add(addon);
+                }
+            }
+        }
+        draft.setAddons(addons);
+    }
+
     private void validateDraft(BookingDraft draft) {
         if (draft.getReservationDate() == null) {
             throw new IllegalArgumentException("Please choose a reservation date.");
+        }
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.set(java.util.Calendar.HOUR_OF_DAY, 0);
+        cal.set(java.util.Calendar.MINUTE, 0);
+        cal.set(java.util.Calendar.SECOND, 0);
+        cal.set(java.util.Calendar.MILLISECOND, 0);
+        if (draft.getReservationDate().before(cal.getTime())) {
+            throw new IllegalArgumentException("Reservation date cannot be in the past.");
         }
         if (draft.getReservationTime() == null || draft.getReservationTime().trim().isEmpty()) {
             throw new IllegalArgumentException("Please choose a reservation time.");

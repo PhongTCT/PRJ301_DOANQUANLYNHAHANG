@@ -124,5 +124,17 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Prevent selecting past dates in HTML5 date picker
+            const dateInput = document.getElementById('reservationDate');
+            if (dateInput) {
+                // Get local date string in YYYY-MM-DD format
+                const today = new Date();
+                today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+                dateInput.setAttribute('min', today.toISOString().split('T')[0]);
+            }
+        });
+    </script>
 </body>
 </html>
