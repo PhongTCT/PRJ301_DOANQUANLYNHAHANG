@@ -94,4 +94,40 @@ public class Reservation implements Serializable {
 
     @PreUpdate
     protected void onUpdate() { updatedAt = new Date(); }
+
+    public Long getId() { return id; }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
+    public String getGuestName() { return guestName; }
+    public void setGuestName(String guestName) { this.guestName = guestName; }
+    public String getGuestPhone() { return guestPhone; }
+    public void setGuestPhone(String guestPhone) { this.guestPhone = guestPhone; }
+    public EventType getEventType() { return eventType; }
+    public void setEventType(EventType eventType) { this.eventType = eventType; }
+    public Date getReservationDate() { return reservationDate; }
+    public void setReservationDate(Date reservationDate) { this.reservationDate = reservationDate; }
+    public Time getReservationTime() { return reservationTime; }
+    public void setReservationTime(Time reservationTime) { this.reservationTime = reservationTime; }
+    public Integer getAdultsCount() { return adultsCount; }
+    public void setAdultsCount(Integer adultsCount) { this.adultsCount = adultsCount; }
+    public Integer getChildrenCount() { return childrenCount; }
+    public void setChildrenCount(Integer childrenCount) { this.childrenCount = childrenCount; }
+    public Boolean getHasChildren() { return hasChildren; }
+    public void setHasChildren(Boolean hasChildren) { this.hasChildren = hasChildren; }
+    public ReservationStatus getStatus() { return status; }
+    public void setStatus(ReservationStatus status) { this.status = status; }
+    public BigDecimal getDepositAmount() { return depositAmount; }
+    public void setDepositAmount(BigDecimal depositAmount) { this.depositAmount = depositAmount; }
+    public Boolean getDepositPaid() { return depositPaid; }
+    public void setDepositPaid(Boolean depositPaid) { this.depositPaid = depositPaid; }
+    public Boolean getIsOnline() { return isOnline; }
+    public void setIsOnline(Boolean isOnline) { this.isOnline = isOnline; }
+    public User getCreatedByStaff() { return createdByStaff; }
+    public void setCreatedByStaff(User createdByStaff) { this.createdByStaff = createdByStaff; }
+    public Date getCheckinAt() { return checkinAt; }
+    public void setCheckinAt(Date checkinAt) { this.checkinAt = checkinAt; }
+    public Boolean getHasSurcharge() { return hasSurcharge; }
+    public void setHasSurcharge(Boolean hasSurcharge) { this.hasSurcharge = hasSurcharge; }
+    public Date getCreatedAt() { return createdAt; }
+    public Date getUpdatedAt() { return updatedAt; }
 }

@@ -29,7 +29,7 @@
         </div>
         <div class="border-top border-secondary border-opacity-25 mt-5 pt-4 d-flex flex-wrap justify-content-between gap-2">
             <span class="text-secondary small">&copy; 2026 Le Royal.</span>
-            <span class="text-secondary small">Menu · Booking · Private Dining</span>
+            <span class="text-secondary small">Menu &middot; Booking &middot; Private Dining</span>
         </div>
     </div>
 </footer>

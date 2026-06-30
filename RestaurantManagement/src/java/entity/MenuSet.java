@@ -37,4 +37,23 @@ public class MenuSet implements Serializable {
 
     @OneToMany(mappedBy = "menuSet", fetch = FetchType.LAZY)
     private List<MenuSetItem> menuSetItems;
+
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+    public String getSetName() { return setName; }
+    public void setSetName(String setName) { this.setName = setName; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public MealTime getMealTime() { return mealTime; }
+    public void setMealTime(MealTime mealTime) { this.mealTime = mealTime; }
+    public BigDecimal getOriginalPrice() { return originalPrice; }
+    public void setOriginalPrice(BigDecimal originalPrice) { this.originalPrice = originalPrice; }
+    public BigDecimal getDiscountedPrice() { return discountedPrice; }
+    public void setDiscountedPrice(BigDecimal discountedPrice) { this.discountedPrice = discountedPrice; }
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public Boolean getIsAvailable() { return isAvailable; }
+    public void setIsAvailable(Boolean isAvailable) { this.isAvailable = isAvailable; }
+    public List<MenuSetItem> getMenuSetItems() { return menuSetItems; }
+    public void setMenuSetItems(List<MenuSetItem> menuSetItems) { this.menuSetItems = menuSetItems; }
 }

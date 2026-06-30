@@ -1,10 +1,14 @@
 package controller;
 
+import dto.BookingDraft;
+import entity.Reservation;
+import entity.User;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import service.BookingService;
 
 public class BookingController extends HttpServlet {
@@ -16,24 +20,81 @@ public class BookingController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
 
+        String stepParam = request.getParameter("step");
+        int step = 1;
+        if (stepParam != null && !stepParam.isEmpty()) {
+            try { step = Integer.parseInt(stepParam); } catch (NumberFormatException ignored) {}
+        }
+
         String action = request.getParameter("action");
+        HttpSession session = request.getSession();
+        BookingDraft draft = (BookingDraft) session.getAttribute("bookingDraft");
+
         if ("dobooking".equals(action)) {
             try {
-                request.getSession().setAttribute("bookingDraft", bookingService.buildDraft(request));
-                request.setAttribute("success", "Booking draft saved. Please choose a table to continue.");
+                draft = bookingService.buildDraft(request);
+                session.setAttribute("bookingDraft", draft);
+                response.sendRedirect("MainController?action=booking&step=2");
+                return;
             } catch (Exception e) {
-                request.setAttribute("error", "Booking information is invalid.");
+                request.setAttribute("error", e.getMessage() == null ? "Booking information is invalid." : e.getMessage());
+                step = 1; // stay on step 1
             }
         }
 
+        if ("selectTable".equals(action)) {
+            try {
+                if (draft == null) {
+                    response.sendRedirect("MainController?action=booking&step=1");
+                    return;
+                }
+                draft.setSelectedTableIds(bookingService.parseTableIds(request));
+                response.sendRedirect("MainController?action=booking&step=3");
+                return;
+            } catch (Exception e) {
+                request.setAttribute("error", e.getMessage() == null ? "Could not select table(s)." : e.getMessage());
+                step = 2;
+            }
+        }
+
+        if ("saveStep3".equals(action)) {
+            try {
+                if (draft == null) {
+                    response.sendRedirect("MainController?action=booking&step=1");
+                    return;
+                }
+                bookingService.processStep3(draft, request);
+                // Go to step 4 (Review) - Assuming it will be step=4
+                response.sendRedirect("MainController?action=booking&step=4");
+                return;
+            } catch (Exception e) {
+                request.setAttribute("error", e.getMessage() == null ? "Could not save menu selections." : e.getMessage());
+                step = 3;
+            }
+        }
+
+        Object bookingDraftError = session.getAttribute("bookingDraftError");
+        if (bookingDraftError != null && request.getAttribute("error") == null) {
+            request.setAttribute("error", bookingDraftError);
+            session.removeAttribute("bookingDraftError");
+        }
+
         try {
-            request.setAttribute("tables", bookingService.getAvailableTables());
-            request.setAttribute("eventTypes", bookingService.getActiveEventTypes());
+            if (step == 1) {
+                request.setAttribute("eventTypes", bookingService.getActiveEventTypes());
+            } else if (step == 2) {
+                request.setAttribute("tables", bookingService.getAvailableTables()); // Ideally filter by date/time
+            } else if (step == 3) {
+                request.setAttribute("menuItems", bookingService.getActiveMenuItems());
+                request.setAttribute("menuSets", bookingService.getActiveMenuSets());
+                request.setAttribute("addons", bookingService.getActiveAddons());
+            }
         } catch (Exception e) {
             request.setAttribute("pageError", "Booking data is temporarily unavailable.");
         }
 
-        request.getRequestDispatcher("booking.jsp").forward(request, response);
+        String targetJsp = "common/booking-step" + step + ".jsp";
+        request.getRequestDispatcher(targetJsp).forward(request, response);
     }
 
     @Override
