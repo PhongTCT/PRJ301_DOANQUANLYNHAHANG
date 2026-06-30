@@ -1,41 +1,24 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <fmt:setLocale value="${sessionScope.lang}" scope="session" />
 <fmt:setBundle basename="i18n.messages" scope="session" />
 <jsp:include page="header.jsp" />
 
 <section class="hero">
-    <div class="container">
-        <div class="hero-panel">
-            <span class="eyebrow mb-3"><i class="fa-solid fa-seedling"></i> <fmt:message key="hero.eyebrow"/></span>
-            <h1 class="hero-title mb-4"><fmt:message key="hero.title"/></h1>
-            <p class="hero-copy mb-4"><fmt:message key="hero.copy"/></p>
-            <div class="d-flex flex-wrap gap-2 mb-4">
-                <a href="MainController?action=booking" class="btn btn-brand btn-lg px-4">
-                    <i class="fa-regular fa-calendar-check me-2"></i><fmt:message key="hero.btn.book"/>
-                </a>
-                <a href="MainController?action=menu" class="btn btn-quiet btn-lg px-4"><fmt:message key="hero.btn.menu"/></a>
-            </div>
-            <div class="row g-2">
-                <div class="col-sm-4">
-                    <div class="hero-stat">
-                        <div class="fw-bold fs-5"><fmt:message key="hero.stat1.title"/></div>
-                        <div class="small muted"><fmt:message key="hero.stat1.sub"/></div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="hero-stat">
-                        <div class="fw-bold fs-5"><fmt:message key="hero.stat2.title"/></div>
-                        <div class="small muted"><fmt:message key="hero.stat2.sub"/></div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="hero-stat">
-                        <div class="fw-bold fs-5"><fmt:message key="hero.stat3.title"/></div>
-                        <div class="small muted"><fmt:message key="hero.stat3.sub"/></div>
-                    </div>
+    <video class="hero-video" autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1661163081367-6402f4f864e0?auto=format&fit=crop&w=1500&q=84">
+        <source src="https://cdn.pixabay.com/video/2022/11/30/141046-776768279_large.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+        <div class="row">
+            <div class="col-lg-6">
+                <span class="badge text-bg-light border text-dark text-uppercase fw-semibold mb-4">Contemporary Fine Dining</span>
+                <h1 class="hero-title mb-4">Le Royal</h1>
+                <p class="hero-copy mb-5">A quiet restaurant for seasonal Vietnamese ingredients, French technique, and a refined dining rhythm between Asia and Europe.</p>
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="MainController?action=booking" class="btn btn-dark">Reserve</a>
+                    <a href="MainController?action=menu" class="btn btn-outline-dark">Explore Menu</a>
                 </div>
             </div>
         </div>
@@ -49,118 +32,105 @@
         </div>
     </c:if>
 
-    <section class="container py-5">
-        <div class="row align-items-end g-3 mb-4">
-            <div class="col-lg-8">
-                <span class="eyebrow mb-2"><i class="fa-solid fa-bowl-food"></i> <fmt:message key="menu.eyebrow"/></span>
-                <h2 class="display-6 fw-bold mb-2"><fmt:message key="menu.title"/></h2>
-                <p class="muted mb-0"><fmt:message key="menu.desc"/></p>
-            </div>
-            <div class="col-lg-4 text-lg-end">
-                <a href="MainController?action=menu" class="btn btn-outline-brand px-4"><fmt:message key="menu.btn.all"/></a>
-            </div>
-        </div>
-
-        <div class="row g-4">
-            <c:forEach items="${featuredMenu}" var="item" varStatus="loop">
-                <div class="col-md-4">
-                    <article class="surface h-100 p-3 shadow-lift">
-                        <c:choose>
-                            <c:when test="${loop.index == 0}">
-                                <img class="card-image mb-3" src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=900&q=80" alt="Fresh salad dish">
-                            </c:when>
-                            <c:when test="${loop.index == 1}">
-                                <img class="card-image mb-3" src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80" alt="Warm soup bowl">
-                            </c:when>
-                            <c:otherwise>
-                                <img class="card-image mb-3" src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=900&q=80" alt="Restaurant main course">
-                            </c:otherwise>
-                        </c:choose>
-                        <div class="d-flex justify-content-between gap-3 mb-2">
-                            <h3 class="h5 fw-bold mb-0">
-                                <c:choose>
-                                    <c:when test="${sessionScope.lang == 'en' and fn:contains(item.itemName, 'Gỏi Ngó Sen')}">Lotus Stem Salad with Shrimp & Pork</c:when>
-                                    <c:when test="${sessionScope.lang == 'en' and fn:contains(item.itemName, 'Súp Măng Tây')}">Crab & Green Asparagus Soup</c:when>
-                                    <c:when test="${sessionScope.lang == 'en' and fn:contains(item.itemName, 'Bò Úc Nướng')}">Grilled Australian Beef Tenderloin</c:when>
-                                    <c:when test="${sessionScope.lang == 'en' and fn:contains(item.itemName, 'Cá Hồi')}">Pan Seared Salmon with Passion Fruit</c:when>
-                                    <c:otherwise>${item.itemName}</c:otherwise>
-                                </c:choose>
-                            </h3>
-                            <span class="badge price-badge align-self-start">
-                                <fmt:formatNumber value="${item.basePrice}" pattern="#,##0"/> VND
-                            </span>
-                        </div>
-                        <p class="muted small mb-3">
-                            <c:choose>
-                                <c:when test="${sessionScope.lang == 'en' and fn:contains(item.itemName, 'Gỏi Ngó Sen')}">Crunchy lotus stem salad tossed with fresh tiger shrimp and savory pork belly</c:when>
-                                <c:when test="${sessionScope.lang == 'en' and fn:contains(item.itemName, 'Súp Măng Tây')}">Hot rich soup served with shredded fresh crab meat and tender green asparagus</c:when>
-                                <c:when test="${sessionScope.lang == 'en' and fn:contains(item.itemName, 'Bò Úc Nướng')}">Premium Australian beef tenderloin grilled to perfection with rich black pepper sauce</c:when>
-                                <c:when test="${sessionScope.lang == 'en' and fn:contains(item.itemName, 'Cá Hồi')}">Fresh Atlantic salmon seared with golden butter and tangy passion fruit sauce</c:when>
-                                <c:otherwise>${item.description}</c:otherwise>
-                            </c:choose>
-                        </p>
-                        <span class="category-pill small">
-                            <c:choose>
-                                <c:when test="${sessionScope.lang == 'en' and fn:contains(item.category.categoryName, 'Khai Vị')}">Appetizer</c:when>
-                                <c:when test="${sessionScope.lang == 'en' and fn:contains(item.category.categoryName, 'Chính')}">Main Course</c:when>
-                                <c:when test="${sessionScope.lang == 'en' and fn:contains(item.category.categoryName, 'Tráng Miệng')}">Dessert</c:when>
-                                <c:when test="${sessionScope.lang == 'en' and fn:contains(item.category.categoryName, 'Uống')}">Drink</c:when>
-                                <c:otherwise>${item.category.categoryName}</c:otherwise>
-                            </c:choose>
-                        </span>
-                    </article>
+    <section class="py-5">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6">
+                    <img class="image-cover" src="https://images.unsplash.com/photo-1572715376701-98568319fd0b?auto=format&fit=crop&w=1200&q=84" alt="Chef plating a fine dining dish">
                 </div>
-            </c:forEach>
+                <div class="col-lg-5 offset-lg-1">
+                    <span class="badge text-bg-light border text-dark text-uppercase fw-semibold">The Restaurant</span>
+                    <h2 class="display-5 mt-3 mb-4">Minimal, seasonal, and deliberately quiet.</h2>
+                    <div class="gold-rule mb-4"></div>
+                    <p class="text-secondary fs-5">Le Royal is built around clean flavours, precise textures, and service that feels calm rather than ceremonial. The menu changes with produce, seafood, herbs, and fermentation from Vietnam, finished with European technique.</p>
+                    <p class="text-secondary mb-0">The visual language is simple: white space, black typography, sharp photography, and a small amount of warm metal in the details.</p>
+                </div>
+            </div>
         </div>
     </section>
 
-    <section class="section-band py-5">
+    <section class="py-5 bg-light border-top border-bottom">
         <div class="container">
-            <div class="row g-4 align-items-center">
-                <div class="col-lg-5">
-                    <span class="eyebrow mb-2"><i class="fa-solid fa-chair"></i> <fmt:message key="spaces.eyebrow"/></span>
-                    <h2 class="display-6 fw-bold mb-3"><fmt:message key="spaces.title"/></h2>
-                    <p class="muted mb-4"><fmt:message key="spaces.desc"/></p>
-                    <a href="MainController?action=booking" class="btn btn-brand px-4"><fmt:message key="spaces.btn.book"/></a>
+            <div class="d-flex align-items-end justify-content-between flex-wrap gap-3 mb-5">
+                <div>
+                    <span class="badge text-bg-light border text-dark text-uppercase fw-semibold">Signature Menus</span>
+                    <h2 class="display-5 mt-3 mb-0">Tasting experiences</h2>
                 </div>
-                <div class="col-lg-7">
-                    <div class="row g-3">
-                        <c:forEach items="${tables}" var="tb">
-                            <div class="col-sm-6">
-                                <article class="surface h-100 p-3">
-                                    <div class="d-flex justify-content-between align-items-start mb-3">
-                                        <div>
-                                            <div class="table-code">${tb.tableCode}</div>
-                                             <div class="muted small">
-                                                 <c:choose>
-                                                     <c:when test="${sessionScope.lang == 'en' and fn:contains(tb.room.roomName, 'Khu chung')}">Standard Dining Area</c:when>
-                                                     <c:when test="${sessionScope.lang == 'en' and fn:contains(tb.room.roomName, 'VIP Vàng')}">Golden VIP Room</c:when>
-                                                     <c:when test="${sessionScope.lang == 'en' and fn:contains(tb.room.roomName, 'Sân Vườn')}">Rose Garden Patio</c:when>
-                                                     <c:when test="${sessionScope.lang == 'en' and fn:contains(tb.room.roomName, 'Biệt Thự')}">Royal VVIP Villa</c:when>
-                                                     <c:otherwise>${tb.room.roomName}</c:otherwise>
-                                                 </c:choose>
-                                             </div>
-                                        </div>
-                                        <span class="badge ${tb.status == 'AVAILABLE' ? 'text-bg-success' : 'text-bg-danger'}">
-                                            <c:choose>
-                                                <c:when test="${sessionScope.lang == 'en'}">${tb.status}</c:when>
-                                                <c:when test="${tb.status == 'AVAILABLE'}">Sẵn sàng</c:when>
-                                                <c:when test="${tb.status == 'RESERVED'}">Đã đặt</c:when>
-                                                <c:when test="${tb.status == 'OCCUPIED'}">Đang dùng</c:when>
-                                                <c:otherwise>${tb.status}</c:otherwise>
-                                            </c:choose>
-                                        </span>
-                                    </div>
-                                    <div class="d-flex justify-content-between align-items-center small">
-                                        <span class="muted"><i class="fa-solid fa-users me-1"></i>${tb.capacity} <fmt:message key="spaces.guests"/></span>
-                                        <span class="fw-bold text-success">
-                                            <fmt:formatNumber value="${tb.basePrice}" pattern="#,##0"/> VND
-                                        </span>
-                                    </div>
-                                </article>
+                <a href="MainController?action=menu" class="btn btn-outline-dark">View Menu</a>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <article class="card shadow-sm border-0  h-100">
+                        <img src="https://epicurevietnam.com/Data/Sites/1/media/dining/other-cities/199/dou-of-abalon-and-canabineros-prawn-%282%29.jpg" class="card-image" alt="Seasonal tasting menu">
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between gap-2 mb-3">
+                                <span class="badge text-bg-light border text-dark px-3 py-1">Lunch</span>
+                                <span class="badge text-bg-light border text-dark px-3 py-1">690k</span>
                             </div>
-                        </c:forEach>
-                    </div>
+                            <h3 class="h2">Seasonal Lunch</h3>
+                            <p class="text-secondary mb-4">Three courses for a light fine dining lunch: seafood, garden herbs, and a fresh dessert.</p>
+                            <a href="MainController?action=booking" class="btn btn-dark btn-sm">Book</a>
+                        </div>
+                    </article>
+                </div>
+                <div class="col-lg-4">
+                    <article class="card shadow-sm border-0  h-100">
+                        <img src="https://epicurevietnam.com/Data/Sites/1/media/dining/other-cities/199/lobster-salad.jpg" class="card-image" alt="Le Royal tasting menu">
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between gap-2 mb-3">
+                                <span class="badge text-bg-light border text-dark px-3 py-1">6 Courses</span>
+                                <span class="badge text-bg-light border text-dark px-3 py-1">1.45m</span>
+                            </div>
+                            <h3 class="h2">Le Royal Tasting</h3>
+                            <p class="text-secondary mb-4">A balanced Asian-European tasting menu with seafood, duck consommé, beef cheek, and tea pairing.</p>
+                            <a href="MainController?action=booking" class="btn btn-dark btn-sm">Book</a>
+                        </div>
+                    </article>
+                </div>
+                <div class="col-lg-4">
+                    <article class="card shadow-sm border-0  h-100">
+                        <img src="https://epicurevietnam.com/Data/Sites/1/media/dining/other-cities/199/toothfish-%282%29.jpg" class="card-image" alt="Chef prestige menu">
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between gap-2 mb-3">
+                                <span class="badge text-bg-light border text-dark px-3 py-1">Prestige</span>
+                                <span class="badge text-bg-light border text-dark px-3 py-1">2.45m</span>
+                            </div>
+                            <h3 class="h2">Chef's Prestige</h3>
+                            <p class="text-secondary mb-4">A longer dinner with lobster, caviar, wagyu, seasonal vegetables, and composed desserts.</p>
+                            <a href="MainController?action=booking" class="btn btn-dark btn-sm">Book</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <article class=" card shadow-sm border-0 h-100 p-5">
+                        <span class="badge text-bg-light border text-dark text-uppercase fw-semibold">Book</span>
+                        <h3 class="display-6 mt-3 mb-3">Reserve a table</h3>
+                        <p class="text-secondary mb-4">Choose a date, number of guests, and preferred seating category.</p>
+                        <a href="MainController?action=booking" class="btn btn-dark">Booking</a>
+                    </article>
+                </div>
+                <div class="col-lg-4">
+                    <article class=" card shadow-sm border-0 h-100 p-5">
+                        <span class="badge text-bg-light border text-dark text-uppercase fw-semibold">Visit</span>
+                        <h3 class="display-6 mt-3 mb-3">District 1</h3>
+                        <p class="text-secondary mb-4">12 Le Loi Boulevard. Lunch from 11:30, dinner from 18:00.</p>
+                        <a href="MainController?action=booking" class="btn btn-outline-dark">Plan Visit</a>
+                    </article>
+                </div>
+                <div class="col-lg-4">
+                    <article class=" card shadow-sm border-0 h-100 p-5">
+                        <span class="badge text-bg-light border text-dark text-uppercase fw-semibold">Private Dining</span>
+                        <h3 class="display-6 mt-3 mb-3">Rooms by tier</h3>
+                        <p class="text-secondary mb-4">Window tables, garden lounge, chef counter, and private suites with deposits shown clearly.</p>
+                        <a href="MainController?action=booking" class="btn btn-outline-dark">See Spaces</a>
+                    </article>
                 </div>
             </div>
         </div>
