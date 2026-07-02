@@ -63,18 +63,15 @@
             
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mb-5">
                 <c:forEach items="${tables}" var="tb">
-                    <c:set var="isAvail" value="${tb.status == 'AVAILABLE'}" />
+                    <c:set var="isAvail" value="true" />
                     
                     <div class="col">
-                        <div class="card h-100 shadow-sm border-0 rounded-4 ${isAvail ? 'bg-white' : 'bg-light opacity-75'}">
+                        <div class="card h-100 shadow-sm border-0 rounded-4 bg-white">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <h5 class="card-title fw-bold mb-0">Bàn ${tb.tableCode}</h5>
-                                    <span class="badge ${isAvail ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'} rounded-pill">
-                                        <c:choose>
-                                            <c:when test="${isAvail}"><fmt:message key="booking.status.available"/></c:when>
-                                            <c:otherwise><fmt:message key="booking.status.reserved"/></c:otherwise>
-                                        </c:choose>
+                                    <span class="badge bg-success-subtle text-success rounded-pill">
+                                        <fmt:message key="booking.status.available"/>
                                     </span>
                                 </div>
                                 <h6 class="card-subtitle mb-3 text-muted small"><i class="fa-solid fa-map-location-dot me-1"></i>${tb.room.roomName}</h6>
@@ -91,15 +88,8 @@
                                 </ul>
                             </div>
                             <div class="card-footer bg-transparent border-0 p-3 pt-0 text-center">
-                                <c:choose>
-                                    <c:when test="${isAvail}">
-                                        <input type="checkbox" class="btn-check table-checkbox" id="table_${tb.id}" name="tableId" value="${tb.id}" data-capacity="${tb.capacity}">
-                                        <label class="btn btn-outline-primary w-100 rounded-pill fw-medium" for="table_${tb.id}"><fmt:message key="booking.table.select"/></label>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <button class="btn btn-secondary w-100 rounded-pill" disabled><fmt:message key="booking.status.unavailable"/></button>
-                                    </c:otherwise>
-                                </c:choose>
+                                <input type="checkbox" class="btn-check table-checkbox" id="table_${tb.id}" name="tableId" value="${tb.id}" data-capacity="${tb.capacity}">
+                                <label class="btn btn-outline-primary w-100 rounded-pill fw-medium" for="table_${tb.id}"><fmt:message key="booking.table.select"/></label>
                             </div>
                         </div>
                     </div>

@@ -24,4 +24,24 @@ public class DiningTableDAO extends AbstractDAO<DiningTable, Integer> {
             em.close();
         }
     }
+
+    public ArrayList<DiningTable> findAvailableTables(java.util.Date reservationDate, java.sql.Time reservationTime) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            String jpql = "SELECT d FROM DiningTable d WHERE d.isActive = true " +
+                          "AND d.id NOT IN (" +
+                          "  SELECT rt.diningTable.id FROM ReservationTable rt " +
+                          "  WHERE rt.reservation.reservationDate = :rDate " +
+                          "  AND rt.reservation.reservationTime = :rTime " +
+                          "  AND rt.reservation.status != 'CANCELLED' " +
+                          "  AND rt.reservation.status != 'REJECTED' " +
+                          ") ORDER BY d.room.roomName, d.tableCode";
+            TypedQuery<DiningTable> query = em.createQuery(jpql, DiningTable.class);
+            query.setParameter("rDate", reservationDate);
+            query.setParameter("rTime", reservationTime);
+            return new ArrayList<>(query.getResultList());
+        } finally {
+            em.close();
+        }
+    }
 }

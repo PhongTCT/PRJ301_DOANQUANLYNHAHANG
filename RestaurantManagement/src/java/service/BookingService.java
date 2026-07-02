@@ -32,7 +32,12 @@ public class BookingService {
     private final MenuSetDAO menuSetDAO = new MenuSetDAO();
     private final AddonServiceDAO addonServiceDAO = new AddonServiceDAO();
 
-    public List<DiningTable> getAvailableTables() {
+    public List<DiningTable> getAvailableTables(BookingDraft draft) {
+        if (draft != null && draft.getReservationDate() != null && draft.getReservationTime() != null) {
+            java.sql.Time time = parseTime(draft.getReservationTime());
+            return diningTableDAO.findAvailableTables(draft.getReservationDate(), time);
+        }
+        // Fallback if no draft info
         return diningTableDAO.ListAll();
     }
 
