@@ -6,8 +6,8 @@
 <jsp:include page="header.jsp" />
 
 <section class="hero">
-    <video class="hero-video" autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1661163081367-6402f4f864e0?auto=format&fit=crop&w=1500&q=84">
-        <source src="https://cdn.pixabay.com/video/2022/11/30/141046-776768279_large.mp4" type="video/mp4">
+    <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="https://images.unsplash.com/photo-1661163081367-6402f4f864e0?auto=format&fit=crop&w=1500&q=84">
+        <source src="assets/video/hero-restaurant.mp4" type="video/mp4">
     </video>
     <div class="hero-overlay"></div>
     <div class="container hero-content">
