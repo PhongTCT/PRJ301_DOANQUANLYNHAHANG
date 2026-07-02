@@ -137,7 +137,7 @@
                                             </div>
                                             <div class="text-end ms-3">
                                                 <span class="fw-bold text-success d-block mb-2"><fmt:formatNumber value="${addon.price}" pattern="#,##0"/>d</span>
-                                                <button type="button" class="btn btn-sm btn-outline-primary" onclick="addToCart('addon', ${addon.id}, this.getAttribute('data-name'), ${addon.price})" data-name="${fn:escapeXml(addon.serviceName)}">Thêm</button>
+                                                <button type="button" class="btn btn-sm btn-outline-primary" onclick="addToCart('addon', ${addon.id}, this.getAttribute('data-name'), ${addon.price})" data-name="${fn:escapeXml(addon.serviceName)}"><fmt:message key="menupage.btn.add"/></button>
                                             </div>
                                         </div>
                                     </c:forEach>

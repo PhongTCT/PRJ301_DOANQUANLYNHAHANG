@@ -49,7 +49,10 @@
                 </div>
                 <c:choose>
                     <c:when test="${not empty sessionScope.currentUser}">
-                        <span class="small text-secondary"><i class="fa-regular fa-user me-1"></i>${sessionScope.currentUser.fullName}</span>
+                        <span class="small text-secondary me-2"><i class="fa-regular fa-user me-1"></i>${sessionScope.currentUser.fullName}</span>
+                        <c:if test="${sessionScope.currentUser.role == 'ADMIN' or sessionScope.currentUser.role == 'STAFF'}">
+                            <a href="${pageContext.request.contextPath}/admin/surcharges" class="btn btn-outline-primary btn-sm px-3 me-2"><i class="fa-solid fa-gauge me-1"></i> Dashboard</a>
+                        </c:if>
                         <a href="MainController?action=logout" class="btn btn-outline-secondary btn-sm px-3">Logout</a>
                     </c:when>
                     <c:otherwise>
