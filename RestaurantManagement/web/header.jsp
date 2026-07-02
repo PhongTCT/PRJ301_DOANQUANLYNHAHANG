@@ -55,7 +55,16 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
                                 <c:if test="${sessionScope.currentUser.role == 'ADMIN' or sessionScope.currentUser.role == 'STAFF'}">
-                                    <li><a class="dropdown-item py-2" href="${pageContext.request.contextPath}/admin/surcharges"><i class="fa-solid fa-gauge me-2 text-primary"></i>Dashboard</a></li>
+                                    <li>
+                                        <c:choose>
+                                            <c:when test="${sessionScope.currentUser.role == 'ADMIN'}">
+                                                <a class="dropdown-item py-2" href="${pageContext.request.contextPath}/admin/surcharges"><i class="fa-solid fa-gauge me-2 text-primary"></i>Dashboard</a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a class="dropdown-item py-2" href="${pageContext.request.contextPath}/admin/reservations"><i class="fa-solid fa-gauge me-2 text-primary"></i>Dashboard</a>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </li>
                                 </c:if>
                                 <li><a class="dropdown-item py-2" href="${pageContext.request.contextPath}/customer/reservations"><i class="fa-solid fa-clock-rotate-left me-2 text-primary"></i>My Reservations</a></li>
                                 <li><hr class="dropdown-divider"></li>
