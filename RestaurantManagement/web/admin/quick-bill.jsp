@@ -129,9 +129,9 @@
                                     <div class="menu-item-name">${item.itemName}</div>
                                     <div class="d-flex justify-content-between align-items-end mt-auto">
                                         <div class="menu-item-price"><fmt:formatNumber value="${item.basePrice}" pattern="#,##0"/> ₫</div>
-                                        <div class="btn btn-sm btn-primary rounded-circle shadow-sm" style="width: 28px; height: 28px; padding: 0; display: flex; align-items: center; justify-content: center; background-color: #4F46E5; border: none;" onclick="addToCart('${item.id}', `${fn:escapeXml(item.itemName)}`, ${item.basePrice}, 'item')">
-                                            <i class="fa-solid fa-plus fs-6"></i>
-                                        </div>
+                                        <button type="button" class="btn btn-sm btn-outline-primary rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('${item.id}', `${fn:escapeXml(item.itemName)}`, ${item.basePrice}, 'item')">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -154,9 +154,9 @@
                                     </div>
                                     <div class="d-flex justify-content-between align-items-end mt-auto">
                                         <div class="menu-item-price"><fmt:formatNumber value="${set.discountedPrice}" pattern="#,##0"/> ₫</div>
-                                        <div class="btn btn-sm btn-warning rounded-circle shadow-sm" style="width: 28px; height: 28px; padding: 0; display: flex; align-items: center; justify-content: center; border: none;" onclick="addToCart('S_${set.id}', `${fn:escapeXml(set.setName)}`, ${set.discountedPrice}, 'set')">
-                                            <i class="fa-solid fa-plus fs-6"></i>
-                                        </div>
+                                        <button type="button" class="btn btn-sm btn-outline-primary rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('S_${set.id}', `${fn:escapeXml(set.setName)}`, ${set.discountedPrice}, 'set')">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
