@@ -14,6 +14,7 @@ public class BookingDraft implements Serializable {
     private Boolean hasChildren;
     private Integer eventTypeId;
     private Boolean hasSurcharge;
+    private java.math.BigDecimal surchargePercent;
 
     // Step 2: Tables
     private List<Integer> selectedTableIds = new ArrayList<>();
@@ -37,6 +38,8 @@ public class BookingDraft implements Serializable {
     public void setEventTypeId(Integer eventTypeId) { this.eventTypeId = eventTypeId; }
     public Boolean getHasSurcharge() { return hasSurcharge; }
     public void setHasSurcharge(Boolean hasSurcharge) { this.hasSurcharge = hasSurcharge; }
+    public java.math.BigDecimal getSurchargePercent() { return surchargePercent; }
+    public void setSurchargePercent(java.math.BigDecimal surchargePercent) { this.surchargePercent = surchargePercent; }
     public List<Integer> getSelectedTableIds() { return selectedTableIds; }
     public void setSelectedTableIds(List<Integer> selectedTableIds) { this.selectedTableIds = selectedTableIds; }
     public List<CartItemDTO> getMenuItems() { return menuItems; }

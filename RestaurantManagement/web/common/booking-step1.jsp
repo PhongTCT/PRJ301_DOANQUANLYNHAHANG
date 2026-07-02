@@ -73,9 +73,20 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-floating">
-                                        <input type="time" class="form-control" id="reservationTime" name="reservationTime" value="${sessionScope.bookingDraft.reservationTime}" required>
+                                        <select class="form-select" id="reservationTime" name="reservationTime" required>
+                                            <option value="" disabled ${empty sessionScope.bookingDraft.reservationTime ? 'selected' : ''}>-- Chọn giờ --</option>
+                                            <option value="17:30" ${sessionScope.bookingDraft.reservationTime == '17:30' || sessionScope.bookingDraft.reservationTime == '17:30:00' ? 'selected' : ''}>17:30</option>
+                                            <option value="18:00" ${sessionScope.bookingDraft.reservationTime == '18:00' || sessionScope.bookingDraft.reservationTime == '18:00:00' ? 'selected' : ''}>18:00</option>
+                                            <option value="18:30" ${sessionScope.bookingDraft.reservationTime == '18:30' || sessionScope.bookingDraft.reservationTime == '18:30:00' ? 'selected' : ''}>18:30</option>
+                                            <option value="19:00" ${sessionScope.bookingDraft.reservationTime == '19:00' || sessionScope.bookingDraft.reservationTime == '19:00:00' ? 'selected' : ''}>19:00</option>
+                                            <option value="19:30" ${sessionScope.bookingDraft.reservationTime == '19:30' || sessionScope.bookingDraft.reservationTime == '19:30:00' ? 'selected' : ''}>19:30</option>
+                                            <option value="20:00" ${sessionScope.bookingDraft.reservationTime == '20:00' || sessionScope.bookingDraft.reservationTime == '20:00:00' ? 'selected' : ''}>20:00</option>
+                                            <option value="20:30" ${sessionScope.bookingDraft.reservationTime == '20:30' || sessionScope.bookingDraft.reservationTime == '20:30:00' ? 'selected' : ''}>20:30</option>
+                                            <option value="21:00" ${sessionScope.bookingDraft.reservationTime == '21:00' || sessionScope.bookingDraft.reservationTime == '21:00:00' ? 'selected' : ''}>21:00</option>
+                                        </select>
                                         <label for="reservationTime"><fmt:message key="booking.time"/></label>
                                     </div>
+                                    <div class="form-text text-muted small mt-1"><i class="fa-regular fa-clock me-1"></i>Giờ nhận khách: 17:30 - 21:00</div>
                                 </div>
                             </div>
 

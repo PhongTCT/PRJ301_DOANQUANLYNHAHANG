@@ -83,14 +83,19 @@ public class BookingController extends HttpServlet {
             if (step == 1) {
                 request.setAttribute("eventTypes", bookingService.getActiveEventTypes());
             } else if (step == 2) {
-                request.setAttribute("tables", bookingService.getAvailableTables()); // Ideally filter by date/time
+                if (draft == null || draft.getReservationDate() == null) {
+                    response.sendRedirect("MainController?action=booking&step=1");
+                    return;
+                }
+                request.setAttribute("tables", bookingService.getAvailableTables(draft));
             } else if (step == 3) {
                 request.setAttribute("menuItems", bookingService.getActiveMenuItems());
                 request.setAttribute("menuSets", bookingService.getActiveMenuSets());
                 request.setAttribute("addons", bookingService.getActiveAddons());
             }
         } catch (Exception e) {
-            request.setAttribute("pageError", "Booking data is temporarily unavailable.");
+            e.printStackTrace();
+            request.setAttribute("pageError", "Booking data is temporarily unavailable. Error: " + e.getMessage());
         }
 
         String targetJsp = "common/booking-step" + step + ".jsp";

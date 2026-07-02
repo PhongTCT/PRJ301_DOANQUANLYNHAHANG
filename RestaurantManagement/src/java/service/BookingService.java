@@ -32,7 +32,15 @@ public class BookingService {
     private final MenuSetDAO menuSetDAO = new MenuSetDAO();
     private final AddonServiceDAO addonServiceDAO = new AddonServiceDAO();
 
-    public List<DiningTable> getAvailableTables() {
+    public List<DiningTable> getAvailableTables(BookingDraft draft) {
+        if (draft != null && draft.getReservationDate() != null && draft.getReservationTime() != null) {
+            java.sql.Time time = parseTime(draft.getReservationTime());
+            int totalGuests = (draft.getAdultsCount() != null ? draft.getAdultsCount() : 0) 
+                            + (draft.getChildrenCount() != null ? draft.getChildrenCount() : 0);
+            if (totalGuests == 0) totalGuests = 1; // Safeguard
+            return diningTableDAO.findAvailableTables(draft.getReservationDate(), time, totalGuests);
+        }
+        // Fallback if no draft info
         return diningTableDAO.ListAll();
     }
 
@@ -57,6 +65,19 @@ public class BookingService {
         String date = request.getParameter("reservationDate");
         if (date != null && !date.trim().isEmpty()) {
             draft.setReservationDate(new SimpleDateFormat("yyyy-MM-dd").parse(date.trim()));
+            
+            // Check holiday surcharge
+            dao.HolidaySurchargeDAO hsDAO = new dao.HolidaySurchargeDAO();
+            entity.HolidaySurcharge holiday = hsDAO.findByDate(draft.getReservationDate());
+            if (holiday != null) {
+                draft.setHasSurcharge(true);
+                draft.setSurchargePercent(holiday.getSurchargePercent());
+                request.getSession().setAttribute("surchargeWarning", "Ngày đặt bàn rơi vào dịp lễ (" + holiday.getHolidayName() + "). Hóa đơn sẽ có phụ thu " + holiday.getSurchargePercent() + "%.");
+            } else {
+                draft.setHasSurcharge(false);
+                draft.setSurchargePercent(java.math.BigDecimal.ZERO);
+                request.getSession().removeAttribute("surchargeWarning");
+            }
         }
         draft.setReservationTime(request.getParameter("reservationTime"));
         draft.setAdultsCount(parseInt(request.getParameter("adultsCount"), 1));
@@ -216,6 +237,24 @@ public class BookingService {
         }
         if (draft.getReservationTime() == null || draft.getReservationTime().trim().isEmpty()) {
             throw new IllegalArgumentException("Please choose a reservation time.");
+        }
+        
+        String timeStr = draft.getReservationTime().trim();
+        if (timeStr.length() >= 5) {
+            try {
+                int hour = Integer.parseInt(timeStr.substring(0, 2));
+                int minute = Integer.parseInt(timeStr.substring(3, 5));
+                
+                if (minute != 0 && minute != 30) {
+                    throw new IllegalArgumentException("Time must be in 30-minute intervals (e.g., 17:30, 18:00).");
+                }
+                
+                boolean isDinner = (hour >= 18 && hour <= 20) || (hour == 17 && minute == 30) || (hour == 21 && minute == 0);
+                
+                if (!isDinner) {
+                    throw new IllegalArgumentException("Please select a time during our service hours (17:30 - 21:00).");
+                }
+            } catch (NumberFormatException ignored) {}
         }
         if (draft.getEventTypeId() == null) {
             throw new IllegalArgumentException("Please choose an event type.");

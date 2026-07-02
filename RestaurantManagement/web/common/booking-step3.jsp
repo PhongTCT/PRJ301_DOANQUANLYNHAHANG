@@ -49,10 +49,10 @@
                     <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
                         <ul class="nav nav-tabs border-bottom-0" id="menuTabs" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active fw-bold text-dark border-0 border-bottom border-primary border-3 bg-transparent pb-3" id="food-tab" data-bs-toggle="tab" data-bs-target="#food-pane" type="button" role="tab"><fmt:message key="booking.step3.tab.food"/></button>
+                                <button class="nav-link active fw-bold text-dark border-0 border-bottom border-primary border-3 bg-transparent pb-3" id="combo-tab" data-bs-toggle="tab" data-bs-target="#combo-pane" type="button" role="tab"><fmt:message key="booking.step3.tab.combo"/></button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link text-muted border-0 bg-transparent pb-3" id="combo-tab" data-bs-toggle="tab" data-bs-target="#combo-pane" type="button" role="tab"><fmt:message key="booking.step3.tab.combo"/></button>
+                                <button class="nav-link text-muted border-0 bg-transparent pb-3" id="food-tab" data-bs-toggle="tab" data-bs-target="#food-pane" type="button" role="tab"><fmt:message key="booking.step3.tab.food"/></button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link text-muted border-0 bg-transparent pb-3" id="service-tab" data-bs-toggle="tab" data-bs-target="#service-pane" type="button" role="tab"><fmt:message key="booking.step3.tab.service"/></button>
@@ -63,7 +63,7 @@
                     <div class="card-body p-4 bg-light bg-opacity-50">
                         <div class="tab-content" id="menuTabContent">
                             <!-- FOOD TAB -->
-                            <div class="tab-pane fade show active" id="food-pane" role="tabpanel" tabindex="0">
+                            <div class="tab-pane fade" id="food-pane" role="tabpanel" tabindex="0">
                                 <div class="row row-cols-1 row-cols-md-2 g-3">
                                     <c:forEach items="${menuItems}" var="item">
                                         <div class="col">
@@ -91,7 +91,7 @@
                             </div>
                             
                             <!-- COMBO TAB -->
-                            <div class="tab-pane fade" id="combo-pane" role="tabpanel" tabindex="0">
+                            <div class="tab-pane fade show active" id="combo-pane" role="tabpanel" tabindex="0">
                                 <div class="row row-cols-1 row-cols-md-2 g-3">
                                     <c:forEach items="${menuSets}" var="set">
                                         <div class="col">
@@ -126,13 +126,17 @@
                             <div class="tab-pane fade" id="service-pane" role="tabpanel" tabindex="0">
                                 <div class="list-group">
                                     <c:forEach items="${addons}" var="addon">
-                                        <div class="list-group-item d-flex justify-content-between align-items-center bg-white border-0 shadow-sm rounded-3 mb-2 p-3">
-                                            <div>
+                                        <div class="list-group-item d-flex align-items-center bg-white border-0 shadow-sm rounded-3 mb-2 p-3">
+                                            <div class="flex-shrink-0 me-3">
+                                                <c:set var="addonImgUrl" value="${addon.imageUrl != null ? addon.imageUrl : 'https://images.unsplash.com/photo-1544025162-8315ea07525b?w=300&h=300&fit=crop'}" />
+                                                <img src="${addonImgUrl}" class="rounded-3 object-fit-cover shadow-sm" alt="Addon" style="width: 80px; height: 80px;">
+                                            </div>
+                                            <div class="flex-grow-1">
                                                 <strong class="d-block mb-1">${addon.serviceName}</strong>
                                                 <span class="d-block small text-muted">${addon.description}</span>
                                             </div>
-                                            <div class="text-end">
-                                                <span class="fw-bold text-success d-block mb-2"><fmt:formatNumber value="${addon.price}" pattern="#,##0"/>đ</span>
+                                            <div class="text-end ms-3">
+                                                <span class="fw-bold text-success d-block mb-2"><fmt:formatNumber value="${addon.price}" pattern="#,##0"/>d</span>
                                                 <button type="button" class="btn btn-sm btn-outline-primary" onclick="addToCart('addon', ${addon.id}, this.getAttribute('data-name'), ${addon.price})" data-name="${fn:escapeXml(addon.serviceName)}">Thêm</button>
                                             </div>
                                         </div>
@@ -167,6 +171,14 @@
                                         <span class="fw-medium">Tùy thuộc quy định</span>
                                     </div>
                                 </li>
+                                <c:if test="${sessionScope.bookingDraft.hasSurcharge}">
+                                <li class="list-group-item p-3 bg-warning bg-opacity-10 border-warning border-opacity-25">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="fw-medium text-warning-emphasis"><i class="fa-solid fa-bolt me-1"></i>Phụ thu lễ (${sessionScope.bookingDraft.surchargePercent}%)</span>
+                                        <span class="fw-bold text-warning-emphasis" id="cartSurcharge">0đ</span>
+                                    </div>
+                                </li>
+                                </c:if>
                                 <li class="list-group-item p-3">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <span class="fw-bold fs-5"><fmt:message key="booking.step3.cart.total"/></span>
@@ -204,6 +216,8 @@
             });
         });
 
+        let surchargePercent = parseFloat("${not empty sessionScope.bookingDraft.surchargePercent ? sessionScope.bookingDraft.surchargePercent : 0}");
+        
         // Cart Logic
         let cart = {
             menu: {},
@@ -281,6 +295,13 @@
             if (!hasItems) {
                 list.appendChild(emptyMsg);
                 emptyMsg.style.display = 'block';
+            }
+
+            if (surchargePercent > 0) {
+                let surchargeAmt = (total * surchargePercent) / 100;
+                let cartSurchargeEl = document.getElementById('cartSurcharge');
+                if (cartSurchargeEl) cartSurchargeEl.innerText = formatCurrency(surchargeAmt);
+                total += surchargeAmt;
             }
 
             document.getElementById('cartTotal').innerText = formatCurrency(total);
