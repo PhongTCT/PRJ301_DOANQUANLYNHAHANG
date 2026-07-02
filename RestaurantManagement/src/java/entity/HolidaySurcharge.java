@@ -24,4 +24,15 @@ public class HolidaySurcharge implements Serializable {
 
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
+
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+    public String getHolidayName() { return holidayName; }
+    public void setHolidayName(String holidayName) { this.holidayName = holidayName; }
+    public Date getSurchargeDate() { return surchargeDate; }
+    public void setSurchargeDate(Date surchargeDate) { this.surchargeDate = surchargeDate; }
+    public BigDecimal getSurchargePercent() { return surchargePercent; }
+    public void setSurchargePercent(BigDecimal surchargePercent) { this.surchargePercent = surchargePercent; }
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
 }

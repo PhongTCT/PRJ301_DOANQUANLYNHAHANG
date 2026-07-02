@@ -47,6 +47,13 @@
             </div>
         </c:if>
         
+        <c:if test="${not empty sessionScope.surchargeWarning}">
+            <div class="alert alert-warning alert-dismissible fade show shadow-sm" role="alert">
+                <i class="fa-solid fa-triangle-exclamation me-2"></i><strong>Lưu ý Phụ thu:</strong> ${sessionScope.surchargeWarning}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </c:if>
+        
         <div class="d-flex justify-content-between align-items-end mb-4">
             <div>
                 <h3 class="fw-bold mb-1"><i class="fa-solid fa-chair text-primary me-2"></i><fmt:message key="booking.step2.title"/></h3>

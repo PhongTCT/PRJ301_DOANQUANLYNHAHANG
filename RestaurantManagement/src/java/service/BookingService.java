@@ -62,6 +62,17 @@ public class BookingService {
         String date = request.getParameter("reservationDate");
         if (date != null && !date.trim().isEmpty()) {
             draft.setReservationDate(new SimpleDateFormat("yyyy-MM-dd").parse(date.trim()));
+            
+            // Check holiday surcharge
+            dao.HolidaySurchargeDAO hsDAO = new dao.HolidaySurchargeDAO();
+            entity.HolidaySurcharge holiday = hsDAO.findByDate(draft.getReservationDate());
+            if (holiday != null) {
+                draft.setHasSurcharge(true);
+                request.getSession().setAttribute("surchargeWarning", "Ngày đặt bàn rơi vào dịp lễ (" + holiday.getHolidayName() + "). Hóa đơn sẽ có phụ thu " + holiday.getSurchargePercent() + "%.");
+            } else {
+                draft.setHasSurcharge(false);
+                request.getSession().removeAttribute("surchargeWarning");
+            }
         }
         draft.setReservationTime(request.getParameter("reservationTime"));
         draft.setAdultsCount(parseInt(request.getParameter("adultsCount"), 1));
