@@ -63,13 +63,16 @@ public class BookingController extends HttpServlet {
                     response.sendRedirect("MainController?action=booking&step=1");
                     return;
                 }
-                User user = (User) session.getAttribute("user");
+                User user = (User) session.getAttribute("currentUser");
                 if (user == null) {
                     response.sendRedirect("MainController?action=login");
                     return;
                 }
-                
                 Reservation reservation = bookingService.saveFinalBooking(draft, user);
+                
+                // Log audit
+                new dao.AuditLogDAO().logAction(user, "CUSTOMER_CREATED_RESERVATION", "Reservation", reservation.getId(), null, "PENDING", request.getRemoteAddr());
+                
                 session.removeAttribute("bookingDraft");
                 session.setAttribute("successMessage", "Booking successful! Your Reservation ID is: #" + reservation.getId());
                 response.sendRedirect("MainController?action=booking&step=1");

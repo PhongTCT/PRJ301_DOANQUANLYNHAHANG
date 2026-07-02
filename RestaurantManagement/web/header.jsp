@@ -49,11 +49,19 @@
                 </div>
                 <c:choose>
                     <c:when test="${not empty sessionScope.currentUser}">
-                        <span class="small text-secondary me-2"><i class="fa-regular fa-user me-1"></i>${sessionScope.currentUser.fullName}</span>
-                        <c:if test="${sessionScope.currentUser.role == 'ADMIN' or sessionScope.currentUser.role == 'STAFF'}">
-                            <a href="${pageContext.request.contextPath}/admin/surcharges" class="btn btn-outline-primary btn-sm px-3 me-2"><i class="fa-solid fa-gauge me-1"></i> Dashboard</a>
-                        </c:if>
-                        <a href="MainController?action=logout" class="btn btn-outline-secondary btn-sm px-3">Logout</a>
+                        <div class="dropdown d-inline-block me-2">
+                            <button class="btn btn-light border btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-regular fa-user me-1"></i>${sessionScope.currentUser.fullName}
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+                                <c:if test="${sessionScope.currentUser.role == 'ADMIN' or sessionScope.currentUser.role == 'STAFF'}">
+                                    <li><a class="dropdown-item py-2" href="${pageContext.request.contextPath}/admin/surcharges"><i class="fa-solid fa-gauge me-2 text-primary"></i>Dashboard</a></li>
+                                </c:if>
+                                <li><a class="dropdown-item py-2" href="${pageContext.request.contextPath}/customer/reservations"><i class="fa-solid fa-clock-rotate-left me-2 text-primary"></i>My Reservations</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item py-2 text-danger" href="MainController?action=logout"><i class="fa-solid fa-arrow-right-from-bracket me-2"></i>Logout</a></li>
+                            </ul>
+                        </div>
                     </c:when>
                     <c:otherwise>
                         <a href="MainController?action=login" class="btn btn-dark btn-sm px-4">Login</a>

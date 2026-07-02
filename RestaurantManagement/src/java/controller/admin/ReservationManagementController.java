@@ -86,6 +86,7 @@ public class ReservationManagementController extends HttpServlet {
                 if ("updateStatus".equals(action)) {
                     String newStatusStr = request.getParameter("status");
                     ReservationStatus newStatus = ReservationStatus.valueOf(newStatusStr);
+                    String oldStatusStr = res.getStatus().name();
                     
                     res.setStatus(newStatus);
                     if (newStatus == ReservationStatus.CHECKED_IN && res.getCheckinAt() == null) {
@@ -93,6 +94,9 @@ public class ReservationManagementController extends HttpServlet {
                     }
                     
                     reservationDAO.update(res);
+                    
+                    // Log audit
+                    new dao.AuditLogDAO().logAction(currentUser, "UPDATE_STATUS", "Reservation", res.getId(), oldStatusStr, newStatusStr, request.getRemoteAddr());
 
                     // Auto-update table status
                     if (res.getReservationTables() != null) {

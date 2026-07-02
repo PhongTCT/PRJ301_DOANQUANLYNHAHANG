@@ -27,9 +27,16 @@ public class ReservationDAO extends AbstractDAO<Reservation, Long> {
     public java.util.List<Reservation> findByUserId(Long userId) {
         javax.persistence.EntityManager em = util.JPAUtil.getEntityManager();
         try {
-            return em.createQuery("SELECT r FROM Reservation r WHERE r.user.id = :userId ORDER BY r.reservationDate DESC, r.reservationTime DESC", Reservation.class)
+            java.util.List<Reservation> results = em.createQuery("SELECT r FROM Reservation r WHERE r.user.id = :userId ORDER BY r.reservationDate DESC, r.reservationTime DESC", Reservation.class)
                      .setParameter("userId", userId)
                      .getResultList();
+            for (Reservation r : results) {
+                em.refresh(r);
+                r.getReservationTables().size();
+                r.getReservationMenuItems().size();
+                r.getReservationAddons().size();
+            }
+            return results;
         } finally {
             em.close();
         }
@@ -74,6 +81,7 @@ public class ReservationDAO extends AbstractDAO<Reservation, Long> {
             }
             java.util.List<Reservation> results = query.getResultList();
             for (Reservation r : results) {
+                em.refresh(r);
                 r.getReservationTables().size();
                 r.getReservationMenuItems().size();
                 r.getReservationAddons().size();
@@ -89,6 +97,7 @@ public class ReservationDAO extends AbstractDAO<Reservation, Long> {
         try {
             Reservation r = em.find(Reservation.class, id);
             if (r != null) {
+                em.refresh(r);
                 // Initialize lazy collections
                 r.getReservationTables().size();
                 r.getReservationMenuItems().size();
