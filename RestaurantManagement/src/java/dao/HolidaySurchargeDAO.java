@@ -9,7 +9,7 @@ public class HolidaySurchargeDAO extends AbstractDAO<HolidaySurcharge, Integer> 
         javax.persistence.EntityManager em = util.JPAUtil.getEntityManager();
         try {
             java.util.List<HolidaySurcharge> list = em.createQuery("SELECT h FROM HolidaySurcharge h WHERE h.surchargeDate = :date AND h.isActive = true", HolidaySurcharge.class)
-                     .setParameter("date", date)
+                     .setParameter("date", date, javax.persistence.TemporalType.DATE)
                      .setMaxResults(1)
                      .getResultList();
             return list.isEmpty() ? null : list.get(0);

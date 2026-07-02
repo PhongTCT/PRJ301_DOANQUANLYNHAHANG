@@ -94,7 +94,8 @@ public class BookingController extends HttpServlet {
                 request.setAttribute("addons", bookingService.getActiveAddons());
             }
         } catch (Exception e) {
-            request.setAttribute("pageError", "Booking data is temporarily unavailable.");
+            e.printStackTrace();
+            request.setAttribute("pageError", "Booking data is temporarily unavailable. Error: " + e.getMessage());
         }
 
         String targetJsp = "common/booking-step" + step + ".jsp";
