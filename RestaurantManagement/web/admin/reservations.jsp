@@ -26,6 +26,7 @@
             <div class="col-md-2 sidebar p-4">
                 <h4 class="mb-4 fw-bold text-white"><i class="fa-solid fa-utensils me-2"></i>Le Royal</h4>
                 <a href="walkin"><i class="fa-solid fa-cash-register me-2"></i> Walk-in POS</a>
+                <a href="quick-bill"><i class="fa-solid fa-bolt me-2"></i> Quick Bill</a>
                 <a href="reservations" class="active"><i class="fa-solid fa-clipboard-list me-2"></i> Reservations</a>
                 <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
                     <a href="surcharges"><i class="fa-solid fa-calendar-check me-2"></i> Holidays</a>

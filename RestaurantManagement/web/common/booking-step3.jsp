@@ -55,6 +55,9 @@
                                 <button class="nav-link text-muted border-0 bg-transparent pb-3" id="food-tab" data-bs-toggle="tab" data-bs-target="#food-pane" type="button" role="tab"><fmt:message key="booking.step3.tab.food"/></button>
                             </li>
                             <li class="nav-item" role="presentation">
+                                <button class="nav-link text-muted border-0 bg-transparent pb-3" id="drink-tab" data-bs-toggle="tab" data-bs-target="#drink-pane" type="button" role="tab"><fmt:message key="booking.step3.tab.drink"/></button>
+                            </li>
+                            <li class="nav-item" role="presentation">
                                 <button class="nav-link text-muted border-0 bg-transparent pb-3" id="service-tab" data-bs-toggle="tab" data-bs-target="#service-pane" type="button" role="tab"><fmt:message key="booking.step3.tab.service"/></button>
                             </li>
                         </ul>
@@ -66,26 +69,28 @@
                             <div class="tab-pane fade" id="food-pane" role="tabpanel" tabindex="0">
                                 <div class="row row-cols-1 row-cols-md-2 g-3">
                                     <c:forEach items="${menuItems}" var="item">
-                                        <div class="col">
-                                            <div class="card h-100 border-0 shadow-sm rounded-3">
-                                                <div class="row g-0">
-                                                    <div class="col-4">
-                                                        <c:set var="imgUrl" value="${item.imageUrl != null ? item.imageUrl : 'https://images.unsplash.com/photo-1544025162-8315ea07525b?w=300&h=300&fit=crop'}" />
-                                                        <img src="${imgUrl}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Food">
-                                                    </div>
-                                                    <div class="col-8">
-                                                        <div class="card-body py-2 px-3">
-                                                            <h6 class="card-title fw-bold mb-1 text-truncate">${sessionScope.lang == 'en' ? item.itemNameEn : item.itemName}</h6>
-                                                            <p class="card-text small text-muted mb-2 text-truncate" title="${sessionScope.lang == 'en' ? item.descriptionEn : item.description}">${sessionScope.lang == 'en' ? item.descriptionEn : item.description}</p>
-                                                            <div class="d-flex justify-content-between align-items-center mt-auto">
-                                                                <span class="text-success fw-bold"><fmt:formatNumber value="${item.basePrice}" pattern="#,##0"/>đ</span>
-                                                                <button type="button" class="btn btn-sm btn-outline-primary rounded-circle" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('menu', ${item.id}, this.getAttribute('data-name'), ${item.basePrice})" data-name="${fn:escapeXml(sessionScope.lang == 'en' ? item.itemNameEn : item.itemName)}"><i class="fa-solid fa-plus"></i></button>
+                                        <c:if test="${item.category.id != 4}">
+                                            <div class="col">
+                                                <div class="card h-100 border-0 shadow-sm rounded-3">
+                                                    <div class="row g-0">
+                                                        <div class="col-4">
+                                                            <c:set var="imgUrl" value="${item.imageUrl != null ? item.imageUrl : 'https://images.unsplash.com/photo-1544025162-8315ea07525b?w=300&h=300&fit=crop'}" />
+                                                            <img src="${imgUrl}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Food">
+                                                        </div>
+                                                        <div class="col-8">
+                                                            <div class="card-body py-2 px-3">
+                                                                <h6 class="card-title fw-bold mb-1 text-truncate">${sessionScope.lang == 'en' ? item.itemNameEn : item.itemName}</h6>
+                                                                <p class="card-text small text-muted mb-2 text-truncate" title="${sessionScope.lang == 'en' ? item.descriptionEn : item.description}">${sessionScope.lang == 'en' ? item.descriptionEn : item.description}</p>
+                                                                <div class="d-flex justify-content-between align-items-center mt-auto">
+                                                                    <span class="text-success fw-bold"><fmt:formatNumber value="${item.basePrice}" pattern="#,##0"/>đ</span>
+                                                                    <button type="button" class="btn btn-sm btn-outline-primary rounded-circle" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('menu', ${item.id}, this.getAttribute('data-name'), ${item.basePrice})" data-name="${fn:escapeXml(sessionScope.lang == 'en' ? item.itemNameEn : item.itemName)}"><i class="fa-solid fa-plus"></i></button>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </c:if>
                                     </c:forEach>
                                 </div>
                             </div>
@@ -121,6 +126,36 @@
                                 </div>
                             </div>
                             
+                            <!-- DRINK TAB -->
+                            <div class="tab-pane fade" id="drink-pane" role="tabpanel" tabindex="0">
+                                <div class="row row-cols-1 row-cols-md-2 g-3">
+                                    <c:forEach items="${menuItems}" var="item">
+                                        <c:if test="${item.category.id == 4}">
+                                            <div class="col">
+                                                <div class="card h-100 border-0 shadow-sm rounded-3">
+                                                    <div class="row g-0">
+                                                        <div class="col-4">
+                                                            <c:set var="imgUrl" value="${item.imageUrl != null ? item.imageUrl : 'https://images.unsplash.com/photo-1544025162-8315ea07525b?w=300&h=300&fit=crop'}" />
+                                                            <img src="${imgUrl}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Drink">
+                                                        </div>
+                                                        <div class="col-8">
+                                                            <div class="card-body py-2 px-3">
+                                                                <h6 class="card-title fw-bold mb-1 text-truncate">${sessionScope.lang == 'en' ? item.itemNameEn : item.itemName}</h6>
+                                                                <p class="card-text small text-muted mb-2 text-truncate" title="${sessionScope.lang == 'en' ? item.descriptionEn : item.description}">${sessionScope.lang == 'en' ? item.descriptionEn : item.description}</p>
+                                                                <div class="d-flex justify-content-between align-items-center mt-auto">
+                                                                    <span class="text-success fw-bold"><fmt:formatNumber value="${item.basePrice}" pattern="#,##0"/>đ</span>
+                                                                    <button type="button" class="btn btn-sm btn-outline-primary rounded-circle" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('menu', ${item.id}, this.getAttribute('data-name'), ${item.basePrice})" data-name="${fn:escapeXml(sessionScope.lang == 'en' ? item.itemNameEn : item.itemName)}"><i class="fa-solid fa-plus"></i></button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </c:if>
+                                    </c:forEach>
+                                </div>
+                            </div>
+
                             <!-- SERVICES TAB -->
                             <div class="tab-pane fade" id="service-pane" role="tabpanel" tabindex="0">
                                 <div class="list-group">

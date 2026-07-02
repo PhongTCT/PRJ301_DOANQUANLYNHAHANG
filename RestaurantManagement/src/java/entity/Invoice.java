@@ -75,4 +75,39 @@ public class Invoice implements Serializable {
 
     @PreUpdate
     protected void onUpdate() { updatedAt = new Date(); }
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public Reservation getReservation() { return reservation; }
+    public void setReservation(Reservation reservation) { this.reservation = reservation; }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
+    public String getGuestName() { return guestName; }
+    public void setGuestName(String guestName) { this.guestName = guestName; }
+    public BigDecimal getSubtotal() { return subtotal; }
+    public void setSubtotal(BigDecimal subtotal) { this.subtotal = subtotal; }
+    public BigDecimal getTipAmount() { return tipAmount; }
+    public void setTipAmount(BigDecimal tipAmount) { this.tipAmount = tipAmount; }
+    public BigDecimal getSurchargeAmount() { return surchargeAmount; }
+    public void setSurchargeAmount(BigDecimal surchargeAmount) { this.surchargeAmount = surchargeAmount; }
+    public BigDecimal getVoucherDiscount() { return voucherDiscount; }
+    public void setVoucherDiscount(BigDecimal voucherDiscount) { this.voucherDiscount = voucherDiscount; }
+    public BigDecimal getPointsDiscount() { return pointsDiscount; }
+    public void setPointsDiscount(BigDecimal pointsDiscount) { this.pointsDiscount = pointsDiscount; }
+    public BigDecimal getTotalAmount() { return totalAmount; }
+    public void setTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount; }
+    public PaymentMethod getPaymentMethod() { return paymentMethod; }
+    public void setPaymentMethod(PaymentMethod paymentMethod) { this.paymentMethod = paymentMethod; }
+    public PaymentStatus getPaymentStatus() { return paymentStatus; }
+    public void setPaymentStatus(PaymentStatus paymentStatus) { this.paymentStatus = paymentStatus; }
+    public String getTransactionRef() { return transactionRef; }
+    public void setTransactionRef(String transactionRef) { this.transactionRef = transactionRef; }
+    public Date getPaidAt() { return paidAt; }
+    public void setPaidAt(Date paidAt) { this.paidAt = paidAt; }
+    public User getIssuedByStaff() { return issuedByStaff; }
+    public void setIssuedByStaff(User issuedByStaff) { this.issuedByStaff = issuedByStaff; }
+    public Date getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
+    public Date getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(Date updatedAt) { this.updatedAt = updatedAt; }
 }
