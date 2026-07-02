@@ -25,6 +25,7 @@
             <!-- Sidebar -->
             <div class="col-md-2 sidebar p-4">
                 <h4 class="mb-4 fw-bold text-white"><i class="fa-solid fa-utensils me-2"></i>Le Royal</h4>
+                <a href="walkin"><i class="fa-solid fa-cash-register me-2"></i> Walk-in POS</a>
                 <a href="reservations" class="active"><i class="fa-solid fa-clipboard-list me-2"></i> Reservations</a>
                 <a href="surcharges"><i class="fa-solid fa-calendar-check me-2"></i> Holidays</a>
                 <a href="#"><i class="fa-solid fa-chair me-2"></i> Tables</a>
@@ -194,8 +195,8 @@
                                                                     <ul class="list-group list-group-flush mb-4">
                                                                         <c:forEach items="${res.reservationTables}" var="rt">
                                                                             <li class="list-group-item px-0 d-flex justify-content-between">
-                                                                                <span>Table ${rt.diningTable.tableNumber} <small class="text-muted">(${rt.diningTable.seats} seats)</small></span>
-                                                                                <span class="text-success fw-bold"><fmt:formatNumber value="${rt.diningTable.price}" pattern="#,##0" />đ</span>
+                                                                                <span>Table ${rt.diningTable.tableCode} <small class="text-muted">(${rt.diningTable.capacity} seats)</small></span>
+                                                                                <span class="text-success fw-bold"><fmt:formatNumber value="${rt.diningTable.basePrice}" pattern="#,##0" />đ</span>
                                                                             </li>
                                                                         </c:forEach>
                                                                         <c:if test="${empty res.reservationTables}">

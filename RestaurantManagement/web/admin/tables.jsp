@@ -29,6 +29,7 @@
                 </div>
             </div>
             <hr class="text-secondary">
+            <a href="${pageContext.request.contextPath}/admin/walkin"><i class="fa-solid fa-cash-register me-2"></i> Walk-in POS</a>
             <a href="${pageContext.request.contextPath}/admin/surcharges"><i class="fa-solid fa-calendar-day me-2"></i> ${sessionScope.lang == 'en' ? 'Holiday Surcharges' : 'Phụ thu Lễ'}</a>
             <a href="${pageContext.request.contextPath}/admin/tables" class="active"><i class="fa-solid fa-chair me-2"></i> ${sessionScope.lang == 'en' ? 'Table Management' : 'Quản lý Bàn'}</a>
             <a href="${pageContext.request.contextPath}/"><i class="fa-solid fa-house me-2"></i> ${sessionScope.lang == 'en' ? 'Back to Home' : 'Trở về Trang chủ'}</a>

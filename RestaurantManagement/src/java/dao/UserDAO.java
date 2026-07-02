@@ -65,6 +65,19 @@ public class UserDAO extends AbstractDAO<User, Long> {
         }
     }
 
+    public User searchByPhone(String phone) {
+        if (phone == null || phone.trim().isEmpty()) return null;
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.phone = :phone", User.class);
+            query.setParameter("phone", phone.trim());
+            List<User> list = query.getResultList();
+            return list.isEmpty() ? null : list.get(0);
+        } finally {
+            em.close();
+        }
+    }
+
     public User findOrCreateGoogleUser(String googleId, String email, String fullName, String avatarUrl) {
         return findOrCreateGoogleUser(googleId, email, fullName, avatarUrl, null, null);
     }
