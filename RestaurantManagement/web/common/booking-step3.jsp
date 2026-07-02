@@ -106,9 +106,8 @@
                                                             <h6 class="card-title fw-bold mb-1 text-truncate">${set.setName}</h6>
                                                             <p class="card-text small text-muted mb-2 text-truncate" title="${set.description}">${set.description}</p>
                                                             <div class="d-flex justify-content-between align-items-center mt-auto">
-                                                                <span class="text-success fw-bold"><fmt:formatNumber value="${set.discountedPrice}" pattern="#,##0"/>đ</span>
-                                                                <!-- Note: We treat combo as a pseudo-menu item or addon depending on backend support, assuming addon for now -->
-                                                                <button type="button" class="btn btn-sm btn-outline-primary rounded-circle" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('addon', ${set.id}, this.getAttribute('data-name'), ${set.discountedPrice})" data-name="Set: ${fn:escapeXml(set.setName)}"><i class="fa-solid fa-plus"></i></button>
+                                                                <span class="text-success fw-bold"><fmt:formatNumber value="${set.discountedPrice}" pattern="#,##0"/>d</span>
+                                                                <button type="button" class="btn btn-sm btn-outline-primary rounded-circle" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('combo', ${set.id}, this.getAttribute('data-name'), ${set.discountedPrice})" data-name="Set: ${fn:escapeXml(set.setName)}"><i class="fa-solid fa-plus"></i></button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -135,9 +134,9 @@
                                                 <strong class="d-block mb-1">${addon.serviceName}</strong>
                                                 <span class="d-block small text-muted">${addon.description}</span>
                                             </div>
-                                            <div class="text-end ms-3">
+                                            <div class="text-end ms-3 d-flex flex-column align-items-end justify-content-center">
                                                 <span class="fw-bold text-success d-block mb-2"><fmt:formatNumber value="${addon.price}" pattern="#,##0"/>d</span>
-                                                <button type="button" class="btn btn-sm btn-outline-primary" onclick="addToCart('addon', ${addon.id}, this.getAttribute('data-name'), ${addon.price})" data-name="${fn:escapeXml(addon.serviceName)}"><fmt:message key="menupage.btn.add"/></button>
+                                                <button type="button" class="btn btn-sm btn-outline-primary rounded-circle" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('addon', ${addon.id}, this.getAttribute('data-name'), ${addon.price})" data-name="${fn:escapeXml(addon.serviceName)}"><i class="fa-solid fa-plus"></i></button>
                                             </div>
                                         </div>
                                     </c:forEach>
@@ -221,10 +220,24 @@
         // Cart Logic
         let cart = {
             menu: {},
-            addon: {}
+            addon: {},
+            combo: {}
         };
 
         function addToCart(type, id, name, price) {
+            if (type === 'menu') {
+                let hasCombo = Object.keys(cart['combo']).length > 0;
+                if (!hasCombo) {
+                    let lang = '${sessionScope.lang}';
+                    if (lang === 'en') {
+                        alert('Please select a Set Combo first before adding individual menu items!');
+                    } else {
+                        alert('Bạn vui lòng chọn một Set Combo trước khi gọi thêm món ăn lẻ nhé!');
+                    }
+                    return;
+                }
+            }
+
             if (!cart[type][id]) {
                 cart[type][id] = { name: name, price: price, qty: 1 };
             } else {
@@ -255,46 +268,47 @@
         }
 
         function renderCart() {
-            const list = document.getElementById('cartItemsList');
-            const emptyMsg = document.getElementById('emptyCartMsg');
+            let list = document.getElementById('cartItemsList');
+            let emptyMsg = document.getElementById('emptyCartMsg');
             let total = 0;
             let hasItems = false;
+            
+            // clear list except empty message
+            Array.from(list.children).forEach(child => {
+                if (child.id !== 'emptyCartMsg') child.remove();
+            });
 
-            // Clear current items (except empty message if it was hidden)
-            list.innerHTML = '';
-
-            const renderType = (type, prefixId) => {
-                for (let id in cart[type]) {
+            const types = ['combo', 'menu', 'addon'];
+            types.forEach(t => {
+                for (let id in cart[t]) {
                     hasItems = true;
-                    let item = cart[type][id];
-                    total += item.price * item.qty;
-
+                    let item = cart[t][id];
+                    let lineTotal = item.price * item.qty;
+                    total += lineTotal;
+                    
                     let li = document.createElement('li');
-                    li.className = 'list-group-item p-3';
-                    li.innerHTML = `
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <div class="fw-medium text-dark">` + item.name + `</div>
-                            <button type="button" class="btn-close btn-sm" style="font-size: 0.6rem;" onclick="removeCartItem('`+type+`', `+id+`)"></button>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="input-group input-group-sm w-auto">
-                                <button class="btn btn-outline-secondary px-2" type="button" onclick="updateQty('`+type+`', `+id+`, -1)"><i class="fa-solid fa-minus"></i></button>
-                                <input type="text" class="form-control text-center px-0 fw-bold" value="`+item.qty+`" style="max-width: 40px;" readonly>
-                                <button class="btn btn-outline-secondary px-2" type="button" onclick="updateQty('`+type+`', `+id+`, 1)"><i class="fa-solid fa-plus"></i></button>
-                            </div>
-                            <span class="text-success fw-bold">` + formatCurrency(item.price * item.qty) + `</span>
-                        </div>
-                    `;
+                    li.className = 'list-group-item px-3 py-2 border-0 border-bottom';
+                    li.innerHTML = '<div class="d-flex justify-content-between align-items-center mb-1">' +
+                        '<span class="fw-bold small text-truncate" style="max-width: 60%;">' + item.name + '</span>' +
+                        '<span class="fw-bold text-success small">' + formatCurrency(lineTotal) + '</span>' +
+                        '</div>' +
+                        '<div class="d-flex justify-content-between align-items-center">' +
+                        '<span class="text-muted small">' + formatCurrency(item.price) + '</span>' +
+                        '<div class="btn-group btn-group-sm border rounded">' +
+                        '<button type="button" class="btn btn-light px-2" onclick="updateQty(\'' + t + '\', ' + id + ', -1)"><i class="fa-solid fa-minus" style="font-size: 10px;"></i></button>' +
+                        '<span class="btn btn-light px-3 fw-bold border-start border-end" style="pointer-events: none;">' + item.qty + '</span>' +
+                        '<button type="button" class="btn btn-light px-2" onclick="updateQty(\'' + t + '\', ' + id + ', 1)"><i class="fa-solid fa-plus" style="font-size: 10px;"></i></button>' +
+                        '</div>' +
+                        '</div>';
                     list.appendChild(li);
                 }
-            };
-
-            renderType('menu', 'menuItemId');
-            renderType('addon', 'addonId');
+            });
 
             if (!hasItems) {
                 list.appendChild(emptyMsg);
                 emptyMsg.style.display = 'block';
+            } else {
+                emptyMsg.style.display = 'none';
             }
 
             if (surchargePercent > 0) {
@@ -319,6 +333,10 @@
             for (let id in cart['addon']) {
                 this.insertAdjacentHTML('beforeend', '<input type="hidden" class="dynamic-cart-input" name="addonId" value="' + id + '">');
                 this.insertAdjacentHTML('beforeend', '<input type="hidden" class="dynamic-cart-input" name="addonQty" value="' + cart['addon'][id].qty + '">');
+            }
+            for (let id in cart['combo']) {
+                this.insertAdjacentHTML('beforeend', '<input type="hidden" class="dynamic-cart-input" name="menuSetId" value="' + id + '">');
+                this.insertAdjacentHTML('beforeend', '<input type="hidden" class="dynamic-cart-input" name="menuSetQty" value="' + cart['combo'][id].qty + '">');
             }
         });
     </script>

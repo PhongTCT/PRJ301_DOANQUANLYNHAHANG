@@ -57,6 +57,30 @@ public class BookingController extends HttpServlet {
             }
         }
 
+        if ("true".equals(request.getParameter("submitFinal"))) {
+            try {
+                if (draft == null) {
+                    response.sendRedirect("MainController?action=booking&step=1");
+                    return;
+                }
+                User user = (User) session.getAttribute("user");
+                if (user == null) {
+                    response.sendRedirect("MainController?action=login");
+                    return;
+                }
+                
+                Reservation reservation = bookingService.saveFinalBooking(draft, user);
+                session.removeAttribute("bookingDraft");
+                session.setAttribute("successMessage", "Booking successful! Your Reservation ID is: #" + reservation.getId());
+                response.sendRedirect("MainController?action=booking&step=1");
+                return;
+            } catch (Exception e) {
+                request.setAttribute("error", e.getMessage() == null ? "Could not finalize booking." : e.getMessage());
+                step = 4;
+            }
+        }
+
+
         if ("saveStep3".equals(action)) {
             try {
                 if (draft == null) {
@@ -114,3 +138,4 @@ public class BookingController extends HttpServlet {
         processRequest(request, response);
     }
 }
+

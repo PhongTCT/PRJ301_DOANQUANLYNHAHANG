@@ -24,4 +24,14 @@ public class ReservationAddon implements Serializable {
 
     @Column(name = "unit_price", nullable = false)
     private BigDecimal unitPrice = BigDecimal.ZERO;
+
+    public Long getId() { return id; }
+    public Reservation getReservation() { return reservation; }
+    public void setReservation(Reservation reservation) { this.reservation = reservation; }
+    public AddonService getAddonService() { return addonService; }
+    public void setAddonService(AddonService addonService) { this.addonService = addonService; }
+    public Integer getQuantity() { return quantity; }
+    public void setQuantity(Integer quantity) { this.quantity = quantity; }
+    public BigDecimal getUnitPrice() { return unitPrice; }
+    public void setUnitPrice(BigDecimal unitPrice) { this.unitPrice = unitPrice; }
 }

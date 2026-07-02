@@ -36,6 +36,8 @@ public class MainController extends HttpServlet {
             case "booking":
             case "dobooking":
             case "selectTable":
+            case "saveStep3":
+            case "submitFinal":
                 url = "BookingController";
                 break;
             case "home":

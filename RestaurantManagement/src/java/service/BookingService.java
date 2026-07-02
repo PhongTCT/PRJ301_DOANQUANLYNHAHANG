@@ -11,6 +11,8 @@ import entity.User;
 import entity.MenuItem;
 import entity.MenuSet;
 import entity.AddonService;
+import entity.ReservationMenuItem;
+import entity.ReservationAddon;
 import dao.MenuItemDAO;
 import dao.MenuSetDAO;
 import dao.AddonServiceDAO;
@@ -187,6 +189,111 @@ public class BookingService {
         return list;
     }
 
+    public Reservation saveFinalBooking(BookingDraft draft, User currentUser) {
+        if (draft == null) {
+            throw new IllegalArgumentException("Booking details are missing.");
+        }
+        if (currentUser == null || currentUser.getId() == null) {
+            throw new IllegalArgumentException("User not logged in.");
+        }
+        if (draft.getSelectedTableIds() == null || draft.getSelectedTableIds().isEmpty()) {
+            throw new IllegalArgumentException("No tables selected.");
+        }
+
+        EntityManager em = JPAUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+
+            EventType eventType = em.find(EventType.class, draft.getEventTypeId());
+            User user = em.find(User.class, currentUser.getId());
+
+            Reservation reservation = new Reservation();
+            reservation.setUser(user);
+            reservation.setGuestName(user.getFullName());
+            reservation.setGuestPhone(user.getPhone());
+            reservation.setEventType(eventType);
+            reservation.setReservationDate(draft.getReservationDate());
+            reservation.setReservationTime(parseTime(draft.getReservationTime()));
+            reservation.setAdultsCount(draft.getAdultsCount());
+            reservation.setChildrenCount(draft.getChildrenCount());
+            reservation.setHasChildren(safeCount(draft.getChildrenCount()) > 0);
+            reservation.setStatus(ReservationStatus.PENDING);
+            reservation.setIsOnline(true);
+            reservation.setHasSurcharge(draft.getHasSurcharge() != null ? draft.getHasSurcharge() : false);
+            
+            em.persist(reservation);
+
+            // 1. Tables
+            for (Integer tableId : draft.getSelectedTableIds()) {
+                DiningTable table = em.find(DiningTable.class, tableId);
+                if (table != null) {
+                    ReservationTable rt = new ReservationTable();
+                    rt.setReservation(reservation);
+                    rt.setDiningTable(table);
+                    em.persist(rt);
+                    
+                    table.setStatus(TableStatus.RESERVED);
+                    em.merge(table);
+                }
+            }
+
+            // 2. Menu Sets (Combos)
+            if (draft.getMenuSets() != null) {
+                for (BookingDraft.CartMenuSetDTO setDto : draft.getMenuSets()) {
+                    MenuSet menuSet = em.find(MenuSet.class, setDto.getMenuSetId());
+                    if (menuSet != null) {
+                        ReservationMenuItem rmi = new ReservationMenuItem();
+                        rmi.setReservation(reservation);
+                        rmi.setMenuSet(menuSet);
+                        rmi.setQuantity(setDto.getQuantity());
+                        rmi.setUnitPrice(menuSet.getDiscountedPrice() != null ? menuSet.getDiscountedPrice() : menuSet.getOriginalPrice());
+                        em.persist(rmi);
+                    }
+                }
+            }
+
+            // 3. Menu Items
+            if (draft.getMenuItems() != null) {
+                for (BookingDraft.CartItemDTO itemDto : draft.getMenuItems()) {
+                    MenuItem menuItem = em.find(MenuItem.class, itemDto.getMenuItemId());
+                    if (menuItem != null) {
+                        ReservationMenuItem rmi = new ReservationMenuItem();
+                        rmi.setReservation(reservation);
+                        rmi.setMenuItem(menuItem);
+                        rmi.setQuantity(itemDto.getQuantity());
+                        rmi.setUnitPrice(menuItem.getBasePrice()); // size logic could go here
+                        em.persist(rmi);
+                    }
+                }
+            }
+
+            // 4. Addons
+            if (draft.getAddons() != null) {
+                for (BookingDraft.CartAddonDTO addonDto : draft.getAddons()) {
+                    AddonService addon = em.find(AddonService.class, addonDto.getAddonId());
+                    if (addon != null) {
+                        ReservationAddon ra = new ReservationAddon();
+                        ra.setReservation(reservation);
+                        ra.setAddonService(addon);
+                        ra.setQuantity(addonDto.getQuantity());
+                        ra.setUnitPrice(addon.getPrice());
+                        em.persist(ra);
+                    }
+                }
+            }
+
+            tx.commit();
+            return reservation;
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            throw new RuntimeException("Error saving final booking: " + e.getMessage(), e);
+        } finally {
+            em.close();
+        }
+    }
+
+
     public void processStep3(BookingDraft draft, HttpServletRequest request) {
         if (draft == null) {
             throw new IllegalArgumentException("Booking session expired. Please start over.");
@@ -221,6 +328,21 @@ public class BookingService {
             }
         }
         draft.setAddons(addons);
+
+        List<BookingDraft.CartMenuSetDTO> menuSets = new java.util.ArrayList<>();
+        String[] menuSetIds = request.getParameterValues("menuSetId");
+        String[] menuSetQtys = request.getParameterValues("menuSetQty");
+        if (menuSetIds != null && menuSetQtys != null) {
+            for (int i = 0; i < menuSetIds.length; i++) {
+                BookingDraft.CartMenuSetDTO set = new BookingDraft.CartMenuSetDTO();
+                set.setMenuSetId(parseInt(menuSetIds[i], null));
+                set.setQuantity(parseInt(i < menuSetQtys.length ? menuSetQtys[i] : "1", 1));
+                if (set.getMenuSetId() != null && set.getQuantity() > 0) {
+                    menuSets.add(set);
+                }
+            }
+        }
+        draft.setMenuSets(menuSets);
     }
 
     private void validateDraft(BookingDraft draft) {
@@ -285,3 +407,5 @@ public class BookingService {
         }
     }
 }
+
+

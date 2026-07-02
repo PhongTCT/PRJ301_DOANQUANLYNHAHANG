@@ -130,4 +130,16 @@ public class Reservation implements Serializable {
     public void setHasSurcharge(Boolean hasSurcharge) { this.hasSurcharge = hasSurcharge; }
     public Date getCreatedAt() { return createdAt; }
     public Date getUpdatedAt() { return updatedAt; }
+
+    public List<ReservationTable> getReservationTables() { return reservationTables; }
+    public void setReservationTables(List<ReservationTable> reservationTables) { this.reservationTables = reservationTables; }
+
+    public List<ReservationMenuItem> getReservationMenuItems() { return reservationMenuItems; }
+    public void setReservationMenuItems(List<ReservationMenuItem> reservationMenuItems) { this.reservationMenuItems = reservationMenuItems; }
+
+    public List<ReservationAddon> getReservationAddons() { return reservationAddons; }
+    public void setReservationAddons(List<ReservationAddon> reservationAddons) { this.reservationAddons = reservationAddons; }
+
+    public Invoice getInvoice() { return invoice; }
+    public void setInvoice(Invoice invoice) { this.invoice = invoice; }
 }
