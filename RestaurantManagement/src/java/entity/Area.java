@@ -28,6 +28,15 @@ public class Area implements Serializable {
     private List<Room> rooms;
 
     public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
     public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
     public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public BigDecimal getPriceModifier() { return priceModifier; }
+    public void setPriceModifier(BigDecimal priceModifier) { this.priceModifier = priceModifier; }
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+    public List<Room> getRooms() { return rooms; }
+    public void setRooms(List<Room> rooms) { this.rooms = rooms; }
 }

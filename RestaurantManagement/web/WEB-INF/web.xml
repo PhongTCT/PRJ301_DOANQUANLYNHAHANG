@@ -116,6 +116,24 @@
         <url-pattern>/BookingController</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>AdminRestaurantController</servlet-name>
+        <servlet-class>controller.AdminRestaurantController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminRestaurantController</servlet-name>
+        <url-pattern>/AdminRestaurantController</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>RestaurantApiController</servlet-name>
+        <servlet-class>controller.RestaurantApiController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RestaurantApiController</servlet-name>
+        <url-pattern>/api/*</url-pattern>
+    </servlet-mapping>
+
     <!-- Welcome File -->
     <welcome-file-list>
         <welcome-file>MainController</welcome-file>

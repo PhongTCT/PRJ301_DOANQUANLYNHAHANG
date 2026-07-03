@@ -36,7 +36,37 @@ public class MainController extends HttpServlet {
             case "booking":
             case "dobooking":
             case "selectTable":
+            case "saveStep3":
                 url = "BookingController";
+                break;
+            case "adminAreas":
+            case "saveArea":
+            case "toggleArea":
+            case "adminRooms":
+            case "saveRoom":
+            case "toggleRoom":
+            case "adminTables":
+            case "saveDiningTable":
+            case "toggleDiningTable":
+            case "adminCategories":
+            case "saveMenuCategory":
+            case "toggleMenuCategory":
+            case "adminMenuItems":
+            case "saveMenuItem":
+            case "toggleMenuItem":
+            case "adminMenuItemSizes":
+            case "saveMenuItemSize":
+            case "adminMenuSets":
+            case "saveMenuSet":
+            case "toggleMenuSet":
+            case "adminMenuSetItems":
+            case "saveMenuSetItem":
+            case "saveMenuSetCourseItems":
+            case "deleteMenuSetItem":
+            case "adminAddonServices":
+            case "saveAddonService":
+            case "toggleAddonService":
+                url = "AdminRestaurantController";
                 break;
             case "home":
             default:

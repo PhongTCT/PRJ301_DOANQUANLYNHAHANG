@@ -24,4 +24,15 @@ public class MenuSetItem implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "default_size_id")
     private MenuItemSize defaultSize;
+
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+    public MenuSet getMenuSet() { return menuSet; }
+    public void setMenuSet(MenuSet menuSet) { this.menuSet = menuSet; }
+    public MenuItem getMenuItem() { return menuItem; }
+    public void setMenuItem(MenuItem menuItem) { this.menuItem = menuItem; }
+    public Integer getQuantity() { return quantity; }
+    public void setQuantity(Integer quantity) { this.quantity = quantity; }
+    public MenuItemSize getDefaultSize() { return defaultSize; }
+    public void setDefaultSize(MenuItemSize defaultSize) { this.defaultSize = defaultSize; }
 }

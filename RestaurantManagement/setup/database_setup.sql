@@ -147,6 +147,7 @@ CREATE TABLE dining_table (
     table_code VARCHAR(20) NOT NULL UNIQUE,
     capacity INT NOT NULL CHECK (capacity IN (2,4,6,8,10,12,20)),
     base_price DECIMAL(10,0) NOT NULL DEFAULT 0 CHECK (base_price >= 0),
+    image_url VARCHAR(500) NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'AVAILABLE'
         CHECK (status IN ('AVAILABLE','RESERVED','OCCUPIED')),
     version INT NOT NULL DEFAULT 0 CHECK (version >= 0),
@@ -424,39 +425,143 @@ VALUES
 
 DECLARE @standardRoomId INT = (SELECT TOP 1 id FROM room WHERE room_type = 'STANDARD' ORDER BY id);
 DECLARE @vipRoomId INT = (SELECT TOP 1 id FROM room WHERE room_type = 'VIP' ORDER BY id);
-INSERT INTO dining_table (room_id, table_code, capacity, base_price)
+INSERT INTO dining_table (room_id, table_code, capacity, base_price, image_url)
 VALUES
-    (@standardRoomId, 'A01', 2, 0),
-    (@standardRoomId, 'A02', 4, 0),
-    (@standardRoomId, 'A03', 6, 0),
-    (@standardRoomId, 'A04', 8, 0),
-    (@vipRoomId, 'VIP-01', 10, 200000),
-    (@vipRoomId, 'VIP-02', 12, 200000);
+    (@standardRoomId, 'A01', 2, 0, 'assets/img/le-royal/seating/dining-room.jpg'),
+    (@standardRoomId, 'A02', 4, 0, 'assets/img/le-royal/seating/private-table.jpg'),
+    (@standardRoomId, 'A03', 6, 0, 'assets/img/le-royal/seating/counter-seat.jpg'),
+    (@standardRoomId, 'A04', 8, 0, 'assets/img/le-royal/seating/salon-table.jpg'),
+    (@vipRoomId, 'VIP-01', 10, 200000, 'assets/img/le-royal/seating/private-table.jpg'),
+    (@vipRoomId, 'VIP-02', 12, 200000, 'assets/img/le-royal/seating/salon-table.jpg');
 
 INSERT INTO menu_category (category_name, meal_time, category_type, sort_order)
 VALUES
     (N'Appetizers', 'ALL_DAY', 'APPETIZER', 1),
-    (N'Main Courses', 'ALL_DAY', 'MAIN', 2),
-    (N'Desserts', 'ALL_DAY', 'DESSERT', 3),
-    (N'Drinks', 'ALL_DAY', 'DRINK', 4);
+    (N'Soups', 'ALL_DAY', 'SOUP', 2),
+    (N'Main Courses', 'ALL_DAY', 'MAIN', 3),
+    (N'Desserts', 'ALL_DAY', 'DESSERT', 4),
+    (N'Drinks', 'ALL_DAY', 'DRINK', 5);
 
 DECLARE @appetizerId INT = (SELECT id FROM menu_category WHERE category_type = 'APPETIZER');
+DECLARE @soupId INT = (SELECT id FROM menu_category WHERE category_type = 'SOUP');
 DECLARE @mainCourseId INT = (SELECT id FROM menu_category WHERE category_type = 'MAIN');
+DECLARE @dessertId INT = (SELECT id FROM menu_category WHERE category_type = 'DESSERT');
 DECLARE @drinkId INT = (SELECT id FROM menu_category WHERE category_type = 'DRINK');
-INSERT INTO menu_item (category_id, item_name, description, base_price)
+INSERT INTO menu_item (category_id, item_name, description, image_url, base_price)
 VALUES
-    (@appetizerId, N'Lotus Stem Salad', N'Crisp lotus stem with shrimp and herbs', 120000),
-    (@appetizerId, N'Crab Asparagus Soup', N'Warm soup with crab meat and fresh asparagus', 85000),
-    (@mainCourseId, N'Black Pepper Beef Tenderloin', N'Grilled beef tenderloin with black pepper sauce', 350000),
-    (@mainCourseId, N'Pan Seared Salmon', N'Salmon with butter and passion fruit sauce', 280000),
-    (@drinkId, N'Fresh Orange Juice', N'Fresh squeezed orange juice', 55000),
-    (@drinkId, N'Bordeaux Red Wine', N'Imported French red wine', 850000);
+    (@appetizerId, N'Silk Garden Prelude', N'Crisp lotus stem with shrimp, herbs, roasted peanut and lime dressing', 'assets/img/le-royal/menu/lotus-stem-salad.jpg', 300000),
+    (@appetizerId, N'Crimson Tide', N'Cold diced tuna, citrus gel, shallot oil and oscietra-style caviar', 'assets/img/le-royal/menu/tuna-tartare-caviar.jpg', 420000),
+    (@appetizerId, N'Moonlit Shore', N'Thin scallop slices with yuzu kosho, herb oil and sea grapes', 'assets/img/le-royal/menu/scallop-carpaccio.jpg', 450000),
+    (@appetizerId, N'Little Green Sonata', N'Fine pastry tart with herbs, whipped cheese and pickled greens', 'assets/img/le-royal/menu/garden-herb-tartlet.jpg', 320000),
+    (@appetizerId, N'Golden Ember Bites', N'Petite crab canapes with creamy roe sauce and toasted crumbs', 'assets/img/le-royal/menu/crab-caviar-bites.jpg', 460000),
+    (@appetizerId, N'Velvet Orchard', N'Smoked duck breast, young leaves, plum vinaigrette and toasted seeds', 'assets/img/le-royal/menu/smoked-duck-salad.jpg', 380000),
+    (@soupId, N'Amber Pour', N'Warm soup with crab meat and fresh green asparagus', 'assets/img/le-royal/menu/crab-asparagus-soup.jpg', 300000),
+    (@soupId, N'Quiet Tide', N'Clear truffle-scented broth with white fish and herbs', 'assets/img/le-royal/menu/truffle-mushroom-consomme.jpg', 360000),
+    (@soupId, N'Autumn Glow', N'Silky pumpkin soup with cream, pumpkin seed oil and toasted almond', 'assets/img/le-royal/menu/pumpkin-veloute.jpg', 300000),
+    (@soupId, N'Deep Sea Velvet', N'Rich shellfish broth finished with cream, herb butter and seafood garnish', 'assets/img/le-royal/menu/lobster-bisque.jpg', 480000),
+    (@mainCourseId, N'Midnight Ember', N'Grilled beef tenderloin with black pepper jus and seasonal vegetables', 'assets/img/le-royal/menu/black-pepper-beef-tenderloin.jpg', 780000),
+    (@mainCourseId, N'Golden Current', N'Salmon with golden butter and passion fruit sauce', 'assets/img/le-royal/menu/pan-seared-salmon.jpg', 680000),
+    (@mainCourseId, N'Red Reef', N'Charcoal grilled lobster with garlic herb butter and lemon', 'assets/img/le-royal/menu/grilled-spiny-lobster.jpg', 1380000),
+    (@mainCourseId, N'Royal Shell Bloom', N'Steamed king crab served with warm herb butter and citrus salt', 'assets/img/le-royal/menu/king-crab-herb-butter.jpg', 1480000),
+    (@mainCourseId, N'Plum Dusk', N'Pink roasted duck breast with spiced plum jus and root vegetables', 'assets/img/le-royal/menu/duck-breast-plum-jus.jpg', 720000),
+    (@mainCourseId, N'Black Fan Nocturne', N'Slow cooked wagyu short rib with red wine sauce and mushroom puree', 'assets/img/le-royal/menu/wagyu-short-rib.jpg', 1200000),
+    (@mainCourseId, N'Pale River', N'White cod marinated in miso, served with dashi butter sauce', 'assets/img/le-royal/menu/miso-cod.jpg', 820000),
+    (@mainCourseId, N'Clay Pot Reverie', N'Prawns, scallop and fish simmered in aromatic clay pot sauce', 'assets/img/le-royal/menu/seafood-clay-pot.jpg', 860000),
+    (@mainCourseId, N'Sunlit Roulade', N'Chicken roulade with foie gras stuffing, herb jus and carrot puree', 'assets/img/le-royal/menu/roasted-chicken-roulade.jpg', 650000),
+    (@mainCourseId, N'Jade Lagoon', N'Creamy saffron risotto with abalone, parmesan and chive oil', 'assets/img/le-royal/menu/abalone-saffron-risotto.jpg', 980000),
+    (@dessertId, N'Cloud on Blue Porcelain', N'Crisp meringue with passion fruit curd, cream and fresh herbs', 'assets/img/le-royal/menu/passion-fruit-pavlova.jpg', 320000),
+    (@dessertId, N'Ruby Garden', N'Raspberry sorbet with berry compote, edible flowers and crisp tuile', 'assets/img/le-royal/menu/berry-sorbet-garden.jpg', 300000),
+    (@dessertId, N'Mist Pearl', N'Coconut panna cotta with tropical fruit and lime espuma', 'assets/img/le-royal/menu/coconut-panna-cotta.jpg', 300000),
+    (@dessertId, N'Honeyed Crown', N'Buttery tart shell with yuzu cream, meringue and basil gel', 'assets/img/le-royal/menu/yuzu-cream-tart.jpg', 340000),
+    (@dessertId, N'Atlas Eclipse', N'Dark chocolate mousse with hazelnut praline and cocoa crumble', 'assets/img/le-royal/menu/chocolate-hazelnut-sphere.jpg', 380000),
+    (@dessertId, N'Berry Nightfall', N'Berry compote with yogurt cream, crisp pearls and meringue', 'assets/img/le-royal/menu/matcha-opera-cake.jpg', 360000),
+    (@drinkId, N'Afternoon Ritual', N'Tableside tea pairing served with small fruit and herb bites', 'assets/img/le-royal/menu/fresh-orange-juice.jpg', 300000),
+    (@drinkId, N'Cellar Twilight', N'Imported French red wine with dark berry notes and smooth tannin', 'assets/img/le-royal/menu/bordeaux-red-wine.jpg', 1200000),
+    (@drinkId, N'Silver Celebration', N'One glass of brut champagne selected for tasting menus', 'assets/img/le-royal/menu/champagne-pairing.jpg', 580000),
+    (@drinkId, N'Amber Finale', N'House citrus cocktail with herbal syrup and sparkling finish', 'assets/img/le-royal/menu/signature-citrus-cocktail.jpg', 300000),
+    (@appetizerId, N'Saffron Orbit', N'A bright first course with crisp textures and warm saffron notes', 'assets/img/le-royal/menu/saffron-orbit.jpg', 360000),
+    (@appetizerId, N'Ivory Petal', N'A delicate plated opening with floral lift and light citrus finish', 'assets/img/le-royal/menu/ivory-petal.jpg', 380000),
+    (@appetizerId, N'Seasonal Quartet', N'Four small seasonal bites arranged as a tasting prelude', 'assets/img/le-royal/menu/seasonal-quartet.jpg', 520000),
+    (@appetizerId, N'Ember Petite', N'A single warm bite with smoked aroma and herb glaze', 'assets/img/le-royal/menu/ember-petite.jpg', 340000),
+    (@soupId, N'Earthen Bloom', N'A grounded broth course with toasted aromatics and tender garnish', 'assets/img/le-royal/menu/earthen-bloom.jpg', 330000),
+    (@soupId, N'Porcelain Whisper', N'A pale, creamy soup served with garden herbs and soft mineral notes', 'assets/img/le-royal/menu/porcelain-whisper.jpg', 340000),
+    (@soupId, N'Rose Gold Broth', N'A warm golden broth with layered sweetness and gentle spice', 'assets/img/le-royal/menu/rose-gold-broth.jpg', 360000),
+    (@mainCourseId, N'Silver Leaf Nocturne', N'A composed seafood plate with bright sauce and soft herb oil', 'assets/img/le-royal/menu/silver-leaf.jpg', 720000),
+    (@mainCourseId, N'Jade Crown', N'A refined ocean course with green herb notes and a clean finish', 'assets/img/le-royal/menu/jade-crown.jpg', 780000),
+    (@mainCourseId, N'Saffron Sun', N'A golden main course with warm spice, butter and citrus sauce', 'assets/img/le-royal/menu/saffron-sun.jpg', 760000),
+    (@mainCourseId, N'Pale Orbit', N'A gentle main course with fruit acidity and a light cream sauce', 'assets/img/le-royal/menu/pale-orbit.jpg', 680000),
+    (@mainCourseId, N'Black Garden', N'A deep, earthy main course with roasted notes and dark jus', 'assets/img/le-royal/menu/black-garden.jpg', 900000),
+    (@mainCourseId, N'Midnight Lotus', N'A dark-plated main course with floral garnish and layered umami', 'assets/img/le-royal/menu/midnight-lotus.jpg', 840000),
+    (@mainCourseId, N'Hidden Cove', N'A coastal main course with fresh herbs and quiet briny sweetness', 'assets/img/le-royal/menu/hidden-cove.jpg', 820000),
+    (@dessertId, N'Green Ribbon', N'A clean green dessert with soft cream, leaf aroma and crisp finish', 'assets/img/le-royal/menu/green-ribbon.jpg', 320000),
+    (@dessertId, N'Tiny Forest', N'A small forest-inspired dessert with berry, cream and roasted crumble', 'assets/img/le-royal/menu/tiny-forest.jpg', 340000),
+    (@dessertId, N'Ruby Drop', N'A jewel-like dessert with bright berry acidity and cool sweetness', 'assets/img/le-royal/menu/ruby-drop.jpg', 360000),
+    (@dessertId, N'Moss Pearl', N'A quiet green dessert with soft mousse and delicate herbal finish', 'assets/img/le-royal/menu/moss-pearl.jpg', 330000),
+    (@drinkId, N'Nocturne Reserve', N'A sommelier-selected reserve pour for richer tasting menus', 'assets/img/le-royal/menu/nocturne-reserve.jpg', 1350000),
+    (@drinkId, N'Sommelier Candle', N'A premium table-side wine pairing chosen for the evening courses', 'assets/img/le-royal/menu/sommelier-candle.jpg', 980000);
 
-INSERT INTO addon_service (service_name, description, price)
+INSERT INTO menu_set (set_name, description, meal_time, original_price, discounted_price, image_url)
 VALUES
-    (N'Rose Table Decoration', N'Fresh roses and candle styling', 250000),
-    (N'Premium Birthday Cake', N'Chocolate or fruit cake on request', 350000),
-    (N'Table Violin Performance', N'Thirty minute private violin performance', 500000);
+    (N'Le Royal Moonlit Journey', N'A poised evening tasting menu moving from garden freshness to a warm ember finish.', 'DINNER', 0, 0, 'assets/img/le-royal/menu/black-pepper-beef-tenderloin.jpg'),
+    (N'Garden of Quiet Tides', N'A soft coastal progression with bright sauces, gentle broth and a silver finish.', 'DINNER', 0, 0, 'assets/img/le-royal/menu/pan-seared-salmon.jpg'),
+    (N'Ember and Velvet Tasting', N'A darker, rounded menu built around smoke, fruit, roasted depth and quiet sweetness.', 'DINNER', 0, 0, 'assets/img/le-royal/menu/duck-breast-plum-jus.jpg'),
+    (N'Royal Shell Nocturne', N'A premium seafood-led tasting menu with deep broth, shellfish and reserve pairing.', 'DINNER', 0, 0, 'assets/img/le-royal/menu/king-crab-herb-butter.jpg'),
+    (N'The Amber Finale Course', N'A celebratory course menu with saffron warmth, jade richness and candlelit wine.', 'DINNER', 0, 0, 'assets/img/le-royal/menu/abalone-saffron-risotto.jpg');
+
+DECLARE @moonlitSetId INT = (SELECT id FROM menu_set WHERE set_name = N'Le Royal Moonlit Journey');
+DECLARE @quietTidesSetId INT = (SELECT id FROM menu_set WHERE set_name = N'Garden of Quiet Tides');
+DECLARE @emberVelvetSetId INT = (SELECT id FROM menu_set WHERE set_name = N'Ember and Velvet Tasting');
+DECLARE @shellNocturneSetId INT = (SELECT id FROM menu_set WHERE set_name = N'Royal Shell Nocturne');
+DECLARE @amberFinaleSetId INT = (SELECT id FROM menu_set WHERE set_name = N'The Amber Finale Course');
+
+INSERT INTO menu_set_item (menu_set_id, menu_item_id, quantity)
+VALUES
+    (@moonlitSetId, (SELECT id FROM menu_item WHERE image_url = 'assets/img/le-royal/menu/lotus-stem-salad.jpg'), 1),
+    (@moonlitSetId, (SELECT id FROM menu_item WHERE image_url = 'assets/img/le-royal/menu/crab-asparagus-soup.jpg'), 1),
+    (@moonlitSetId, (SELECT id FROM menu_item WHERE image_url = 'assets/img/le-royal/menu/black-pepper-beef-tenderloin.jpg'), 1),
+    (@moonlitSetId, (SELECT id FROM menu_item WHERE image_url = 'assets/img/le-royal/menu/passion-fruit-pavlova.jpg'), 1),
+    (@moonlitSetId, (SELECT id FROM menu_item WHERE image_url = 'assets/img/le-royal/menu/bordeaux-red-wine.jpg'), 1),
+    (@quietTidesSetId, (SELECT id FROM menu_item WHERE image_url = 'assets/img/le-royal/menu/scallop-carpaccio.jpg'), 1),
+    (@quietTidesSetId, (SELECT id FROM menu_item WHERE image_url = 'assets/img/le-royal/menu/truffle-mushroom-consomme.jpg'), 1),
+    (@quietTidesSetId, (SELECT id FROM menu_item WHERE image_url = 'assets/img/le-royal/menu/pan-seared-salmon.jpg'), 1),
+    (@quietTidesSetId, (SELECT id FROM menu_item WHERE image_url = 'assets/img/le-royal/menu/berry-sorbet-garden.jpg'), 1),
+    (@quietTidesSetId, (SELECT id FROM menu_item WHERE image_url = 'assets/img/le-royal/menu/champagne-pairing.jpg'), 1),
+    (@emberVelvetSetId, (SELECT id FROM menu_item WHERE image_url = 'assets/img/le-royal/menu/smoked-duck-salad.jpg'), 1),
+    (@emberVelvetSetId, (SELECT id FROM menu_item WHERE image_url = 'assets/img/le-royal/menu/pumpkin-veloute.jpg'), 1),
+    (@emberVelvetSetId, (SELECT id FROM menu_item WHERE image_url = 'assets/img/le-royal/menu/duck-breast-plum-jus.jpg'), 1),
+    (@emberVelvetSetId, (SELECT id FROM menu_item WHERE image_url = 'assets/img/le-royal/menu/yuzu-cream-tart.jpg'), 1),
+    (@emberVelvetSetId, (SELECT id FROM menu_item WHERE image_url = 'assets/img/le-royal/menu/fresh-orange-juice.jpg'), 1),
+    (@shellNocturneSetId, (SELECT id FROM menu_item WHERE image_url = 'assets/img/le-royal/menu/tuna-tartare-caviar.jpg'), 1),
+    (@shellNocturneSetId, (SELECT id FROM menu_item WHERE image_url = 'assets/img/le-royal/menu/lobster-bisque.jpg'), 1),
+    (@shellNocturneSetId, (SELECT id FROM menu_item WHERE image_url = 'assets/img/le-royal/menu/king-crab-herb-butter.jpg'), 1),
+    (@shellNocturneSetId, (SELECT id FROM menu_item WHERE image_url = 'assets/img/le-royal/menu/matcha-opera-cake.jpg'), 1),
+    (@shellNocturneSetId, (SELECT id FROM menu_item WHERE image_url = 'assets/img/le-royal/menu/nocturne-reserve.jpg'), 1),
+    (@amberFinaleSetId, (SELECT id FROM menu_item WHERE image_url = 'assets/img/le-royal/menu/saffron-orbit.jpg'), 1),
+    (@amberFinaleSetId, (SELECT id FROM menu_item WHERE image_url = 'assets/img/le-royal/menu/rose-gold-broth.jpg'), 1),
+    (@amberFinaleSetId, (SELECT id FROM menu_item WHERE image_url = 'assets/img/le-royal/menu/abalone-saffron-risotto.jpg'), 1),
+    (@amberFinaleSetId, (SELECT id FROM menu_item WHERE image_url = 'assets/img/le-royal/menu/coconut-panna-cotta.jpg'), 1),
+    (@amberFinaleSetId, (SELECT id FROM menu_item WHERE image_url = 'assets/img/le-royal/menu/sommelier-candle.jpg'), 1);
+
+;WITH set_totals AS (
+    SELECT
+        msi.menu_set_id,
+        SUM((mi.base_price + ISNULL(ms.price_modifier, 0)) * msi.quantity) AS total_price
+    FROM menu_set_item msi
+    JOIN menu_item mi ON mi.id = msi.menu_item_id
+    LEFT JOIN menu_item_size ms ON ms.id = msi.default_size_id
+    GROUP BY msi.menu_set_id
+)
+UPDATE menu_set
+SET original_price = st.total_price,
+    discounted_price = st.total_price
+FROM menu_set
+JOIN set_totals st ON st.menu_set_id = menu_set.id;
+
+INSERT INTO addon_service (service_name, description, price, image_url)
+VALUES
+    (N'Rose Table Decoration', N'Fresh roses and candle styling', 250000, 'assets/img/le-royal/Signature Red Rose Bouquet.jpg'),
+    (N'Premium Birthday Cake', N'Chocolate or fruit cake on request', 350000, 'assets/img/le-royal/Champagne Welcome Service.jpg'),
+    (N'Table Violin Performance', N'Thirty minute private violin performance', 500000, 'assets/img/le-royal/Private Live Pianist.jpg');
 
 INSERT INTO voucher
     (voucher_code, voucher_type, discount_percent, discount_amount, min_order_value, max_discount, valid_from, valid_to, usage_limit)

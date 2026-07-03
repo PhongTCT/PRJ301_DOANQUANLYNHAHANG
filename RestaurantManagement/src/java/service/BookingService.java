@@ -207,6 +207,21 @@ public class BookingService {
         }
         draft.setMenuItems(menuItems);
 
+        List<BookingDraft.CartSetDTO> menuSets = new java.util.ArrayList<>();
+        String[] menuSetIds = request.getParameterValues("menuSetId");
+        String[] menuSetQtys = request.getParameterValues("menuSetQty");
+        if (menuSetIds != null && menuSetQtys != null) {
+            for (int i = 0; i < menuSetIds.length; i++) {
+                BookingDraft.CartSetDTO set = new BookingDraft.CartSetDTO();
+                set.setMenuSetId(parseInt(menuSetIds[i], null));
+                set.setQuantity(parseInt(i < menuSetQtys.length ? menuSetQtys[i] : "1", 1));
+                if (set.getMenuSetId() != null && set.getQuantity() > 0) {
+                    menuSets.add(set);
+                }
+            }
+        }
+        draft.setMenuSets(menuSets);
+
         List<BookingDraft.CartAddonDTO> addons = new java.util.ArrayList<>();
         String[] addonIds = request.getParameterValues("addonId");
         String[] addonQtys = request.getParameterValues("addonQty");

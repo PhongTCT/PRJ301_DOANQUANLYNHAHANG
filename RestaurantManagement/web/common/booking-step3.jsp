@@ -70,7 +70,7 @@
                                             <div class="card h-100 border-0 shadow-sm rounded-3">
                                                 <div class="row g-0">
                                                     <div class="col-4">
-                                                        <c:set var="imgUrl" value="${item.imageUrl != null ? item.imageUrl : 'https://images.unsplash.com/photo-1544025162-8315ea07525b?w=300&h=300&fit=crop'}" />
+                                                        <c:set var="imgUrl" value="${item.imageUrl != null ? item.imageUrl : 'assets/img/le-royal/menu/lotus-stem-salad.jpg'}" />
                                                         <img src="${imgUrl}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Food">
                                                     </div>
                                                     <div class="col-8">
@@ -98,7 +98,7 @@
                                             <div class="card h-100 border-0 shadow-sm rounded-3">
                                                 <div class="row g-0">
                                                     <div class="col-4">
-                                                        <c:set var="imgUrl" value="${set.imageUrl != null ? set.imageUrl : 'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=300&h=300&fit=crop'}" />
+                                                        <c:set var="imgUrl" value="${set.imageUrl != null ? set.imageUrl : 'assets/img/le-royal/menu/black-pepper-beef-tenderloin.jpg'}" />
                                                         <img src="${imgUrl}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Combo">
                                                     </div>
                                                     <div class="col-8">
@@ -107,8 +107,7 @@
                                                             <p class="card-text small text-muted mb-2 text-truncate" title="${set.description}">${set.description}</p>
                                                             <div class="d-flex justify-content-between align-items-center mt-auto">
                                                                 <span class="text-success fw-bold"><fmt:formatNumber value="${set.discountedPrice}" pattern="#,##0"/>đ</span>
-                                                                <!-- Note: We treat combo as a pseudo-menu item or addon depending on backend support, assuming addon for now -->
-                                                                <button type="button" class="btn btn-sm btn-outline-primary rounded-circle" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('addon', ${set.id}, this.getAttribute('data-name'), ${set.discountedPrice})" data-name="Set: ${fn:escapeXml(set.setName)}"><i class="fa-solid fa-plus"></i></button>
+                                                                <button type="button" class="btn btn-sm btn-outline-primary rounded-circle" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('set', ${set.id}, this.getAttribute('data-name'), ${set.discountedPrice})" data-name="Set: ${fn:escapeXml(set.setName)}"><i class="fa-solid fa-plus"></i></button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -128,7 +127,7 @@
                                     <c:forEach items="${addons}" var="addon">
                                         <div class="list-group-item d-flex align-items-center bg-white border-0 shadow-sm rounded-3 mb-2 p-3">
                                             <div class="flex-shrink-0 me-3">
-                                                <c:set var="addonImgUrl" value="${addon.imageUrl != null ? addon.imageUrl : 'https://images.unsplash.com/photo-1544025162-8315ea07525b?w=300&h=300&fit=crop'}" />
+                                                <c:set var="addonImgUrl" value="${addon.imageUrl != null ? addon.imageUrl : 'assets/img/le-royal/Champagne Welcome Service.jpg'}" />
                                                 <img src="${addonImgUrl}" class="rounded-3 object-fit-cover shadow-sm" alt="Addon" style="width: 80px; height: 80px;">
                                             </div>
                                             <div class="flex-grow-1">
@@ -221,6 +220,7 @@
         // Cart Logic
         let cart = {
             menu: {},
+            set: {},
             addon: {}
         };
 
@@ -290,6 +290,7 @@
             };
 
             renderType('menu', 'menuItemId');
+            renderType('set', 'menuSetId');
             renderType('addon', 'addonId');
 
             if (!hasItems) {
@@ -315,6 +316,10 @@
             for (let id in cart['menu']) {
                 this.insertAdjacentHTML('beforeend', '<input type="hidden" class="dynamic-cart-input" name="menuItemId" value="' + id + '">');
                 this.insertAdjacentHTML('beforeend', '<input type="hidden" class="dynamic-cart-input" name="menuItemQty" value="' + cart['menu'][id].qty + '">');
+            }
+            for (let id in cart['set']) {
+                this.insertAdjacentHTML('beforeend', '<input type="hidden" class="dynamic-cart-input" name="menuSetId" value="' + id + '">');
+                this.insertAdjacentHTML('beforeend', '<input type="hidden" class="dynamic-cart-input" name="menuSetQty" value="' + cart['set'][id].qty + '">');
             }
             for (let id in cart['addon']) {
                 this.insertAdjacentHTML('beforeend', '<input type="hidden" class="dynamic-cart-input" name="addonId" value="' + id + '">');

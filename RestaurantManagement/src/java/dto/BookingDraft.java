@@ -21,6 +21,7 @@ public class BookingDraft implements Serializable {
 
     // Step 3: Menus and Addons
     private List<CartItemDTO> menuItems = new ArrayList<>();
+    private List<CartSetDTO> menuSets = new ArrayList<>();
     private List<CartAddonDTO> addons = new ArrayList<>();
 
     // Getters and Setters
@@ -44,6 +45,8 @@ public class BookingDraft implements Serializable {
     public void setSelectedTableIds(List<Integer> selectedTableIds) { this.selectedTableIds = selectedTableIds; }
     public List<CartItemDTO> getMenuItems() { return menuItems; }
     public void setMenuItems(List<CartItemDTO> menuItems) { this.menuItems = menuItems; }
+    public List<CartSetDTO> getMenuSets() { return menuSets; }
+    public void setMenuSets(List<CartSetDTO> menuSets) { this.menuSets = menuSets; }
     public List<CartAddonDTO> getAddons() { return addons; }
     public void setAddons(List<CartAddonDTO> addons) { this.addons = addons; }
 
@@ -57,6 +60,15 @@ public class BookingDraft implements Serializable {
         public void setQuantity(Integer quantity) { this.quantity = quantity; }
         public String getNote() { return note; }
         public void setNote(String note) { this.note = note; }
+    }
+
+    public static class CartSetDTO implements Serializable {
+        private Integer menuSetId;
+        private Integer quantity;
+        public Integer getMenuSetId() { return menuSetId; }
+        public void setMenuSetId(Integer menuSetId) { this.menuSetId = menuSetId; }
+        public Integer getQuantity() { return quantity; }
+        public void setQuantity(Integer quantity) { this.quantity = quantity; }
     }
 
     public static class CartAddonDTO implements Serializable {

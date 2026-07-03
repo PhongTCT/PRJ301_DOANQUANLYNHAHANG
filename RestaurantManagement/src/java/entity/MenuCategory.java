@@ -34,9 +34,19 @@ public class MenuCategory implements Serializable {
     private List<MenuItem> menuItems;
 
     public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
     public String getCategoryName() { return categoryName; }
+    public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
     public MealTime getMealTime() { return mealTime; }
+    public void setMealTime(MealTime mealTime) { this.mealTime = mealTime; }
     public MenuCategoryType getCategoryType() { return categoryType; }
+    public void setCategoryType(MenuCategoryType categoryType) { this.categoryType = categoryType; }
+    public Integer getSortOrder() { return sortOrder; }
+    public void setSortOrder(Integer sortOrder) { this.sortOrder = sortOrder; }
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+    public List<MenuItem> getMenuItems() { return menuItems; }
+    public void setMenuItems(List<MenuItem> menuItems) { this.menuItems = menuItems; }
 
     public String getCategoryNameEn() {
         if (categoryName == null) return "";
