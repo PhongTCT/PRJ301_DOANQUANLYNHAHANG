@@ -22,9 +22,20 @@ public class CustomerProfile implements Serializable {
     @Column(name = "loyalty_points", nullable = false)
     private Integer loyaltyPoints = 0;
 
+    @Column(name = "coin_balance", nullable = false)
+    private BigDecimal coinBalance = BigDecimal.ZERO;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "current_rank_id")
     private CustomerRankConfig currentRank;
+
+    @Column(name = "last_activity_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastActivityAt;
+
+    @Column(name = "last_decay_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastDecayAt;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -48,8 +59,14 @@ public class CustomerProfile implements Serializable {
     public void setTotalSpent(BigDecimal totalSpent) { this.totalSpent = totalSpent; }
     public Integer getLoyaltyPoints() { return loyaltyPoints; }
     public void setLoyaltyPoints(Integer loyaltyPoints) { this.loyaltyPoints = loyaltyPoints; }
+    public BigDecimal getCoinBalance() { return coinBalance; }
+    public void setCoinBalance(BigDecimal coinBalance) { this.coinBalance = coinBalance; }
     public CustomerRankConfig getCurrentRank() { return currentRank; }
     public void setCurrentRank(CustomerRankConfig currentRank) { this.currentRank = currentRank; }
+    public Date getLastActivityAt() { return lastActivityAt; }
+    public void setLastActivityAt(Date lastActivityAt) { this.lastActivityAt = lastActivityAt; }
+    public Date getLastDecayAt() { return lastDecayAt; }
+    public void setLastDecayAt(Date lastDecayAt) { this.lastDecayAt = lastDecayAt; }
     public Date getCreatedAt() { return createdAt; }
     public Date getUpdatedAt() { return updatedAt; }
 }

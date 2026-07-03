@@ -43,4 +43,20 @@ public class RankTopUp implements Serializable {
 
     @PrePersist
     protected void onCreate() { createdAt = new Date(); }
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
+    public RankName getTargetRank() { return targetRank; }
+    public void setTargetRank(RankName targetRank) { this.targetRank = targetRank; }
+    public BigDecimal getAmount() { return amount; }
+    public void setAmount(BigDecimal amount) { this.amount = amount; }
+    public PaymentMethod getPaymentMethod() { return paymentMethod; }
+    public void setPaymentMethod(PaymentMethod paymentMethod) { this.paymentMethod = paymentMethod; }
+    public String getTransactionRef() { return transactionRef; }
+    public void setTransactionRef(String transactionRef) { this.transactionRef = transactionRef; }
+    public TransactionStatus getStatus() { return status; }
+    public void setStatus(TransactionStatus status) { this.status = status; }
+    public Date getCreatedAt() { return createdAt; }
 }

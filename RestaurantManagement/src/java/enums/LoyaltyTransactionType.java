@@ -4,5 +4,7 @@ public enum LoyaltyTransactionType {
     EARN,
     REDEEM,
     TOPUP,
-    RANK_UPGRADE
+    RANK_UPGRADE,
+    POINTS_DECAY,
+    RANK_DOWNGRADE
 }

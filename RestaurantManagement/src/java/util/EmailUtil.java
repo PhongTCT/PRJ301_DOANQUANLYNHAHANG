@@ -223,6 +223,69 @@ public class EmailUtil {
         "</body></html>";
     }
 
+    public static String buildRankChangeHtml(String name, String rankName, String changeType,
+            java.math.BigDecimal discountPercent, Boolean canBookVip, Boolean canBookVvip) {
+        boolean isUpgrade = "upgraded".equals(changeType);
+        String title = isUpgrade ? "Congratulation! Rank Upgraded" : "Rank Downgraded";
+        String heading = isUpgrade ? "Chuc mung ban da duoc len hang!" : "Thong bao: hang cua ban da bi giam";
+        String message = isUpgrade
+                ? "We are pleased to inform you that your membership rank has been upgraded"
+                : "Due to inactivity, your membership rank has been adjusted";
+        String benefits = "";
+        if (isUpgrade) {
+            benefits += "<p style=\"margin:4px 0;color:#444;font-size:14px\">";
+            if (discountPercent != null && discountPercent.compareTo(java.math.BigDecimal.ZERO) > 0)
+                benefits += "✦ Discount: <strong>" + discountPercent + "%</strong> off your bill<br>";
+            if (Boolean.TRUE.equals(canBookVip))
+                benefits += "✦ VIP room access: <strong>Enabled</strong><br>";
+            if (Boolean.TRUE.equals(canBookVvip))
+                benefits += "✦ VVIP room access: <strong>Enabled</strong><br>";
+            benefits += "</p>";
+        }
+        return "<!DOCTYPE html>" +
+        "<html>" +
+        "<head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">" +
+        "<style>" +
+            "body{margin:0;padding:0;background-color:#f5f3ef;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}" +
+            ".wrapper{max-width:600px;margin:0 auto;padding:20px 10px}" +
+            ".card{background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.08)}" +
+            ".header{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);padding:36px 32px;text-align:center}" +
+            ".header h1{margin:0;color:#d4af37;font-size:22px;font-weight:700;letter-spacing:1px}" +
+            ".header p{margin:6px 0 0;color:#c0c0c0;font-size:13px}" +
+            ".body{padding:36px 32px}" +
+            ".body h2{margin:0 0 16px;color:#1a1a2e;font-size:20px}" +
+            ".body p{margin:0 0 12px;color:#444;font-size:15px;line-height:1.6}" +
+            ".rank-badge{display:inline-block;padding:8px 24px;background:linear-gradient(135deg,#d4af37,#c5a028);color:#1a1a2e;border-radius:6px;font-size:18px;font-weight:700;letter-spacing:1px;margin:16px 0}" +
+            ".benefit-box{background:#faf8f5;border-radius:8px;padding:16px 20px;margin:16px 0;border:1px solid #e8e3db}" +
+            ".footer{background:#faf8f5;padding:24px 32px;text-align:center;border-top:1px solid #e8e3db}" +
+            ".footer p{margin:4px 0;color:#888;font-size:12px}" +
+        "</style></head>" +
+        "<body>" +
+        "<div class=\"wrapper\">" +
+        "<div class=\"card\">" +
+        "<div class=\"header\">" +
+        "<h1>✦ LE ROYAL ✦</h1>" +
+        "<p>Fine Dining Restaurant</p>" +
+        "</div>" +
+        "<div class=\"body\">" +
+        "<h2>" + title + "</h2>" +
+        "<p>" + escapeHtml(message) + ", " + escapeHtml(name) + ".</p>" +
+        "<div style=\"text-align:center\"><div class=\"rank-badge\">" + escapeHtml(rankName) + "</div></div>" +
+        "<p style=\"text-align:center;color:#888;font-size:14px\">" + escapeHtml(heading) + "</p>" +
+        (isUpgrade && !benefits.isEmpty() ? "<div class=\"benefit-box\">" + benefits + "</div>" : "") +
+        "<p style=\"font-size:13px;color:#888;margin-top:20px\">Visit us again to enjoy your membership benefits!</p>" +
+        "</div>" +
+        "<div class=\"footer\">" +
+        "<p><strong>Le Royal Restaurant</strong></p>" +
+        "<p>123 Nguyen Hue Street, District 1, Ho Chi Minh City</p>" +
+        "<p>Phone: (028) 3822-1234 &bull; Email: contact@leroyal.vn</p>" +
+        "<p style=\"margin-top:8px\">&copy; 2026 Le Royal Restaurant. All rights reserved.</p>" +
+        "</div>" +
+        "</div>" +
+        "</div>" +
+        "</body></html>";
+    }
+
     private static String escapeHtml(String value) {
         if (value == null) return "";
         return value.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")

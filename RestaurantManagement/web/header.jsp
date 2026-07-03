@@ -63,6 +63,7 @@
                                         </li>
                                     </c:when>
                                     <c:otherwise>
+                                        <li><a class="dropdown-item py-2" href="${pageContext.request.contextPath}/customer/rank"><i class="fa-solid fa-ranking-star me-2 text-warning"></i>Hạng & Điểm</a></li>
                                         <li><a class="dropdown-item py-2" href="${pageContext.request.contextPath}/customer/reservations"><i class="fa-solid fa-clock-rotate-left me-2 text-primary"></i>My Reservations</a></li>
                                         <li><a class="dropdown-item py-2" href="${pageContext.request.contextPath}/customer/vouchers"><i class="fa-solid fa-ticket me-2 text-primary"></i>Voucher của tôi</a></li>
                                         <li><a class="dropdown-item py-2" href="${pageContext.request.contextPath}/customer/reviews"><i class="fa-solid fa-star me-2 text-primary"></i>Đánh giá của tôi</a></li>
