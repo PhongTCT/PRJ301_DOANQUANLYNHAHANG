@@ -17,12 +17,14 @@ import javax.servlet.http.HttpSession;
 import javax.persistence.EntityManager;
 import service.BookingService;
 import service.BillingService;
+import service.VnPayService;
 import util.JPAUtil;
 
 public class BookingController extends HttpServlet {
 
     private final BookingService bookingService = new BookingService();
     private final BillingService billingService = new BillingService();
+    private final VnPayService vnPayService = new VnPayService();
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -98,6 +100,10 @@ public class BookingController extends HttpServlet {
                 session.setAttribute("lastReservation", reservation);
                 session.setAttribute("lastInvoice", reservation.getInvoice());
                 session.setAttribute("successMessage", "Đặt bàn thành công! Mã đặt bàn của bạn là #" + reservation.getId());
+                if (paymentMethod == PaymentMethod.VNPAY) {
+                    response.sendRedirect(vnPayService.createPaymentUrl(request, reservation.getInvoice()));
+                    return;
+                }
                 response.sendRedirect("MainController?action=bookingConfirmation");
                 return;
             } catch (Exception e) {

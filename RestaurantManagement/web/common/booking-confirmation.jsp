@@ -6,6 +6,18 @@
 
 <main class="bg-light py-5" style="min-height: 80vh;">
     <div class="container">
+        <c:if test="${not empty sessionScope.successMessage}">
+            <div class="alert alert-success border-0 shadow-sm">
+                <i class="fa-solid fa-circle-check me-2"></i>${sessionScope.successMessage}
+                <c:remove var="successMessage" scope="session"/>
+            </div>
+        </c:if>
+        <c:if test="${not empty sessionScope.errorMessage}">
+            <div class="alert alert-danger border-0 shadow-sm">
+                <i class="fa-solid fa-circle-exclamation me-2"></i>${sessionScope.errorMessage}
+                <c:remove var="errorMessage" scope="session"/>
+            </div>
+        </c:if>
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="card border-0 shadow-sm rounded-4 overflow-hidden">

@@ -145,15 +145,17 @@
                                 <div class="col-md-4">
                                     <label class="border rounded-3 p-3 w-100 h-100">
                                         <input type="radio" name="paymentMethod" value="VNPAY" class="me-2"> VNPay
+                                        <span class="d-block small text-muted mt-1">Chuyển sang cổng VNPay để thanh toán ngay.</span>
                                     </label>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="border rounded-3 p-3 w-100 h-100">
-                                        <input type="radio" name="paymentMethod" value="MOMO" class="me-2"> MoMo
+                                    <label class="border rounded-3 p-3 w-100 h-100 text-muted">
+                                        <input type="radio" name="paymentMethod" value="MOMO" class="me-2" disabled> MoMo
+                                        <span class="d-block small mt-1">Đang phát triển.</span>
                                     </label>
                                 </div>
                             </div>
-                            <div class="form-text">Hệ thống sẽ tạo invoice ở trạng thái chờ thanh toán để staff/admin xác nhận khi khách thanh toán.</div>
+                            <div class="form-text">VNPay sẽ tự cập nhật hóa đơn khi thanh toán thành công. Tiền mặt được staff/admin xác nhận tại quầy.</div>
                         </div>
 
                         <div class="alert alert-info border-0 rounded-3 d-flex align-items-start">
