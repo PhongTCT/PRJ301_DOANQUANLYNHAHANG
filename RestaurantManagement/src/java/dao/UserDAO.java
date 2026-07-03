@@ -52,6 +52,19 @@ public class UserDAO extends AbstractDAO<User, Long> {
         }
     }
 
+    public User searchByUsername(String username) {
+        if (username == null) return null;
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class);
+            query.setParameter("username", username);
+            List<User> list = query.getResultList();
+            return list.isEmpty() ? null : list.get(0);
+        } finally {
+            em.close();
+        }
+    }
+
     public User searchByGoogleId(String googleId) {
         if (googleId == null) return null;
         EntityManager em = JPAUtil.getEntityManager();
@@ -96,6 +109,7 @@ public class UserDAO extends AbstractDAO<User, Long> {
 
             if (user == null) {
                 user = new User();
+                user.setUsername(email.substring(0, email.indexOf('@')));
                 user.setEmail(email);
                 user.setFullName(fullName == null || fullName.trim().isEmpty() ? email : fullName.trim());
                 user.setRole(UserRole.CUSTOMER);
@@ -154,6 +168,7 @@ public class UserDAO extends AbstractDAO<User, Long> {
 
             if (user == null) {
                 user = new User();
+                user.setUsername(email.substring(0, email.indexOf('@')));
                 user.setEmail(email);
                 user.setFullName(fullName == null || fullName.trim().isEmpty() ? email : fullName.trim());
                 user.setRole(UserRole.CUSTOMER);
@@ -194,6 +209,20 @@ public class UserDAO extends AbstractDAO<User, Long> {
                 tx.rollback();
             }
             throw e;
+        } finally {
+            em.close();
+        }
+    }
+
+    public User searchByUsernameOrEmail(String usernameOrEmail) {
+        if (usernameOrEmail == null) return null;
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            TypedQuery<User> query = em.createQuery(
+                "SELECT u FROM User u WHERE u.username = :value OR u.email = :value", User.class);
+            query.setParameter("value", usernameOrEmail);
+            List<User> list = query.getResultList();
+            return list.isEmpty() ? null : list.get(0);
         } finally {
             em.close();
         }

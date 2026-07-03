@@ -44,7 +44,9 @@
                                     <th>Sao</th>
                                     <th>Nội dung</th>
                                     <th>Trạng thái</th>
-                                    <th class="text-end pe-4">Thao tác</th>
+                                    <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
+                                        <th class="text-end pe-4">Thao tác</th>
+                                    </c:if>
                                 </tr>
                             </thead>
                             <tbody>
@@ -55,17 +57,19 @@
                                         <td class="text-warning"><c:forEach begin="1" end="${r.rating}"><i class="fa-solid fa-star"></i></c:forEach></td>
                                         <td style="max-width:420px;">${r.comment}<c:if test="${not empty r.imageUrl}"><div><a href="${r.imageUrl}" target="_blank" class="small">Xem ảnh</a></div></c:if></td>
                                         <td><span class="badge ${r.isVisible ? 'bg-success' : 'bg-light text-dark border'}">${r.isVisible ? 'Đang hiển thị' : 'Đang ẩn'}</span></td>
-                                        <td class="text-end pe-4">
-                                            <form method="post" action="${pageContext.request.contextPath}/admin/reviews" class="d-inline">
-                                                <input type="hidden" name="id" value="${r.id}">
-                                                <input type="hidden" name="action" value="${r.isVisible ? 'hide' : 'show'}">
-                                                <button class="btn btn-sm ${r.isVisible ? 'btn-outline-secondary' : 'btn-outline-success'}">${r.isVisible ? 'Ẩn' : 'Duyệt'}</button>
-                                            </form>
-                                        </td>
+                                        <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
+                                            <td class="text-end pe-4">
+                                                <form method="post" action="${pageContext.request.contextPath}/admin/reviews" class="d-inline">
+                                                    <input type="hidden" name="id" value="${r.id}">
+                                                    <input type="hidden" name="action" value="${r.isVisible ? 'hide' : 'show'}">
+                                                    <button class="btn btn-sm ${r.isVisible ? 'btn-outline-secondary' : 'btn-outline-success'}">${r.isVisible ? 'Ẩn' : 'Duyệt'}</button>
+                                                </form>
+                                            </td>
+                                        </c:if>
                                     </tr>
                                 </c:forEach>
                                 <c:if test="${empty reviews}">
-                                    <tr><td colspan="6" class="text-center text-muted py-5">Chưa có đánh giá.</td></tr>
+                                    <tr><td colspan="${sessionScope.currentUser.role == 'ADMIN' ? 6 : 5}" class="text-center text-muted py-5">Chưa có đánh giá.</td></tr>
                                 </c:if>
                             </tbody>
                         </table>

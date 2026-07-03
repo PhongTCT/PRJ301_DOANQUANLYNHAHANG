@@ -19,7 +19,7 @@ public class ReviewModerationController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("currentUser");
-        if (user == null || user.getRole() != UserRole.ADMIN) {
+        if (user == null || (user.getRole() != UserRole.ADMIN && user.getRole() != UserRole.STAFF)) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }

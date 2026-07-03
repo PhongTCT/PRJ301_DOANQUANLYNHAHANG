@@ -24,9 +24,10 @@ public class MainController extends HttpServlet {
             case "login":
             case "dologin":
             case "googleLogin":
-            case "completeGoogleProfile":
+            case "registerGoogle":
             case "facebookLogin":
-            case "completeFacebookProfile":
+            case "registerFacebook":
+            case "verify":
             case "logout":
                 url = "LoginController";
                 break;

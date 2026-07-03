@@ -315,10 +315,12 @@
                     <h1 class="admin-voucher-title">Quản lý voucher</h1>
                     <p class="admin-voucher-copy">Tạo và theo dõi mã ưu đãi cho tổng hóa đơn. Trang này giữ số lượng, thời hạn và trạng thái bật/tắt để đội vận hành kiểm soát khuyến mãi rõ hơn.</p>
                 </div>
-                <button type="button" class="admin-primary-action" data-bs-toggle="modal" data-bs-target="#voucherModal">
-                    <i class="fa-solid fa-plus"></i>
-                    Thêm voucher
-                </button>
+                <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
+                    <button type="button" class="admin-primary-action" data-bs-toggle="modal" data-bs-target="#voucherModal">
+                        <i class="fa-solid fa-plus"></i>
+                        Thêm voucher
+                    </button>
+                </c:if>
             </section>
 
             <div class="admin-stat-grid">
@@ -364,7 +366,9 @@
                                 <th>Thời hạn</th>
                                 <th>Số lượng</th>
                                 <th>Trạng thái</th>
-                                <th class="text-end pe-4">Thao tác</th>
+                                <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
+                                    <th class="text-end pe-4">Thao tác</th>
+                                </c:if>
                             </tr>
                         </thead>
                         <tbody>
@@ -403,25 +407,27 @@
                                             ${v.isActive ? 'Đang bật' : 'Đã tắt'}
                                         </span>
                                     </td>
-                                    <td class="text-end pe-4">
-                                        <div class="voucher-actions">
-                                            <button type="button" class="voucher-icon-btn" title="Sửa voucher" data-bs-toggle="modal" data-bs-target="#editVoucher${v.id}">
-                                                <i class="fa-solid fa-pen"></i>
-                                            </button>
-                                            <form method="post" action="${pageContext.request.contextPath}/admin/vouchers" class="d-inline">
-                                                <input type="hidden" name="action" value="toggle">
-                                                <input type="hidden" name="id" value="${v.id}">
-                                                <button type="submit" class="voucher-icon-btn" title="${v.isActive ? 'Tắt voucher' : 'Bật voucher'}">
-                                                    <i class="fa-solid fa-power-off"></i>
+                                    <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
+                                        <td class="text-end pe-4">
+                                            <div class="voucher-actions">
+                                                <button type="button" class="voucher-icon-btn" title="Sửa voucher" data-bs-toggle="modal" data-bs-target="#editVoucher${v.id}">
+                                                    <i class="fa-solid fa-pen"></i>
                                                 </button>
-                                            </form>
-                                        </div>
-                                    </td>
+                                                <form method="post" action="${pageContext.request.contextPath}/admin/vouchers" class="d-inline">
+                                                    <input type="hidden" name="action" value="toggle">
+                                                    <input type="hidden" name="id" value="${v.id}">
+                                                    <button type="submit" class="voucher-icon-btn" title="${v.isActive ? 'Tắt voucher' : 'Bật voucher'}">
+                                                        <i class="fa-solid fa-power-off"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </c:if>
                                 </tr>
                             </c:forEach>
                             <c:if test="${empty vouchers}">
                                 <tr>
-                                    <td colspan="7" class="voucher-empty-row">
+                                    <td colspan="${sessionScope.currentUser.role == 'ADMIN' ? 7 : 6}" class="voucher-empty-row">
                                         <i class="fa-solid fa-ticket"></i>
                                         Chưa có voucher. Tạo mã đầu tiên để bắt đầu quản lý ưu đãi.
                                     </td>
@@ -435,6 +441,7 @@
     </main>
 </div>
 
+<c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
 <div class="modal fade admin-modal" id="voucherModal" tabindex="-1" aria-labelledby="voucherModalTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -499,7 +506,9 @@
         </div>
     </div>
 </div>
+</c:if>
 
+<c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
 <c:forEach items="${vouchers}" var="v">
     <div class="modal fade admin-modal" id="editVoucher${v.id}" tabindex="-1" aria-labelledby="editVoucherTitle${v.id}" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -543,6 +552,7 @@
         </div>
     </div>
 </c:forEach>
+</c:if>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>

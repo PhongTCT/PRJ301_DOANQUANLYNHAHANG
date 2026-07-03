@@ -45,6 +45,7 @@ GO
 
 CREATE TABLE users (
     id BIGINT IDENTITY(1,1) PRIMARY KEY,
+    username NVARCHAR(50) NOT NULL UNIQUE,
     email NVARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NULL,
     full_name NVARCHAR(100) NOT NULL,
@@ -388,11 +389,11 @@ VALUES
     ('PLATINUM', 70000000, 12.00, 4, 1, 1),
     ('DIAMOND', 100000000, 15.00, 5, 1, 1);
 
-INSERT INTO users (email, password, full_name, phone, role, status, email_verified)
+INSERT INTO users (username, email, password, full_name, phone, role, status, email_verified)
 VALUES
-    ('admin@restaurant.com', '$2a$10$Ew8wW/w.u/Q.E.R.T.Y.U.I.O.P.A.S.D.F.G.H.J.K.L.Z.X.C.V', N'Admin User', '0901234567', 'ADMIN', 'ACTIVE', 1),
-    ('staff@restaurant.com', '$2a$10$Ew8wW/w.u/Q.E.R.T.Y.U.I.O.P.A.S.D.F.G.H.J.K.L.Z.X.C.V', N'Staff User', '0902345678', 'STAFF', 'ACTIVE', 1),
-    ('customer@gmail.com', '$2a$10$Ew8wW/w.u/Q.E.R.T.Y.U.I.O.P.A.S.D.F.G.H.J.K.L.Z.X.C.V', N'Loyal Customer', '0903456789', 'CUSTOMER', 'ACTIVE', 1);
+    ('admin', 'admin@restaurant.com', '$2a$10$Ew8wW/w.u/Q.E.R.T.Y.U.I.O.P.A.S.D.F.G.H.J.K.L.Z.X.C.V', N'Admin User', '0901234567', 'ADMIN', 'ACTIVE', 1),
+    ('staff', 'staff@restaurant.com', '$2a$10$Ew8wW/w.u/Q.E.R.T.Y.U.I.O.P.A.S.D.F.G.H.J.K.L.Z.X.C.V', N'Staff User', '0902345678', 'STAFF', 'ACTIVE', 1),
+    ('customer', 'customer@gmail.com', '$2a$10$Ew8wW/w.u/Q.E.R.T.Y.U.I.O.P.A.S.D.F.G.H.J.K.L.Z.X.C.V', N'Loyal Customer', '0903456789', 'CUSTOMER', 'ACTIVE', 1);
 
 DECLARE @customerId BIGINT = (SELECT id FROM users WHERE email = 'customer@gmail.com');
 DECLARE @bronzeRankId INT = (SELECT id FROM customer_rank_config WHERE rank_name = 'BRONZE');

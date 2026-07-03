@@ -79,9 +79,10 @@ public class AuthFilter implements Filter {
             case "login":
             case "dologin":
             case "googleLogin":
-            case "completeGoogleProfile":
+            case "registerGoogle":
             case "facebookLogin":
-            case "completeFacebookProfile":
+            case "registerFacebook":
+            case "verify":
             case "logout":
             case "bookingConfirmation":
                 return true;

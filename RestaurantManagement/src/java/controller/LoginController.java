@@ -3,6 +3,7 @@ package controller;
 import dto.FacebookLoginDraft;
 import dto.GoogleLoginDraft;
 import entity.User;
+import enums.UserStatus;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -10,10 +11,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import service.AuthService;
+import util.EmailUtil;
 
 public class LoginController extends HttpServlet {
 
     private final AuthService authService = new AuthService();
+
+    @Override
+    public void init() throws ServletException {
+        EmailUtil.init(getServletContext());
+    }
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -44,7 +51,7 @@ public class LoginController extends HttpServlet {
 
         if ("dologin".equals(action)) {
             try {
-                User user = authService.login(request.getParameter("email"), request.getParameter("password"));
+                User user = authService.login(request.getParameter("username"), request.getParameter("password"));
                 loginSuccess(request, response, session, user);
             } catch (IllegalArgumentException e) {
                 request.setAttribute("error", e.getMessage());
@@ -57,11 +64,19 @@ public class LoginController extends HttpServlet {
                         ? authService.buildGoogleLoginDraftFromAccessToken(accessToken)
                         : authService.buildGoogleLoginDraftFromCredential(request.getParameter("credential"));
 
-                if (authService.findExistingGoogleUser(draft) == null) {
+                User existingUser = authService.findExistingGoogleUser(draft);
+
+                if (existingUser == null) {
                     session.setAttribute("pendingGoogleLogin", draft);
                     request.setAttribute("googleDraft", draft);
                     request.setAttribute("showGoogleInfoForm", true);
                     request.setAttribute("notice", "Please complete your information to create your account.");
+                    request.getRequestDispatcher("login.jsp").forward(request, response);
+                    return;
+                }
+
+                if (existingUser.getStatus() != UserStatus.ACTIVE) {
+                    request.setAttribute("notice", "Your account is pending verification. Please check your email to verify your account.");
                     request.getRequestDispatcher("login.jsp").forward(request, response);
                     return;
                 }
@@ -74,16 +89,17 @@ public class LoginController extends HttpServlet {
                 request.setAttribute("error", "Google login could not be completed. Please try again.");
                 request.getRequestDispatcher("login.jsp").forward(request, response);
             }
-        } else if ("completeGoogleProfile".equals(action)) {
+        } else if ("registerGoogle".equals(action)) {
             try {
                 GoogleLoginDraft draft = (GoogleLoginDraft) session.getAttribute("pendingGoogleLogin");
-                User user = authService.completeGoogleProfile(
+                authService.registerGoogleUser(
                         draft,
                         request.getParameter("fullName"),
                         request.getParameter("phone"),
                         request.getParameter("dateOfBirth"));
                 session.removeAttribute("pendingGoogleLogin");
-                loginSuccess(request, response, session, user);
+                request.setAttribute("success", "Account created! Please check your email to verify your account.");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
             } catch (IllegalArgumentException e) {
                 request.setAttribute("error", e.getMessage());
                 request.setAttribute("showGoogleInfoForm", true);
@@ -99,11 +115,19 @@ public class LoginController extends HttpServlet {
             try {
                 FacebookLoginDraft draft = authService.buildFacebookLoginDraftFromAccessToken(request.getParameter("facebookAccessToken"));
 
-                if (authService.findExistingFacebookUser(draft) == null) {
+                User existingUser = authService.findExistingFacebookUser(draft);
+
+                if (existingUser == null) {
                     session.setAttribute("pendingFacebookLogin", draft);
                     request.setAttribute("facebookDraft", draft);
                     request.setAttribute("showFacebookInfoForm", true);
                     request.setAttribute("notice", "Please complete your information to create your account.");
+                    request.getRequestDispatcher("login.jsp").forward(request, response);
+                    return;
+                }
+
+                if (existingUser.getStatus() != UserStatus.ACTIVE) {
+                    request.setAttribute("notice", "Your account is pending verification. Please check your email to verify your account.");
                     request.getRequestDispatcher("login.jsp").forward(request, response);
                     return;
                 }
@@ -116,16 +140,17 @@ public class LoginController extends HttpServlet {
                 request.setAttribute("error", "Facebook login could not be completed. Please try again.");
                 request.getRequestDispatcher("login.jsp").forward(request, response);
             }
-        } else if ("completeFacebookProfile".equals(action)) {
+        } else if ("registerFacebook".equals(action)) {
             try {
                 FacebookLoginDraft draft = (FacebookLoginDraft) session.getAttribute("pendingFacebookLogin");
-                User user = authService.completeFacebookProfile(
+                authService.registerFacebookUser(
                         draft,
                         request.getParameter("fullName"),
                         request.getParameter("phone"),
                         request.getParameter("dateOfBirth"));
                 session.removeAttribute("pendingFacebookLogin");
-                loginSuccess(request, response, session, user);
+                request.setAttribute("success", "Account created! Please check your email to verify your account.");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
             } catch (IllegalArgumentException e) {
                 request.setAttribute("error", e.getMessage());
                 request.setAttribute("showFacebookInfoForm", true);
@@ -137,6 +162,15 @@ public class LoginController extends HttpServlet {
                 request.setAttribute("facebookDraft", session.getAttribute("pendingFacebookLogin"));
                 request.getRequestDispatcher("login.jsp").forward(request, response);
             }
+        } else if ("verify".equals(action)) {
+            String token = request.getParameter("token");
+            String error = authService.verifyEmail(token);
+            if (error != null) {
+                request.setAttribute("error", error);
+            } else {
+                request.setAttribute("success", "Email verified successfully! You can now login.");
+            }
+            request.getRequestDispatcher("login.jsp").forward(request, response);
         } else {
             if ("1".equals(request.getParameter("required"))) {
                 request.setAttribute("notice", "Please login before using this feature.");

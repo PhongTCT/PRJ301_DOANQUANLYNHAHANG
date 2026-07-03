@@ -25,12 +25,15 @@
                 <c:if test="${not empty notice}">
                     <div class="alert alert-info py-2 small">${notice}</div>
                 </c:if>
+                <c:if test="${not empty success}">
+                    <div class="alert alert-success py-2 small">${success}</div>
+                </c:if>
 
                 <c:choose>
                     <c:when test="${showGoogleInfoForm or not empty sessionScope.pendingGoogleLogin}">
                         <c:set var="pendingGoogle" value="${not empty googleDraft ? googleDraft : sessionScope.pendingGoogleLogin}" />
                         <form action="MainController" method="POST">
-                            <input type="hidden" name="action" value="completeGoogleProfile">
+                            <input type="hidden" name="action" value="registerGoogle">
                             <div class="bg-light border rounded p-3 mb-4">
                                 <div class="d-flex align-items-center gap-3">
                                     <c:if test="${not empty pendingGoogle.avatarUrl}">
@@ -67,7 +70,7 @@
                     <c:when test="${showFacebookInfoForm or not empty sessionScope.pendingFacebookLogin}">
                         <c:set var="pendingFacebook" value="${not empty facebookDraft ? facebookDraft : sessionScope.pendingFacebookLogin}" />
                         <form action="MainController" method="POST">
-                            <input type="hidden" name="action" value="completeFacebookProfile">
+                            <input type="hidden" name="action" value="registerFacebook">
                             <div class="bg-light border rounded p-3 mb-4">
                                 <div class="d-flex align-items-center gap-3">
                                     <c:if test="${not empty pendingFacebook.avatarUrl}">
@@ -105,8 +108,8 @@
                 <form action="MainController" method="POST">
                     <input type="hidden" name="action" value="dologin">
                     <div class="mb-3">
-                        <label class="form-label small fw-bold">Email</label>
-                        <input type="email" name="email" class="form-control" placeholder="admin@restaurant.com" required>
+                        <label class="form-label small fw-bold">Username or Email</label>
+                        <input type="text" name="username" class="form-control" placeholder="admin / admin@restaurant.com" required>
                     </div>
                     <div class="mb-4">
                         <label class="form-label small fw-bold">Password</label>
@@ -142,9 +145,9 @@
 
                 <div class="bg-light border rounded p-3 mt-4 small">
                     <div class="fw-bold mb-2">Quick test accounts</div>
-                    <div class="mb-1"><code>admin@restaurant.com / 123456</code></div>
-                    <div class="mb-1"><code>staff@restaurant.com / 123456</code></div>
-                    <div><code>customer@gmail.com / 123456</code></div>
+                    <div class="mb-1"><code>admin / 123456</code> (admin)</div>
+                    <div class="mb-1"><code>staff / 123456</code> (staff)</div>
+                    <div><code>customer / 123456</code> (customer)</div>
                 </div>
                     </c:otherwise>
                 </c:choose>

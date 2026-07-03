@@ -31,7 +31,9 @@ public class RoleFilter implements Filter {
         }
         if (uri.contains("/admin/")) {
             if (currentUser.getRole() == UserRole.STAFF) {
-                if (!uri.contains("/admin/walkin") && !uri.contains("/admin/reservations") && !uri.contains("/admin/quick-bill")) {
+                if (!uri.contains("/admin/walkin") && !uri.contains("/admin/reservations") && !uri.contains("/admin/quick-bill")
+                        && !uri.contains("/admin/invoices") && !uri.contains("/admin/vouchers")
+                        && !uri.contains("/admin/reviews") && !uri.contains("/admin/reports")) {
                     httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
                     return;
                 }
