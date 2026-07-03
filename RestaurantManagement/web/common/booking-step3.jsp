@@ -14,6 +14,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         .item-img { width: 100%; height: 100px; object-fit: cover; }
+        .category-tabs { display: flex; overflow-x: auto; gap: 10px; padding-bottom: 10px; }
+        .category-tabs::-webkit-scrollbar { height: 6px; }
+        .category-tabs::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .cat-btn { white-space: nowrap; padding: 8px 16px; border-radius: 20px; border: 1px solid #cbd5e1; background: white; color: #475569; font-weight: 500; transition: all 0.2s; }
+        .cat-btn:hover, .cat-btn.active { background: #4F46E5; color: white; border-color: #4F46E5; }
     </style>
 </head>
 <body class="bg-light pb-5">
@@ -47,101 +52,95 @@
             <div class="col-lg-8">
                 <div class="card shadow-sm border-0 rounded-4 mb-4">
                     <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
-                        <ul class="nav nav-tabs border-bottom-0" id="menuTabs" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active fw-bold text-dark border-0 border-bottom border-primary border-3 bg-transparent pb-3" id="combo-tab" data-bs-toggle="tab" data-bs-target="#combo-pane" type="button" role="tab"><fmt:message key="booking.step3.tab.combo"/></button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link text-muted border-0 bg-transparent pb-3" id="food-tab" data-bs-toggle="tab" data-bs-target="#food-pane" type="button" role="tab"><fmt:message key="booking.step3.tab.food"/></button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link text-muted border-0 bg-transparent pb-3" id="service-tab" data-bs-toggle="tab" data-bs-target="#service-pane" type="button" role="tab"><fmt:message key="booking.step3.tab.service"/></button>
-                            </li>
-                        </ul>
+                        <div class="category-tabs">
+                            <button class="cat-btn active" onclick="filterCategory('ALL', this)">All Items</button>
+                            <button class="cat-btn" onclick="filterCategory('combo', this)"><i class="fa-solid fa-layer-group me-1"></i><fmt:message key="booking.step3.tab.combo"/></button>
+                            <button class="cat-btn" onclick="filterCategory('1', this)">Khai Vị</button>
+                            <button class="cat-btn" onclick="filterCategory('2', this)">Món Chính</button>
+                            <button class="cat-btn" onclick="filterCategory('3', this)">Tráng Miệng</button>
+                            <button class="cat-btn" onclick="filterCategory('4', this)"><fmt:message key="booking.step3.tab.drink"/></button>
+                            <button class="cat-btn" onclick="filterCategory('service', this)"><fmt:message key="booking.step3.tab.service"/></button>
+                        </div>
                     </div>
                     
                     <div class="card-body p-4 bg-light bg-opacity-50">
-                        <div class="tab-content" id="menuTabContent">
-                            <!-- FOOD TAB -->
-                            <div class="tab-pane fade" id="food-pane" role="tabpanel" tabindex="0">
-                                <div class="row row-cols-1 row-cols-md-2 g-3">
-                                    <c:forEach items="${menuItems}" var="item">
-                                        <div class="col">
-                                            <div class="card h-100 border-0 shadow-sm rounded-3">
-                                                <div class="row g-0">
-                                                    <div class="col-4">
-                                                        <c:set var="imgUrl" value="${item.imageUrl != null ? item.imageUrl : 'assets/img/le-royal/menu/lotus-stem-salad.jpg'}" />
-                                                        <img src="${imgUrl}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Food">
-                                                    </div>
-                                                    <div class="col-8">
-                                                        <div class="card-body py-2 px-3">
-                                                            <h6 class="card-title fw-bold mb-1 text-truncate">${sessionScope.lang == 'en' ? item.itemNameEn : item.itemName}</h6>
-                                                            <p class="card-text small text-muted mb-2 text-truncate" title="${sessionScope.lang == 'en' ? item.descriptionEn : item.description}">${sessionScope.lang == 'en' ? item.descriptionEn : item.description}</p>
-                                                            <div class="d-flex justify-content-between align-items-center mt-auto">
-                                                                <span class="text-success fw-bold"><fmt:formatNumber value="${item.basePrice}" pattern="#,##0"/>đ</span>
-                                                                <button type="button" class="btn btn-sm btn-outline-primary rounded-circle" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('menu', ${item.id}, this.getAttribute('data-name'), ${item.basePrice})" data-name="${fn:escapeXml(sessionScope.lang == 'en' ? item.itemNameEn : item.itemName)}"><i class="fa-solid fa-plus"></i></button>
-                                                            </div>
-                                                        </div>
+                        <div class="row row-cols-1 row-cols-md-2 g-3" id="menuGrid">
+                            
+                            <!-- COMBO SETS -->
+                            <c:forEach items="${menuSets}" var="set">
+                                <div class="col filter-item" data-category="combo">
+                                    <div class="card h-100 border-0 shadow-sm rounded-3">
+                                        <div class="row g-0 h-100">
+                                            <div class="col-4">
+                                                <c:set var="imgUrl" value="${set.imageUrl != null ? set.imageUrl : 'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=300&h=300&fit=crop'}" />
+                                                <img src="${imgUrl}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Combo">
+                                            </div>
+                                            <div class="col-8">
+                                                <div class="card-body py-2 px-3 d-flex flex-column h-100">
+                                                    <h6 class="card-title fw-bold mb-1 text-truncate">${set.setName}</h6>
+                                                    <p class="card-text small text-muted mb-2 text-truncate" title="${set.description}">${set.description}</p>
+                                                    <div class="d-flex justify-content-between align-items-center mt-auto">
+                                                        <span class="text-success fw-bold"><fmt:formatNumber value="${set.discountedPrice}" pattern="#,##0"/>đ</span>
+                                                        <button type="button" class="btn btn-sm btn-outline-primary rounded-circle" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('combo', ${set.id}, this.getAttribute('data-name'), ${set.discountedPrice})" data-name="Set: ${fn:escapeXml(set.setName)}"><i class="fa-solid fa-plus"></i></button>
+
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </c:forEach>
+                                    </div>
                                 </div>
-                            </div>
-                            
-                            <!-- COMBO TAB -->
-                            <div class="tab-pane fade show active" id="combo-pane" role="tabpanel" tabindex="0">
-                                <div class="row row-cols-1 row-cols-md-2 g-3">
-                                    <c:forEach items="${menuSets}" var="set">
-                                        <div class="col">
-                                            <div class="card h-100 border-0 shadow-sm rounded-3">
-                                                <div class="row g-0">
-                                                    <div class="col-4">
-                                                        <c:set var="imgUrl" value="${set.imageUrl != null ? set.imageUrl : 'assets/img/le-royal/menu/black-pepper-beef-tenderloin.jpg'}" />
-                                                        <img src="${imgUrl}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Combo">
-                                                    </div>
-                                                    <div class="col-8">
-                                                        <div class="card-body py-2 px-3">
-                                                            <h6 class="card-title fw-bold mb-1 text-truncate">${set.setName}</h6>
-                                                            <p class="card-text small text-muted mb-2 text-truncate" title="${set.description}">${set.description}</p>
-                                                            <div class="d-flex justify-content-between align-items-center mt-auto">
-                                                                <span class="text-success fw-bold"><fmt:formatNumber value="${set.discountedPrice}" pattern="#,##0"/>đ</span>
-                                                                <button type="button" class="btn btn-sm btn-outline-primary rounded-circle" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('set', ${set.id}, this.getAttribute('data-name'), ${set.discountedPrice})" data-name="Set: ${fn:escapeXml(set.setName)}"><i class="fa-solid fa-plus"></i></button>
-                                                            </div>
-                                                        </div>
+                            </c:forEach>
+
+                            <!-- MENU ITEMS -->
+                            <c:forEach items="${menuItems}" var="item">
+                                <div class="col filter-item" data-category="${item.category.id}">
+                                    <div class="card h-100 border-0 shadow-sm rounded-3">
+                                        <div class="row g-0 h-100">
+                                            <div class="col-4">
+                                                <c:set var="imgUrl" value="${item.imageUrl != null ? item.imageUrl : 'https://images.unsplash.com/photo-1544025162-8315ea07525b?w=300&h=300&fit=crop'}" />
+                                                <img src="${imgUrl}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Item">
+                                            </div>
+                                            <div class="col-8">
+                                                <div class="card-body py-2 px-3 d-flex flex-column h-100">
+                                                    <h6 class="card-title fw-bold mb-1 text-truncate">${sessionScope.lang == 'en' ? item.itemNameEn : item.itemName}</h6>
+                                                    <p class="card-text small text-muted mb-2 text-truncate" title="${sessionScope.lang == 'en' ? item.descriptionEn : item.description}">${sessionScope.lang == 'en' ? item.descriptionEn : item.description}</p>
+                                                    <div class="d-flex justify-content-between align-items-center mt-auto">
+                                                        <span class="text-success fw-bold"><fmt:formatNumber value="${item.basePrice}" pattern="#,##0"/>đ</span>
+                                                        <button type="button" class="btn btn-sm btn-outline-primary rounded-circle" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('menu', ${item.id}, this.getAttribute('data-name'), ${item.basePrice})" data-name="${fn:escapeXml(sessionScope.lang == 'en' ? item.itemNameEn : item.itemName)}"><i class="fa-solid fa-plus"></i></button>
+
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </c:forEach>
-                                    <c:if test="${empty menuSets}">
-                                        <p class="text-muted w-100 text-center py-4">No combo sets available.</p>
-                                    </c:if>
+                                    </div>
                                 </div>
-                            </div>
-                            
-                            <!-- SERVICES TAB -->
-                            <div class="tab-pane fade" id="service-pane" role="tabpanel" tabindex="0">
-                                <div class="list-group">
-                                    <c:forEach items="${addons}" var="addon">
-                                        <div class="list-group-item d-flex align-items-center bg-white border-0 shadow-sm rounded-3 mb-2 p-3">
-                                            <div class="flex-shrink-0 me-3">
-                                                <c:set var="addonImgUrl" value="${addon.imageUrl != null ? addon.imageUrl : 'assets/img/le-royal/Champagne Welcome Service.jpg'}" />
-                                                <img src="${addonImgUrl}" class="rounded-3 object-fit-cover shadow-sm" alt="Addon" style="width: 80px; height: 80px;">
+                            </c:forEach>
+
+                            <!-- SERVICES / ADDONS -->
+                            <c:forEach items="${addons}" var="addon">
+                                <div class="col filter-item" data-category="service">
+                                    <div class="card h-100 border-0 shadow-sm rounded-3">
+                                        <div class="row g-0 h-100">
+                                            <div class="col-4">
+                                                <c:set var="addonImgUrl" value="${addon.imageUrl != null ? addon.imageUrl : 'https://images.unsplash.com/photo-1544025162-8315ea07525b?w=300&h=300&fit=crop'}" />
+                                                <img src="${addonImgUrl}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Addon">
+
                                             </div>
-                                            <div class="flex-grow-1">
-                                                <strong class="d-block mb-1">${addon.serviceName}</strong>
-                                                <span class="d-block small text-muted">${addon.description}</span>
-                                            </div>
-                                            <div class="text-end ms-3">
-                                                <span class="fw-bold text-success d-block mb-2"><fmt:formatNumber value="${addon.price}" pattern="#,##0"/>d</span>
-                                                <button type="button" class="btn btn-sm btn-outline-primary" onclick="addToCart('addon', ${addon.id}, this.getAttribute('data-name'), ${addon.price})" data-name="${fn:escapeXml(addon.serviceName)}">Thêm</button>
+                                            <div class="col-8">
+                                                <div class="card-body py-2 px-3 d-flex flex-column h-100">
+                                                    <h6 class="card-title fw-bold mb-1 text-truncate">${addon.serviceName}</h6>
+                                                    <p class="card-text small text-muted mb-2 text-truncate" title="${addon.description}">${addon.description}</p>
+                                                    <div class="d-flex justify-content-between align-items-center mt-auto">
+                                                        <span class="text-success fw-bold"><fmt:formatNumber value="${addon.price}" pattern="#,##0"/>đ</span>
+                                                        <button type="button" class="btn btn-sm btn-outline-primary rounded-circle" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('addon', ${addon.id}, this.getAttribute('data-name'), ${addon.price})" data-name="${fn:escapeXml(addon.serviceName)}"><i class="fa-solid fa-plus"></i></button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </c:forEach>
+                                    </div>
                                 </div>
-                            </div>
+                            </c:forEach>
+
                         </div>
                     </div>
                 </div>
@@ -220,8 +219,9 @@
         // Cart Logic
         let cart = {
             menu: {},
-            set: {},
-            addon: {}
+            addon: {},
+            combo: {}
+
         };
 
         function addToCart(type, id, name, price) {
@@ -255,47 +255,48 @@
         }
 
         function renderCart() {
-            const list = document.getElementById('cartItemsList');
-            const emptyMsg = document.getElementById('emptyCartMsg');
+            let list = document.getElementById('cartItemsList');
+            let emptyMsg = document.getElementById('emptyCartMsg');
             let total = 0;
             let hasItems = false;
+            
+            // clear list except empty message
+            Array.from(list.children).forEach(child => {
+                if (child.id !== 'emptyCartMsg') child.remove();
+            });
 
-            // Clear current items (except empty message if it was hidden)
-            list.innerHTML = '';
-
-            const renderType = (type, prefixId) => {
-                for (let id in cart[type]) {
+            const types = ['combo', 'menu', 'addon'];
+            types.forEach(t => {
+                for (let id in cart[t]) {
                     hasItems = true;
-                    let item = cart[type][id];
-                    total += item.price * item.qty;
-
+                    let item = cart[t][id];
+                    let lineTotal = item.price * item.qty;
+                    total += lineTotal;
+                    
                     let li = document.createElement('li');
-                    li.className = 'list-group-item p-3';
-                    li.innerHTML = `
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <div class="fw-medium text-dark">` + item.name + `</div>
-                            <button type="button" class="btn-close btn-sm" style="font-size: 0.6rem;" onclick="removeCartItem('`+type+`', `+id+`)"></button>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="input-group input-group-sm w-auto">
-                                <button class="btn btn-outline-secondary px-2" type="button" onclick="updateQty('`+type+`', `+id+`, -1)"><i class="fa-solid fa-minus"></i></button>
-                                <input type="text" class="form-control text-center px-0 fw-bold" value="`+item.qty+`" style="max-width: 40px;" readonly>
-                                <button class="btn btn-outline-secondary px-2" type="button" onclick="updateQty('`+type+`', `+id+`, 1)"><i class="fa-solid fa-plus"></i></button>
-                            </div>
-                            <span class="text-success fw-bold">` + formatCurrency(item.price * item.qty) + `</span>
-                        </div>
-                    `;
+                    li.className = 'list-group-item px-3 py-2 border-0 border-bottom';
+                    li.innerHTML = '<div class="d-flex justify-content-between align-items-center mb-1">' +
+                        '<span class="fw-bold small text-truncate" style="max-width: 60%;">' + item.name + '</span>' +
+                        '<span class="fw-bold text-success small">' + formatCurrency(lineTotal) + '</span>' +
+                        '</div>' +
+                        '<div class="d-flex justify-content-between align-items-center">' +
+                        '<span class="text-muted small">' + formatCurrency(item.price) + '</span>' +
+                        '<div class="btn-group btn-group-sm border rounded">' +
+                        '<button type="button" class="btn btn-light px-2" onclick="updateQty(\'' + t + '\', ' + id + ', -1)"><i class="fa-solid fa-minus" style="font-size: 10px;"></i></button>' +
+                        '<span class="btn btn-light px-3 fw-bold border-start border-end" style="pointer-events: none;">' + item.qty + '</span>' +
+                        '<button type="button" class="btn btn-light px-2" onclick="updateQty(\'' + t + '\', ' + id + ', 1)"><i class="fa-solid fa-plus" style="font-size: 10px;"></i></button>' +
+                        '</div>' +
+                        '</div>';
                     list.appendChild(li);
                 }
-            };
+            });
 
-            renderType('menu', 'menuItemId');
-            renderType('set', 'menuSetId');
-            renderType('addon', 'addonId');
 
             if (!hasItems) {
                 list.appendChild(emptyMsg);
                 emptyMsg.style.display = 'block';
+            } else {
+                emptyMsg.style.display = 'none';
             }
 
             if (surchargePercent > 0) {
@@ -325,7 +326,25 @@
                 this.insertAdjacentHTML('beforeend', '<input type="hidden" class="dynamic-cart-input" name="addonId" value="' + id + '">');
                 this.insertAdjacentHTML('beforeend', '<input type="hidden" class="dynamic-cart-input" name="addonQty" value="' + cart['addon'][id].qty + '">');
             }
+            for (let id in cart['combo']) {
+                this.insertAdjacentHTML('beforeend', '<input type="hidden" class="dynamic-cart-input" name="menuSetId" value="' + id + '">');
+                this.insertAdjacentHTML('beforeend', '<input type="hidden" class="dynamic-cart-input" name="menuSetQty" value="' + cart['combo'][id].qty + '">');
+            }
         });
+
+        // Filter Menu Categories
+        function filterCategory(catId, btnEl) {
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active', 'bg-primary', 'text-white'));
+            btnEl.classList.add('active');
+            
+            document.querySelectorAll('.filter-item').forEach(card => {
+                if (catId === 'ALL' || card.dataset.category === catId) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
     </script>
 </body>
 </html>

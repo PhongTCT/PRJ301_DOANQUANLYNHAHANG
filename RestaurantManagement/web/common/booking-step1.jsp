@@ -43,10 +43,16 @@
         </div>
 
         <c:if test="${not empty error}">
-            <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
-                <i class="fa-solid fa-circle-exclamation me-2"></i>${error}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <div class="alert alert-danger shadow-sm border-0 rounded-3 mb-4">
+                <i class="fa-solid fa-circle-exclamation me-2"></i> ${error}
             </div>
+        </c:if>
+
+        <c:if test="${not empty sessionScope.successMessage}">
+            <div class="alert alert-success shadow-sm border-0 rounded-3 mb-4">
+                <i class="fa-solid fa-check-circle me-2"></i> ${sessionScope.successMessage}
+            </div>
+            <c:remove var="successMessage" scope="session" />
         </c:if>
 
         <div class="row justify-content-center">

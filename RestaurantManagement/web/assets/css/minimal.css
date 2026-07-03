@@ -238,6 +238,37 @@ section.py-5.bg-light:before {
     box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.08);
 }
 
+.account-menu {
+    min-width: 248px;
+    padding: 0.55rem;
+    border: 1px solid var(--brand-line) !important;
+    border-radius: 0 !important;
+    box-shadow: 0 1rem 2.4rem rgba(42, 34, 20, 0.14) !important;
+}
+
+.account-menu .dropdown-item {
+    border-radius: 0;
+    font-weight: 600;
+    transition: background-color 0.22s ease, color 0.22s ease, transform 0.22s ease;
+}
+
+.account-menu .dropdown-item:hover,
+.account-menu .dropdown-item:focus {
+    background: #f8f4ec;
+    color: #171410;
+    transform: translateX(2px);
+}
+
+.account-menu__primary {
+    border: 1px solid rgba(185, 154, 82, 0.34);
+    background: linear-gradient(90deg, rgba(185, 154, 82, 0.13), rgba(255, 255, 255, 0.9));
+    color: #171410;
+}
+
+.account-menu__primary i {
+    color: var(--brand-gold);
+}
+
 @media (max-width: 575.98px) {
     .brand-emblem,
     .brand-symbol {

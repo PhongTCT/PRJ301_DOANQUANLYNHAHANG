@@ -1,10 +1,13 @@
 package service;
 
 import dao.UserDAO;
+import dao.VerificationTokenDAO;
 import dto.FacebookLoginDraft;
 import dto.GoogleLoginDraft;
 import entity.User;
+import entity.VerificationToken;
 import enums.UserStatus;
+import enums.VerificationTokenType;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,9 +18,11 @@ import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import util.BCryptUtil;
+import util.EmailUtil;
 
 public class AuthService {
     private static final String GOOGLE_CLIENT_ID = "421816854411-gjtf8gr3ts2v9r866pk2s4n9mc1tvvs0.apps.googleusercontent.com";
@@ -28,17 +33,18 @@ public class AuthService {
     private static final String FACEBOOK_USER_INFO_URL = "https://graph.facebook.com/v19.0/me";
 
     private final UserDAO userDAO = new UserDAO();
+    private final VerificationTokenDAO tokenDAO = new VerificationTokenDAO();
 
-    public User login(String email, String password) {
-        if (email == null || password == null || email.trim().isEmpty() || password.trim().isEmpty()) {
-            throw new IllegalArgumentException("Please enter email and password.");
+    public User login(String username, String password) {
+        if (username == null || password == null || username.trim().isEmpty() || password.trim().isEmpty()) {
+            throw new IllegalArgumentException("Please enter username and password.");
         }
-        User user = userDAO.searchByEmail(email.trim());
+        User user = userDAO.searchByUsernameOrEmail(username.trim());
         if (user == null) {
             throw new IllegalArgumentException("Account does not exist.");
         }
         if (user.getStatus() != UserStatus.ACTIVE) {
-            throw new IllegalArgumentException("Account is not active.");
+            throw new IllegalArgumentException("Account is not active. Please verify your email first.");
         }
         if (user.getPassword() == null || !BCryptUtil.checkPassword(password, user.getPassword())) {
             throw new IllegalArgumentException("Incorrect password.");
@@ -94,12 +100,12 @@ public class AuthService {
                 draft.getFullName(),
                 draft.getAvatarUrl());
         if (user.getStatus() != UserStatus.ACTIVE) {
-            throw new IllegalArgumentException("Account is not active.");
+            throw new IllegalArgumentException("Account is not active. Please verify your email first.");
         }
         return user;
     }
 
-    public User completeGoogleProfile(GoogleLoginDraft draft, String fullName, String phone, String dateOfBirth) {
+    public User registerGoogleUser(GoogleLoginDraft draft, String fullName, String phone, String dateOfBirth) {
         validateGoogleDraft(draft);
         String cleanName = fullName == null ? "" : fullName.trim();
         String cleanPhone = phone == null ? "" : phone.trim();
@@ -118,10 +124,79 @@ public class AuthService {
                 draft.getAvatarUrl(),
                 cleanPhone,
                 parseDateOfBirth(dateOfBirth));
-        if (user.getStatus() != UserStatus.ACTIVE) {
-            throw new IllegalArgumentException("Account is not active.");
-        }
+
+        user.setStatus(UserStatus.PENDING);
+        user.setEmailVerified(false);
+        userDAO.update(user);
+
+        sendVerificationEmail(user);
+
         return user;
+    }
+
+    public User registerFacebookUser(FacebookLoginDraft draft, String fullName, String phone, String dateOfBirth) {
+        validateFacebookDraft(draft);
+        String cleanName = fullName == null ? "" : fullName.trim();
+        String cleanPhone = phone == null ? "" : phone.trim();
+
+        if (cleanName.isEmpty()) {
+            throw new IllegalArgumentException("Please enter your full name.");
+        }
+        if (cleanPhone.isEmpty()) {
+            throw new IllegalArgumentException("Please enter your phone number.");
+        }
+
+        User user = userDAO.findOrCreateFacebookUser(
+                draft.getFacebookId(),
+                draft.getEmail(),
+                cleanName,
+                draft.getAvatarUrl(),
+                cleanPhone,
+                parseDateOfBirth(dateOfBirth));
+
+        user.setStatus(UserStatus.PENDING);
+        user.setEmailVerified(false);
+        userDAO.update(user);
+
+        sendVerificationEmail(user);
+
+        return user;
+    }
+
+    private void sendVerificationEmail(User user) {
+        String tokenValue = UUID.randomUUID().toString().replace("-", "");
+        Date expiresAt = new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000L);
+
+        VerificationToken verifyToken = new VerificationToken(user, tokenValue, VerificationTokenType.EMAIL_VERIFY, expiresAt);
+        tokenDAO.insert(verifyToken);
+
+        String verifyLink = "http://localhost:8080/RestaurantManagement/MainController?action=verify&token=" + tokenValue;
+        EmailUtil.sendVerifyEmail(user.getEmail(), user.getFullName(), verifyLink);
+    }
+
+    public String verifyEmail(String tokenValue) {
+        if (tokenValue == null || tokenValue.trim().isEmpty()) {
+            return "Invalid verification link.";
+        }
+
+        VerificationToken token = tokenDAO.findValidToken(tokenValue.trim(), VerificationTokenType.EMAIL_VERIFY);
+        if (token == null) {
+            return "This verification link is invalid or has expired.";
+        }
+
+        User user = token.getUser();
+        if (user == null) {
+            return "User not found.";
+        }
+
+        user.setStatus(UserStatus.ACTIVE);
+        user.setEmailVerified(true);
+        userDAO.update(user);
+
+        token.setUsedAt(new Date());
+        tokenDAO.update(token);
+
+        return null;
     }
 
     public FacebookLoginDraft buildFacebookLoginDraftFromAccessToken(String accessToken) {
@@ -158,32 +233,7 @@ public class AuthService {
                 null,
                 null);
         if (user.getStatus() != UserStatus.ACTIVE) {
-            throw new IllegalArgumentException("Account is not active.");
-        }
-        return user;
-    }
-
-    public User completeFacebookProfile(FacebookLoginDraft draft, String fullName, String phone, String dateOfBirth) {
-        validateFacebookDraft(draft);
-        String cleanName = fullName == null ? "" : fullName.trim();
-        String cleanPhone = phone == null ? "" : phone.trim();
-
-        if (cleanName.isEmpty()) {
-            throw new IllegalArgumentException("Please enter your full name.");
-        }
-        if (cleanPhone.isEmpty()) {
-            throw new IllegalArgumentException("Please enter your phone number.");
-        }
-
-        User user = userDAO.findOrCreateFacebookUser(
-                draft.getFacebookId(),
-                draft.getEmail(),
-                cleanName,
-                draft.getAvatarUrl(),
-                cleanPhone,
-                parseDateOfBirth(dateOfBirth));
-        if (user.getStatus() != UserStatus.ACTIVE) {
-            throw new IllegalArgumentException("Account is not active.");
+            throw new IllegalArgumentException("Account is not active. Please verify your email first.");
         }
         return user;
     }

@@ -26,6 +26,19 @@ public class DiningTableDAO extends AbstractDAO<DiningTable, Integer> {
         }
     }
 
+    public ArrayList<DiningTable> getTablesByStatus(enums.TableStatus status) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            TypedQuery<DiningTable> query = em.createQuery(
+                    "SELECT d FROM DiningTable d WHERE d.isActive = true AND d.status = :status ORDER BY d.room.roomName, d.tableCode",
+                    DiningTable.class);
+            query.setParameter("status", status);
+            return new ArrayList<>(query.getResultList());
+        } finally {
+            em.close();
+        }
+    }
+
     public ArrayList<DiningTable> findAvailableTables(java.util.Date reservationDate, java.sql.Time reservationTime, int totalGuests) {
         EntityManager em = JPAUtil.getEntityManager();
         try {

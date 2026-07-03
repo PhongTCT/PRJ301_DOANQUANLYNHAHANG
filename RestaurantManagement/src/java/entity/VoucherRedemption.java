@@ -29,4 +29,15 @@ public class VoucherRedemption implements Serializable {
 
     @PrePersist
     protected void onCreate() { usedAt = new Date(); }
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public Voucher getVoucher() { return voucher; }
+    public void setVoucher(Voucher voucher) { this.voucher = voucher; }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
+    public Invoice getInvoice() { return invoice; }
+    public void setInvoice(Invoice invoice) { this.invoice = invoice; }
+    public Date getUsedAt() { return usedAt; }
+    public void setUsedAt(Date usedAt) { this.usedAt = usedAt; }
 }

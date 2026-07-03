@@ -29,9 +29,18 @@ public class RoleFilter implements Filter {
             httpResponse.sendRedirect(httpRequest.getContextPath() + "/MainController?action=login");
             return;
         }
-        if (uri.contains("/admin/") && currentUser.getRole() != UserRole.ADMIN) {
-            httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
-            return;
+        if (uri.contains("/admin/")) {
+            if (currentUser.getRole() == UserRole.STAFF) {
+                if (!uri.contains("/admin/walkin") && !uri.contains("/admin/reservations") && !uri.contains("/admin/quick-bill")
+                        && !uri.contains("/admin/invoices") && !uri.contains("/admin/vouchers")
+                        && !uri.contains("/admin/reviews") && !uri.contains("/admin/reports")) {
+                    httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
+                    return;
+                }
+            } else if (currentUser.getRole() != UserRole.ADMIN) {
+                httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
+                return;
+            }
         }
         if (uri.contains("/staff/")
                 && currentUser.getRole() != UserRole.STAFF

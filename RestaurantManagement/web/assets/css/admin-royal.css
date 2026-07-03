@@ -1,0 +1,335 @@
+:root {
+    --admin-ink: #171410;
+    --admin-muted: #70675b;
+    --admin-gold: #b99a52;
+    --admin-gold-soft: rgba(185, 154, 82, 0.16);
+    --admin-line: #e8dfcf;
+    --admin-paper: #fbfaf7;
+    --admin-wash: #f3efe8;
+    --admin-panel: rgba(255, 255, 255, 0.88);
+}
+
+* {
+    letter-spacing: 0;
+}
+
+body.admin-royal {
+    margin: 0;
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top right, rgba(185, 154, 82, 0.13), transparent 34rem),
+        linear-gradient(180deg, var(--admin-paper) 0%, var(--admin-wash) 100%) !important;
+    color: var(--admin-ink);
+    font-family: "Inter", Arial, sans-serif !important;
+}
+
+body.admin-royal h1,
+body.admin-royal h2,
+body.admin-royal .admin-display,
+body.admin-royal .metric .fs-4,
+body.admin-royal .voucher-discount,
+body.admin-royal .table-code {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-weight: 600;
+}
+
+body.admin-royal > .d-flex,
+body.admin-royal .container-fluid > .d-flex {
+    min-height: 100vh;
+}
+
+body.admin-royal main.flex-grow-1,
+body.admin-royal > .d-flex > .flex-grow-1,
+body.admin-royal .container-fluid > .d-flex > .flex-grow-1 {
+    min-width: 0;
+    padding: 2rem !important;
+}
+
+.admin-shell {
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.admin-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 1.5rem;
+    padding: 1.25rem 0 1.5rem;
+}
+
+body.admin-royal > .d-flex > .flex-grow-1 > .d-flex.justify-content-between.align-items-center.mb-4,
+body.admin-royal .container-fluid > .d-flex > .flex-grow-1 > .d-flex.justify-content-between.align-items-center.mb-4 {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end !important;
+    gap: 1.5rem;
+    padding: 1.25rem 0 1.5rem;
+    margin-bottom: 0.5rem !important;
+}
+
+.admin-kicker,
+.admin-section-label,
+body.admin-royal .table thead th,
+body.admin-royal .form-label.text-muted.small.fw-bold,
+body.admin-royal .form-label.small.text-muted {
+    color: #917337 !important;
+    font-size: 0.72rem;
+    font-weight: 800 !important;
+    letter-spacing: 0.13em !important;
+    text-transform: uppercase;
+}
+
+.admin-title,
+body.admin-royal main > h2.fw-bold,
+body.admin-royal main > .d-flex h2,
+body.admin-royal .flex-grow-1.p-5 > .d-flex h2,
+body.admin-royal .flex-grow-1.p-5 > h2 {
+    margin: 0.3rem 0 0.4rem;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: clamp(2.45rem, 4.6vw, 4.45rem);
+    font-weight: 600 !important;
+    line-height: 0.95;
+    color: var(--admin-ink);
+}
+
+.admin-copy,
+body.admin-royal main > .d-flex p,
+body.admin-royal .flex-grow-1.p-5 > .d-flex p,
+body.admin-royal .text-muted {
+    color: var(--admin-muted) !important;
+}
+
+body.admin-royal .card,
+body.admin-royal .metric,
+body.admin-royal .menu-section,
+body.admin-royal .cart-section,
+body.admin-royal .pos-card {
+    overflow: hidden;
+    border: 1px solid var(--admin-line) !important;
+    border-radius: 0 !important;
+    background: var(--admin-panel) !important;
+    box-shadow: 0 1rem 2.5rem rgba(94, 77, 45, 0.09) !important;
+}
+
+body.admin-royal .card-body {
+    background: transparent !important;
+}
+
+body.admin-royal .table {
+    margin-bottom: 0 !important;
+}
+
+body.admin-royal .table thead th {
+    padding: 1rem;
+    background: #f8f3ea !important;
+    border-bottom: 1px solid var(--admin-line);
+    white-space: nowrap;
+}
+
+body.admin-royal .table tbody td {
+    padding: 1rem;
+    border-color: #efe6d7;
+    vertical-align: middle;
+}
+
+body.admin-royal .table-hover tbody tr {
+    transition: background-color 0.18s ease;
+}
+
+body.admin-royal .table-hover tbody tr:hover {
+    background-color: rgba(185, 154, 82, 0.08);
+}
+
+body.admin-royal .btn,
+body.admin-royal .form-control,
+body.admin-royal .form-select,
+body.admin-royal .input-group-text,
+body.admin-royal .badge {
+    border-radius: 0 !important;
+}
+
+body.admin-royal .btn-primary,
+body.admin-royal .btn-pos {
+    border-color: var(--admin-ink) !important;
+    background: var(--admin-ink) !important;
+    color: #fff !important;
+    font-weight: 700;
+    transition: transform 0.22s ease, background-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+body.admin-royal .btn-primary:hover,
+body.admin-royal .btn-primary:focus,
+body.admin-royal .btn-pos:hover,
+body.admin-royal .btn-pos:focus {
+    border-color: #2d2618 !important;
+    background: #2d2618 !important;
+    color: #fff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 0.8rem 1.8rem rgba(45, 38, 24, 0.16);
+}
+
+body.admin-royal .btn-outline-primary,
+body.admin-royal .btn-outline-info,
+body.admin-royal .btn-outline-success,
+body.admin-royal .btn-outline-secondary {
+    border-color: #ded4c5 !important;
+    color: var(--admin-ink) !important;
+    background: #fff !important;
+}
+
+body.admin-royal .btn-outline-primary:hover,
+body.admin-royal .btn-outline-info:hover,
+body.admin-royal .btn-outline-success:hover,
+body.admin-royal .btn-outline-secondary:hover,
+body.admin-royal .btn-light:hover {
+    border-color: var(--admin-gold) !important;
+    background: #fbf7ef !important;
+    color: var(--admin-ink) !important;
+}
+
+body.admin-royal .btn-sm:not(.dropdown-toggle),
+body.admin-royal .btn-light.border.shadow-sm {
+    min-width: 36px;
+    min-height: 36px;
+}
+
+body.admin-royal .form-control,
+body.admin-royal .form-select,
+body.admin-royal .input-group-text {
+    border-color: #ded4c5;
+    background-color: #fff;
+}
+
+body.admin-royal .form-control:focus,
+body.admin-royal .form-select:focus {
+    border-color: var(--admin-gold);
+    box-shadow: 0 0 0 0.2rem rgba(185, 154, 82, 0.14);
+}
+
+body.admin-royal .alert {
+    border: 0;
+    border-left: 3px solid currentColor;
+    border-radius: 0 !important;
+    box-shadow: 0 0.8rem 1.8rem rgba(94, 77, 45, 0.08);
+}
+
+body.admin-royal .modal-content {
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: 0 1.5rem 4rem rgba(23, 20, 16, 0.18) !important;
+}
+
+body.admin-royal .modal-header,
+body.admin-royal .modal-footer {
+    border-color: var(--admin-line) !important;
+    background: #fbf7ef;
+}
+
+body.admin-royal .modal-title {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 1.85rem;
+    font-weight: 600 !important;
+    color: var(--admin-ink);
+}
+
+body.admin-royal .badge.bg-light,
+body.admin-royal .badge.bg-secondary-subtle,
+body.admin-royal .badge.bg-success-subtle,
+body.admin-royal .badge.bg-warning-subtle,
+body.admin-royal .badge.bg-danger-subtle {
+    border: 1px solid #e1d3ba !important;
+    background: #fbf7ef !important;
+    color: #715c2d !important;
+    font-weight: 700;
+}
+
+body.admin-royal .badge.bg-success,
+body.admin-royal .badge.bg-primary {
+    background: #edf7f1 !important;
+    border: 1px solid rgba(25, 135, 84, 0.25) !important;
+    color: #1c6a45 !important;
+}
+
+body.admin-royal .badge.bg-warning,
+body.admin-royal .badge.bg-danger {
+    background: #fff6e8 !important;
+    border: 1px solid rgba(185, 154, 82, 0.35) !important;
+    color: #8a5c12 !important;
+}
+
+body.admin-royal .text-primary,
+body.admin-royal .text-success,
+body.admin-royal .text-warning {
+    color: #8a6e34 !important;
+}
+
+body.admin-royal .metric {
+    padding: 1.15rem 1.2rem !important;
+}
+
+body.admin-royal .metric .fs-4 {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: 2.3rem !important;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+}
+
+body.admin-royal .pos-container {
+    max-width: 920px;
+}
+
+body.admin-royal .pos-header,
+body.admin-royal .cart-header {
+    border-radius: 0 !important;
+    background: #171410 !important;
+    color: #fff !important;
+}
+
+body.admin-royal .table-card,
+body.admin-royal .dining-opt-btn,
+body.admin-royal .cat-btn,
+body.admin-royal .menu-item-card,
+body.admin-royal .qty-control {
+    border-radius: 0 !important;
+    border-color: #ded4c5 !important;
+}
+
+body.admin-royal .table-card:hover,
+body.admin-royal .table-card.selected,
+body.admin-royal .dining-opt-btn.active,
+body.admin-royal .cat-btn:hover,
+body.admin-royal .cat-btn.active {
+    border-color: var(--admin-gold) !important;
+    background: #fbf7ef !important;
+    color: var(--admin-ink) !important;
+}
+
+body.admin-royal .table-card.selected .text-white {
+    color: var(--admin-ink) !important;
+}
+
+body.admin-royal .menu-item-price,
+body.admin-royal .summary-total,
+body.admin-royal .cart-item-total {
+    color: var(--admin-ink) !important;
+    font-variant-numeric: tabular-nums;
+}
+
+body.admin-royal .main-content {
+    background: transparent !important;
+    padding: 1.25rem !important;
+}
+
+@media (max-width: 991.98px) {
+    body.admin-royal main.flex-grow-1,
+    body.admin-royal > .d-flex > .flex-grow-1,
+    body.admin-royal .container-fluid > .d-flex > .flex-grow-1 {
+        padding: 1.25rem !important;
+    }
+
+    .admin-hero {
+        grid-template-columns: 1fr;
+    }
+}

@@ -36,7 +36,10 @@ public abstract class AbstractDAO<T, K> {
         if (entity == null) {
             return false;
         }
-        return executeInTransaction(em -> em.persist(entity));
+        return executeInTransaction(em -> {
+            em.persist(entity);
+            em.flush();
+        });
     }
 
     public boolean update(T entity) {

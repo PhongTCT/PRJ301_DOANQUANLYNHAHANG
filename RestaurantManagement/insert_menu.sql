@@ -1,0 +1,17 @@
+INSERT INTO menu_item (category_id, item_name, description, image_url, base_price, is_available) VALUES 
+(1, 'Mini Savory Tartlets', 'Delicate savory tartlets with seasonal fillings', 'assets/img/le-royal/Mini Savory Tartlets.png', 250000, 1),
+(1, 'Mushroom Croquette with Truffle', 'Crispy croquettes with earthy mushroom and truffle', 'assets/img/le-royal/Mushroom Croquette with Truffle.png', 280000, 1),
+(1, 'Chef''s Seafood Canape Selection', 'Assorted premium seafood canapés', 'assets/img/le-royal/Chef''s Seafood Canape Selection.png', 450000, 1),
+(1, 'Tuna Tartare with Herb Consomme', 'Fresh tuna tartare served with a light herb broth', 'assets/img/le-royal/Tuna Tartare with Herb Consomme.png', 350000, 1),
+(1, 'Chicken Rillettes with Pickled Vegetables', 'Smooth chicken rillettes paired with tangy pickles', 'assets/img/le-royal/Chicken Rillettes with Pickled Vegetables.png', 220000, 1),
+(2, 'Seared Tuna with Avocado Puree', 'Perfectly seared tuna with smooth avocado puree and bell pepper sauces', 'assets/img/le-royal/Seared Tuna with Avocado Puree and Bell Pepper Sauces.png', 550000, 1),
+(2, 'Poached Lobster with Spiced Broth', 'Tender poached lobster served in an aromatic spiced broth', 'assets/img/le-royal/Poached Lobster with Spiced Broth.png', 1200000, 1),
+(2, 'Grilled Fish with Shellfish Bisque', 'Fresh grilled fish accompanied by shellfish bisque and carrot puree', 'assets/img/le-royal/Grilled Fish with Shellfish Bisque and Carrot Puree.png', 650000, 1),
+(2, 'Butter-Poached Lobster with Bisque Foam', 'Rich butter-poached lobster finished with a delicate bisque foam', 'assets/img/le-royal/Butter-Poached Lobster with Bisque Foam.png', 1300000, 1),
+(2, 'Crispy Rice Cake with Mushrooms and Herbs', 'Crispy rice cake topped with savory mushrooms and fresh herbs', 'assets/img/le-royal/Crispy Rice Cake with Mushrooms and Herbs.png', 350000, 1),
+(2, 'Crispy Pork Belly with Carrot Puree', 'Crispy pork belly balanced with sweet carrot puree', 'assets/img/le-royal/Crispy Pork Belly with Carrot Puree.png', 450000, 1),
+(2, 'Roasted Pork Belly with Fermented Bean Sauce', 'Succulent roasted pork belly glazed with fermented bean sauce', 'assets/img/le-royal/Roasted Pork Belly with Fermented Bean Sauce.png', 420000, 1),
+(2, 'Whole Alaskan King Crab', 'Premium whole Alaskan king crab steamed to perfection', 'assets/img/le-royal/Whole Alaskan King Crab.png', 3500000, 1),
+(2, 'Poached Fish Mousse with Shellfish Sauce', 'Delicate poached fish mousse served with a rich shellfish sauce', 'assets/img/le-royal/Poached Fish Mousse with Shellfish Sauce.png', 580000, 1),
+(2, 'Roasted Pigeon with Root Vegetable Puree', 'Classic roasted pigeon paired with silky root vegetable puree', 'assets/img/le-royal/Roasted Pigeon with Root Vegetable Puree.png', 750000, 1),
+(3, 'Coconut Mousse with Basil', 'Light and refreshing coconut mousse with a hint of basil', 'assets/img/le-royal/Coconut Mousse with Basil.png', 150000, 1);

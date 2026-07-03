@@ -45,6 +45,7 @@ GO
 
 CREATE TABLE users (
     id BIGINT IDENTITY(1,1) PRIMARY KEY,
+    username NVARCHAR(50) NOT NULL UNIQUE,
     email NVARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NULL,
     full_name NVARCHAR(100) NOT NULL,
@@ -73,7 +74,7 @@ CREATE TABLE customer_rank_config (
     id INT IDENTITY(1,1) PRIMARY KEY,
     rank_name VARCHAR(20) NOT NULL UNIQUE
         CHECK (rank_name IN ('BRONZE','SILVER','GOLD','PLATINUM','DIAMOND')),
-    min_spend_threshold DECIMAL(12,0) NOT NULL CHECK (min_spend_threshold >= 0),
+    min_point_threshold INT NOT NULL CHECK (min_point_threshold >= 0),
     discount_percent DECIMAL(5,2) NOT NULL CHECK (discount_percent >= 0),
     points_per_thousand_vnd INT NOT NULL CHECK (points_per_thousand_vnd >= 0),
     can_book_vip BIT NOT NULL DEFAULT 0,
@@ -87,8 +88,11 @@ CREATE TABLE customer_profile (
         CONSTRAINT FK_customer_profile_user REFERENCES users(id) ON DELETE CASCADE,
     total_spent DECIMAL(12,0) NOT NULL DEFAULT 0 CHECK (total_spent >= 0),
     loyalty_points INT NOT NULL DEFAULT 0 CHECK (loyalty_points >= 0),
+    coin_balance DECIMAL(12,0) NOT NULL DEFAULT 0 CHECK (coin_balance >= 0),
     current_rank_id INT NULL
         CONSTRAINT FK_customer_profile_rank REFERENCES customer_rank_config(id),
+    last_activity_at DATETIME2 NULL,
+    last_decay_at DATETIME2 NULL,
     created_at DATETIME2 NOT NULL DEFAULT GETDATE(),
     updated_at DATETIME2 NOT NULL DEFAULT GETDATE()
 );
@@ -109,7 +113,7 @@ CREATE TABLE rank_topup (
 CREATE TABLE loyalty_transaction (
     id BIGINT IDENTITY(1,1) PRIMARY KEY,
     user_id BIGINT NOT NULL CONSTRAINT FK_loyalty_transaction_user REFERENCES users(id),
-    type VARCHAR(20) NOT NULL CHECK (type IN ('EARN','REDEEM','TOPUP','RANK_UPGRADE')),
+    type VARCHAR(20) NOT NULL CHECK (type IN ('EARN','REDEEM','TOPUP','RANK_UPGRADE','POINTS_DECAY','RANK_DOWNGRADE')),
     points_delta INT NOT NULL,
     amount_reference DECIMAL(12,0) NULL,
     description NVARCHAR(255) NULL,
@@ -381,24 +385,27 @@ CREATE TABLE audit_log (
 GO
 
 INSERT INTO customer_rank_config
-    (rank_name, min_spend_threshold, discount_percent, points_per_thousand_vnd, can_book_vip, can_book_vvip)
+    (rank_name, min_point_threshold, discount_percent, points_per_thousand_vnd, can_book_vip, can_book_vvip, is_active)
 VALUES
-    ('BRONZE', 0, 0.00, 1, 0, 0),
-    ('SILVER', 10000000, 5.00, 2, 1, 0),
-    ('GOLD', 30000000, 8.00, 3, 1, 0),
-    ('PLATINUM', 70000000, 12.00, 4, 1, 1),
-    ('DIAMOND', 100000000, 15.00, 5, 1, 1);
+    ('BRONZE', 0, 0.00, 1, 0, 0, 1),
+    ('SILVER', 5000, 5.00, 1, 0, 0, 1),
+    ('GOLD', 20000, 10.00, 2, 1, 0, 1),
+    ('PLATINUM', 50000, 15.00, 3, 1, 1, 1),
+    ('DIAMOND', 100000, 20.00, 5, 1, 1, 1);
 
-INSERT INTO users (email, password, full_name, phone, role, status, email_verified)
-VALUES
-    ('admin@restaurant.com', '$2a$10$Ew8wW/w.u/Q.E.R.T.Y.U.I.O.P.A.S.D.F.G.H.J.K.L.Z.X.C.V', N'Admin User', '0901234567', 'ADMIN', 'ACTIVE', 1),
-    ('staff@restaurant.com', '$2a$10$Ew8wW/w.u/Q.E.R.T.Y.U.I.O.P.A.S.D.F.G.H.J.K.L.Z.X.C.V', N'Staff User', '0902345678', 'STAFF', 'ACTIVE', 1),
-    ('customer@gmail.com', '$2a$10$Ew8wW/w.u/Q.E.R.T.Y.U.I.O.P.A.S.D.F.G.H.J.K.L.Z.X.C.V', N'Loyal Customer', '0903456789', 'CUSTOMER', 'ACTIVE', 1);
+IF NOT EXISTS (SELECT 1 FROM users WHERE username = 'admin')
+BEGIN
+    INSERT INTO users (username, email, password, full_name, phone, role, status, email_verified)
+    VALUES
+        ('admin', 'admin@restaurant.com', '$2a$10$Ew8wW/w.u/Q.E.R.T.Y.U.I.O.P.A.S.D.F.G.H.J.K.L.Z.X.C.V', N'Admin User', '0901234567', 'ADMIN', 'ACTIVE', 1),
+        ('staff', 'staff@restaurant.com', '$2a$10$Ew8wW/w.u/Q.E.R.T.Y.U.I.O.P.A.S.D.F.G.H.J.K.L.Z.X.C.V', N'Staff User', '0902345678', 'STAFF', 'ACTIVE', 1),
+        ('customer', 'customer@gmail.com', '$2a$10$Ew8wW/w.u/Q.E.R.T.Y.U.I.O.P.A.S.D.F.G.H.J.K.L.Z.X.C.V', N'Loyal Customer', '0903456789', 'CUSTOMER', 'ACTIVE', 1);
 
-DECLARE @customerId BIGINT = (SELECT id FROM users WHERE email = 'customer@gmail.com');
-DECLARE @bronzeRankId INT = (SELECT id FROM customer_rank_config WHERE rank_name = 'BRONZE');
-INSERT INTO customer_profile (user_id, total_spent, loyalty_points, current_rank_id)
-VALUES (@customerId, 0, 100, @bronzeRankId);
+    DECLARE @customerId BIGINT = (SELECT id FROM users WHERE email = 'customer@gmail.com');
+    DECLARE @bronzeRankId INT = (SELECT id FROM customer_rank_config WHERE rank_name = 'BRONZE');
+    INSERT INTO customer_profile (user_id, total_spent, loyalty_points, current_rank_id)
+    VALUES (@customerId, 0, 100, @bronzeRankId);
+END
 
 INSERT INTO event_type (name, description)
 VALUES
@@ -562,6 +569,18 @@ VALUES
     (N'Rose Table Decoration', N'Fresh roses and candle styling', 250000, 'assets/img/le-royal/Signature Red Rose Bouquet.jpg'),
     (N'Premium Birthday Cake', N'Chocolate or fruit cake on request', 350000, 'assets/img/le-royal/Champagne Welcome Service.jpg'),
     (N'Table Violin Performance', N'Thirty minute private violin performance', 500000, 'assets/img/le-royal/Private Live Pianist.jpg');
+
+IF NOT EXISTS (SELECT 1 FROM customer_rank_config WHERE rank_name = 'BRONZE')
+BEGIN
+    INSERT INTO customer_rank_config (rank_name, min_point_threshold, discount_percent, points_per_thousand_vnd, can_book_vip, can_book_vvip, is_active)
+    VALUES
+        ('BRONZE', 0, 0, 1, 0, 0, 1),
+        ('SILVER', 5000, 5.00, 1, 0, 0, 1),
+        ('GOLD', 20000, 10.00, 2, 1, 0, 1),
+        ('PLATINUM', 50000, 15.00, 3, 1, 1, 1),
+        ('DIAMOND', 100000, 20.00, 5, 1, 1, 1);
+END
+GO
 
 INSERT INTO voucher
     (voucher_code, voucher_type, discount_percent, discount_amount, min_order_value, max_discount, valid_from, valid_to, usage_limit)

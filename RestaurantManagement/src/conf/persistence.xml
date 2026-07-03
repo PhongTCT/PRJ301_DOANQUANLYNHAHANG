@@ -10,6 +10,8 @@
       <property name="javax.persistence.jdbc.password" value="12345"/>
       <!-- Disable auto table creation to preserve our custom SQL setup & seed data -->
       <property name="javax.persistence.schema-generation.database.action" value="none"/>
+      <!-- Disable cache to prevent stale data during direct SQL inserts -->
+      <property name="eclipselink.cache.shared.default" value="false"/>
     </properties>
   </persistence-unit>
 </persistence>

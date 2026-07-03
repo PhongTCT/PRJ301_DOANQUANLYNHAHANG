@@ -31,6 +31,14 @@
             <div class="alert alert-warning">${pageError}</div>
         </div>
     </c:if>
+    <c:if test="${not empty sessionScope.errorMessage}">
+        <div class="container mt-4">
+            <div class="alert alert-danger shadow-sm border-0">
+                <i class="fa-solid fa-circle-exclamation me-2"></i>${sessionScope.errorMessage}
+                <c:remove var="errorMessage" scope="session"/>
+            </div>
+        </div>
+    </c:if>
 
     <section class="py-5">
         <div class="container">

@@ -36,4 +36,18 @@ public class LoyaltyTransaction implements Serializable {
 
     @PrePersist
     protected void onCreate() { createdAt = new Date(); }
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
+    public LoyaltyTransactionType getType() { return type; }
+    public void setType(LoyaltyTransactionType type) { this.type = type; }
+    public Integer getPointsDelta() { return pointsDelta; }
+    public void setPointsDelta(Integer pointsDelta) { this.pointsDelta = pointsDelta; }
+    public BigDecimal getAmountReference() { return amountReference; }
+    public void setAmountReference(BigDecimal amountReference) { this.amountReference = amountReference; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public Date getCreatedAt() { return createdAt; }
 }

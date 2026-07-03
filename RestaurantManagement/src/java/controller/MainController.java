@@ -24,9 +24,10 @@ public class MainController extends HttpServlet {
             case "login":
             case "dologin":
             case "googleLogin":
-            case "completeGoogleProfile":
+            case "registerGoogle":
             case "facebookLogin":
-            case "completeFacebookProfile":
+            case "registerFacebook":
+            case "verify":
             case "logout":
                 url = "LoginController";
                 break;
@@ -37,6 +38,12 @@ public class MainController extends HttpServlet {
             case "dobooking":
             case "selectTable":
             case "saveStep3":
+            case "dobooking":
+            case "selectTable":
+            case "saveStep3":
+            case "submitFinal":
+            case "bookingConfirmation":
+
                 url = "BookingController";
                 break;
             case "adminAreas":
