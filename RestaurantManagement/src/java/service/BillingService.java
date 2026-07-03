@@ -50,7 +50,7 @@ public class BillingService {
         }
 
         if (draft.getMenuSets() != null) {
-            for (BookingDraft.CartMenuSetDTO setDto : draft.getMenuSets()) {
+            for (BookingDraft.CartSetDTO setDto : draft.getMenuSets()) {
                 MenuSet set = em.find(MenuSet.class, setDto.getMenuSetId());
                 if (set != null) {
                     BigDecimal price = set.getDiscountedPrice() != null ? set.getDiscountedPrice() : set.getOriginalPrice();

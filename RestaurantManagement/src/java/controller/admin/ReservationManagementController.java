@@ -57,6 +57,42 @@ public class ReservationManagementController extends HttpServlet {
         List<Reservation> list = reservationDAO.findAllWithFilter(filterDate, filterStatus, phoneStr);
         request.setAttribute("reservations", list);
         
+        // Build JSON for Timeline (using the filtered list, or we could fetch all for the day - let's use the filtered list for consistency)
+        StringBuilder jsonBuilder = new StringBuilder();
+        jsonBuilder.append("[");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+        
+        for (int i = 0; i < list.size(); i++) {
+            Reservation r = list.get(i);
+            int totalGuests = (r.getAdultsCount() != null ? r.getAdultsCount() : 0) + (r.getChildrenCount() != null ? r.getChildrenCount() : 0);
+            String title = r.getGuestName() + " (" + totalGuests + " pax)";
+            String start = dateFormat.format(r.getReservationDate()) + "T" + timeFormat.format(r.getReservationTime());
+            String color = "#4F46E5"; // Default (Pending)
+            if (r.getStatus() != null) {
+                switch (r.getStatus()) {
+                    case CONFIRMED: color = "#059669"; break; // Green
+                    case CHECKED_IN: color = "#0284c7"; break; // Light Blue
+                    case COMPLETED: color = "#64748b"; break; // Gray
+                    case CANCELLED:
+                    case NO_SHOW: color = "#e11d48"; break; // Red
+                }
+            }
+            jsonBuilder.append("{")
+                       .append("\"id\":\"").append(r.getId()).append("\",")
+                       .append("\"title\":\"").append(title).append("\",")
+                       .append("\"start\":\"").append(start).append("\",")
+                       .append("\"color\":\"").append(color).append("\"")
+                       .append("}");
+            if (i < list.size() - 1) {
+                jsonBuilder.append(",");
+            }
+        }
+        jsonBuilder.append("]");
+        
+        request.setAttribute("eventsJson", jsonBuilder.toString());
+        request.setAttribute("targetDate", dateStr != null && !dateStr.isEmpty() ? dateStr : dateFormat.format(new Date()));
+        
         request.getRequestDispatcher("/admin/reservations.jsp").forward(request, response);
     }
 

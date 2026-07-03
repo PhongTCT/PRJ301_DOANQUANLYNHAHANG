@@ -386,6 +386,37 @@
             calculateTotals(currentItemSubtotal);
         });
         
+        // Filter tables based on guest count
+        document.getElementById('guestCount').addEventListener('input', function() {
+            const guestCount = parseInt(this.value) || 1;
+            const tableSelect = document.getElementById('tableId');
+            const options = tableSelect.querySelectorAll('option:not([value=""])');
+            let hasValidSelection = false;
+            
+            options.forEach(opt => {
+                const capacity = parseInt(opt.getAttribute('data-capacity')) || 0;
+                if (capacity < guestCount) {
+                    opt.style.display = 'none';
+                    opt.disabled = true;
+                } else {
+                    opt.style.display = '';
+                    opt.disabled = false;
+                }
+                
+                if (opt.selected && opt.disabled) {
+                    tableSelect.value = '';
+                } else if (opt.selected && !opt.disabled) {
+                    hasValidSelection = true;
+                }
+            });
+            
+            if (!hasValidSelection && tableSelect.value !== '') {
+                tableSelect.value = '';
+                const currentItemSubtotal = Object.values(cart).reduce((sum, item) => sum + (item.price * item.qty), 0);
+                calculateTotals(currentItemSubtotal);
+            }
+        });
+        
         // Calculate and Update Summary
         function calculateTotals(itemSubtotal) {
             document.getElementById('summarySubtotal').innerText = formatMoney(itemSubtotal);

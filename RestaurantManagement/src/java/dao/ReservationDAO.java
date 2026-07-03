@@ -108,4 +108,41 @@ public class ReservationDAO extends AbstractDAO<Reservation, Long> {
             em.close();
         }
     }
+
+    public java.util.List<Reservation> findNoShowCandidates() {
+        javax.persistence.EntityManager em = util.JPAUtil.getEntityManager();
+        try {
+            String jpql = "SELECT r FROM Reservation r WHERE r.status = :status";
+            java.util.List<Reservation> allConfirmed = em.createQuery(jpql, Reservation.class)
+                     .setParameter("status", enums.ReservationStatus.CONFIRMED)
+                     .getResultList();
+                     
+            java.util.List<Reservation> noShows = new java.util.ArrayList<>();
+            java.util.Calendar cal = java.util.Calendar.getInstance();
+            int currentHour = cal.get(java.util.Calendar.HOUR_OF_DAY);
+            int currentMinute = cal.get(java.util.Calendar.MINUTE);
+            int currentTotalMinutes = currentHour * 60 + currentMinute;
+            
+            java.text.SimpleDateFormat fmt = new java.text.SimpleDateFormat("yyyy-MM-dd");
+            String todayStr = fmt.format(new java.util.Date());
+            
+            for (Reservation r : allConfirmed) {
+                if (r.getReservationDate() != null && fmt.format(r.getReservationDate()).equals(todayStr)) {
+                    if (r.getReservationTime() != null) {
+                        cal.setTime(r.getReservationTime());
+                        int resHour = cal.get(java.util.Calendar.HOUR_OF_DAY);
+                        int resMinute = cal.get(java.util.Calendar.MINUTE);
+                        int resTotalMinutes = resHour * 60 + resMinute;
+                        
+                        if (currentTotalMinutes - resTotalMinutes > 15) {
+                            noShows.add(r);
+                        }
+                    }
+                }
+            }
+            return noShows;
+        } finally {
+            em.close();
+        }
+    }
 }

@@ -148,6 +148,7 @@ public class BookingController extends HttpServlet {
                 request.setAttribute("menuItems", bookingService.getActiveMenuItems());
                 request.setAttribute("menuSets", bookingService.getActiveMenuSets());
                 request.setAttribute("addons", bookingService.getActiveAddons());
+                request.setAttribute("categories", new dao.MenuCategoryDAO().ListAll());
             } else if (step == 4) {
                 prepareStep4(request, draft);
             }

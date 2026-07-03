@@ -23,7 +23,6 @@ public class BookingDraft implements Serializable {
     private List<CartItemDTO> menuItems = new ArrayList<>();
     private List<CartSetDTO> menuSets = new ArrayList<>();
     private List<CartAddonDTO> addons = new ArrayList<>();
-    private List<CartMenuSetDTO> menuSets = new ArrayList<>();
 
     // Step 4: discount and payment
     private String voucherCode;
@@ -55,8 +54,6 @@ public class BookingDraft implements Serializable {
     public void setMenuSets(List<CartSetDTO> menuSets) { this.menuSets = menuSets; }
     public List<CartAddonDTO> getAddons() { return addons; }
     public void setAddons(List<CartAddonDTO> addons) { this.addons = addons; }
-    public List<CartMenuSetDTO> getMenuSets() { return menuSets; }
-    public void setMenuSets(List<CartMenuSetDTO> menuSets) { this.menuSets = menuSets; }
     public String getVoucherCode() { return voucherCode; }
     public void setVoucherCode(String voucherCode) { this.voucherCode = voucherCode; }
     public Integer getPointsToUse() { return pointsToUse; }
@@ -94,12 +91,4 @@ public class BookingDraft implements Serializable {
         public void setQuantity(Integer quantity) { this.quantity = quantity; }
     }
 
-    public static class CartMenuSetDTO implements Serializable {
-        private Integer menuSetId;
-        private Integer quantity;
-        public Integer getMenuSetId() { return menuSetId; }
-        public void setMenuSetId(Integer menuSetId) { this.menuSetId = menuSetId; }
-        public Integer getQuantity() { return quantity; }
-        public void setQuantity(Integer quantity) { this.quantity = quantity; }
-    }
 }
