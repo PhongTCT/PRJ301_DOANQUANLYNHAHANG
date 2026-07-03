@@ -166,7 +166,10 @@ public class LoginController extends HttpServlet {
         String redirectAfterLogin = (String) session.getAttribute("redirectAfterLogin");
         session.removeAttribute("redirectAfterLogin");
 
-        if (redirectAfterLogin != null && redirectAfterLogin.startsWith("/")) {
+        if (user.getRole() != null
+                && ("ADMIN".equals(user.getRole().name()) || "STAFF".equals(user.getRole().name()))) {
+            response.sendRedirect(request.getContextPath() + "/admin/quick-bill");
+        } else if (redirectAfterLogin != null && redirectAfterLogin.startsWith("/")) {
             response.sendRedirect(request.getContextPath() + redirectAfterLogin);
         } else {
             response.sendRedirect("MainController?action=home");

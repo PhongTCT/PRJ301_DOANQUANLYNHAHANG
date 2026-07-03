@@ -5,6 +5,7 @@ import enums.PaymentStatus;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.*;
 
 @Entity
@@ -62,6 +63,9 @@ public class Invoice implements Serializable {
     @JoinColumn(name = "issued_by_staff_id")
     private User issuedByStaff;
 
+    @OneToMany(mappedBy = "invoice", fetch = FetchType.LAZY)
+    private List<VoucherRedemption> voucherRedemptions;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
@@ -106,6 +110,8 @@ public class Invoice implements Serializable {
     public void setPaidAt(Date paidAt) { this.paidAt = paidAt; }
     public User getIssuedByStaff() { return issuedByStaff; }
     public void setIssuedByStaff(User issuedByStaff) { this.issuedByStaff = issuedByStaff; }
+    public List<VoucherRedemption> getVoucherRedemptions() { return voucherRedemptions; }
+    public void setVoucherRedemptions(List<VoucherRedemption> voucherRedemptions) { this.voucherRedemptions = voucherRedemptions; }
     public Date getCreatedAt() { return createdAt; }
     public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
     public Date getUpdatedAt() { return updatedAt; }

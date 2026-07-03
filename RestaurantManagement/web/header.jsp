@@ -53,20 +53,22 @@
                             <button class="btn btn-light border btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fa-regular fa-user me-1"></i>${sessionScope.currentUser.fullName}
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
-                                <c:if test="${sessionScope.currentUser.role == 'ADMIN' or sessionScope.currentUser.role == 'STAFF'}">
-                                    <li>
-                                        <c:choose>
-                                            <c:when test="${sessionScope.currentUser.role == 'ADMIN'}">
-                                                <a class="dropdown-item py-2" href="${pageContext.request.contextPath}/admin/surcharges"><i class="fa-solid fa-gauge me-2 text-primary"></i>Dashboard</a>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <a class="dropdown-item py-2" href="${pageContext.request.contextPath}/admin/reservations"><i class="fa-solid fa-gauge me-2 text-primary"></i>Dashboard</a>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </li>
-                                </c:if>
-                                <li><a class="dropdown-item py-2" href="${pageContext.request.contextPath}/customer/reservations"><i class="fa-solid fa-clock-rotate-left me-2 text-primary"></i>My Reservations</a></li>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 account-menu">
+                                <c:choose>
+                                    <c:when test="${sessionScope.currentUser.role == 'ADMIN' or sessionScope.currentUser.role == 'STAFF'}">
+                                        <li>
+                                            <a class="dropdown-item py-3 account-menu__primary" href="${pageContext.request.contextPath}/admin/quick-bill">
+                                                <i class="fa-solid fa-briefcase me-2"></i>Quản lý
+                                            </a>
+                                        </li>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <li><a class="dropdown-item py-2" href="${pageContext.request.contextPath}/customer/reservations"><i class="fa-solid fa-clock-rotate-left me-2 text-primary"></i>My Reservations</a></li>
+                                        <li><a class="dropdown-item py-2" href="${pageContext.request.contextPath}/customer/vouchers"><i class="fa-solid fa-ticket me-2 text-primary"></i>Voucher của tôi</a></li>
+                                        <li><a class="dropdown-item py-2" href="${pageContext.request.contextPath}/customer/reviews"><i class="fa-solid fa-star me-2 text-primary"></i>Đánh giá của tôi</a></li>
+                                        <li><a class="dropdown-item py-2" href="${pageContext.request.contextPath}/customer/invoices"><i class="fa-solid fa-file-invoice me-2 text-primary"></i>Hóa đơn của tôi</a></li>
+                                    </c:otherwise>
+                                </c:choose>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item py-2 text-danger" href="MainController?action=logout"><i class="fa-solid fa-arrow-right-from-bracket me-2"></i>Logout</a></li>
                             </ul>

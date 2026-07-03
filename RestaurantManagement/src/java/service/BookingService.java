@@ -18,9 +18,13 @@ import dao.MenuSetDAO;
 import dao.AddonServiceDAO;
 import enums.ReservationStatus;
 import enums.TableStatus;
+import enums.PaymentMethod;
+import entity.Invoice;
+import entity.Voucher;
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.persistence.EntityManager;
@@ -33,6 +37,7 @@ public class BookingService {
     private final MenuItemDAO menuItemDAO = new MenuItemDAO();
     private final MenuSetDAO menuSetDAO = new MenuSetDAO();
     private final AddonServiceDAO addonServiceDAO = new AddonServiceDAO();
+    private final BillingService billingService = new BillingService();
 
     public List<DiningTable> getAvailableTables(BookingDraft draft) {
         if (draft != null && draft.getReservationDate() != null && draft.getReservationTime() != null) {
@@ -190,6 +195,10 @@ public class BookingService {
     }
 
     public Reservation saveFinalBooking(BookingDraft draft, User currentUser) {
+        return saveFinalBooking(draft, currentUser, null, 0, PaymentMethod.CASH);
+    }
+
+    public Reservation saveFinalBooking(BookingDraft draft, User currentUser, String voucherCode, int pointsToUse, PaymentMethod paymentMethod) {
         if (draft == null) {
             throw new IllegalArgumentException("Booking details are missing.");
         }
@@ -207,6 +216,9 @@ public class BookingService {
 
             EventType eventType = em.find(EventType.class, draft.getEventTypeId());
             User user = em.find(User.class, currentUser.getId());
+            BigDecimal subtotal = billingService.calculateDraftSubtotal(em, draft);
+            BigDecimal surcharge = billingService.calculateSurcharge(subtotal, draft);
+            Voucher voucher = billingService.validateVoucher(em, voucherCode, user, subtotal.add(surcharge));
 
             Reservation reservation = new Reservation();
             reservation.setUser(user);
@@ -283,7 +295,11 @@ public class BookingService {
                 }
             }
 
+            Invoice invoice = billingService.createInvoiceForReservation(em, reservation, user, null, subtotal, surcharge,
+                    voucher, pointsToUse, paymentMethod, false);
+
             tx.commit();
+            reservation.setInvoice(invoice);
             return reservation;
         } catch (Exception e) {
             if (tx.isActive()) tx.rollback();

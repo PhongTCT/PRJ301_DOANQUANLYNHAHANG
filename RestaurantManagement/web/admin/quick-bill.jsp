@@ -11,7 +11,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Bootstrap CSS -->
@@ -79,28 +79,16 @@
         .empty-cart { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #94a3b8; padding: 20px; text-align: center; }
         .empty-cart i { font-size: 3rem; margin-bottom: 10px; color: #cbd5e1; }
     </style>
+    <link href="${pageContext.request.contextPath}/assets/css/admin-royal.css" rel="stylesheet">
 </head>
-<body>
+<body class="admin-royal">
     <div class="d-flex">
-        <!-- Sidebar -->
-        <div class="sidebar p-3" style="width: 260px; flex-shrink: 0;">
-            <div class="d-flex justify-content-between align-items-center mt-2 mb-4">
-                <h4 class="fw-bold m-0 flex-grow-1"><i class="fa-solid fa-utensils me-2"></i>Le Royal</h4>
-            </div>
-            <hr class="text-secondary">
-            <a href="${pageContext.request.contextPath}/admin/walkin"><i class="fa-solid fa-cash-register me-2"></i> Walk-in POS</a>
-            <a href="${pageContext.request.contextPath}/admin/quick-bill" class="active"><i class="fa-solid fa-bolt me-2"></i> Quick Bill</a>
-            <a href="${pageContext.request.contextPath}/admin/reservations"><i class="fa-solid fa-clipboard-list me-2"></i> Reservations</a>
-            <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
-                <a href="${pageContext.request.contextPath}/admin/surcharges"><i class="fa-solid fa-calendar-day me-2"></i> Holidays</a>
-                <a href="${pageContext.request.contextPath}/admin/tables"><i class="fa-solid fa-chair me-2"></i> Tables</a>
-            </c:if>
-            <hr class="border-secondary">
-            <a href="${pageContext.request.contextPath}/"><i class="fa-solid fa-arrow-left me-2"></i> Back to Site</a>
-        </div>
+        <jsp:include page="/admin/sidebar.jsp">
+            <jsp:param name="active" value="quick-bill"/>
+        </jsp:include>
 
         <!-- Main Content -->
-        <div style="flex: 1; height: 100vh; display: flex; flex-direction: column; overflow: hidden; background: #e2e8f0;">
+        <div style="flex: 1; height: 100vh; display: flex; flex-direction: column; overflow: hidden;">
             
             <div class="main-content">
                 <!-- Menu Section -->
@@ -117,19 +105,45 @@
                         <!-- Menu Items -->
                         <c:forEach items="${menuItems}" var="item">
                             <div class="menu-item-card" data-category="${item.category.id}">
+                                <c:set var="itemDisplayName" value="${item.itemName}" />
                                 <c:choose>
                                     <c:when test="${not empty item.imageUrl}">
-                                        <img src="${pageContext.request.contextPath}/${item.imageUrl}" alt="${item.itemName}" class="menu-item-img">
+                                        <c:choose>
+                                            <c:when test="${fn:startsWith(item.imageUrl, 'http')}">
+                                                <img src="${item.imageUrl}" alt="${itemDisplayName}" class="menu-item-img">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <img src="${pageContext.request.contextPath}/${item.imageUrl}" alt="${itemDisplayName}" class="menu-item-img">
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:when>
+                                    <c:when test="${item.itemName == 'Crab Asparagus Soup'}">
+                                        <img src="${pageContext.request.contextPath}/assets/img/le-royal/Crab Salad with Cream Sauce and Squid Ink Crisps.png" alt="${itemDisplayName}" class="menu-item-img">
+                                    </c:when>
+                                    <c:when test="${item.itemName == 'Lotus Stem Salad'}">
+                                        <img src="${pageContext.request.contextPath}/assets/img/le-royal/Vegetable Terrine with Herb Sorbet.png" alt="${itemDisplayName}" class="menu-item-img">
+                                    </c:when>
+                                    <c:when test="${item.itemName == 'Black Pepper Beef Tenderloin'}">
+                                        <img src="${pageContext.request.contextPath}/assets/img/le-royal/Roasted Beef with Red Wine Jus.png" alt="${itemDisplayName}" class="menu-item-img">
+                                    </c:when>
+                                    <c:when test="${item.itemName == 'Pan Seared Salmon'}">
+                                        <img src="${pageContext.request.contextPath}/assets/img/le-royal/Seared Fish with Herb Puree.png" alt="${itemDisplayName}" class="menu-item-img">
+                                    </c:when>
+                                    <c:when test="${item.itemName == 'Bordeaux Red Wine'}">
+                                        <img src="${pageContext.request.contextPath}/assets/img/le-royal/Rosé Wine.jpg" alt="${itemDisplayName}" class="menu-item-img">
+                                    </c:when>
+                                    <c:when test="${item.itemName == 'Fresh Orange Juice'}">
+                                        <img src="${pageContext.request.contextPath}/assets/img/le-royal/Passion Fruit Fizz.jpg" alt="${itemDisplayName}" class="menu-item-img">
                                     </c:when>
                                     <c:otherwise>
-                                        <div class="menu-item-img-placeholder"><i class="fa-solid fa-burger"></i></div>
+                                        <img src="${pageContext.request.contextPath}/assets/img/le-royal/Herb Tart.png" alt="${itemDisplayName}" class="menu-item-img">
                                     </c:otherwise>
                                 </c:choose>
                                 <div class="menu-item-info">
-                                    <div class="menu-item-name">${item.itemName}</div>
+                                    <div class="menu-item-name">${itemDisplayName}</div>
                                     <div class="d-flex justify-content-between align-items-end mt-auto">
                                         <div class="menu-item-price"><fmt:formatNumber value="${item.basePrice}" pattern="#,##0"/> ₫</div>
-                                        <button type="button" class="btn btn-sm btn-outline-primary rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('${item.id}', `${fn:escapeXml(item.itemName)}`, ${item.basePrice}, 'item')">
+                                        <button type="button" class="btn btn-sm btn-outline-primary rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('${item.id}', `${fn:escapeXml(itemDisplayName)}`, ${item.basePrice}, 'item')">
                                             <i class="fa-solid fa-plus"></i>
                                         </button>
                                     </div>
@@ -139,22 +153,30 @@
                         <!-- Combo Sets -->
                         <c:forEach items="${menuSets}" var="set">
                             <div class="menu-item-card" data-category="combo">
+                                <c:set var="setDisplayName" value="${set.setName}" />
                                 <c:choose>
                                     <c:when test="${not empty set.imageUrl}">
-                                        <img src="${pageContext.request.contextPath}/${set.imageUrl}" alt="${set.setName}" class="menu-item-img">
+                                        <c:choose>
+                                            <c:when test="${fn:startsWith(set.imageUrl, 'http')}">
+                                                <img src="${set.imageUrl}" alt="${setDisplayName}" class="menu-item-img">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <img src="${pageContext.request.contextPath}/${set.imageUrl}" alt="${setDisplayName}" class="menu-item-img">
+                                            </c:otherwise>
+                                        </c:choose>
                                     </c:when>
                                     <c:otherwise>
-                                        <div class="menu-item-img-placeholder"><i class="fa-solid fa-layer-group"></i></div>
+                                        <img src="${pageContext.request.contextPath}/assets/img/le-royal/Signature Set.webp" alt="${setDisplayName}" class="menu-item-img">
                                     </c:otherwise>
                                 </c:choose>
                                 <div class="menu-item-info">
                                     <div class="menu-item-name">
                                         <span class="badge bg-warning text-dark me-1" style="font-size: 0.7rem;">SET</span>
-                                        ${set.setName}
+                                        ${setDisplayName}
                                     </div>
                                     <div class="d-flex justify-content-between align-items-end mt-auto">
                                         <div class="menu-item-price"><fmt:formatNumber value="${set.discountedPrice}" pattern="#,##0"/> ₫</div>
-                                        <button type="button" class="btn btn-sm btn-outline-primary rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('S_${set.id}', `${fn:escapeXml(set.setName)}`, ${set.discountedPrice}, 'set')">
+                                        <button type="button" class="btn btn-sm btn-outline-primary rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('S_${set.id}', `${fn:escapeXml(setDisplayName)}`, ${set.discountedPrice}, 'set')">
                                             <i class="fa-solid fa-plus"></i>
                                         </button>
                                     </div>
@@ -303,6 +325,7 @@
                 
                 keys.forEach(id => {
                     const item = cart[id];
+                    const safeId = JSON.stringify(id);
                     const itemTotal = item.price * item.qty;
                     itemSubtotal += itemTotal;
                     
@@ -314,12 +337,12 @@
                             <div class="cart-item-price">` + formatMoney(item.price) + `</div>
                         </div>
                         <div class="qty-control me-3">
-                            <button type="button" class="qty-btn" onclick="updateQty(`+id+`, -1)"><i class="fa-solid fa-minus fs-7"></i></button>
+                            <button type="button" class="qty-btn" onclick="updateQty(`+safeId+`, -1)"><i class="fa-solid fa-minus fs-7"></i></button>
                             <span class="qty-value">` + item.qty + `</span>
-                            <button type="button" class="qty-btn" onclick="updateQty(`+id+`, 1)"><i class="fa-solid fa-plus fs-7"></i></button>
+                            <button type="button" class="qty-btn" onclick="updateQty(`+safeId+`, 1)"><i class="fa-solid fa-plus fs-7"></i></button>
                         </div>
                         <div class="cart-item-total">` + formatMoney(itemTotal) + `</div>
-                        <button type="button" class="remove-btn ms-2" onclick="removeItem(`+id+`)"><i class="fa-solid fa-trash"></i></button>
+                        <button type="button" class="remove-btn ms-2" onclick="removeItem(`+safeId+`)"><i class="fa-solid fa-trash"></i></button>
                     `;
                     cartContainer.appendChild(div);
                 });

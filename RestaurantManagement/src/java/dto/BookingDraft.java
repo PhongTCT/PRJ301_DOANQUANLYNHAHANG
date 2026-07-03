@@ -24,6 +24,11 @@ public class BookingDraft implements Serializable {
     private List<CartAddonDTO> addons = new ArrayList<>();
     private List<CartMenuSetDTO> menuSets = new ArrayList<>();
 
+    // Step 4: discount and payment
+    private String voucherCode;
+    private Integer pointsToUse = 0;
+    private String paymentMethod = "CASH";
+
     // Getters and Setters
     public Date getReservationDate() { return reservationDate; }
     public void setReservationDate(Date reservationDate) { this.reservationDate = reservationDate; }
@@ -49,6 +54,12 @@ public class BookingDraft implements Serializable {
     public void setAddons(List<CartAddonDTO> addons) { this.addons = addons; }
     public List<CartMenuSetDTO> getMenuSets() { return menuSets; }
     public void setMenuSets(List<CartMenuSetDTO> menuSets) { this.menuSets = menuSets; }
+    public String getVoucherCode() { return voucherCode; }
+    public void setVoucherCode(String voucherCode) { this.voucherCode = voucherCode; }
+    public Integer getPointsToUse() { return pointsToUse; }
+    public void setPointsToUse(Integer pointsToUse) { this.pointsToUse = pointsToUse; }
+    public String getPaymentMethod() { return paymentMethod; }
+    public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
 
     public static class CartItemDTO implements Serializable {
         private Integer menuItemId;

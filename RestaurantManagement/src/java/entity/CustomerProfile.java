@@ -39,4 +39,17 @@ public class CustomerProfile implements Serializable {
 
     @PreUpdate
     protected void onUpdate() { updatedAt = new Date(); }
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
+    public BigDecimal getTotalSpent() { return totalSpent; }
+    public void setTotalSpent(BigDecimal totalSpent) { this.totalSpent = totalSpent; }
+    public Integer getLoyaltyPoints() { return loyaltyPoints; }
+    public void setLoyaltyPoints(Integer loyaltyPoints) { this.loyaltyPoints = loyaltyPoints; }
+    public CustomerRankConfig getCurrentRank() { return currentRank; }
+    public void setCurrentRank(CustomerRankConfig currentRank) { this.currentRank = currentRank; }
+    public Date getCreatedAt() { return createdAt; }
+    public Date getUpdatedAt() { return updatedAt; }
 }

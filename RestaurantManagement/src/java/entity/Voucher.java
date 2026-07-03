@@ -63,4 +63,41 @@ public class Voucher implements Serializable {
 
     @PrePersist
     protected void onCreate() { createdAt = new Date(); }
+
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+    public String getVoucherCode() { return voucherCode; }
+    public void setVoucherCode(String voucherCode) { this.voucherCode = voucherCode; }
+    public VoucherType getVoucherType() { return voucherType; }
+    public void setVoucherType(VoucherType voucherType) { this.voucherType = voucherType; }
+    public BigDecimal getDiscountPercent() { return discountPercent; }
+    public void setDiscountPercent(BigDecimal discountPercent) { this.discountPercent = discountPercent; }
+    public BigDecimal getDiscountAmount() { return discountAmount; }
+    public void setDiscountAmount(BigDecimal discountAmount) { this.discountAmount = discountAmount; }
+    public BigDecimal getMinOrderValue() { return minOrderValue; }
+    public void setMinOrderValue(BigDecimal minOrderValue) { this.minOrderValue = minOrderValue; }
+    public BigDecimal getMaxDiscount() { return maxDiscount; }
+    public void setMaxDiscount(BigDecimal maxDiscount) { this.maxDiscount = maxDiscount; }
+    public Date getValidFrom() { return validFrom; }
+    public void setValidFrom(Date validFrom) { this.validFrom = validFrom; }
+    public Date getValidTo() { return validTo; }
+    public void setValidTo(Date validTo) { this.validTo = validTo; }
+    public Integer getUsageLimit() { return usageLimit; }
+    public void setUsageLimit(Integer usageLimit) { this.usageLimit = usageLimit; }
+    public Integer getUsedCount() { return usedCount; }
+    public void setUsedCount(Integer usedCount) { this.usedCount = usedCount; }
+    public CustomerRankConfig getApplicableRank() { return applicableRank; }
+    public void setApplicableRank(CustomerRankConfig applicableRank) { this.applicableRank = applicableRank; }
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+    public Date getCreatedAt() { return createdAt; }
+    public List<VoucherRedemption> getRedemptions() { return redemptions; }
+    public void setRedemptions(List<VoucherRedemption> redemptions) { this.redemptions = redemptions; }
+
+    public int getRemainingUses() {
+        if (usageLimit == null || usageLimit <= 0) {
+            return 0;
+        }
+        return Math.max(0, usageLimit - (usedCount == null ? 0 : usedCount));
+    }
 }

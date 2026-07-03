@@ -83,6 +83,7 @@ public class AuthFilter implements Filter {
             case "facebookLogin":
             case "completeFacebookProfile":
             case "logout":
+            case "bookingConfirmation":
                 return true;
             default:
                 return false;

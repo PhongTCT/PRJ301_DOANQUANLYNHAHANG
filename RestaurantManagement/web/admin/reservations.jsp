@@ -10,6 +10,7 @@
     <title>Le Royal - Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { background-color: #f8f9fa; font-family: 'Inter', sans-serif; }
         .sidebar { min-height: 100vh; background-color: #1a1d20; color: white; }
@@ -18,26 +19,17 @@
         .card { border-radius: 12px; }
         .status-badge { font-weight: 500; font-size: 0.85rem; padding: 0.4em 0.8em; }
     </style>
+    <link href="${pageContext.request.contextPath}/assets/css/admin-royal.css" rel="stylesheet">
 </head>
-<body>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-2 sidebar p-4">
-                <h4 class="mb-4 fw-bold text-white"><i class="fa-solid fa-utensils me-2"></i>Le Royal</h4>
-                <a href="walkin"><i class="fa-solid fa-cash-register me-2"></i> Walk-in POS</a>
-                <a href="quick-bill"><i class="fa-solid fa-bolt me-2"></i> Quick Bill</a>
-                <a href="reservations" class="active"><i class="fa-solid fa-clipboard-list me-2"></i> Reservations</a>
-                <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
-                    <a href="surcharges"><i class="fa-solid fa-calendar-check me-2"></i> Holidays</a>
-                    <a href="tables"><i class="fa-solid fa-chair me-2"></i> Tables</a>
-                </c:if>
-                <hr class="border-secondary">
-                <a href="${pageContext.request.contextPath}/"><i class="fa-solid fa-arrow-left me-2"></i> Back to Site</a>
-            </div>
+<body class="admin-royal">
+    <div class="container-fluid p-0">
+        <div class="d-flex">
+            <jsp:include page="/admin/sidebar.jsp">
+                <jsp:param name="active" value="reservations"/>
+            </jsp:include>
 
             <!-- Main Content -->
-            <div class="col-md-10 p-5">
+            <div class="flex-grow-1 p-5">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
                         <h2 class="fw-bold mb-0">Reservation Management</h2>

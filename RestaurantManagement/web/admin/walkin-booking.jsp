@@ -10,7 +10,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Bootstrap CSS -->
@@ -69,26 +69,17 @@
             transform: translateY(-2px);
         }
     </style>
+    <link href="${pageContext.request.contextPath}/assets/css/admin-royal.css" rel="stylesheet">
 </head>
-<body>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-2 sidebar p-4">
-                <h4 class="mb-4 fw-bold text-white"><i class="fa-solid fa-utensils me-2"></i>Le Royal</h4>
-                <a href="walkin" class="active"><i class="fa-solid fa-cash-register me-2"></i> Walk-in POS</a>
-                <a href="quick-bill"><i class="fa-solid fa-bolt me-2"></i> Quick Bill</a>
-                <a href="reservations"><i class="fa-solid fa-clipboard-list me-2"></i> Reservations</a>
-                <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
-                    <a href="surcharges"><i class="fa-solid fa-calendar-check me-2"></i> Holidays</a>
-                    <a href="tables"><i class="fa-solid fa-chair me-2"></i> Tables</a>
-                </c:if>
-                <hr class="border-secondary">
-                <a href="${pageContext.request.contextPath}/"><i class="fa-solid fa-arrow-left me-2"></i> Back to Site</a>
-            </div>
+<body class="admin-royal">
+    <div class="container-fluid p-0">
+        <div class="d-flex">
+            <jsp:include page="/admin/sidebar.jsp">
+                <jsp:param name="active" value="walkin"/>
+            </jsp:include>
 
             <!-- Main Content -->
-            <div class="col-md-10 p-5">
+            <div class="flex-grow-1 p-5">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2 class="h3 mb-0 text-gray-800 fw-bold">Walk-in POS</h2>
                 </div>
