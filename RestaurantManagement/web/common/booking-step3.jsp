@@ -72,7 +72,7 @@
                                     <div class="card h-100 border-0 shadow-sm rounded-3">
                                         <div class="row g-0 h-100">
                                             <div class="col-4">
-                                                <c:set var="imgUrl" value="${set.imageUrl != null ? set.imageUrl : 'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=300&h=300&fit=crop'}" />
+                                                <c:set var="imgUrl" value="${set.imageUrl != null ? set.imageUrl : 'assets/img/le-royal/menu/black-pepper-beef-tenderloin.jpg'}" />
                                                 <img src="${imgUrl}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Combo">
                                             </div>
                                             <div class="col-8">
@@ -97,7 +97,7 @@
                                     <div class="card h-100 border-0 shadow-sm rounded-3">
                                         <div class="row g-0 h-100">
                                             <div class="col-4">
-                                                <c:set var="imgUrl" value="${item.imageUrl != null ? item.imageUrl : 'https://images.unsplash.com/photo-1544025162-8315ea07525b?w=300&h=300&fit=crop'}" />
+                                                <c:set var="imgUrl" value="${item.imageUrl != null ? item.imageUrl : 'assets/img/le-royal/menu/lotus-stem-salad.jpg'}" />
                                                 <img src="${imgUrl}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Item">
                                             </div>
                                             <div class="col-8">
@@ -122,7 +122,7 @@
                                     <div class="card h-100 border-0 shadow-sm rounded-3">
                                         <div class="row g-0 h-100">
                                             <div class="col-4">
-                                                <c:set var="addonImgUrl" value="${addon.imageUrl != null ? addon.imageUrl : 'https://images.unsplash.com/photo-1544025162-8315ea07525b?w=300&h=300&fit=crop'}" />
+                                                <c:set var="addonImgUrl" value="${addon.imageUrl != null ? addon.imageUrl : 'assets/img/le-royal/Champagne Welcome Service.jpg'}" />
                                                 <img src="${addonImgUrl}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Addon">
 
                                             </div>

@@ -38,9 +38,6 @@ public class MainController extends HttpServlet {
             case "dobooking":
             case "selectTable":
             case "saveStep3":
-            case "dobooking":
-            case "selectTable":
-            case "saveStep3":
             case "submitFinal":
             case "bookingConfirmation":
 

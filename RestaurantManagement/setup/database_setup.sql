@@ -192,7 +192,7 @@ CREATE TABLE menu_set (
     id INT IDENTITY(1,1) PRIMARY KEY,
     set_name NVARCHAR(150) NOT NULL,
     description NVARCHAR(MAX) NULL,
-    meal_time VARCHAR(20) NOT NULL CHECK (meal_time IN ('BREAKFAST','LUNCH','DINNER')),
+    meal_time VARCHAR(20) NOT NULL CHECK (meal_time IN ('BREAKFAST','LUNCH','DINNER','ALL_DAY')),
     original_price DECIMAL(10,0) NOT NULL CHECK (original_price >= 0),
     discounted_price DECIMAL(10,0) NOT NULL CHECK (discounted_price >= 0),
     image_url VARCHAR(500) NULL,
