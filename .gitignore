@@ -12,6 +12,9 @@
 
 # Package Files #
 *.jar
+!/RestaurantManagement/web/WEB-INF/lib/
+!/RestaurantManagement/web/WEB-INF/lib/sqljdbc4.jar
+!/RestaurantManagement/web/WEB-INF/lib/javax.mail.jar
 *.war
 *.nar
 *.ear

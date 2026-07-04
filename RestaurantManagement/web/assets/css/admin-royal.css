@@ -7,10 +7,64 @@
     --admin-paper: #fbfaf7;
     --admin-wash: #f3efe8;
     --admin-panel: rgba(255, 255, 255, 0.88);
+    --admin-scroll-thumb: rgba(145, 115, 55, 0.42);
+    --admin-scroll-thumb-hover: rgba(145, 115, 55, 0.68);
+    --admin-scroll-track: rgba(232, 223, 207, 0.32);
 }
 
 * {
     letter-spacing: 0;
+}
+
+html {
+    scrollbar-gutter: stable;
+}
+
+body.admin-royal,
+body.admin-royal * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--admin-scroll-thumb) transparent;
+}
+
+body.admin-royal::-webkit-scrollbar,
+body.admin-royal *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+body.admin-royal::-webkit-scrollbar-track,
+body.admin-royal *::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+body.admin-royal::-webkit-scrollbar-thumb,
+body.admin-royal *::-webkit-scrollbar-thumb {
+    min-height: 42px;
+    border: 2px solid transparent;
+    border-radius: 999px;
+    background: var(--admin-scroll-thumb);
+    background-clip: padding-box;
+}
+
+body.admin-royal::-webkit-scrollbar-thumb:hover,
+body.admin-royal *::-webkit-scrollbar-thumb:hover {
+    background: var(--admin-scroll-thumb-hover);
+    background-clip: padding-box;
+}
+
+body.admin-royal::-webkit-scrollbar-corner,
+body.admin-royal *::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+body.admin-royal .table-responsive,
+body.admin-royal .category-tabs {
+    scrollbar-color: rgba(145, 115, 55, 0.36) transparent;
+}
+
+body.admin-royal .table-responsive::-webkit-scrollbar,
+body.admin-royal .category-tabs::-webkit-scrollbar {
+    height: 7px;
 }
 
 body.admin-royal {

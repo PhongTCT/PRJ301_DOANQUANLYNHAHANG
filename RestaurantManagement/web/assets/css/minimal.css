@@ -2,18 +2,96 @@
     --brand-gold: #b99a52;
     --brand-gold-line: rgba(185, 154, 82, 0.52);
     --brand-line: #e7e2d8;
+    --brand-scroll-thumb: rgba(145, 115, 55, 0.42);
+    --brand-scroll-thumb-hover: rgba(145, 115, 55, 0.68);
+    --brand-nav-height: 122px;
 }
 
-* {
+html {
+    width: 100%;
+    max-width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+    overscroll-behavior: none;
+    scrollbar-gutter: stable;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
     letter-spacing: 0;
 }
 
 body {
+    width: 100%;
+    max-width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+    overscroll-behavior: none;
     font-family: "Inter", Arial, sans-serif;
 }
 
+body,
+html,
+body * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--brand-scroll-thumb) transparent;
+}
+
+body::-webkit-scrollbar,
+html::-webkit-scrollbar,
+body *::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+}
+
+body::-webkit-scrollbar-track,
+html::-webkit-scrollbar-track,
+body *::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+body::-webkit-scrollbar-thumb,
+html::-webkit-scrollbar-thumb,
+body *::-webkit-scrollbar-thumb {
+    min-height: 42px;
+    border: 2px solid transparent;
+    border-radius: 999px;
+    background: var(--brand-scroll-thumb);
+    background-clip: padding-box;
+}
+
+body::-webkit-scrollbar-thumb:hover,
+html::-webkit-scrollbar-thumb:hover,
+body *::-webkit-scrollbar-thumb:hover {
+    background: var(--brand-scroll-thumb-hover);
+    background-clip: padding-box;
+}
+
+body::-webkit-scrollbar-corner,
+html::-webkit-scrollbar-corner,
+body *::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+img,
+video,
+canvas,
+iframe,
+svg {
+    max-width: 100%;
+}
+
+.container,
+.container-fluid,
+.row,
+[class*="col-"] {
+    min-width: 0;
+}
+
 .navbar {
-    min-height: 86px;
+    min-height: var(--brand-nav-height);
 }
 
 .navbar:after {
@@ -108,7 +186,9 @@ h5,
 
 .hero {
     position: relative;
-    min-height: calc(100vh - 86px);
+    height: calc(100dvh - var(--brand-nav-height));
+    min-height: 620px;
+    max-height: calc(100dvh - var(--brand-nav-height));
     overflow: hidden;
     background: #000000;
 }
@@ -131,7 +211,8 @@ h5,
 
 .hero-content {
     position: relative;
-    min-height: calc(100vh - 86px);
+    height: 100%;
+    min-height: 0;
     display: flex;
     align-items: center;
 }
@@ -270,6 +351,10 @@ section.py-5.bg-light:before {
 }
 
 @media (max-width: 575.98px) {
+    :root {
+        --brand-nav-height: 92px;
+    }
+
     .brand-emblem,
     .brand-symbol {
         width: 38px;
@@ -282,5 +367,17 @@ section.py-5.bg-light:before {
 
     .hero-title {
         font-size: 4rem;
+    }
+
+    .hero {
+        height: auto;
+        min-height: calc(100dvh - var(--brand-nav-height));
+        max-height: none;
+    }
+
+    .hero-content {
+        min-height: calc(100dvh - var(--brand-nav-height));
+        padding-top: 3rem;
+        padding-bottom: 3rem;
     }
 }
