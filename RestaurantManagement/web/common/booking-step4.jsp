@@ -7,7 +7,8 @@
 
 <jsp:include page="/header.jsp" />
 
-<main class="bg-light py-5">
+<link href="${pageContext.request.contextPath}/assets/css/admin-royal.css" rel="stylesheet">
+<main class="bg-light py-5 admin-royal">
     <div class="container">
         <!-- Progress Steps -->
         <div class="row justify-content-center mb-5">

@@ -68,7 +68,7 @@
                                     <td class="ps-4">${s.id}</td>
                                     <td class="fw-bold">${s.holidayName}</td>
                                     <td><fmt:formatDate value="${s.surchargeDate}" pattern="dd/MM/yyyy" /></td>
-                                    <td><span class="badge bg-danger rounded-pill px-3 py-2 fs-6">+${s.surchargePercent}%</span></td>
+                                    <td><span class="badge bg-danger rounded-pill px-3 py-2 fs-6">+<fmt:formatNumber value="${s.surchargePercent}" pattern="0.00"/>%</span></td>
                                     <td>
                                         <c:choose>
                                             <c:when test="${s.isActive}"><span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1">${sessionScope.lang == 'en' ? 'Active' : 'Đang kích hoạt'}</span></c:when>
@@ -104,7 +104,7 @@
                                                     <div class="row">
                                                         <div class="col-md-6 mb-3">
                                                             <label class="form-label text-muted small fw-bold">PHỤ THU (%)</label>
-                                                            <input type="number" name="surchargePercent" class="form-control form-control-lg" value="${s.surchargePercent}" min="0" max="100" required>
+                                                            <input type="number" name="surchargePercent" step="0.01" class="form-control form-control-lg" value="${s.surchargePercent}" min="0" max="100" required>
                                                         </div>
                                                         <div class="col-md-6 mb-3">
                                                             <label class="form-label text-muted small fw-bold">TRẠNG THÁI</label>
@@ -180,7 +180,7 @@
                         <div class="mb-3">
                             <label class="form-label text-muted small fw-bold">PHỤ THU (%)</label>
                             <div class="input-group input-group-lg">
-                                <input type="number" name="surchargePercent" class="form-control" value="15" min="0" max="100" required>
+                                <input type="number" name="surchargePercent" step="0.01" class="form-control" value="15" min="0" max="100" required>
                                 <span class="input-group-text bg-white">%</span>
                             </div>
                         </div>

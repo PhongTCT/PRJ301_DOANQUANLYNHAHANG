@@ -67,6 +67,7 @@
     <a class="admin-sidebar__link ${param.active == 'walkin' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/walkin"><i class="fa-solid fa-cash-register"></i><span>Walk-in POS</span></a>
     <a class="admin-sidebar__link ${param.active == 'quick-bill' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/quick-bill"><i class="fa-solid fa-bolt"></i><span>Quick Bill</span></a>
     <a class="admin-sidebar__link ${param.active == 'reservations' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/reservations"><i class="fa-solid fa-clipboard-list"></i><span>Reservations</span></a>
+    <a class="admin-sidebar__link ${param.active == 'timeline' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/timeline"><i class="fa-solid fa-timeline"></i><span>Timeline</span></a>
 
     <a class="admin-sidebar__link ${param.active == 'invoices' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/invoices"><i class="fa-solid fa-file-invoice"></i><span>Invoices</span></a>
     <a class="admin-sidebar__link ${param.active == 'vouchers' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/vouchers"><i class="fa-solid fa-ticket"></i><span>Vouchers</span></a>

@@ -61,6 +61,7 @@
                                     <option value="CHECKED_IN" ${param.status == 'CHECKED_IN' ? 'selected' : ''}>Checked In</option>
                                     <option value="COMPLETED" ${param.status == 'COMPLETED' ? 'selected' : ''}>Completed</option>
                                     <option value="CANCELLED" ${param.status == 'CANCELLED' ? 'selected' : ''}>Cancelled</option>
+                                    <option value="NO_SHOW" ${param.status == 'NO_SHOW' ? 'selected' : ''}>Missed</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
@@ -122,6 +123,7 @@
                                                         <c:when test="${res.status == 'CHECKED_IN'}"><span class="badge bg-primary status-badge">Checked In</span></c:when>
                                                         <c:when test="${res.status == 'COMPLETED'}"><span class="badge bg-success status-badge">Completed</span></c:when>
                                                         <c:when test="${res.status == 'CANCELLED'}"><span class="badge bg-danger status-badge">Cancelled</span></c:when>
+                                                        <c:when test="${res.status == 'NO_SHOW'}"><span class="badge bg-dark status-badge">Missed</span></c:when>
                                                     </c:choose>
                                                 </td>
                                                 <td class="text-end pe-4">

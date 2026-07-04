@@ -13,15 +13,23 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        .item-img { width: 100%; height: 100px; object-fit: cover; }
         .category-tabs { display: flex; overflow-x: auto; gap: 10px; padding-bottom: 10px; }
         .category-tabs::-webkit-scrollbar { height: 6px; }
         .category-tabs::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .cat-btn { white-space: nowrap; padding: 8px 16px; border-radius: 20px; border: 1px solid #cbd5e1; background: white; color: #475569; font-weight: 500; transition: all 0.2s; }
         .cat-btn:hover, .cat-btn.active { background: #4F46E5; color: white; border-color: #4F46E5; }
+
+        .menu-items-grid { flex: 1; overflow-y: auto; padding: 15px 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; align-content: start; }
+        .menu-item-card { border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; transition: all 0.2s; background: white; display: flex; flex-direction: column; height: 220px; position: relative; }
+        .menu-item-card:hover { border-color: #4F46E5; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15); transform: translateY(-2px); }
+        .menu-item-img { height: 130px; min-height: 130px; object-fit: cover; width: 100%; border-bottom: 1px solid #f1f5f9; }
+        .menu-item-info { padding: 10px; display: flex; flex-direction: column; justify-content: space-between; height: 90px; background: white; z-index: 2; }
+        .menu-item-name { font-weight: 600; font-size: 0.9rem; color: #1e293b; margin-bottom: 5px; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        .menu-item-price { font-weight: 700; color: #059669; font-size: 0.95rem; margin-top: auto; }
     </style>
+    <link href="${pageContext.request.contextPath}/assets/css/admin-royal.css" rel="stylesheet">
 </head>
-<body class="bg-light pb-5">
+<body class="bg-light pb-5 admin-royal">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
         <div class="container">
             <a class="navbar-brand fw-bold" href="${pageContext.request.contextPath}/"><i class="fa-solid fa-utensils me-2"></i>Restaurant</a>
@@ -53,38 +61,47 @@
                 <div class="card shadow-sm border-0 rounded-4 mb-4">
                     <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
                         <div class="category-tabs">
-                            <button class="cat-btn active" onclick="filterCategory('ALL', this)">All Items</button>
+                            <button class="cat-btn active" onclick="filterCategory('ALL', this)"><fmt:message key="booking.step3.tab.all" />All Items</button>
                             <button class="cat-btn" onclick="filterCategory('combo', this)"><i class="fa-solid fa-layer-group me-1"></i><fmt:message key="booking.step3.tab.combo"/></button>
-                            <button class="cat-btn" onclick="filterCategory('1', this)">Khai Vị</button>
-                            <button class="cat-btn" onclick="filterCategory('2', this)">Món Chính</button>
-                            <button class="cat-btn" onclick="filterCategory('3', this)">Tráng Miệng</button>
-                            <button class="cat-btn" onclick="filterCategory('4', this)"><fmt:message key="booking.step3.tab.drink"/></button>
+                            <c:forEach items="${categories}" var="cat">
+                                <button class="cat-btn" onclick="filterCategory('${cat.id}', this)">${sessionScope.lang == 'en' ? cat.categoryNameEn : cat.categoryName}</button>
+                            </c:forEach>
                             <button class="cat-btn" onclick="filterCategory('service', this)"><fmt:message key="booking.step3.tab.service"/></button>
                         </div>
                     </div>
                     
                     <div class="card-body p-4 bg-light bg-opacity-50">
-                        <div class="row row-cols-1 row-cols-md-2 g-3" id="menuGrid">
+                        <div class="menu-items-grid" id="menuGrid">
                             
                             <!-- COMBO SETS -->
                             <c:forEach items="${menuSets}" var="set">
-                                <div class="col filter-item" data-category="combo">
-                                    <div class="card h-100 border-0 shadow-sm rounded-3">
-                                        <div class="row g-0 h-100">
-                                            <div class="col-4">
-                                                <c:set var="imgUrl" value="${set.imageUrl != null ? set.imageUrl : 'assets/img/le-royal/menu/black-pepper-beef-tenderloin.jpg'}" />
-                                                <img src="${imgUrl}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Combo">
+                                <div class="filter-item" data-category="combo">
+                                    <div class="menu-item-card">
+                                        <c:choose>
+                                            <c:when test="${not empty set.imageUrl}">
+                                                <c:choose>
+                                                    <c:when test="${fn:startsWith(set.imageUrl, 'http')}">
+                                                        <img src="${set.imageUrl}" class="menu-item-img" alt="Combo">
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <img src="${pageContext.request.contextPath}/${set.imageUrl}" class="menu-item-img" alt="Combo">
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <img src="${pageContext.request.contextPath}/assets/img/le-royal/Signature Set.webp" class="menu-item-img" alt="Combo">
+                                            </c:otherwise>
+                                        </c:choose>
+                                        <div class="menu-item-info">
+                                            <div class="menu-item-name">
+                                                <span class="badge bg-warning text-dark me-1" style="font-size: 0.7rem;">SET</span>
+                                                ${set.setName}
                                             </div>
-                                            <div class="col-8">
-                                                <div class="card-body py-2 px-3 d-flex flex-column h-100">
-                                                    <h6 class="card-title fw-bold mb-1 text-truncate">${set.setName}</h6>
-                                                    <p class="card-text small text-muted mb-2 text-truncate" title="${set.description}">${set.description}</p>
-                                                    <div class="d-flex justify-content-between align-items-center mt-auto">
-                                                        <span class="text-success fw-bold"><fmt:formatNumber value="${set.discountedPrice}" pattern="#,##0"/>đ</span>
-                                                        <button type="button" class="btn btn-sm btn-outline-primary rounded-circle" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('combo', ${set.id}, this.getAttribute('data-name'), ${set.discountedPrice})" data-name="Set: ${fn:escapeXml(set.setName)}"><i class="fa-solid fa-plus"></i></button>
-
-                                                    </div>
-                                                </div>
+                                            <div class="d-flex justify-content-between align-items-end mt-auto">
+                                                <div class="menu-item-price"><fmt:formatNumber value="${set.discountedPrice}" pattern="#,##0"/> ₫</div>
+                                                <button type="button" class="btn btn-sm btn-outline-primary rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('combo', ${set.id}, this.getAttribute('data-name'), ${set.discountedPrice})" data-name="Set: ${fn:escapeXml(set.setName)}">
+                                                    <i class="fa-solid fa-plus"></i>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -93,23 +110,48 @@
 
                             <!-- MENU ITEMS -->
                             <c:forEach items="${menuItems}" var="item">
-                                <div class="col filter-item" data-category="${item.category.id}">
-                                    <div class="card h-100 border-0 shadow-sm rounded-3">
-                                        <div class="row g-0 h-100">
-                                            <div class="col-4">
-                                                <c:set var="imgUrl" value="${item.imageUrl != null ? item.imageUrl : 'assets/img/le-royal/menu/lotus-stem-salad.jpg'}" />
-                                                <img src="${imgUrl}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Item">
-                                            </div>
-                                            <div class="col-8">
-                                                <div class="card-body py-2 px-3 d-flex flex-column h-100">
-                                                    <h6 class="card-title fw-bold mb-1 text-truncate">${sessionScope.lang == 'en' ? item.itemNameEn : item.itemName}</h6>
-                                                    <p class="card-text small text-muted mb-2 text-truncate" title="${sessionScope.lang == 'en' ? item.descriptionEn : item.description}">${sessionScope.lang == 'en' ? item.descriptionEn : item.description}</p>
-                                                    <div class="d-flex justify-content-between align-items-center mt-auto">
-                                                        <span class="text-success fw-bold"><fmt:formatNumber value="${item.basePrice}" pattern="#,##0"/>đ</span>
-                                                        <button type="button" class="btn btn-sm btn-outline-primary rounded-circle" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('menu', ${item.id}, this.getAttribute('data-name'), ${item.basePrice})" data-name="${fn:escapeXml(sessionScope.lang == 'en' ? item.itemNameEn : item.itemName)}"><i class="fa-solid fa-plus"></i></button>
-
-                                                    </div>
-                                                </div>
+                                <div class="filter-item" data-category="${item.category.id}">
+                                    <div class="menu-item-card">
+                                        <c:choose>
+                                            <c:when test="${not empty item.imageUrl}">
+                                                <c:choose>
+                                                    <c:when test="${fn:startsWith(item.imageUrl, 'http')}">
+                                                        <img src="${item.imageUrl}" class="menu-item-img" alt="Item">
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <img src="${pageContext.request.contextPath}/${item.imageUrl}" class="menu-item-img" alt="Item">
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </c:when>
+                                            <c:when test="${item.itemName == 'Crab Asparagus Soup'}">
+                                                <img src="${pageContext.request.contextPath}/assets/img/le-royal/Crab Salad with Cream Sauce and Squid Ink Crisps.png" class="menu-item-img" alt="Item">
+                                            </c:when>
+                                            <c:when test="${item.itemName == 'Lotus Stem Salad'}">
+                                                <img src="${pageContext.request.contextPath}/assets/img/le-royal/Vegetable Terrine with Herb Sorbet.png" class="menu-item-img" alt="Item">
+                                            </c:when>
+                                            <c:when test="${item.itemName == 'Black Pepper Beef Tenderloin'}">
+                                                <img src="${pageContext.request.contextPath}/assets/img/le-royal/Roasted Beef with Red Wine Jus.png" class="menu-item-img" alt="Item">
+                                            </c:when>
+                                            <c:when test="${item.itemName == 'Pan Seared Salmon'}">
+                                                <img src="${pageContext.request.contextPath}/assets/img/le-royal/Seared Fish with Herb Puree.png" class="menu-item-img" alt="Item">
+                                            </c:when>
+                                            <c:when test="${item.itemName == 'Bordeaux Red Wine'}">
+                                                <img src="${pageContext.request.contextPath}/assets/img/le-royal/Rosé Wine.jpg" class="menu-item-img" alt="Item">
+                                            </c:when>
+                                            <c:when test="${item.itemName == 'Fresh Orange Juice'}">
+                                                <img src="${pageContext.request.contextPath}/assets/img/le-royal/Passion Fruit Fizz.jpg" class="menu-item-img" alt="Item">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <img src="${pageContext.request.contextPath}/assets/img/le-royal/Herb Tart.png" class="menu-item-img" alt="Item">
+                                            </c:otherwise>
+                                        </c:choose>
+                                        <div class="menu-item-info">
+                                            <div class="menu-item-name">${sessionScope.lang == 'en' ? item.itemNameEn : item.itemName}</div>
+                                            <div class="d-flex justify-content-between align-items-end mt-auto">
+                                                <div class="menu-item-price"><fmt:formatNumber value="${item.basePrice}" pattern="#,##0"/> ₫</div>
+                                                <button type="button" class="btn btn-sm btn-outline-primary rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('menu', ${item.id}, this.getAttribute('data-name'), ${item.basePrice})" data-name="${fn:escapeXml(sessionScope.lang == 'en' ? item.itemNameEn : item.itemName)}">
+                                                    <i class="fa-solid fa-plus"></i>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -118,23 +160,17 @@
 
                             <!-- SERVICES / ADDONS -->
                             <c:forEach items="${addons}" var="addon">
-                                <div class="col filter-item" data-category="service">
-                                    <div class="card h-100 border-0 shadow-sm rounded-3">
-                                        <div class="row g-0 h-100">
-                                            <div class="col-4">
-                                                <c:set var="addonImgUrl" value="${addon.imageUrl != null ? addon.imageUrl : 'assets/img/le-royal/Champagne Welcome Service.jpg'}" />
-                                                <img src="${addonImgUrl}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Addon">
-
-                                            </div>
-                                            <div class="col-8">
-                                                <div class="card-body py-2 px-3 d-flex flex-column h-100">
-                                                    <h6 class="card-title fw-bold mb-1 text-truncate">${addon.serviceName}</h6>
-                                                    <p class="card-text small text-muted mb-2 text-truncate" title="${addon.description}">${addon.description}</p>
-                                                    <div class="d-flex justify-content-between align-items-center mt-auto">
-                                                        <span class="text-success fw-bold"><fmt:formatNumber value="${addon.price}" pattern="#,##0"/>đ</span>
-                                                        <button type="button" class="btn btn-sm btn-outline-primary rounded-circle" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('addon', ${addon.id}, this.getAttribute('data-name'), ${addon.price})" data-name="${fn:escapeXml(addon.serviceName)}"><i class="fa-solid fa-plus"></i></button>
-                                                    </div>
-                                                </div>
+                                <div class="filter-item" data-category="service">
+                                    <div class="menu-item-card">
+                                        <c:set var="addonImgUrl" value="${addon.imageUrl != null ? addon.imageUrl : 'assets/img/le-royal/Champagne Welcome Service.jpg'}" />
+                                        <img src="${addonImgUrl}" class="menu-item-img" alt="Addon">
+                                        <div class="menu-item-info">
+                                            <div class="menu-item-name">${addon.serviceName}</div>
+                                            <div class="d-flex justify-content-between align-items-end mt-auto">
+                                                <div class="menu-item-price"><fmt:formatNumber value="${addon.price}" pattern="#,##0"/> ₫</div>
+                                                <button type="button" class="btn btn-sm btn-outline-primary rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('addon', ${addon.id}, this.getAttribute('data-name'), ${addon.price})" data-name="${fn:escapeXml(addon.serviceName)}">
+                                                    <i class="fa-solid fa-plus"></i>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
