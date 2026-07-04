@@ -14,10 +14,14 @@
         </div>
         <div class="col-md-8 col-lg-5">
             <section class="card shadow-sm border-0 p-4 shadow-lift">
-                <div class="mb-4">
-                    <h2 class="h3 fw-bold mb-1">Login</h2>
-                    <p class="text-secondary small mb-0">Use an active account to continue.</p>
-                </div>
+                <ul class="nav nav-pills nav-fill mb-4" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link fw-semibold ${not showRegisterForm ? 'active' : ''}" id="loginTab" data-bs-toggle="pill" data-bs-target="#loginPanel" type="button" role="tab">Login</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link fw-semibold ${showRegisterForm ? 'active' : ''}" id="registerTab" data-bs-toggle="pill" data-bs-target="#registerPanel" type="button" role="tab">Register</button>
+                    </li>
+                </ul>
 
                 <c:if test="${not empty error}">
                     <div class="alert alert-danger py-2 small">${error}</div>
@@ -105,49 +109,80 @@
                         </form>
                     </c:when>
                     <c:otherwise>
-                <form action="MainController" method="POST">
-                    <input type="hidden" name="action" value="dologin">
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold">Username or Email</label>
-                        <input type="text" name="username" class="form-control" placeholder="admin / admin@restaurant.com" required>
+                <div class="tab-content">
+                    <div class="tab-pane fade ${not showRegisterForm ? 'show active' : ''}" id="loginPanel" role="tabpanel">
+                        <form action="MainController" method="POST">
+                            <input type="hidden" name="action" value="dologin">
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">Username or Email</label>
+                                <input type="text" name="username" class="form-control" placeholder="admin / admin@restaurant.com" required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label small fw-bold">Password</label>
+                                <input type="password" name="password" class="form-control" placeholder="123456" required>
+                            </div>
+                            <button type="submit" class="btn btn-dark w-100">Login</button>
+                        </form>
+
+                        <div class="d-flex align-items-center gap-3 my-4">
+                            <hr class="flex-grow-1 my-0">
+                            <span class="small text-secondary">or</span>
+                            <hr class="flex-grow-1 my-0">
+                        </div>
+
+                        <button type="button" id="googleLoginButton" class="btn btn-outline-dark w-100 d-flex align-items-center justify-content-center gap-2 py-2 shadow-sm" disabled>
+                            <span id="googleLoginSpinner" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                            <i id="googleLoginIcon" class="fa-brands fa-google text-danger d-none"></i>
+                            <span id="googleLoginText" class="fw-bold">Loading Google sign-in...</span>
+                        </button>
+                        <button type="button" id="facebookLoginButton" class="btn btn-outline-primary w-100 d-flex align-items-center justify-content-center gap-2 py-2 shadow-sm mt-2" disabled>
+                            <span id="facebookLoginSpinner" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                            <i id="facebookLoginIcon" class="fa-brands fa-facebook-f d-none"></i>
+                            <span id="facebookLoginText" class="fw-bold">Loading Facebook sign-in...</span>
+                        </button>
+                        <form id="googleLoginForm" action="MainController" method="POST" class="d-none">
+                            <input type="hidden" name="action" value="googleLogin">
+                            <input type="hidden" name="accessToken" id="googleAccessToken">
+                        </form>
+                        <form id="facebookLoginForm" action="MainController" method="POST" class="d-none">
+                            <input type="hidden" name="action" value="facebookLogin">
+                            <input type="hidden" name="facebookAccessToken" id="facebookAccessToken">
+                        </form>
+
+                        <div class="bg-light border rounded p-3 mt-4 small">
+                            <div class="fw-bold mb-2">Quick test accounts</div>
+                            <div class="mb-1"><code>admin / 123456</code> (admin)</div>
+                            <div class="mb-1"><code>staff / 123456</code> (staff)</div>
+                            <div><code>customer / 123456</code> (customer)</div>
+                        </div>
                     </div>
-                    <div class="mb-4">
-                        <label class="form-label small fw-bold">Password</label>
-                        <input type="password" name="password" class="form-control" placeholder="123456" required>
+
+                    <div class="tab-pane fade ${showRegisterForm ? 'show active' : ''}" id="registerPanel" role="tabpanel">
+                        <form action="MainController" method="POST">
+                            <input type="hidden" name="action" value="doregister">
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">Username</label>
+                                <input type="text" name="username" class="form-control" placeholder="Choose a username" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">Email</label>
+                                <input type="email" name="email" class="form-control" placeholder="your@email.com" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">Full Name</label>
+                                <input type="text" name="fullName" class="form-control" placeholder="Your full name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">Phone</label>
+                                <input type="tel" name="phone" class="form-control" placeholder="0901234567">
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label small fw-bold">Password</label>
+                                <input type="password" name="password" class="form-control" placeholder="At least 6 characters" required>
+                            </div>
+                            <button type="submit" class="btn btn-dark w-100">Create Account</button>
+                        </form>
                     </div>
-                    <button type="submit" class="btn btn-dark w-100">Login</button>
-                </form>
-
-                <div class="d-flex align-items-center gap-3 my-4">
-                    <hr class="flex-grow-1 my-0">
-                    <span class="small text-secondary">or</span>
-                    <hr class="flex-grow-1 my-0">
-                </div>
-
-                <button type="button" id="googleLoginButton" class="btn btn-outline-dark w-100 d-flex align-items-center justify-content-center gap-2 py-2 shadow-sm" disabled>
-                    <span id="googleLoginSpinner" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                    <i id="googleLoginIcon" class="fa-brands fa-google text-danger d-none"></i>
-                    <span id="googleLoginText" class="fw-bold">Loading Google sign-in...</span>
-                </button>
-                <button type="button" id="facebookLoginButton" class="btn btn-outline-primary w-100 d-flex align-items-center justify-content-center gap-2 py-2 shadow-sm mt-2" disabled>
-                    <span id="facebookLoginSpinner" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                    <i id="facebookLoginIcon" class="fa-brands fa-facebook-f d-none"></i>
-                    <span id="facebookLoginText" class="fw-bold">Loading Facebook sign-in...</span>
-                </button>
-                <form id="googleLoginForm" action="MainController" method="POST" class="d-none">
-                    <input type="hidden" name="action" value="googleLogin">
-                    <input type="hidden" name="accessToken" id="googleAccessToken">
-                </form>
-                <form id="facebookLoginForm" action="MainController" method="POST" class="d-none">
-                    <input type="hidden" name="action" value="facebookLogin">
-                    <input type="hidden" name="facebookAccessToken" id="facebookAccessToken">
-                </form>
-
-                <div class="bg-light border rounded p-3 mt-4 small">
-                    <div class="fw-bold mb-2">Quick test accounts</div>
-                    <div class="mb-1"><code>admin / 123456</code> (admin)</div>
-                    <div class="mb-1"><code>staff / 123456</code> (staff)</div>
-                    <div><code>customer / 123456</code> (customer)</div>
                 </div>
                     </c:otherwise>
                 </c:choose>

@@ -12,13 +12,11 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Map;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import service.LoyaltyService;
 
-@WebServlet(name = "CustomerRankController", urlPatterns = {"/customer/rank"})
 public class CustomerRankController extends HttpServlet {
 
     private final LoyaltyService loyaltyService = new LoyaltyService();

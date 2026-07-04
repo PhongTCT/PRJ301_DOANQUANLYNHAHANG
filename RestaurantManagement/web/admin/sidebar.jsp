@@ -72,12 +72,13 @@
     <a class="admin-sidebar__link ${param.active == 'vouchers' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/vouchers"><i class="fa-solid fa-ticket"></i><span>Vouchers</span></a>
     <a class="admin-sidebar__link ${param.active == 'reviews' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/reviews"><i class="fa-solid fa-star-half-stroke"></i><span>Reviews</span></a>
     <a class="admin-sidebar__link ${param.active == 'reports' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/reports"><i class="fa-solid fa-chart-line"></i><span>Reports</span></a>
+    <a class="admin-sidebar__link ${param.active == 'users' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/users"><i class="fa-solid fa-users"></i><span>Users</span></a>
 
     <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
         <a class="admin-sidebar__link ${param.active == 'rank-config' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/rank-config"><i class="fa-solid fa-ranking-star"></i><span>Rank Config</span></a>
         <a class="admin-sidebar__link ${param.active == 'surcharges' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/surcharges"><i class="fa-solid fa-calendar-day"></i><span>Holidays</span></a>
         <a class="admin-sidebar__link ${param.active == 'tables' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/tables"><i class="fa-solid fa-chair"></i><span>Tables</span></a>
-    </c:if>
+            </c:if>
 
     <hr class="border-secondary">
     <a class="admin-sidebar__link" href="${pageContext.request.contextPath}/"><i class="fa-solid fa-arrow-left"></i><span>Back to Site</span></a>

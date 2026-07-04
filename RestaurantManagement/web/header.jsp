@@ -49,6 +49,12 @@
                 </div>
                 <c:choose>
                     <c:when test="${not empty sessionScope.currentUser}">
+                        <a href="${pageContext.request.contextPath}/customer/notifications" class="btn btn-light border btn-sm position-relative me-2">
+                            <i class="fa-regular fa-bell"></i>
+                            <c:if test="${not empty sessionScope.unreadCount and sessionScope.unreadCount > 0}">
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:9px">${sessionScope.unreadCount > 9 ? '9+' : sessionScope.unreadCount}</span>
+                            </c:if>
+                        </a>
                         <div class="dropdown d-inline-block me-2">
                             <button class="btn btn-light border btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fa-regular fa-user me-1"></i>${sessionScope.currentUser.fullName}
@@ -63,6 +69,7 @@
                                         </li>
                                     </c:when>
                                     <c:otherwise>
+                                        <li><a class="dropdown-item py-2" href="${pageContext.request.contextPath}/customer/notifications"><i class="fa-regular fa-bell me-2 text-warning"></i>Notifications</a></li>
                                         <li><a class="dropdown-item py-2" href="${pageContext.request.contextPath}/customer/rank"><i class="fa-solid fa-ranking-star me-2 text-warning"></i>Hạng & Điểm</a></li>
                                         <li><a class="dropdown-item py-2" href="${pageContext.request.contextPath}/customer/reservations"><i class="fa-solid fa-clock-rotate-left me-2 text-primary"></i>My Reservations</a></li>
                                         <li><a class="dropdown-item py-2" href="${pageContext.request.contextPath}/customer/vouchers"><i class="fa-solid fa-ticket me-2 text-primary"></i>Voucher của tôi</a></li>

@@ -231,11 +231,11 @@ public class LoyaltyService {
                 em.getTransaction().commit();
 
                 try {
-                    User user = managed.getUser();
-                    String email = user.getEmail();
+                    User userEntity = managed.getUser();
+                    String email = userEntity.getEmail();
                     if (email != null && !email.isEmpty()) {
                         String html = util.EmailUtil.buildRankChangeHtml(
-                                user.getFullName(),
+                                userEntity.getFullName(),
                                 newRank.getRankName().name(),
                                 "upgraded",
                                 newRank.getDiscountPercent(),
@@ -245,8 +245,13 @@ public class LoyaltyService {
                                 "Chuc mung! Ban da duoc len hang " + newRank.getRankName().name(),
                                 html);
                     }
+                    NotificationService notifService = new NotificationService();
+                    notifService.createNotification(userEntity,
+                            "Rank Upgraded",
+                            "Congratulations! You've been upgraded to " + newRank.getRankName().name()
+                            + " with " + newRank.getDiscountPercent() + "% discount.");
                 } catch (Exception e) {
-                    System.err.println("Failed to send upgrade email: " + e.getMessage());
+                    System.err.println("Failed to send upgrade notification: " + e.getMessage());
                 }
 
             } catch (Exception e) {
@@ -295,11 +300,11 @@ public class LoyaltyService {
                 em.getTransaction().commit();
 
                 try {
-                    User user = managed.getUser();
-                    String email = user.getEmail();
+                    User userEntity = managed.getUser();
+                    String email = userEntity.getEmail();
                     if (email != null && !email.isEmpty()) {
                         String html = util.EmailUtil.buildRankChangeHtml(
-                                user.getFullName(),
+                                userEntity.getFullName(),
                                 appropriateRank.getRankName().name(),
                                 "downgraded",
                                 appropriateRank.getDiscountPercent(),
@@ -309,8 +314,13 @@ public class LoyaltyService {
                                 "Thong bao: hang cua ban da bi giam xuong " + appropriateRank.getRankName().name(),
                                 html);
                     }
+                    NotificationService notifService = new NotificationService();
+                    notifService.createNotification(userEntity,
+                            "Rank Downgraded",
+                            "Your rank has been adjusted to " + appropriateRank.getRankName().name()
+                            + " due to inactivity.");
                 } catch (Exception e) {
-                    System.err.println("Failed to send downgrade email: " + e.getMessage());
+                    System.err.println("Failed to send downgrade notification: " + e.getMessage());
                 }
 
             } catch (Exception e) {

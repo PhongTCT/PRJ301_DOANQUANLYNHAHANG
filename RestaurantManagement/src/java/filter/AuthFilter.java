@@ -78,6 +78,9 @@ public class AuthFilter implements Filter {
             case "menu":
             case "login":
             case "dologin":
+            case "register":
+            case "doregister":
+            case "checkSession":
             case "googleLogin":
             case "registerGoogle":
             case "facebookLogin":

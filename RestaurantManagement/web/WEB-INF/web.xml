@@ -159,6 +159,62 @@
         <url-pattern>/BookingController</url-pattern>
     </servlet-mapping>
 
+    <!-- Admin Controllers -->
+    <servlet>
+        <servlet-name>AdminRankConfigController</servlet-name>
+        <servlet-class>controller.admin.AdminRankConfigController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminRankConfigController</servlet-name>
+        <url-pattern>/admin/rank-config</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AdminUserController</servlet-name>
+        <servlet-class>controller.admin.AdminUserController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminUserController</servlet-name>
+        <url-pattern>/admin/users</url-pattern>
+    </servlet-mapping>
+
+    <!-- Customer Controllers -->
+    <servlet>
+        <servlet-name>CustomerRankController</servlet-name>
+        <servlet-class>controller.customer.CustomerRankController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CustomerRankController</servlet-name>
+        <url-pattern>/customer/rank</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>NotificationController</servlet-name>
+        <servlet-class>controller.customer.NotificationController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>NotificationController</servlet-name>
+        <url-pattern>/customer/notifications</url-pattern>
+    </servlet-mapping>
+
+    <!-- VNPay Controller -->
+    <servlet>
+        <servlet-name>VnPayController</servlet-name>
+        <servlet-class>controller.payment.VnPayController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>VnPayController</servlet-name>
+        <url-pattern>/payment/vnpay-pay</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VnPayController</servlet-name>
+        <url-pattern>/payment/vnpay-return</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VnPayController</servlet-name>
+        <url-pattern>/payment/vnpay-ipn</url-pattern>
+    </servlet-mapping>
+
     <!-- Welcome File -->
     <welcome-file-list>
         <welcome-file>MainController</welcome-file>

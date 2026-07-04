@@ -214,6 +214,25 @@ public class UserDAO extends AbstractDAO<User, Long> {
         }
     }
 
+    public ArrayList<User> searchByKeyword(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return ListAll();
+        }
+        String kw = "%" + keyword.trim().toLowerCase() + "%";
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            TypedQuery<User> query = em.createQuery(
+                "SELECT u FROM User u WHERE LOWER(u.username) LIKE :kw "
+                + "OR LOWER(u.email) LIKE :kw "
+                + "OR LOWER(u.fullName) LIKE :kw "
+                + "OR u.phone LIKE :kw", User.class);
+            query.setParameter("kw", kw);
+            return new ArrayList<>(query.getResultList());
+        } finally {
+            em.close();
+        }
+    }
+
     public User searchByUsernameOrEmail(String usernameOrEmail) {
         if (usernameOrEmail == null) return null;
         EntityManager em = JPAUtil.getEntityManager();

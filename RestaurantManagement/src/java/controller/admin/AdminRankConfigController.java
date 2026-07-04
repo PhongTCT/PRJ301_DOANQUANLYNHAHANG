@@ -8,13 +8,11 @@ import enums.UserRole;
 import java.io.IOException;
 import java.math.BigDecimal;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import service.LoyaltyService;
 
-@WebServlet(name = "AdminRankConfigController", urlPatterns = {"/admin/rank-config"})
 public class AdminRankConfigController extends HttpServlet {
 
     private final CustomerRankConfigDAO rankConfigDAO = new CustomerRankConfigDAO();

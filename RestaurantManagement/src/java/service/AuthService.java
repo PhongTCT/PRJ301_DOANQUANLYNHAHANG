@@ -6,6 +6,7 @@ import dto.FacebookLoginDraft;
 import dto.GoogleLoginDraft;
 import entity.User;
 import entity.VerificationToken;
+import enums.UserRole;
 import enums.UserStatus;
 import enums.VerificationTokenType;
 import java.io.BufferedReader;
@@ -161,6 +162,58 @@ public class AuthService {
         sendVerificationEmail(user);
 
         return user;
+    }
+
+    public User registerUser(String username, String email, String password, String fullName, String phone) {
+        String cleanUsername = username == null ? "" : username.trim();
+        String cleanEmail = email == null ? "" : email.trim().toLowerCase();
+        String cleanFullName = fullName == null ? "" : fullName.trim();
+        String cleanPhone = phone == null ? "" : phone.trim();
+
+        if (cleanUsername.isEmpty()) {
+            throw new IllegalArgumentException("Vui lòng nhập tên đăng nhập.");
+        }
+        if (cleanUsername.length() < 3 || cleanUsername.length() > 50) {
+            throw new IllegalArgumentException("Tên đăng nhập phải từ 3-50 ký tự.");
+        }
+        if (!cleanUsername.matches("^[a-zA-Z0-9_]+$")) {
+            throw new IllegalArgumentException("Tên đăng nhập chỉ được chứa chữ, số và dấu gạch dưới.");
+        }
+        if (cleanEmail.isEmpty()) {
+            throw new IllegalArgumentException("Vui lòng nhập email.");
+        }
+        if (!cleanEmail.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            throw new IllegalArgumentException("Email không hợp lệ.");
+        }
+        if (password == null || password.length() < 6) {
+            throw new IllegalArgumentException("Mật khẩu phải có ít nhất 6 ký tự.");
+        }
+        if (cleanFullName.isEmpty()) {
+            throw new IllegalArgumentException("Vui lòng nhập họ tên.");
+        }
+
+        if (userDAO.searchByUsername(cleanUsername) != null) {
+            throw new IllegalArgumentException("Tên đăng nhập đã tồn tại.");
+        }
+        if (userDAO.searchByEmail(cleanEmail) != null) {
+            throw new IllegalArgumentException("Email đã được sử dụng.");
+        }
+
+        User user = new User();
+        user.setUsername(cleanUsername);
+        user.setEmail(cleanEmail);
+        user.setPassword(BCryptUtil.hashPassword(password));
+        user.setFullName(cleanFullName);
+        user.setPhone(cleanPhone.isEmpty() ? null : cleanPhone);
+        user.setRole(UserRole.CUSTOMER);
+        user.setStatus(UserStatus.PENDING);
+        user.setEmailVerified(false);
+        user.setFirstOrderUsed(false);
+        userDAO.insert(user);
+
+        User created = userDAO.searchByUsername(cleanUsername);
+        sendVerificationEmail(created);
+        return created;
     }
 
     private void sendVerificationEmail(User user) {
