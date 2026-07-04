@@ -37,9 +37,21 @@ public class Room implements Serializable {
     private List<DiningTable> diningTables;
 
     public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
     public Area getArea() { return area; }
+    public void setArea(Area area) { this.area = area; }
     public String getRoomName() { return roomName; }
+    public void setRoomName(String roomName) { this.roomName = roomName; }
     public RoomType getRoomType() { return roomType; }
+    public void setRoomType(RoomType roomType) { this.roomType = roomType; }
+    public Integer getCapacity() { return capacity; }
+    public void setCapacity(Integer capacity) { this.capacity = capacity; }
+    public BigDecimal getPricePerSession() { return pricePerSession; }
+    public void setPricePerSession(BigDecimal pricePerSession) { this.pricePerSession = pricePerSession; }
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+    public List<DiningTable> getDiningTables() { return diningTables; }
+    public void setDiningTables(List<DiningTable> diningTables) { this.diningTables = diningTables; }
 
     public String getRoomNameEn() {
         if (roomName == null) return "";

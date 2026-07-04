@@ -29,6 +29,9 @@ public class DiningTable implements Serializable {
     @Column(name = "base_price", nullable = false)
     private BigDecimal basePrice = BigDecimal.ZERO;
 
+    @Column(name = "image_url", length = 500)
+    private String imageUrl;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
     private TableStatus status = TableStatus.AVAILABLE;
@@ -56,6 +59,8 @@ public class DiningTable implements Serializable {
     public void setCapacity(Integer capacity) { this.capacity = capacity; }
     public BigDecimal getBasePrice() { return basePrice; }
     public void setBasePrice(BigDecimal basePrice) { this.basePrice = basePrice; }
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
     public TableStatus getStatus() { return status; }
     public void setStatus(TableStatus status) { this.status = status; }
     public Integer getVersion() { return version; }

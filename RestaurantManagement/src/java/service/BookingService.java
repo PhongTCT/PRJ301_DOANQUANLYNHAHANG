@@ -252,7 +252,7 @@ public class BookingService {
 
             // 2. Menu Sets (Combos)
             if (draft.getMenuSets() != null) {
-                for (BookingDraft.CartMenuSetDTO setDto : draft.getMenuSets()) {
+                for (BookingDraft.CartSetDTO setDto : draft.getMenuSets()) {
                     MenuSet menuSet = em.find(MenuSet.class, setDto.getMenuSetId());
                     if (menuSet != null) {
                         ReservationMenuItem rmi = new ReservationMenuItem();
@@ -330,6 +330,21 @@ public class BookingService {
         }
         draft.setMenuItems(menuItems);
 
+        List<BookingDraft.CartSetDTO> menuSets = new java.util.ArrayList<>();
+        String[] menuSetIds = request.getParameterValues("menuSetId");
+        String[] menuSetQtys = request.getParameterValues("menuSetQty");
+        if (menuSetIds != null && menuSetQtys != null) {
+            for (int i = 0; i < menuSetIds.length; i++) {
+                BookingDraft.CartSetDTO set = new BookingDraft.CartSetDTO();
+                set.setMenuSetId(parseInt(menuSetIds[i], null));
+                set.setQuantity(parseInt(i < menuSetQtys.length ? menuSetQtys[i] : "1", 1));
+                if (set.getMenuSetId() != null && set.getQuantity() > 0) {
+                    menuSets.add(set);
+                }
+            }
+        }
+        draft.setMenuSets(menuSets);
+
         List<BookingDraft.CartAddonDTO> addons = new java.util.ArrayList<>();
         String[] addonIds = request.getParameterValues("addonId");
         String[] addonQtys = request.getParameterValues("addonQty");
@@ -344,21 +359,6 @@ public class BookingService {
             }
         }
         draft.setAddons(addons);
-
-        List<BookingDraft.CartMenuSetDTO> menuSets = new java.util.ArrayList<>();
-        String[] menuSetIds = request.getParameterValues("menuSetId");
-        String[] menuSetQtys = request.getParameterValues("menuSetQty");
-        if (menuSetIds != null && menuSetQtys != null) {
-            for (int i = 0; i < menuSetIds.length; i++) {
-                BookingDraft.CartMenuSetDTO set = new BookingDraft.CartMenuSetDTO();
-                set.setMenuSetId(parseInt(menuSetIds[i], null));
-                set.setQuantity(parseInt(i < menuSetQtys.length ? menuSetQtys[i] : "1", 1));
-                if (set.getMenuSetId() != null && set.getQuantity() > 0) {
-                    menuSets.add(set);
-                }
-            }
-        }
-        draft.setMenuSets(menuSets);
     }
 
     private void validateDraft(BookingDraft draft) {

@@ -24,4 +24,8 @@ public class MenuItemDAO extends AbstractDAO<MenuItem, Integer> {
             em.close();
         }
     }
+
+    public ArrayList<MenuItem> findAllForAdmin() {
+        return super.ListAll();
+    }
 }

@@ -59,4 +59,8 @@ public class DiningTableDAO extends AbstractDAO<DiningTable, Integer> {
             em.close();
         }
     }
+
+    public ArrayList<DiningTable> findAllForAdmin() {
+        return super.ListAll();
+    }
 }

@@ -12,11 +12,23 @@
     <title><fmt:message key="booking.title"/></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/minimal.css">
+    <link href="${pageContext.request.contextPath}/assets/css/admin-royal.css" rel="stylesheet">
 </head>
-<body class="bg-light pb-5">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+<body class="bg-light pb-5 admin-royal">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm sticky-top mb-4">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="${pageContext.request.contextPath}/"><i class="fa-solid fa-utensils me-2"></i>Restaurant</a>
+            <a class="navbar-brand d-flex align-items-center gap-3" href="${pageContext.request.contextPath}/MainController?action=home">
+                <span class="brand-emblem" aria-hidden="true">
+                    <svg class="brand-symbol" viewBox="0 0 64 64" focusable="false">
+                        <path class="brand-symbol-l" d="M25 10V54H43" />
+                        <path class="brand-symbol-r" d="M33 14C46 10 54 17 53 28C52 38 41 41 33 34" />
+                        <path class="brand-symbol-r" d="M35 37C44 41 50 48 53 56" />
+                    </svg>
+                </span>
+                <span class="brand-text">Le Royal</span>
+            </a>
         </div>
     </nav>
 
@@ -78,15 +90,19 @@
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mb-5">
                 <c:forEach items="${tables}" var="tb">
                     <c:set var="isAvail" value="true" />
+                    <c:set var="tableImgUrl" value="${empty tb.imageUrl ? 'assets/img/le-royal/seating/dining-room.jpg' : tb.imageUrl}" />
                     
                     <div class="col">
                         <div class="card h-100 shadow-sm border-0 rounded-4 bg-white">
+                            <div class="position-relative">
+                                <img src="${tableImgUrl}" class="card-img-top rounded-top-4" alt="${tb.tableCode}" style="height: 160px; object-fit: cover;">
+                                <span class="badge bg-success position-absolute top-0 end-0 m-2">
+                                    <fmt:message key="booking.status.available"/>
+                                </span>
+                            </div>
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <h5 class="card-title fw-bold mb-0">Bàn ${tb.tableCode}</h5>
-                                    <span class="badge bg-success-subtle text-success rounded-pill">
-                                        <fmt:message key="booking.status.available"/>
-                                    </span>
                                 </div>
                                 <h6 class="card-subtitle mb-3 text-muted small"><i class="fa-solid fa-map-location-dot me-1"></i>${tb.room.roomName}</h6>
                                 

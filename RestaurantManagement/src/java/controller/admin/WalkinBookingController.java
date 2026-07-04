@@ -103,7 +103,7 @@ public class WalkinBookingController extends HttpServlet {
             // 1. Find User by Phone (Type A)
             User customer = userDAO.searchByPhone(phone);
             if (customer == null) {
-                session.setAttribute("errorMessage", "Customer not found. Please create an account for them first (Type C).");
+                session.setAttribute("errorMessage", "Customer not found. <a href='" + request.getContextPath() + "/admin/create-customer' class='alert-link'>Click here to create an account (Type C)</a> first.");
                 response.sendRedirect(request.getContextPath() + "/admin/walkin");
                 return;
             }

@@ -69,12 +69,6 @@
         .table-selector { margin-bottom: 15px; transition: all 0.3s ease; }
         .table-selector.hidden { display: none; }
         
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        
         /* Empty Cart State */
         .empty-cart { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #94a3b8; padding: 20px; text-align: center; }
         .empty-cart i { font-size: 3rem; margin-bottom: 10px; color: #cbd5e1; }
@@ -384,6 +378,37 @@
         document.getElementById('tableId').addEventListener('change', function() {
             const currentItemSubtotal = Object.values(cart).reduce((sum, item) => sum + (item.price * item.qty), 0);
             calculateTotals(currentItemSubtotal);
+        });
+        
+        // Filter tables based on guest count
+        document.getElementById('guestCount').addEventListener('input', function() {
+            const guestCount = parseInt(this.value) || 1;
+            const tableSelect = document.getElementById('tableId');
+            const options = tableSelect.querySelectorAll('option:not([value=""])');
+            let hasValidSelection = false;
+            
+            options.forEach(opt => {
+                const capacity = parseInt(opt.getAttribute('data-capacity')) || 0;
+                if (capacity < guestCount) {
+                    opt.style.display = 'none';
+                    opt.disabled = true;
+                } else {
+                    opt.style.display = '';
+                    opt.disabled = false;
+                }
+                
+                if (opt.selected && opt.disabled) {
+                    tableSelect.value = '';
+                } else if (opt.selected && !opt.disabled) {
+                    hasValidSelection = true;
+                }
+            });
+            
+            if (!hasValidSelection && tableSelect.value !== '') {
+                tableSelect.value = '';
+                const currentItemSubtotal = Object.values(cart).reduce((sum, item) => sum + (item.price * item.qty), 0);
+                calculateTotals(currentItemSubtotal);
+            }
         });
         
         // Calculate and Update Summary

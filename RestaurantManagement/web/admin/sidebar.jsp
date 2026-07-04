@@ -1,18 +1,70 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <style>
+    :root {
+        --admin-scroll-thumb: rgba(145, 115, 55, 0.42);
+        --admin-scroll-thumb-hover: rgba(145, 115, 55, 0.68);
+    }
+    html {
+        scrollbar-gutter: stable;
+    }
+    body,
+    body * {
+        scrollbar-width: thin;
+        scrollbar-color: var(--admin-scroll-thumb) transparent;
+    }
+    body::-webkit-scrollbar,
+    body *::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    body::-webkit-scrollbar-track,
+    body *::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    body::-webkit-scrollbar-thumb,
+    body *::-webkit-scrollbar-thumb {
+        min-height: 42px;
+        border: 2px solid transparent;
+        border-radius: 999px;
+        background: var(--admin-scroll-thumb);
+        background-clip: padding-box;
+    }
+    body::-webkit-scrollbar-thumb:hover,
+    body *::-webkit-scrollbar-thumb:hover {
+        background: var(--admin-scroll-thumb-hover);
+        background-clip: padding-box;
+    }
+    body::-webkit-scrollbar-corner,
+    body *::-webkit-scrollbar-corner {
+        background: transparent;
+    }
     .admin-sidebar {
         width: 260px;
         min-width: 260px;
         max-width: 260px;
-        min-height: 100vh;
+        height: 100vh;
+        min-height: 0;
         flex: 0 0 260px;
+        overflow-y: auto;
+        overscroll-behavior: contain;
         background:
             radial-gradient(circle at top left, rgba(185,154,82,.16), transparent 22rem),
             #171a1d;
         color: #fff;
         padding: 18px 16px;
         border-right: 1px solid rgba(185,154,82,.22);
+        scrollbar-color: rgba(213,188,121,.32) transparent;
+    }
+    .admin-sidebar::-webkit-scrollbar {
+        width: 5px;
+    }
+    .admin-sidebar::-webkit-scrollbar-thumb {
+        border-width: 1px;
+        background: rgba(213,188,121,.28);
+    }
+    .admin-sidebar::-webkit-scrollbar-thumb:hover {
+        background: rgba(213,188,121,.52);
     }
     .admin-sidebar__brand {
         min-height: 58px;
@@ -67,6 +119,7 @@
     <a class="admin-sidebar__link ${param.active == 'walkin' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/walkin"><i class="fa-solid fa-cash-register"></i><span>Walk-in POS</span></a>
     <a class="admin-sidebar__link ${param.active == 'quick-bill' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/quick-bill"><i class="fa-solid fa-bolt"></i><span>Quick Bill</span></a>
     <a class="admin-sidebar__link ${param.active == 'reservations' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/reservations"><i class="fa-solid fa-clipboard-list"></i><span>Reservations</span></a>
+    <a class="admin-sidebar__link ${param.active == 'timeline' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/timeline"><i class="fa-solid fa-timeline"></i><span>Timeline</span></a>
 
     <a class="admin-sidebar__link ${param.active == 'invoices' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/invoices"><i class="fa-solid fa-file-invoice"></i><span>Invoices</span></a>
     <a class="admin-sidebar__link ${param.active == 'vouchers' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/vouchers"><i class="fa-solid fa-ticket"></i><span>Vouchers</span></a>

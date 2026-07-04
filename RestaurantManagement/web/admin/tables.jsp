@@ -36,14 +36,14 @@
 
             <c:if test="${not empty sessionScope.successMessage}">
                 <div class="alert alert-success alert-dismissible fade show rounded-3" role="alert">
-                    <i class="fa-solid fa-circle-check me-2"></i> ${sessionScope.successMessage}
+                    <i class="fa-solid fa-circle-check me-2"></i> ${sessionScope.lang == 'en' ? sessionScope.successMessage : sessionScope.successMessage}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
                 <c:remove var="successMessage" scope="session" />
             </c:if>
             <c:if test="${not empty sessionScope.errorMessage}">
                 <div class="alert alert-danger alert-dismissible fade show rounded-3" role="alert">
-                    <i class="fa-solid fa-circle-exclamation me-2"></i> ${sessionScope.errorMessage}
+                    <i class="fa-solid fa-circle-exclamation me-2"></i> ${sessionScope.lang == 'en' ? sessionScope.errorMessage : sessionScope.errorMessage}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
                 <c:remove var="errorMessage" scope="session" />
@@ -225,3 +225,4 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
