@@ -24,7 +24,7 @@
                 <label class="form-label">Menu set</label>
                 <select class="form-select mb-3" name="menuSetId" required>
                     <c:forEach items="${menuSets}" var="set">
-                        <option value="${set.id}" ${(not empty editMenuSetItem && editMenuSetItem.menuSet.id == set.id) || (empty editMenuSetItem && param.menuSetId == set.id) ? 'selected' : ''}>${set.setName}</option>
+                        <option value="${set.id}" ${(not empty editMenuSetItem && editMenuSetItem.menuSet.id == set.id) || (empty editMenuSetItem && param.menuSetId == set.id) ? 'selected' : ''}>${not empty set.setNameVi ? set.setNameVi : set.setName}</option>
                     </c:forEach>
                 </select>
                 <label class="form-label">Menu item</label>
@@ -52,6 +52,10 @@
                         </optgroup>
                     </c:forEach>
                 </select>
+                <label class="form-label">Course name (VI, optional)</label>
+                <input class="form-control mb-3" name="courseNameVi" value="${editMenuSetItem.courseNameVi}">
+                <label class="form-label">Course name (EN, optional)</label>
+                <input class="form-control mb-3" name="courseName" value="${editMenuSetItem.courseName}">
                 <label class="form-label">Quantity</label>
                 <input class="form-control mb-3" name="quantity" type="number" min="1" value="${empty editMenuSetItem ? 1 : editMenuSetItem.quantity}" required>
                 <button class="btn btn-dark w-100" type="submit">Save</button>
@@ -74,8 +78,8 @@
                         <c:forEach items="${menuSetItemList}" var="setItem">
                             <tr>
                                 <td>${setItem.id}</td>
-                                <td><strong>${setItem.menuSet.setName}</strong></td>
-                                <td>${setItem.menuItem.itemName}</td>
+                                <td><strong>${not empty setItem.menuSet.setNameVi ? setItem.menuSet.setNameVi : setItem.menuSet.setName}</strong></td>
+                                <td>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : setItem.menuItem.itemName)}</td>
                                 <td><c:out value="${empty setItem.defaultSize ? 'None' : setItem.defaultSize.sizeName}" /></td>
                                 <td>${setItem.quantity}</td>
                                 <td class="text-end">

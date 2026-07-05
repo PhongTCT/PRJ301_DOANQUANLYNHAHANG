@@ -16,8 +16,14 @@ public class MenuSet implements Serializable {
     @Column(name = "set_name", nullable = false, columnDefinition = "NVARCHAR(150)")
     private String setName;
 
+    @Column(name = "set_name_vi", columnDefinition = "NVARCHAR(150)")
+    private String setNameVi;
+
     @Column(name = "description", columnDefinition = "NVARCHAR(MAX)")
     private String description;
+
+    @Column(name = "description_vi", columnDefinition = "NVARCHAR(MAX)")
+    private String descriptionVi;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "meal_time", nullable = false, length = 20)
@@ -42,8 +48,12 @@ public class MenuSet implements Serializable {
     public void setId(Integer id) { this.id = id; }
     public String getSetName() { return setName; }
     public void setSetName(String setName) { this.setName = setName; }
+    public String getSetNameVi() { return setNameVi; }
+    public void setSetNameVi(String setNameVi) { this.setNameVi = setNameVi; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+    public String getDescriptionVi() { return descriptionVi; }
+    public void setDescriptionVi(String descriptionVi) { this.descriptionVi = descriptionVi; }
     public MealTime getMealTime() { return mealTime; }
     public void setMealTime(MealTime mealTime) { this.mealTime = mealTime; }
     public BigDecimal getOriginalPrice() { return originalPrice; }

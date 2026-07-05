@@ -147,7 +147,7 @@
                         <!-- Combo Sets -->
                         <c:forEach items="${menuSets}" var="set">
                             <div class="menu-item-card" data-category="combo">
-                                <c:set var="setDisplayName" value="${set.setName}" />
+                                <c:set var="setDisplayName" value="${not empty set.setNameVi ? set.setNameVi : set.setName}" />
                                 <c:choose>
                                     <c:when test="${not empty set.imageUrl}">
                                         <c:choose>

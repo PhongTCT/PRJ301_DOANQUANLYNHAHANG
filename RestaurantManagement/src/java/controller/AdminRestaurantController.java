@@ -24,17 +24,17 @@ public class AdminRestaurantController extends HttpServlet {
         try {
             if (isSaveAction(action)) {
                 String redirect = handleSave(action, request);
-                response.sendRedirect(redirect);
+                response.sendRedirect(appendEmbed(request, redirect));
                 return;
             }
             if (isToggleAction(action)) {
                 handleToggle(action, request);
-                response.sendRedirect("MainController?action=" + listActionForToggle(action) + "&saved=1");
+                response.sendRedirect(appendEmbed(request, "MainController?action=" + listActionForToggle(action) + "&saved=1"));
                 return;
             }
             if (isDeleteAction(action)) {
                 handleDelete(action, request);
-                response.sendRedirect(redirectAfterDelete(action, request));
+                response.sendRedirect(appendEmbed(request, redirectAfterDelete(action, request)));
                 return;
             }
             prepareList(action, request);
@@ -199,6 +199,13 @@ public class AdminRestaurantController extends HttpServlet {
         if (isToggleAction(action)) return listActionForToggle(action);
         if (isDeleteAction(action)) return listActionForDelete(action);
         return action == null ? "adminAreas" : action;
+    }
+
+    private String appendEmbed(HttpServletRequest request, String redirect) {
+        if (!"1".equals(request.getParameter("embed")) || redirect == null || redirect.contains("embed=1")) {
+            return redirect;
+        }
+        return redirect + (redirect.contains("?") ? "&" : "?") + "embed=1";
     }
 
     private boolean isSaveAction(String action) {

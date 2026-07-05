@@ -376,6 +376,133 @@ body.admin-royal .main-content {
     padding: 1.25rem !important;
 }
 
+.admin-dashboard-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 36%);
+    min-height: 340px;
+    overflow: hidden;
+    border: 1px solid var(--admin-line);
+    background: rgba(255, 255, 255, 0.82);
+    box-shadow: 0 1rem 2.5rem rgba(94, 77, 45, 0.09);
+}
+
+.admin-dashboard-hero__content {
+    align-self: end;
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.admin-dashboard-hero__media {
+    min-height: 100%;
+    border-left: 1px solid var(--admin-line);
+    background: #171410;
+}
+
+.admin-dashboard-hero__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.86;
+}
+
+.admin-action-tile,
+.admin-link-list .list-group-item {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    min-height: 86px;
+    padding: 1rem;
+    border: 1px solid var(--admin-line);
+    color: var(--admin-ink);
+    text-decoration: none;
+    background: #fff;
+    transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.admin-action-tile:hover,
+.admin-link-list .list-group-item:hover {
+    border-color: var(--admin-gold);
+    background: #fbf7ef;
+    transform: translateY(-2px);
+}
+
+.admin-action-tile strong {
+    display: block;
+    font-weight: 800;
+}
+
+.admin-action-tile small {
+    display: block;
+    margin-top: 0.2rem;
+    color: var(--admin-muted);
+}
+
+.admin-action-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    border: 1px solid rgba(185, 154, 82, 0.36);
+    background: var(--admin-gold-soft);
+    color: #7b612e;
+}
+
+.admin-link-list .list-group-item {
+    justify-content: flex-start;
+    min-height: 52px;
+    border-right: 0;
+    border-left: 0;
+    border-bottom: 0;
+}
+
+.admin-link-list .list-group-item:first-child {
+    border-top: 1px solid var(--admin-line);
+}
+
+.admin-link-list .list-group-item i {
+    width: 20px;
+    color: #917337;
+}
+
+.admin-menu-thumb {
+    width: 64px;
+    height: 52px;
+    flex: 0 0 64px;
+    object-fit: cover;
+    border: 1px solid var(--admin-line);
+    background: #f8f3ea;
+}
+
+.admin-menu-thumb--empty {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #917337;
+}
+
+.admin-workspace-frame {
+    width: 100%;
+    min-height: calc(100vh - 125px);
+    border: 0;
+    background: #fbfaf7;
+}
+
+body.admin-royal.admin-embed {
+    background: #fbfaf7 !important;
+}
+
+body.admin-royal.admin-embed main.container,
+body.admin-royal.admin-embed main.container-fluid {
+    max-width: none;
+    padding: 1.25rem !important;
+}
+
+body.admin-royal.admin-embed .navbar,
+body.admin-royal.admin-embed footer {
+    display: none !important;
+}
+
 @media (max-width: 991.98px) {
     body.admin-royal main.flex-grow-1,
     body.admin-royal > .d-flex > .flex-grow-1,
@@ -385,5 +512,15 @@ body.admin-royal .main-content {
 
     .admin-hero {
         grid-template-columns: 1fr;
+    }
+
+    .admin-dashboard-hero {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-dashboard-hero__media {
+        min-height: 220px;
+        border-left: 0;
+        border-top: 1px solid var(--admin-line);
     }
 }

@@ -19,8 +19,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/minimal.css">
+    <c:if test="${param.embed == '1'}">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/admin-royal.css">
+    </c:if>
 </head>
-<body>
+<body class="${param.embed == '1' ? 'admin-royal admin-embed' : ''}">
+<c:if test="${param.embed != '1'}">
 <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm sticky-top">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center gap-3" href="${pageContext.request.contextPath}/MainController?action=home">
@@ -90,3 +94,4 @@
         </div>
     </div>
 </nav>
+</c:if>

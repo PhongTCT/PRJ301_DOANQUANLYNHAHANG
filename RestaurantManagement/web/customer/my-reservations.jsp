@@ -203,7 +203,7 @@
                     <div class="reserve-detail-label mt-4 mb-2"><i class="fa-solid fa-utensils me-2"></i>Món đã gọi</div>
                     <c:forEach items="${res.reservationMenuItems}" var="rmi">
                         <div class="reserve-detail-item">
-                            <span>${not empty rmi.menuItem ? rmi.menuItem.itemName : rmi.menuSet.setName} <span class="badge bg-secondary ms-1">x${rmi.quantity}</span></span>
+                            <span>${not empty rmi.menuItem ? (not empty rmi.menuItem.itemNameVi ? rmi.menuItem.itemNameVi : rmi.menuItem.itemName) : (not empty rmi.menuSet.setNameVi ? rmi.menuSet.setNameVi : rmi.menuSet.setName)} <span class="badge bg-secondary ms-1">x${rmi.quantity}</span></span>
                             <span class="fw-bold"><fmt:formatNumber value="${rmi.unitPrice * rmi.quantity}" pattern="#,##0"/>đ</span>
                         </div>
                     </c:forEach>

@@ -213,6 +213,7 @@
     <servlet-mapping>
         <servlet-name>VnPayController</servlet-name>
         <url-pattern>/payment/vnpay-ipn</url-pattern>
+    </servlet-mapping>
     <servlet>
         <servlet-name>AdminRestaurantController</servlet-name>
         <servlet-class>controller.AdminRestaurantController</servlet-class>

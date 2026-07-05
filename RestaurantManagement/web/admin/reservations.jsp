@@ -205,7 +205,7 @@
                                                                     <ul class="list-group list-group-flush mb-4">
                                                                         <c:forEach items="${res.reservationMenuItems}" var="rmi">
                                                                             <li class="list-group-item px-0 d-flex justify-content-between">
-                                                                                <span>${not empty rmi.menuItem ? rmi.menuItem.itemName : rmi.menuSet.setName} <span class="badge bg-secondary ms-1">x${rmi.quantity}</span></span>
+                                                                                <span>${not empty rmi.menuItem ? (not empty rmi.menuItem.itemNameVi ? rmi.menuItem.itemNameVi : rmi.menuItem.itemName) : (not empty rmi.menuSet.setNameVi ? rmi.menuSet.setNameVi : rmi.menuSet.setName)} <span class="badge bg-secondary ms-1">x${rmi.quantity}</span></span>
                                                                                 <span class="text-success fw-bold"><fmt:formatNumber value="${rmi.unitPrice * rmi.quantity}" pattern="#,##0" />đ</span>
                                                                             </li>
                                                                         </c:forEach>

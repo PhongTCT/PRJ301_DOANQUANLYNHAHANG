@@ -165,6 +165,7 @@ CREATE TABLE dining_table (
 CREATE TABLE menu_category (
     id INT IDENTITY(1,1) PRIMARY KEY,
     category_name NVARCHAR(100) NOT NULL,
+    category_name_vi NVARCHAR(100) NULL,
     meal_time VARCHAR(20) NOT NULL
         CHECK (meal_time IN ('BREAKFAST','LUNCH','DINNER','ALL_DAY')),
     category_type VARCHAR(20) NOT NULL
@@ -177,7 +178,9 @@ CREATE TABLE menu_item (
     id INT IDENTITY(1,1) PRIMARY KEY,
     category_id INT NOT NULL CONSTRAINT FK_menu_item_category REFERENCES menu_category(id),
     item_name NVARCHAR(150) NOT NULL,
+    item_name_vi NVARCHAR(150) NULL,
     description NVARCHAR(MAX) NULL,
+    description_vi NVARCHAR(MAX) NULL,
     image_url VARCHAR(500) NULL,
     base_price DECIMAL(10,0) NOT NULL CHECK (base_price >= 0),
     is_available BIT NOT NULL DEFAULT 1,
@@ -195,7 +198,9 @@ CREATE TABLE menu_item_size (
 CREATE TABLE menu_set (
     id INT IDENTITY(1,1) PRIMARY KEY,
     set_name NVARCHAR(150) NOT NULL,
+    set_name_vi NVARCHAR(150) NULL,
     description NVARCHAR(MAX) NULL,
+    description_vi NVARCHAR(MAX) NULL,
     meal_time VARCHAR(20) NOT NULL CHECK (meal_time IN ('BREAKFAST','LUNCH','DINNER','ALL_DAY')),
     original_price DECIMAL(10,0) NOT NULL CHECK (original_price >= 0),
     discounted_price DECIMAL(10,0) NOT NULL CHECK (discounted_price >= 0),
@@ -209,6 +214,8 @@ CREATE TABLE menu_set_item (
         CONSTRAINT FK_menu_set_item_set REFERENCES menu_set(id) ON DELETE CASCADE,
     menu_item_id INT NOT NULL CONSTRAINT FK_menu_set_item_item REFERENCES menu_item(id),
     quantity INT NOT NULL DEFAULT 1 CHECK (quantity > 0),
+    course_name NVARCHAR(150) NULL,
+    course_name_vi NVARCHAR(150) NULL,
     default_size_id INT NULL CONSTRAINT FK_menu_set_item_size REFERENCES menu_item_size(id)
 );
 
@@ -519,6 +526,30 @@ VALUES
     (N'Royal Shell Nocturne', N'A premium seafood-led tasting menu with deep broth, shellfish and reserve pairing.', 'DINNER', 0, 0, 'assets/img/le-royal/menu/king-crab-herb-butter.jpg'),
     (N'The Amber Finale Course', N'A celebratory course menu with saffron warmth, jade richness and candlelit wine.', 'DINNER', 0, 0, 'assets/img/le-royal/menu/abalone-saffron-risotto.jpg');
 
+UPDATE menu_item SET item_name_vi = N'Gỏi Ngó Sen Tôm' WHERE image_url = 'assets/img/le-royal/menu/lotus-stem-salad.jpg';
+UPDATE menu_item SET item_name_vi = N'Súp Cua Măng Tây' WHERE image_url = 'assets/img/le-royal/menu/crab-asparagus-soup.jpg';
+UPDATE menu_item SET item_name_vi = N'Thăn Bò Tiêu Đen' WHERE image_url = 'assets/img/le-royal/menu/black-pepper-beef-tenderloin.jpg';
+UPDATE menu_item SET item_name_vi = N'Cá Hồi Sốt Chanh Dây' WHERE image_url = 'assets/img/le-royal/menu/pan-seared-salmon.jpg';
+UPDATE menu_item SET item_name_vi = N'Nước Cam Tươi' WHERE image_url = 'assets/img/le-royal/menu/fresh-orange-juice.jpg';
+UPDATE menu_item SET item_name_vi = N'Rượu Vang Bordeaux' WHERE image_url = 'assets/img/le-royal/menu/bordeaux-red-wine.jpg';
+UPDATE menu_item SET item_name_vi = N'Cá Ngừ Caviar' WHERE image_url = 'assets/img/le-royal/menu/tuna-tartare-caviar.jpg';
+UPDATE menu_item SET item_name_vi = N'Sò Điệp Carpaccio' WHERE image_url = 'assets/img/le-royal/menu/scallop-carpaccio.jpg';
+UPDATE menu_item SET item_name_vi = N'Salad Vịt Hun Khói' WHERE image_url = 'assets/img/le-royal/menu/smoked-duck-salad.jpg';
+UPDATE menu_item SET item_name_vi = N'Nước Dùng Nấm Truffle' WHERE image_url = 'assets/img/le-royal/menu/truffle-mushroom-consomme.jpg';
+UPDATE menu_item SET item_name_vi = N'Súp Bí Đỏ Kem Mịn' WHERE image_url = 'assets/img/le-royal/menu/pumpkin-veloute.jpg';
+UPDATE menu_item SET item_name_vi = N'Súp Tôm Hùm' WHERE image_url = 'assets/img/le-royal/menu/lobster-bisque.jpg';
+UPDATE menu_item SET item_name_vi = N'Cua Hoàng Đế Bơ Thảo Mộc' WHERE image_url = 'assets/img/le-royal/menu/king-crab-herb-butter.jpg';
+UPDATE menu_item SET item_name_vi = N'Ức Vịt Sốt Mận' WHERE image_url = 'assets/img/le-royal/menu/duck-breast-plum-jus.jpg';
+UPDATE menu_item SET item_name_vi = N'Bào Ngư Risotto Saffron' WHERE image_url = 'assets/img/le-royal/menu/abalone-saffron-risotto.jpg';
+UPDATE menu_item SET item_name_vi = N'Pavlova Chanh Dây' WHERE image_url = 'assets/img/le-royal/menu/passion-fruit-pavlova.jpg';
+UPDATE menu_item SET item_name_vi = N'Sorbet Dâu Rừng' WHERE image_url = 'assets/img/le-royal/menu/berry-sorbet-garden.jpg';
+UPDATE menu_item SET item_name_vi = N'Panna Cotta Dừa' WHERE image_url = 'assets/img/le-royal/menu/coconut-panna-cotta.jpg';
+UPDATE menu_item SET item_name_vi = N'Tart Kem Yuzu' WHERE image_url = 'assets/img/le-royal/menu/yuzu-cream-tart.jpg';
+UPDATE menu_item SET item_name_vi = N'Bánh Opera Matcha' WHERE image_url = 'assets/img/le-royal/menu/matcha-opera-cake.jpg';
+UPDATE menu_item SET item_name_vi = N'Champagne Pairing' WHERE image_url = 'assets/img/le-royal/menu/champagne-pairing.jpg';
+UPDATE menu_item SET item_name_vi = N'Nocturne Reserve' WHERE image_url = 'assets/img/le-royal/menu/nocturne-reserve.jpg';
+UPDATE menu_item SET item_name_vi = N'Sommelier Candle' WHERE image_url = 'assets/img/le-royal/menu/sommelier-candle.jpg';
+
 DECLARE @moonlitSetId INT = (SELECT id FROM menu_set WHERE set_name = N'Le Royal Moonlit Journey');
 DECLARE @quietTidesSetId INT = (SELECT id FROM menu_set WHERE set_name = N'Garden of Quiet Tides');
 DECLARE @emberVelvetSetId INT = (SELECT id FROM menu_set WHERE set_name = N'Ember and Velvet Tasting');
@@ -552,6 +583,66 @@ VALUES
     (@amberFinaleSetId, (SELECT id FROM menu_item WHERE image_url = 'assets/img/le-royal/menu/abalone-saffron-risotto.jpg'), 1),
     (@amberFinaleSetId, (SELECT id FROM menu_item WHERE image_url = 'assets/img/le-royal/menu/coconut-panna-cotta.jpg'), 1),
     (@amberFinaleSetId, (SELECT id FROM menu_item WHERE image_url = 'assets/img/le-royal/menu/sommelier-candle.jpg'), 1);
+
+UPDATE menu_set
+SET set_name_vi = N'Trăng Về Vĩ Dạ',
+    description_vi = N'Một thực đơn tối lấy cảm hứng từ ánh trăng, khu vườn và màn sương xứ Huế.'
+WHERE set_name = N'Le Royal Moonlit Journey';
+
+UPDATE menu_set
+SET set_name_vi = N'Dữ Dội Và Dịu Êm',
+    description_vi = N'Một nhịp biển mềm, đi từ vị tươi mát đến dư âm lấp lánh như sóng.'
+WHERE set_name = N'Garden of Quiet Tides';
+
+UPDATE menu_set
+SET set_name_vi = N'Bếp Lửa Ấp Iu',
+    description_vi = N'Một tasting menu ấm, sâu và có khói, gợi cảm giác bữa tối bên bếp lửa.'
+WHERE set_name = N'Ember and Velvet Tasting';
+
+UPDATE menu_set
+SET set_name_vi = N'Đoàn Thuyền Sao Biển',
+    description_vi = N'Một hành trình hải vị đêm, từ mặt biển tối đến khoang thuyền đầy sao.'
+WHERE set_name = N'Royal Shell Nocturne';
+
+UPDATE menu_set
+SET set_name_vi = N'Tắt Nắng Buộc Gió',
+    description_vi = N'Một thực đơn tiệc sáng rực, giữ lại hương vàng, men say và khoảnh khắc đang chín.'
+WHERE set_name = N'The Amber Finale Course';
+
+;WITH course_names AS (
+    SELECT N'Le Royal Moonlit Journey' AS set_name, 'assets/img/le-royal/menu/lotus-stem-salad.jpg' AS image_url, N'Vườn Ai Mướt Quá' AS course_name_vi UNION ALL
+    SELECT N'Le Royal Moonlit Journey', 'assets/img/le-royal/menu/crab-asparagus-soup.jpg', N'Sương Khói Mờ Nhân Ảnh' UNION ALL
+    SELECT N'Le Royal Moonlit Journey', 'assets/img/le-royal/menu/black-pepper-beef-tenderloin.jpg', N'Thuyền Ai Đậu Bến Trăng' UNION ALL
+    SELECT N'Le Royal Moonlit Journey', 'assets/img/le-royal/menu/passion-fruit-pavlova.jpg', N'Áo Em Trắng Quá' UNION ALL
+    SELECT N'Le Royal Moonlit Journey', 'assets/img/le-royal/menu/bordeaux-red-wine.jpg', N'Gió Theo Lối Gió' UNION ALL
+    SELECT N'Garden of Quiet Tides', 'assets/img/le-royal/menu/scallop-carpaccio.jpg', N'Con Sóng Dưới Lòng Sâu' UNION ALL
+    SELECT N'Garden of Quiet Tides', 'assets/img/le-royal/menu/truffle-mushroom-consomme.jpg', N'Sóng Tìm Ra Tận Bể' UNION ALL
+    SELECT N'Garden of Quiet Tides', 'assets/img/le-royal/menu/pan-seared-salmon.jpg', N'Ngày Xưa Và Ngày Sau' UNION ALL
+    SELECT N'Garden of Quiet Tides', 'assets/img/le-royal/menu/berry-sorbet-garden.jpg', N'Ngàn Con Sóng Nhỏ' UNION ALL
+    SELECT N'Garden of Quiet Tides', 'assets/img/le-royal/menu/champagne-pairing.jpg', N'Bờ Xa Vỗ Mãi' UNION ALL
+    SELECT N'Ember and Velvet Tasting', 'assets/img/le-royal/menu/smoked-duck-salad.jpg', N'Chờn Vờn Sương Sớm' UNION ALL
+    SELECT N'Ember and Velvet Tasting', 'assets/img/le-royal/menu/pumpkin-veloute.jpg', N'Ấp Iu Nồng Đượm' UNION ALL
+    SELECT N'Ember and Velvet Tasting', 'assets/img/le-royal/menu/duck-breast-plum-jus.jpg', N'Một Ngọn Lửa Lòng' UNION ALL
+    SELECT N'Ember and Velvet Tasting', 'assets/img/le-royal/menu/yuzu-cream-tart.jpg', N'Thương Về Bếp Lửa' UNION ALL
+    SELECT N'Ember and Velvet Tasting', 'assets/img/le-royal/menu/fresh-orange-juice.jpg', N'Dậy Mùi Khói Bếp' UNION ALL
+    SELECT N'Royal Shell Nocturne', 'assets/img/le-royal/menu/tuna-tartare-caviar.jpg', N'Mặt Trời Xuống Biển' UNION ALL
+    SELECT N'Royal Shell Nocturne', 'assets/img/le-royal/menu/lobster-bisque.jpg', N'Câu Hát Căng Buồm' UNION ALL
+    SELECT N'Royal Shell Nocturne', 'assets/img/le-royal/menu/king-crab-herb-butter.jpg', N'Cá Bạc Biển Đông' UNION ALL
+    SELECT N'Royal Shell Nocturne', 'assets/img/le-royal/menu/matcha-opera-cake.jpg', N'Sao Mờ Kéo Lưới' UNION ALL
+    SELECT N'Royal Shell Nocturne', 'assets/img/le-royal/menu/nocturne-reserve.jpg', N'Bình Minh Nâng Chén' UNION ALL
+    SELECT N'The Amber Finale Course', 'assets/img/le-royal/menu/saffron-orbit.jpg', N'Nắng Hạ Chưa Phai' UNION ALL
+    SELECT N'The Amber Finale Course', 'assets/img/le-royal/menu/rose-gold-broth.jpg', N'Hương Mật Tháng Giêng' UNION ALL
+    SELECT N'The Amber Finale Course', 'assets/img/le-royal/menu/abalone-saffron-risotto.jpg', N'Vội Vàng Giữ Ngọc' UNION ALL
+    SELECT N'The Amber Finale Course', 'assets/img/le-royal/menu/coconut-panna-cotta.jpg', N'Mây Gần Môi' UNION ALL
+    SELECT N'The Amber Finale Course', 'assets/img/le-royal/menu/sommelier-candle.jpg', N'Men Say Rất Vội'
+)
+UPDATE msi
+SET course_name_vi = course_names.course_name_vi
+FROM menu_set_item msi
+JOIN menu_set ms ON ms.id = msi.menu_set_id
+JOIN menu_item mi ON mi.id = msi.menu_item_id
+JOIN course_names ON course_names.set_name = ms.set_name
+    AND course_names.image_url = mi.image_url;
 
 ;WITH set_totals AS (
     SELECT

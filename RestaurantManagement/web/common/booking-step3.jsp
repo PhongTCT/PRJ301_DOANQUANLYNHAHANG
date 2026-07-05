@@ -86,6 +86,7 @@
                             
                             <!-- COMBO SETS -->
                             <c:forEach items="${menuSets}" var="set">
+                                <c:set var="setDisplayName" value="${sessionScope.lang == 'vi' ? (not empty set.setNameVi ? set.setNameVi : set.setName) : (not empty set.setName ? set.setName : set.setNameVi)}" />
                                 <div class="filter-item" data-category="combo">
                                     <div class="menu-item-card">
                                         <c:choose>
@@ -106,11 +107,11 @@
                                         <div class="menu-item-info">
                                             <div class="menu-item-name">
                                                 <span class="badge bg-warning text-dark me-1" style="font-size: 0.7rem;">SET</span>
-                                                ${set.setName}
+                                                ${setDisplayName}
                                             </div>
                                             <div class="d-flex justify-content-between align-items-end mt-auto">
                                                 <div class="menu-item-price"><fmt:formatNumber value="${set.discountedPrice}" pattern="#,##0"/> ₫</div>
-                                                <button type="button" class="btn btn-sm btn-outline-primary rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('combo', ${set.id}, this.getAttribute('data-name'), ${set.discountedPrice})" data-name="Set: ${fn:escapeXml(set.setName)}">
+                                                <button type="button" class="btn btn-sm btn-outline-primary rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('combo', ${set.id}, this.getAttribute('data-name'), ${set.discountedPrice})" data-name="Set: ${fn:escapeXml(setDisplayName)}">
                                                     <i class="fa-solid fa-plus"></i>
                                                 </button>
                                             </div>

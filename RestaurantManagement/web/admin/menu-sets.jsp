@@ -26,10 +26,14 @@
                 <input type="hidden" name="originalPrice" value="${empty editMenuSet ? 0 : editMenuSet.originalPrice}">
                 <input type="hidden" name="discountedPrice" value="${empty editMenuSet ? 0 : editMenuSet.discountedPrice}">
                 <h2 class="h5 mb-3">${empty editMenuSet ? 'Create set' : 'Edit set'}</h2>
-                <label class="form-label">Set name</label>
-                <input id="setNameInput" class="form-control mb-3" name="setName" value="${editMenuSet.setName}" required>
-                <label class="form-label">Description</label>
-                <textarea id="setDescriptionInput" class="form-control mb-3" name="description" rows="3">${editMenuSet.description}</textarea>
+                <label class="form-label">Set name (VI)</label>
+                <input id="setNameInput" class="form-control mb-3" name="setNameVi" value="${not empty editMenuSet.setNameVi ? editMenuSet.setNameVi : editMenuSet.setName}" required>
+                <label class="form-label">Set name (EN, optional)</label>
+                <input class="form-control mb-3" name="setName" value="${editMenuSet.setName}">
+                <label class="form-label">Description (VI)</label>
+                <textarea id="setDescriptionInput" class="form-control mb-3" name="descriptionVi" rows="3">${not empty editMenuSet.descriptionVi ? editMenuSet.descriptionVi : editMenuSet.description}</textarea>
+                <label class="form-label">Description (EN, optional)</label>
+                <textarea class="form-control mb-3" name="description" rows="3">${editMenuSet.description}</textarea>
                 <label class="form-label">Service period</label>
                 <select id="setServiceInput" class="form-select mb-3" name="mealTime">
                     <option value="LUNCH" ${editMenuSet.mealTime == 'LUNCH' ? 'selected' : ''}>Lunch Service</option>
@@ -53,8 +57,8 @@
                         <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
                             <div>
                                 <p class="text-uppercase text-secondary small mb-1">Selected set</p>
-                                <h2 id="setPreviewName" class="h4 mb-1">${selectedMenuSet.setName}</h2>
-                                <p id="setPreviewDescription" class="text-secondary mb-0">${selectedMenuSet.description}</p>
+                                <h2 id="setPreviewName" class="h4 mb-1">${not empty selectedMenuSet.setNameVi ? selectedMenuSet.setNameVi : selectedMenuSet.setName}</h2>
+                                <p id="setPreviewDescription" class="text-secondary mb-0">${not empty selectedMenuSet.descriptionVi ? selectedMenuSet.descriptionVi : selectedMenuSet.description}</p>
                             </div>
                             <span id="setPreviewStatus" class="badge ${selectedMenuSet.isAvailable ? 'text-bg-success' : 'text-bg-secondary'}">${selectedMenuSet.isAvailable ? 'Available' : 'Hidden'}</span>
                         </div>
@@ -92,7 +96,7 @@
                                             <c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'APPETIZER'}">
                                                 <c:set var="hasAppetizer" value="true" />
                                                 <div class="d-flex justify-content-between gap-3 py-2 border-top">
-                                                    <div><strong>${setItem.menuItem.itemName}</strong><div class="small text-secondary"><c:out value="${empty setItem.defaultSize ? 'No default size' : setItem.defaultSize.sizeName}" /> - Qty ${setItem.quantity}</div></div>
+                                                    <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:out value="${empty setItem.defaultSize ? 'No default size' : setItem.defaultSize.sizeName}" /> - Qty ${setItem.quantity}</div></div>
                                                     <a class="btn btn-outline-danger btn-sm align-self-center" href="MainController?action=deleteMenuSetItem&id=${setItem.id}&returnTo=adminMenuSets&menuSetId=${selectedMenuSet.id}" onclick="return confirm('Remove this item from the set?')">Remove</a>
                                                 </div>
                                             </c:if>
@@ -106,7 +110,7 @@
                                             <c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'SOUP'}">
                                                 <c:set var="hasSoup" value="true" />
                                                 <div class="d-flex justify-content-between gap-3 py-2 border-top">
-                                                    <div><strong>${setItem.menuItem.itemName}</strong><div class="small text-secondary"><c:out value="${empty setItem.defaultSize ? 'No default size' : setItem.defaultSize.sizeName}" /> - Qty ${setItem.quantity}</div></div>
+                                                    <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:out value="${empty setItem.defaultSize ? 'No default size' : setItem.defaultSize.sizeName}" /> - Qty ${setItem.quantity}</div></div>
                                                     <a class="btn btn-outline-danger btn-sm align-self-center" href="MainController?action=deleteMenuSetItem&id=${setItem.id}&returnTo=adminMenuSets&menuSetId=${selectedMenuSet.id}" onclick="return confirm('Remove this item from the set?')">Remove</a>
                                                 </div>
                                             </c:if>
@@ -120,7 +124,7 @@
                                             <c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'MAIN'}">
                                                 <c:set var="hasMain" value="true" />
                                                 <div class="d-flex justify-content-between gap-3 py-2 border-top">
-                                                    <div><strong>${setItem.menuItem.itemName}</strong><div class="small text-secondary"><c:out value="${empty setItem.defaultSize ? 'No default size' : setItem.defaultSize.sizeName}" /> - Qty ${setItem.quantity}</div></div>
+                                                    <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:out value="${empty setItem.defaultSize ? 'No default size' : setItem.defaultSize.sizeName}" /> - Qty ${setItem.quantity}</div></div>
                                                     <a class="btn btn-outline-danger btn-sm align-self-center" href="MainController?action=deleteMenuSetItem&id=${setItem.id}&returnTo=adminMenuSets&menuSetId=${selectedMenuSet.id}" onclick="return confirm('Remove this item from the set?')">Remove</a>
                                                 </div>
                                             </c:if>
@@ -134,7 +138,7 @@
                                             <c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'DESSERT'}">
                                                 <c:set var="hasDessert" value="true" />
                                                 <div class="d-flex justify-content-between gap-3 py-2 border-top">
-                                                    <div><strong>${setItem.menuItem.itemName}</strong><div class="small text-secondary"><c:out value="${empty setItem.defaultSize ? 'No default size' : setItem.defaultSize.sizeName}" /> - Qty ${setItem.quantity}</div></div>
+                                                    <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:out value="${empty setItem.defaultSize ? 'No default size' : setItem.defaultSize.sizeName}" /> - Qty ${setItem.quantity}</div></div>
                                                     <a class="btn btn-outline-danger btn-sm align-self-center" href="MainController?action=deleteMenuSetItem&id=${setItem.id}&returnTo=adminMenuSets&menuSetId=${selectedMenuSet.id}" onclick="return confirm('Remove this item from the set?')">Remove</a>
                                                 </div>
                                             </c:if>
@@ -148,7 +152,7 @@
                                             <c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'DRINK'}">
                                                 <c:set var="hasDrink" value="true" />
                                                 <div class="d-flex justify-content-between gap-3 py-2 border-top">
-                                                    <div><strong>${setItem.menuItem.itemName}</strong><div class="small text-secondary"><c:out value="${empty setItem.defaultSize ? 'No default size' : setItem.defaultSize.sizeName}" /> - Qty ${setItem.quantity}</div></div>
+                                                    <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:out value="${empty setItem.defaultSize ? 'No default size' : setItem.defaultSize.sizeName}" /> - Qty ${setItem.quantity}</div></div>
                                                     <a class="btn btn-outline-danger btn-sm align-self-center" href="MainController?action=deleteMenuSetItem&id=${setItem.id}&returnTo=adminMenuSets&menuSetId=${selectedMenuSet.id}" onclick="return confirm('Remove this item from the set?')">Remove</a>
                                                 </div>
                                             </c:if>
@@ -201,7 +205,7 @@
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
                 <div>
                     <p class="text-uppercase text-secondary small mb-1">Choose courses</p>
-                    <h2 class="h5 mb-0">${selectedMenuSet.setName}</h2>
+                    <h2 class="h5 mb-0">${not empty selectedMenuSet.setNameVi ? selectedMenuSet.setNameVi : selectedMenuSet.setName}</h2>
                 </div>
                 <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminMenuSets&id=${selectedMenuSet.id}&mode=details">Back to set details</a>
             </div>
@@ -274,7 +278,9 @@
             <form id="menuPriceForm" class="row g-3 align-items-end" method="post" action="MainController">
                 <input type="hidden" name="action" value="saveMenuSet">
                 <input type="hidden" name="id" value="${selectedMenuSet.id}">
+                <input type="hidden" name="setNameVi" value="${not empty selectedMenuSet.setNameVi ? selectedMenuSet.setNameVi : selectedMenuSet.setName}">
                 <input type="hidden" name="setName" value="${selectedMenuSet.setName}">
+                <input type="hidden" name="descriptionVi" value="${selectedMenuSet.descriptionVi}">
                 <input type="hidden" name="description" value="${selectedMenuSet.description}">
                 <input type="hidden" name="mealTime" value="${selectedMenuSet.mealTime}">
                 <input type="hidden" name="originalPrice" value="${selectedMenuSet.originalPrice}">
@@ -301,8 +307,8 @@
             <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
                 <div>
                     <p class="text-uppercase text-secondary small mb-1">Menu preview</p>
-                    <h2 id="setPreviewName" class="h4 mb-1">${selectedMenuSet.setName}</h2>
-                    <p id="setPreviewDescription" class="text-secondary mb-0">${selectedMenuSet.description}</p>
+                    <h2 id="setPreviewName" class="h4 mb-1">${not empty selectedMenuSet.setNameVi ? selectedMenuSet.setNameVi : selectedMenuSet.setName}</h2>
+                    <p id="setPreviewDescription" class="text-secondary mb-0">${not empty selectedMenuSet.descriptionVi ? selectedMenuSet.descriptionVi : selectedMenuSet.description}</p>
                 </div>
                 <span id="setPreviewStatus" class="badge ${selectedMenuSet.isAvailable ? 'text-bg-success' : 'text-bg-secondary'}">${selectedMenuSet.isAvailable ? 'Available' : 'Hidden'}</span>
             </div>
@@ -340,7 +346,7 @@
                                 <c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'APPETIZER'}">
                                     <c:set var="hasAppetizerPreview" value="true" />
                                     <div class="d-flex justify-content-between gap-3 py-2 border-top">
-                                        <div><strong>${setItem.menuItem.itemName}</strong><div class="small text-secondary"><c:out value="${empty setItem.defaultSize ? 'No default size' : setItem.defaultSize.sizeName}" /> - Qty ${setItem.quantity}</div></div>
+                                        <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:out value="${empty setItem.defaultSize ? 'No default size' : setItem.defaultSize.sizeName}" /> - Qty ${setItem.quantity}</div></div>
                                         <a class="btn btn-outline-danger btn-sm align-self-center" href="MainController?action=deleteMenuSetItem&id=${setItem.id}&returnTo=adminMenuSets&menuSetId=${selectedMenuSet.id}" onclick="return confirm('Remove this item from the set?')">Remove</a>
                                     </div>
                                 </c:if>
@@ -354,7 +360,7 @@
                                 <c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'SOUP'}">
                                     <c:set var="hasSoupPreview" value="true" />
                                     <div class="d-flex justify-content-between gap-3 py-2 border-top">
-                                        <div><strong>${setItem.menuItem.itemName}</strong><div class="small text-secondary"><c:out value="${empty setItem.defaultSize ? 'No default size' : setItem.defaultSize.sizeName}" /> - Qty ${setItem.quantity}</div></div>
+                                        <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:out value="${empty setItem.defaultSize ? 'No default size' : setItem.defaultSize.sizeName}" /> - Qty ${setItem.quantity}</div></div>
                                         <a class="btn btn-outline-danger btn-sm align-self-center" href="MainController?action=deleteMenuSetItem&id=${setItem.id}&returnTo=adminMenuSets&menuSetId=${selectedMenuSet.id}" onclick="return confirm('Remove this item from the set?')">Remove</a>
                                     </div>
                                 </c:if>
@@ -368,7 +374,7 @@
                                 <c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'MAIN'}">
                                     <c:set var="hasMainPreview" value="true" />
                                     <div class="d-flex justify-content-between gap-3 py-2 border-top">
-                                        <div><strong>${setItem.menuItem.itemName}</strong><div class="small text-secondary"><c:out value="${empty setItem.defaultSize ? 'No default size' : setItem.defaultSize.sizeName}" /> - Qty ${setItem.quantity}</div></div>
+                                        <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:out value="${empty setItem.defaultSize ? 'No default size' : setItem.defaultSize.sizeName}" /> - Qty ${setItem.quantity}</div></div>
                                         <a class="btn btn-outline-danger btn-sm align-self-center" href="MainController?action=deleteMenuSetItem&id=${setItem.id}&returnTo=adminMenuSets&menuSetId=${selectedMenuSet.id}" onclick="return confirm('Remove this item from the set?')">Remove</a>
                                     </div>
                                 </c:if>
@@ -382,7 +388,7 @@
                                 <c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'DESSERT'}">
                                     <c:set var="hasDessertPreview" value="true" />
                                     <div class="d-flex justify-content-between gap-3 py-2 border-top">
-                                        <div><strong>${setItem.menuItem.itemName}</strong><div class="small text-secondary"><c:out value="${empty setItem.defaultSize ? 'No default size' : setItem.defaultSize.sizeName}" /> - Qty ${setItem.quantity}</div></div>
+                                        <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:out value="${empty setItem.defaultSize ? 'No default size' : setItem.defaultSize.sizeName}" /> - Qty ${setItem.quantity}</div></div>
                                         <a class="btn btn-outline-danger btn-sm align-self-center" href="MainController?action=deleteMenuSetItem&id=${setItem.id}&returnTo=adminMenuSets&menuSetId=${selectedMenuSet.id}" onclick="return confirm('Remove this item from the set?')">Remove</a>
                                     </div>
                                 </c:if>
@@ -396,7 +402,7 @@
                                 <c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'DRINK'}">
                                     <c:set var="hasDrinkPreview" value="true" />
                                     <div class="d-flex justify-content-between gap-3 py-2 border-top">
-                                        <div><strong>${setItem.menuItem.itemName}</strong><div class="small text-secondary"><c:out value="${empty setItem.defaultSize ? 'No default size' : setItem.defaultSize.sizeName}" /> - Qty ${setItem.quantity}</div></div>
+                                        <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:out value="${empty setItem.defaultSize ? 'No default size' : setItem.defaultSize.sizeName}" /> - Qty ${setItem.quantity}</div></div>
                                         <a class="btn btn-outline-danger btn-sm align-self-center" href="MainController?action=deleteMenuSetItem&id=${setItem.id}&returnTo=adminMenuSets&menuSetId=${selectedMenuSet.id}" onclick="return confirm('Remove this item from the set?')">Remove</a>
                                     </div>
                                 </c:if>
@@ -413,12 +419,12 @@
                     <div class="modal-header">
                         <div>
                             <p class="text-uppercase text-secondary small mb-1">Confirm menu</p>
-                            <h5 class="modal-title" id="menuPreviewModalTitle">${selectedMenuSet.setName}</h5>
+                            <h5 class="modal-title" id="menuPreviewModalTitle">${not empty selectedMenuSet.setNameVi ? selectedMenuSet.setNameVi : selectedMenuSet.setName}</h5>
                         </div>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <p class="text-secondary">${selectedMenuSet.description}</p>
+                        <p class="text-secondary">${not empty selectedMenuSet.descriptionVi ? selectedMenuSet.descriptionVi : selectedMenuSet.description}</p>
                         <div class="row g-3 mb-4">
                             <div class="col-sm-4"><div class="border rounded-3 p-3"><div class="small text-secondary">Service</div><strong><c:choose><c:when test="${selectedMenuSet.mealTime == 'LUNCH'}">Lunch Service</c:when><c:when test="${selectedMenuSet.mealTime == 'ALL_DAY'}">All Services</c:when><c:otherwise>Dinner Service</c:otherwise></c:choose></strong></div></div>
                             <div class="col-sm-4"><div class="border rounded-3 p-3"><div class="small text-secondary">Suggested</div><strong><fmt:formatNumber value="${selectedMenuSet.originalPrice}" pattern="#,##0"/></strong></div></div>
@@ -428,31 +434,31 @@
                             <div class="border rounded-3 p-3">
                                 <div class="small text-uppercase text-secondary mb-2">Course 1 - Appetizer</div>
                                 <c:set var="hasModalAppetizer" value="false" />
-                                <c:forEach items="${selectedMenuSetItems}" var="setItem"><c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'APPETIZER'}"><c:set var="hasModalAppetizer" value="true" /><div>${setItem.menuItem.itemName}</div></c:if></c:forEach>
+                                <c:forEach items="${selectedMenuSetItems}" var="setItem"><c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'APPETIZER'}"><c:set var="hasModalAppetizer" value="true" /><div>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</div></c:if></c:forEach>
                                 <c:if test="${!hasModalAppetizer}"><div class="text-secondary small">No appetizer selected.</div></c:if>
                             </div>
                             <div class="border rounded-3 p-3">
                                 <div class="small text-uppercase text-secondary mb-2">Course 2 - Soup</div>
                                 <c:set var="hasModalSoup" value="false" />
-                                <c:forEach items="${selectedMenuSetItems}" var="setItem"><c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'SOUP'}"><c:set var="hasModalSoup" value="true" /><div>${setItem.menuItem.itemName}</div></c:if></c:forEach>
+                                <c:forEach items="${selectedMenuSetItems}" var="setItem"><c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'SOUP'}"><c:set var="hasModalSoup" value="true" /><div>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</div></c:if></c:forEach>
                                 <c:if test="${!hasModalSoup}"><div class="text-secondary small">No soup course.</div></c:if>
                             </div>
                             <div class="border rounded-3 p-3">
                                 <div class="small text-uppercase text-secondary mb-2">Course 3 - Main</div>
                                 <c:set var="hasModalMain" value="false" />
-                                <c:forEach items="${selectedMenuSetItems}" var="setItem"><c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'MAIN'}"><c:set var="hasModalMain" value="true" /><div>${setItem.menuItem.itemName}</div></c:if></c:forEach>
+                                <c:forEach items="${selectedMenuSetItems}" var="setItem"><c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'MAIN'}"><c:set var="hasModalMain" value="true" /><div>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</div></c:if></c:forEach>
                                 <c:if test="${!hasModalMain}"><div class="text-secondary small">No main course selected.</div></c:if>
                             </div>
                             <div class="border rounded-3 p-3">
                                 <div class="small text-uppercase text-secondary mb-2">Course 4 - Dessert</div>
                                 <c:set var="hasModalDessert" value="false" />
-                                <c:forEach items="${selectedMenuSetItems}" var="setItem"><c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'DESSERT'}"><c:set var="hasModalDessert" value="true" /><div>${setItem.menuItem.itemName}</div></c:if></c:forEach>
+                                <c:forEach items="${selectedMenuSetItems}" var="setItem"><c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'DESSERT'}"><c:set var="hasModalDessert" value="true" /><div>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</div></c:if></c:forEach>
                                 <c:if test="${!hasModalDessert}"><div class="text-secondary small">No dessert selected.</div></c:if>
                             </div>
                             <div class="border rounded-3 p-3">
                                 <div class="small text-uppercase text-secondary mb-2">Optional - Beverage / Add-on</div>
                                 <c:set var="hasModalDrink" value="false" />
-                                <c:forEach items="${selectedMenuSetItems}" var="setItem"><c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'DRINK'}"><c:set var="hasModalDrink" value="true" /><div>${setItem.menuItem.itemName}</div></c:if></c:forEach>
+                                <c:forEach items="${selectedMenuSetItems}" var="setItem"><c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'DRINK'}"><c:set var="hasModalDrink" value="true" /><div>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</div></c:if></c:forEach>
                                 <c:if test="${!hasModalDrink}"><div class="text-secondary small">No beverage selected.</div></c:if>
                             </div>
                         </div>
@@ -489,8 +495,9 @@
                         <tr class="${not empty selectedMenuSet && selectedMenuSet.id == set.id ? 'table-light' : ''}">
                             <td>${set.id}</td>
                             <td>
-                                <strong>${set.setName}</strong>
-                                <div class="small text-secondary">${set.description}</div>
+                                <strong>${not empty set.setNameVi ? set.setNameVi : set.setName}</strong>
+                                <c:if test="${not empty set.setName}"><div class="small text-secondary">${set.setName}</div></c:if>
+                                <div class="small text-secondary">${not empty set.descriptionVi ? set.descriptionVi : set.description}</div>
                             </td>
                             <td><c:choose><c:when test="${set.mealTime == 'LUNCH'}">Lunch Service</c:when><c:when test="${set.mealTime == 'ALL_DAY'}">All Services</c:when><c:otherwise>Dinner Service</c:otherwise></c:choose></td>
                             <td><fmt:formatNumber value="${set.originalPrice}" pattern="#,##0"/></td>

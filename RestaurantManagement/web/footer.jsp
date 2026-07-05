@@ -1,5 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<c:if test="${param.embed != '1'}">
 <footer class="bg-dark text-light py-5">
     <div class="container">
         <div class="row g-5">
@@ -34,6 +36,31 @@
         </div>
     </div>
 </footer>
+</c:if>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<c:if test="${param.embed == '1'}">
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('form').forEach(function (form) {
+            if (!form.querySelector('input[name="embed"]')) {
+                var input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'embed';
+                input.value = '1';
+                form.appendChild(input);
+            }
+        });
+        document.querySelectorAll('a[href]').forEach(function (link) {
+            var href = link.getAttribute('href');
+            if (!href || href.indexOf('#') === 0 || href.indexOf('javascript:') === 0 || href.indexOf('embed=1') !== -1) {
+                return;
+            }
+            if (href.indexOf('MainController') !== -1 || href.indexOf('AdminRestaurantController') !== -1) {
+                link.setAttribute('href', href + (href.indexOf('?') === -1 ? '?' : '&') + 'embed=1');
+            }
+        });
+    });
+</script>
+</c:if>
 </body>
 </html>

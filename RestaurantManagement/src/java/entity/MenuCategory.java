@@ -16,6 +16,9 @@ public class MenuCategory implements Serializable {
     @Column(name = "category_name", nullable = false, columnDefinition = "NVARCHAR(100)")
     private String categoryName;
 
+    @Column(name = "category_name_vi", columnDefinition = "NVARCHAR(100)")
+    private String categoryNameVi;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "meal_time", nullable = false, length = 20)
     private MealTime mealTime = MealTime.ALL_DAY;
@@ -37,6 +40,8 @@ public class MenuCategory implements Serializable {
     public void setId(Integer id) { this.id = id; }
     public String getCategoryName() { return categoryName; }
     public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
+    public String getCategoryNameVi() { return categoryNameVi; }
+    public void setCategoryNameVi(String categoryNameVi) { this.categoryNameVi = categoryNameVi; }
     public MealTime getMealTime() { return mealTime; }
     public void setMealTime(MealTime mealTime) { this.mealTime = mealTime; }
     public MenuCategoryType getCategoryType() { return categoryType; }

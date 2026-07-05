@@ -23,8 +23,14 @@ public class MenuItem implements Serializable {
     @Column(name = "item_name", nullable = false, columnDefinition = "NVARCHAR(150)")
     private String itemName;
 
+    @Column(name = "item_name_vi", columnDefinition = "NVARCHAR(150)")
+    private String itemNameVi;
+
     @Column(name = "description", columnDefinition = "NVARCHAR(MAX)")
     private String description;
+
+    @Column(name = "description_vi", columnDefinition = "NVARCHAR(MAX)")
+    private String descriptionVi;
 
     @Column(name = "image_url", length = 500)
     private String imageUrl;
@@ -59,8 +65,12 @@ public class MenuItem implements Serializable {
     public void setCategory(MenuCategory category) { this.category = category; }
     public String getItemName() { return itemName; }
     public void setItemName(String itemName) { this.itemName = itemName; }
+    public String getItemNameVi() { return itemNameVi; }
+    public void setItemNameVi(String itemNameVi) { this.itemNameVi = itemNameVi; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+    public String getDescriptionVi() { return descriptionVi; }
+    public void setDescriptionVi(String descriptionVi) { this.descriptionVi = descriptionVi; }
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
     public BigDecimal getBasePrice() { return basePrice; }

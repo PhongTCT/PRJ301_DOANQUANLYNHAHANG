@@ -94,7 +94,10 @@ public class AdminRestaurantService {
 
     public void saveMenuCategory(HttpServletRequest request) {
         MenuCategory category = getOrNewCategory(paramInt(request, "id"));
-        category.setCategoryName(required(request, "categoryName", "Category name"));
+        String categoryNameVi = required(request, "categoryNameVi", "Category name (VI)");
+        String categoryName = trim(request.getParameter("categoryName"));
+        category.setCategoryName(categoryName == null || categoryName.isEmpty() ? categoryNameVi : categoryName);
+        category.setCategoryNameVi(categoryNameVi);
         category.setMealTime(enumValue(MealTime.class, request.getParameter("mealTime"), "Meal time"));
         category.setCategoryType(enumValue(MenuCategoryType.class, request.getParameter("categoryType"), "Category type"));
         category.setSortOrder(positiveInt(request, "sortOrder", "Sort order"));
@@ -105,9 +108,15 @@ public class AdminRestaurantService {
     public void saveMenuItem(HttpServletRequest request) {
         MenuItem item = getOrNewMenuItem(paramInt(request, "id"));
         MenuCategory category = requireCategory(paramInt(request, "categoryId"));
+        String itemNameVi = required(request, "itemNameVi", "Item name (VI)");
+        String itemName = trim(request.getParameter("itemName"));
+        String descriptionVi = trim(request.getParameter("descriptionVi"));
+        String description = trim(request.getParameter("description"));
         item.setCategory(category);
-        item.setItemName(required(request, "itemName", "Item name"));
-        item.setDescription(trim(request.getParameter("description")));
+        item.setItemName(itemName == null || itemName.isEmpty() ? itemNameVi : itemName);
+        item.setItemNameVi(itemNameVi);
+        item.setDescription(description == null || description.isEmpty() ? descriptionVi : description);
+        item.setDescriptionVi(descriptionVi);
         item.setImageUrl(trim(request.getParameter("imageUrl")));
         item.setBasePrice(nonNegativeMoney(request, "basePrice", "Base price"));
         item.setIsAvailable(paramBool(request, "isAvailable"));
@@ -125,8 +134,14 @@ public class AdminRestaurantService {
 
     public MenuSet saveMenuSet(HttpServletRequest request) {
         MenuSet set = getOrNewMenuSet(paramInt(request, "id"));
-        set.setSetName(required(request, "setName", "Set name"));
-        set.setDescription(trim(request.getParameter("description")));
+        String setNameVi = required(request, "setNameVi", "Set name (VI)");
+        String setName = trim(request.getParameter("setName"));
+        String descriptionVi = trim(request.getParameter("descriptionVi"));
+        String description = trim(request.getParameter("description"));
+        set.setSetName(setName == null || setName.isEmpty() ? setNameVi : setName);
+        set.setSetNameVi(setNameVi);
+        set.setDescription(description == null || description.isEmpty() ? descriptionVi : description);
+        set.setDescriptionVi(descriptionVi);
         set.setMealTime(enumValue(MealTime.class, request.getParameter("mealTime"), "Meal time"));
         if (set.getId() == null || menuSetItemDAO.findByMenuSet(set.getId()).isEmpty()) {
             set.setOriginalPrice(nonNegativeMoney(request, "originalPrice", "Original price"));
@@ -156,6 +171,8 @@ public class AdminRestaurantService {
         setItem.setMenuSet(menuSet);
         setItem.setMenuItem(menuItem);
         setItem.setDefaultSize(defaultSize);
+        setItem.setCourseName(trim(request.getParameter("courseName")));
+        setItem.setCourseNameVi(trim(request.getParameter("courseNameVi")));
         setItem.setQuantity(positiveInt(request, "quantity", "Quantity"));
         save(menuSetItemDAO, setItem, setItem.getId());
         recalculateMenuSetOriginalPrice(menuSet.getId());
