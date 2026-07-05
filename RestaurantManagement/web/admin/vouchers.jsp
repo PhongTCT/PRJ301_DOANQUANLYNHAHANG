@@ -21,12 +21,30 @@
             --royal-panel: #ffffff;
         }
 
-        * {
+        html {
+            height: 100%;
+            width: 100%;
+            max-width: 100%;
+            overscroll-behavior: none;
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
             letter-spacing: 0;
         }
 
         body {
             margin: 0;
+            height: 100%;
+            width: 100%;
+            max-width: 100%;
+            overscroll-behavior: none;
+            overflow-x: hidden;
+            overflow-y: hidden;
             background:
                 radial-gradient(circle at top right, rgba(185, 154, 82, 0.12), transparent 34rem),
                 linear-gradient(180deg, #fbfaf7 0%, #f3efe8 100%);
@@ -34,12 +52,32 @@
             font-family: "Inter", Arial, sans-serif;
         }
 
+        .admin-layout {
+            width: 100%;
+            max-width: 100vw;
+            height: 100vh;
+            min-height: 0;
+            overflow-x: hidden;
+            overflow-y: hidden;
+            align-items: stretch;
+        }
+
         .admin-voucher-main {
+            flex: 1 1 auto;
             min-width: 0;
+            min-height: 0;
+            height: 100vh;
+            width: calc(100% - 260px);
+            max-width: calc(100vw - 260px);
+            overflow-x: hidden;
+            overflow-y: auto;
+            overscroll-behavior: contain;
             padding: 2rem;
         }
 
         .admin-voucher-shell {
+            width: 100%;
+            min-width: 0;
             max-width: 1280px;
             margin: 0 auto;
         }
@@ -111,6 +149,7 @@
         }
 
         .admin-stat {
+            min-width: 0;
             background: rgba(255, 255, 255, 0.84);
             padding: 1.15rem 1.2rem;
         }
@@ -123,6 +162,7 @@
             line-height: 1;
             font-weight: 600;
             font-variant-numeric: tabular-nums;
+            overflow-wrap: anywhere;
         }
 
         .admin-alert {
@@ -134,6 +174,7 @@
 
         .admin-panel {
             overflow: hidden;
+            max-width: 100%;
             background: rgba(255, 255, 255, 0.86);
             border: 1px solid var(--royal-line);
             box-shadow: 0 1rem 2.5rem rgba(94, 77, 45, 0.09);
@@ -148,9 +189,33 @@
             border-bottom: 1px solid var(--royal-line);
         }
 
+        .voucher-table-wrap {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            overscroll-behavior-x: contain;
+        }
+
         .admin-table {
+            width: 100%;
+            min-width: 0;
+            table-layout: fixed;
             margin: 0;
         }
+
+        .admin-table th,
+        .admin-table td {
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .admin-table th:nth-child(1) { width: 15%; }
+        .admin-table th:nth-child(2) { width: 15%; }
+        .admin-table th:nth-child(3) { width: 12%; }
+        .admin-table th:nth-child(4) { width: 19%; }
+        .admin-table th:nth-child(5) { width: 11%; }
+        .admin-table th:nth-child(6) { width: 13%; }
+        .admin-table th:nth-child(7) { width: 15%; }
 
         .admin-table thead th {
             padding: 1rem 1rem;
@@ -168,6 +233,7 @@
         .voucher-code-cell {
             display: grid;
             gap: 0.3rem;
+            min-width: 0;
         }
 
         .voucher-code-text {
@@ -175,6 +241,7 @@
             font-weight: 800;
             color: var(--royal-ink);
             font-variant-numeric: tabular-nums;
+            overflow-wrap: anywhere;
         }
 
         .voucher-type-tag,
@@ -191,6 +258,7 @@
             font-size: 0.76rem;
             font-weight: 700;
             white-space: nowrap;
+            max-width: 100%;
         }
 
         .voucher-status.is-on {
@@ -223,7 +291,9 @@
         .voucher-actions {
             display: inline-flex;
             align-items: center;
+            justify-content: flex-end;
             gap: 0.45rem;
+            white-space: nowrap;
         }
 
         .voucher-icon-btn {
@@ -288,6 +358,9 @@
             }
 
             .admin-voucher-main {
+                width: 100%;
+                max-width: 100vw;
+                height: 100vh;
                 padding: 1.25rem;
             }
 
@@ -297,6 +370,11 @@
 
             .admin-stat-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .admin-table {
+                min-width: 780px;
+                table-layout: auto;
             }
         }
     </style>
@@ -356,7 +434,7 @@
                     <span class="voucher-use-tag"><i class="fa-solid fa-ticket me-2"></i>${fn:length(vouchers)} mã</span>
                 </div>
 
-                <div class="table-responsive">
+                <div class="table-responsive voucher-table-wrap">
                     <table class="table table-hover align-middle admin-table">
                         <thead>
                             <tr>

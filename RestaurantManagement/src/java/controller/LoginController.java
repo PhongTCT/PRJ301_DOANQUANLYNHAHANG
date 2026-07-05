@@ -43,6 +43,41 @@ public class LoginController extends HttpServlet {
             session.removeAttribute("pendingFacebookLogin");
         }
 
+        if ("checkSession".equals(action)) {
+            response.setContentType("application/json;charset=UTF-8");
+            User u = (User) session.getAttribute("currentUser");
+            if (u != null) {
+                response.getWriter().write("{\"authenticated\":true,\"user\":{\"id\":" + u.getId()
+                        + ",\"fullName\":\"" + u.getFullName() + "\",\"role\":\"" + u.getRole().name() + "\"}}");
+            } else {
+                response.getWriter().write("{\"authenticated\":false}");
+            }
+            return;
+        }
+
+        if ("register".equals(action)) {
+            request.setAttribute("showRegisterForm", true);
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+            return;
+        }
+
+        if ("doregister".equals(action)) {
+            try {
+                authService.registerUser(
+                        request.getParameter("username"),
+                        request.getParameter("email"),
+                        request.getParameter("password"),
+                        request.getParameter("fullName"),
+                        request.getParameter("phone"));
+                request.setAttribute("success", "Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản.");
+            } catch (IllegalArgumentException e) {
+                request.setAttribute("error", e.getMessage());
+                request.setAttribute("showRegisterForm", true);
+            }
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+            return;
+        }
+
         if ("logout".equals(action)) {
             session.invalidate();
             response.sendRedirect("MainController?action=home");
@@ -197,6 +232,7 @@ public class LoginController extends HttpServlet {
         session.setAttribute("loginUser", user);
         session.setAttribute("userRole", user.getRole());
         session.setAttribute("userName", user.getFullName());
+        session.setAttribute("unreadCount", new service.NotificationService().getUnreadCount(user));
         String redirectAfterLogin = (String) session.getAttribute("redirectAfterLogin");
         session.removeAttribute("redirectAfterLogin");
 

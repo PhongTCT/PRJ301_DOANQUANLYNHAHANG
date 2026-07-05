@@ -69,12 +69,6 @@
         .table-selector { margin-bottom: 15px; transition: all 0.3s ease; }
         .table-selector.hidden { display: none; }
         
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        
         /* Empty Cart State */
         .empty-cart { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #94a3b8; padding: 20px; text-align: center; }
         .empty-cart i { font-size: 3rem; margin-bottom: 10px; color: #cbd5e1; }

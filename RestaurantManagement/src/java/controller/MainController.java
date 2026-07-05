@@ -23,6 +23,9 @@ public class MainController extends HttpServlet {
         switch (action) {
             case "login":
             case "dologin":
+            case "register":
+            case "doregister":
+            case "checkSession":
             case "googleLogin":
             case "registerGoogle":
             case "facebookLogin":

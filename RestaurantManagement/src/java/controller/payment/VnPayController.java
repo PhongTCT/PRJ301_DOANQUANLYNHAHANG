@@ -12,19 +12,28 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import service.VnPayService;
 import util.JPAUtil;
 
-@WebServlet(name = "VnPayController", urlPatterns = {"/payment/vnpay-pay", "/payment/vnpay-return", "/payment/vnpay-ipn"})
 public class VnPayController extends HttpServlet {
     private final VnPayService vnPayService = new VnPayService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        handleRequest(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        handleRequest(request, response);
+    }
+
+    private void handleRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String path = request.getRequestURI();
         if (path.endsWith("/payment/vnpay-pay")) {

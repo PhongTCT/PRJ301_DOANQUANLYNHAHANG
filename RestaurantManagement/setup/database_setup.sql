@@ -3,6 +3,10 @@
 -- SQL Server 2014+ | JPA/Hibernate/EclipseLink compatible | UTF-8 source
 -- ============================================================================
 
+SET ANSI_NULLS ON;
+SET QUOTED_IDENTIFIER ON;
+GO
+
 IF DB_ID('RestaurantManagement') IS NULL
 BEGIN
     CREATE DATABASE RestaurantManagement;

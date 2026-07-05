@@ -67,8 +67,9 @@ public class VnPayService {
         params.put("vnp_CreateDate", createDate);
         params.put("vnp_ExpireDate", expireDate);
 
+        String hashData = buildHashData(params);
         String query = buildQuery(params);
-        String secureHash = hmacSHA512(config(context, "vnpay.hashSecret", "VNPAY_HASH_SECRET", DEFAULT_HASH_SECRET), query);
+        String secureHash = hmacSHA512(config(context, "vnpay.hashSecret", "VNPAY_HASH_SECRET", DEFAULT_HASH_SECRET), hashData);
         return config(context, "vnpay.payUrl", "VNPAY_PAY_URL", DEFAULT_PAY_URL) + "?" + query + "&vnp_SecureHash=" + secureHash;
     }
 
@@ -79,8 +80,8 @@ public class VnPayService {
         if (secureHash == null || secureHash.trim().isEmpty()) {
             return false;
         }
-        String signedData = buildQuery(params);
-        String expected = hmacSHA512(config(request.getServletContext(), "vnpay.hashSecret", "VNPAY_HASH_SECRET", DEFAULT_HASH_SECRET), signedData);
+        String hashData = buildHashData(params);
+        String expected = hmacSHA512(config(request.getServletContext(), "vnpay.hashSecret", "VNPAY_HASH_SECRET", DEFAULT_HASH_SECRET), hashData);
         return expected.equalsIgnoreCase(secureHash);
     }
 
@@ -116,6 +117,23 @@ public class VnPayService {
 
     public String buildTxnRef(Long invoiceId) {
         return "LR" + invoiceId;
+    }
+
+    private String buildHashData(Map<String, String> params) {
+        List<String> keys = new ArrayList<>(params.keySet());
+        Collections.sort(keys);
+        StringBuilder hash = new StringBuilder();
+        for (String key : keys) {
+            String value = params.get(key);
+            if (value == null || value.trim().isEmpty()) {
+                continue;
+            }
+            if (hash.length() > 0) {
+                hash.append('&');
+            }
+            hash.append(key).append('=').append(value);
+        }
+        return hash.toString();
     }
 
     private String buildQuery(Map<String, String> params) {
