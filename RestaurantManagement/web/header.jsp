@@ -14,7 +14,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Le Royal - Contemporary Fine Dining</title>
+    <title><fmt:message key="site.title"/></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -38,9 +38,9 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto gap-lg-2 py-3 py-lg-0 main-nav">
-                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/MainController?action=home">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/MainController?action=menu">Menu</a></li>
-                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/MainController?action=booking">Booking</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/MainController?action=home"><fmt:message key="nav.home"/></a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/MainController?action=menu"><fmt:message key="nav.menu"/></a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/MainController?action=booking"><fmt:message key="nav.booking"/></a></li>
             </ul>
             <div class="d-flex align-items-center flex-wrap gap-2">
                 <div class="btn-group lang-switch" role="group" aria-label="Language switcher">
@@ -58,25 +58,25 @@
                                     <c:when test="${sessionScope.currentUser.role == 'ADMIN' or sessionScope.currentUser.role == 'STAFF'}">
                                         <li>
                                             <a class="dropdown-item py-3 account-menu__primary" href="${pageContext.request.contextPath}/admin/quick-bill">
-                                                <i class="fa-solid fa-briefcase me-2"></i>Quản lý
+                                                <i class="fa-solid fa-briefcase me-2"></i><fmt:message key="nav.manage"/>
                                             </a>
                                         </li>
                                     </c:when>
                                     <c:otherwise>
-                                        <li><a class="dropdown-item py-2" href="${pageContext.request.contextPath}/customer/rank"><i class="fa-solid fa-ranking-star me-2 text-warning"></i>Hạng & Điểm</a></li>
-                                        <li><a class="dropdown-item py-2" href="${pageContext.request.contextPath}/customer/reservations"><i class="fa-solid fa-clock-rotate-left me-2 text-primary"></i>My Reservations</a></li>
-                                        <li><a class="dropdown-item py-2" href="${pageContext.request.contextPath}/customer/vouchers"><i class="fa-solid fa-ticket me-2 text-primary"></i>Voucher của tôi</a></li>
-                                        <li><a class="dropdown-item py-2" href="${pageContext.request.contextPath}/customer/reviews"><i class="fa-solid fa-star me-2 text-primary"></i>Đánh giá của tôi</a></li>
-                                        <li><a class="dropdown-item py-2" href="${pageContext.request.contextPath}/customer/invoices"><i class="fa-solid fa-file-invoice me-2 text-primary"></i>Hóa đơn của tôi</a></li>
+                                        <li><a class="dropdown-item py-2" href="${pageContext.request.contextPath}/customer/rank"><i class="fa-solid fa-ranking-star me-2 text-warning"></i><fmt:message key="account.rank"/></a></li>
+                                        <li><a class="dropdown-item py-2" href="${pageContext.request.contextPath}/customer/reservations"><i class="fa-solid fa-clock-rotate-left me-2 text-primary"></i><fmt:message key="account.reservations"/></a></li>
+                                        <li><a class="dropdown-item py-2" href="${pageContext.request.contextPath}/customer/vouchers"><i class="fa-solid fa-ticket me-2 text-primary"></i><fmt:message key="account.vouchers"/></a></li>
+                                        <li><a class="dropdown-item py-2" href="${pageContext.request.contextPath}/customer/reviews"><i class="fa-solid fa-star me-2 text-primary"></i><fmt:message key="account.reviews"/></a></li>
+                                        <li><a class="dropdown-item py-2" href="${pageContext.request.contextPath}/customer/invoices"><i class="fa-solid fa-file-invoice me-2 text-primary"></i><fmt:message key="account.invoices"/></a></li>
                                     </c:otherwise>
                                 </c:choose>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item py-2 text-danger" href="${pageContext.request.contextPath}/MainController?action=logout"><i class="fa-solid fa-arrow-right-from-bracket me-2"></i>Logout</a></li>
+                                <li><a class="dropdown-item py-2 text-danger" href="${pageContext.request.contextPath}/MainController?action=logout"><i class="fa-solid fa-arrow-right-from-bracket me-2"></i><fmt:message key="nav.logout"/></a></li>
                             </ul>
                         </div>
                     </c:when>
                     <c:otherwise>
-                        <a href="${pageContext.request.contextPath}/MainController?action=login" class="btn btn-dark btn-sm px-4">Login</a>
+                        <a href="${pageContext.request.contextPath}/MainController?action=login" class="btn btn-dark btn-sm px-4"><fmt:message key="nav.login"/></a>
                     </c:otherwise>
                 </c:choose>
             </div>

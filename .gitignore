@@ -12,6 +12,7 @@
 
 # Package Files #
 *.jar
+!/RestaurantManagement/web/WEB-INF/lib/*.jar
 *.war
 *.nar
 *.ear

@@ -61,7 +61,7 @@
                 <div class="card shadow-sm border-0 rounded-4 mb-4">
                     <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
                         <div class="category-tabs">
-                            <button class="cat-btn active" onclick="filterCategory('ALL', this)"><fmt:message key="booking.step3.tab.all" />All Items</button>
+                            <button class="cat-btn active" onclick="filterCategory('ALL', this)"><fmt:message key="booking.step3.tab.all" /></button>
                             <button class="cat-btn" onclick="filterCategory('combo', this)"><i class="fa-solid fa-layer-group me-1"></i><fmt:message key="booking.step3.tab.combo"/></button>
                             <c:forEach items="${categories}" var="cat">
                                 <button class="cat-btn" onclick="filterCategory('${cat.id}', this)">${sessionScope.lang == 'en' ? cat.categoryNameEn : cat.categoryName}</button>

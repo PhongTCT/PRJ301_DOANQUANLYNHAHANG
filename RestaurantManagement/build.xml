@@ -68,4 +68,17 @@
     nbproject/build-impl.xml file. 
 
     -->
+    <target name="-post-compile">
+        <mkdir dir="${build.classes.dir}"/>
+        <javac srcdir="${src.dir}"
+               destdir="${build.classes.dir}"
+               includes="filter/AuthFilter.java"
+               classpath="${javac.classpath}:${j2ee.platform.classpath}:${build.classes.dir}"
+               source="${javac.source}"
+               target="${javac.target}"
+               encoding="${source.encoding}"
+               includeantruntime="false"/>
+        <available file="${build.classes.dir}/filter/AuthFilter.class" property="auth.filter.compiled"/>
+        <fail unless="auth.filter.compiled" message="AuthFilter.class was not compiled; deployment would fail."/>
+    </target>
 </project>
