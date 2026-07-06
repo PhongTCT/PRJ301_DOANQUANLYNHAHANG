@@ -92,7 +92,22 @@ public class LoginController extends HttpServlet {
                 request.setAttribute("error", e.getMessage());
                 request.getRequestDispatcher("login.jsp").forward(request, response);
             }
-        } else if ("googleLogin".equals(action)) {
+            return;
+        }
+        
+        if ("dologinAjax".equals(action)) {
+            response.setContentType("application/json;charset=UTF-8");
+            try {
+                User user = authService.login(request.getParameter("username"), request.getParameter("password"));
+                session.setAttribute("currentUser", user);
+                response.getWriter().write("{\"success\":true,\"user\":{\"id\":" + user.getId() + ",\"fullName\":\"" + user.getFullName() + "\"}}");
+            } catch (IllegalArgumentException e) {
+                response.getWriter().write("{\"success\":false,\"error\":\"" + e.getMessage().replace("\"", "\\\"") + "\"}");
+            }
+            return;
+        }
+        
+        if ("googleLogin".equals(action)) {
             try {
                 String accessToken = request.getParameter("accessToken");
                 GoogleLoginDraft draft = (accessToken != null && !accessToken.trim().isEmpty())

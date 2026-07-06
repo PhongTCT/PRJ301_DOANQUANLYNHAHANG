@@ -41,17 +41,17 @@
             <div class="row g-4 align-items-end">
                 <div class="col-lg-8">
                     <div class="review-kicker mb-3">Guest Voice</div>
-                    <h1 class="review-title mb-3">ÄÃ¡nh giÃ¡ cá»§a tÃ´i</h1>
-                    <p class="review-copy mb-0">Chia sáº» tráº£i nghiá»‡m cá»§a báº¡n sau má»—i bá»¯a Äƒn vÃ  xem láº¡i nhá»¯ng Ä‘Ã¡nh giÃ¡ Ä‘Ã£ gá»­i.</p>
+                    <h1 class="review-title mb-3">Đánh giá của tôi</h1>
+                    <p class="review-copy mb-0">Chia sẻ trải nghiệm của bạn sau mỗi bữa ăn và xem lại những đánh giá đã gửi.</p>
                 </div>
                 <div class="col-lg-4">
                     <div class="review-summary">
                         <div class="review-summary__item">
-                            <div class="review-kicker mb-2">ÄÃ£ gá»­i</div>
+                            <div class="review-kicker mb-2">Đã gửi</div>
                             <div class="review-summary__number">${fn:length(myReviews)}</div>
                         </div>
                         <div class="review-summary__item">
-                            <div class="review-kicker mb-2">ÄÃ£ duyá»‡t</div>
+                            <div class="review-kicker mb-2">Đã duyệt</div>
                             <div class="review-summary__number">
                                 <c:set var="visible" value="0"/>
                                 <c:forEach items="${myReviews}" var="r"><c:if test="${r.isVisible}"><c:set var="visible" value="${visible + 1}"/></c:if></c:forEach>
@@ -83,14 +83,14 @@
                 <section class="review-panel" aria-labelledby="submitReviewTitle">
                     <div class="review-panel__header">
                         <div class="review-section-label">Write</div>
-                        <h2 id="submitReviewTitle" class="h4 fw-semibold mb-0 mt-1">Gá»­i Ä‘Ã¡nh giÃ¡</h2>
+                        <h2 id="submitReviewTitle" class="h4 fw-semibold mb-0 mt-1">Gửi đánh giá</h2>
                     </div>
                     <div class="review-body">
                         <form method="post" action="${pageContext.request.contextPath}/customer/reviews" class="review-form">
                             <div class="mb-3">
-                                <label>ÄÆ¡n Ä‘Ã£ hoÃ n thÃ nh</label>
+                                <label>Đơn đã hoàn thành</label>
                                 <select name="reservationId" class="form-select" required>
-                                    <option value="">Chá»n mÃ£ Ä‘áº·t bÃ n</option>
+                                    <option value="">Chọn mã đặt bàn</option>
                                     <c:forEach items="${myReservations}" var="r">
                                         <c:if test="${r.status == 'COMPLETED'}">
                                             <option value="${r.id}">#${r.id} - <fmt:formatDate value="${r.reservationDate}" pattern="dd/MM/yyyy"/></option>
@@ -99,18 +99,18 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label>Sá»‘ sao</label>
+                                <label>Số sao</label>
                                 <input type="number" name="rating" class="form-control" min="1" max="5" value="5" required>
                             </div>
                             <div class="mb-3">
-                                <label>HÃ¬nh áº£nh URL</label>
+                                <label>Hình ảnh URL</label>
                                 <input name="imageUrl" class="form-control" placeholder="https://...">
                             </div>
                             <div class="mb-3">
-                                <label>Ná»™i dung</label>
+                                <label>Nội dung</label>
                                 <textarea name="comment" class="form-control" rows="5" required></textarea>
                             </div>
-                            <button class="review-submit w-100"><i class="fa-regular fa-paper-plane me-2"></i>Gá»­i Ä‘Ã¡nh giÃ¡</button>
+                            <button class="review-submit w-100"><i class="fa-regular fa-paper-plane me-2"></i>Gửi đánh giá</button>
                         </form>
                     </div>
                 </section>
@@ -120,7 +120,7 @@
                     <div class="review-panel__header">
                         <div>
                             <div class="review-section-label">History</div>
-                            <h2 id="historyTitle" class="h4 fw-semibold mb-0 mt-1">Lá»‹ch sá»­ Ä‘Ã¡nh giÃ¡</h2>
+                            <h2 id="historyTitle" class="h4 fw-semibold mb-0 mt-1">Lịch sử đánh giá</h2>
                         </div>
                     </div>
                     <div class="review-body">
@@ -128,8 +128,8 @@
                             <c:when test="${empty myReviews}">
                                 <div class="review-empty">
                                     <i class="fa-regular fa-star d-block"></i>
-                                    <div class="fw-semibold mb-1">Báº¡n chÆ°a cÃ³ Ä‘Ã¡nh giÃ¡ nÃ o</div>
-                                    <div class="small">HÃ£y gá»­i Ä‘Ã¡nh giÃ¡ Ä‘áº§u tiÃªn sau bá»¯a Äƒn táº¡i Le Royal.</div>
+                                    <div class="fw-semibold mb-1">Bạn chưa có đánh giá nào</div>
+                                    <div class="small">Hãy gửi đánh giá đầu tiên sau bữa ăn tại Le Royal.</div>
                                 </div>
                             </c:when>
                             <c:otherwise>
@@ -137,7 +137,7 @@
                                     <div class="review-card">
                                         <div class="review-card__meta">
                                             <span class="review-reservation-id">Reservation #${r.reservation.id}</span>
-                                            <span class="badge ${r.isVisible ? 'bg-success' : 'bg-secondary'} rounded-0 fw-semibold">${r.isVisible ? 'ÄÃ£ duyá»‡t' : 'Chá» duyá»‡t'}</span>
+                                            <span class="badge ${r.isVisible ? 'bg-success' : 'bg-secondary'} rounded-0 fw-semibold">${r.isVisible ? 'Đã duyệt' : 'Chờ duyệt'}</span>
                                         </div>
                                         <div class="review-stars my-2">
                                             <c:forEach begin="1" end="${r.rating}"><i class="fa-solid fa-star"></i></c:forEach>

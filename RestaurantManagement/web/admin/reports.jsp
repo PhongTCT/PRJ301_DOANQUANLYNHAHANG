@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BÃ¡o cÃ¡o doanh thu - Le Royal</title>
+    <title>Báo cáo doanh thu - Le Royal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -23,21 +23,21 @@
             <section class="admin-hero">
                 <div>
                     <div class="admin-kicker">Revenue intelligence</div>
-                    <h1 class="admin-title">BÃ¡o cÃ¡o doanh thu</h1>
-                    <p class="admin-copy mb-0">Tá»•ng há»£p doanh thu, sá»‘ hÃ³a Ä‘Æ¡n vÃ  cÃ¡c khoáº£n giáº£m tá»« invoice Ä‘Ã£ thanh toÃ¡n.</p>
+                    <h1 class="admin-title">Báo cáo doanh thu</h1>
+                    <p class="admin-copy mb-0">Tổng hợp doanh thu, số hóa đơn và các khoản giảm từ invoice đã thanh toán.</p>
                 </div>
                 <form method="get" class="d-flex gap-2 flex-wrap">
                     <input type="date" name="from" value="${fromValue}" class="form-control">
                     <input type="date" name="to" value="${toValue}" class="form-control">
-                    <button class="btn btn-primary"><i class="fa-solid fa-filter me-2"></i>Lá»c</button>
+                    <button class="btn btn-primary"><i class="fa-solid fa-filter me-2"></i>Lọc</button>
                 </form>
             </section>
 
             <div class="row g-3 mb-4">
-                <div class="col-md-3"><div class="metric"><div class="admin-section-label">Doanh thu</div><div class="fs-4 fw-bold"><fmt:formatNumber value="${summary[0]}" pattern="#,##0"/>Ä‘</div></div></div>
-                <div class="col-md-3"><div class="metric"><div class="admin-section-label">Sá»‘ hÃ³a Ä‘Æ¡n</div><div class="fs-4 fw-bold">${summary[1]}</div></div></div>
-                <div class="col-md-3"><div class="metric"><div class="admin-section-label">Giáº£m voucher</div><div class="fs-4 fw-bold"><fmt:formatNumber value="${summary[2]}" pattern="#,##0"/>Ä‘</div></div></div>
-                <div class="col-md-3"><div class="metric"><div class="admin-section-label">Giáº£m Ä‘iá»ƒm</div><div class="fs-4 fw-bold"><fmt:formatNumber value="${summary[3]}" pattern="#,##0"/>Ä‘</div></div></div>
+                <div class="col-md-3"><div class="metric"><div class="admin-section-label">Doanh thu</div><div class="fs-4 fw-bold"><fmt:formatNumber value="${summary[0]}" pattern="#,##0"/>đ</div></div></div>
+                <div class="col-md-3"><div class="metric"><div class="admin-section-label">Số hóa đơn</div><div class="fs-4 fw-bold">${summary[1]}</div></div></div>
+                <div class="col-md-3"><div class="metric"><div class="admin-section-label">Giảm voucher</div><div class="fs-4 fw-bold"><fmt:formatNumber value="${summary[2]}" pattern="#,##0"/>đ</div></div></div>
+                <div class="col-md-3"><div class="metric"><div class="admin-section-label">Giảm điểm</div><div class="fs-4 fw-bold"><fmt:formatNumber value="${summary[3]}" pattern="#,##0"/>đ</div></div></div>
             </div>
 
             <div class="card mb-4">
@@ -51,18 +51,18 @@
                     <div class="table-responsive">
                         <table class="table align-middle">
                             <thead>
-                                <tr><th class="ps-4">NgÃ y</th><th>Doanh thu</th><th>Sá»‘ hÃ³a Ä‘Æ¡n</th></tr>
+                                <tr><th class="ps-4">Ngày</th><th>Doanh thu</th><th>Số hóa đơn</th></tr>
                             </thead>
                             <tbody>
                                 <c:forEach items="${revenueRows}" var="r">
                                     <tr>
                                         <td class="ps-4 fw-semibold">${r[0]}</td>
-                                        <td class="fw-bold"><fmt:formatNumber value="${r[1]}" pattern="#,##0"/>Ä‘</td>
+                                        <td class="fw-bold"><fmt:formatNumber value="${r[1]}" pattern="#,##0"/>đ</td>
                                         <td>${r[2]}</td>
                                     </tr>
                                 </c:forEach>
                                 <c:if test="${empty revenueRows}">
-                                    <tr><td colspan="3" class="text-center text-muted py-5">ChÆ°a cÃ³ doanh thu trong khoáº£ng nÃ y.</td></tr>
+                                    <tr><td colspan="3" class="text-center text-muted py-5">Chưa có doanh thu trong khoảng này.</td></tr>
                                 </c:if>
                             </tbody>
                         </table>
@@ -80,7 +80,7 @@ const values = [<c:forEach items="${revenueRows}" var="r" varStatus="s">${r[1]}$
 new Chart(document.getElementById('revenueChart'), {
     type: 'bar',
     data: { labels: labels, datasets: [{ label: 'Doanh thu', data: values, backgroundColor: '#b99a52' }] },
-    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: v => new Intl.NumberFormat('vi-VN').format(v) + 'Ä‘' } } } }
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: v => new Intl.NumberFormat('vi-VN').format(v) + 'đ' } } } }
 });
 </script>
 </body>

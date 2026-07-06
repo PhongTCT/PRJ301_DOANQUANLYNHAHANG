@@ -279,17 +279,17 @@
             <div class="row g-4 align-items-end">
                 <div class="col-lg-8">
                     <div class="voucher-kicker mb-3">Le Royal Privileges</div>
-                    <h1 class="voucher-title mb-3">Voucher cá»§a tÃ´i</h1>
-                    <p class="voucher-copy mb-0">Nhá»¯ng Æ°u Ä‘Ã£i Ä‘ang kháº£ dá»¥ng cho láº§n Ä‘áº·t bÃ n tiáº¿p theo cá»§a báº¡n. Má»—i mÃ£ chá»‰ Ä‘Æ°á»£c dÃ¹ng má»™t láº§n cho má»—i tÃ i khoáº£n vÃ  sáº½ Ä‘Æ°á»£c kiá»ƒm tra láº¡i khi xÃ¡c nháº­n hÃ³a Ä‘Æ¡n.</p>
+                    <h1 class="voucher-title mb-3">Voucher của tôi</h1>
+                    <p class="voucher-copy mb-0">Những ưu đãi đang khả dụng cho lần đặt bàn tiếp theo của bạn. Mỗi mã chỉ được dùng một lần cho mỗi tài khoản và sẽ được kiểm tra lại khi xác nhận hóa đơn.</p>
                 </div>
                 <div class="col-lg-4">
                     <div class="voucher-summary">
                         <div class="voucher-summary__item">
-                            <div class="voucher-meta-label mb-2">Kháº£ dá»¥ng</div>
+                            <div class="voucher-meta-label mb-2">Khả dụng</div>
                             <div class="voucher-summary__number">${fn:length(availableVouchers)}</div>
                         </div>
                         <div class="voucher-summary__item">
-                            <div class="voucher-meta-label mb-2">ÄÃ£ dÃ¹ng</div>
+                            <div class="voucher-meta-label mb-2">Đã dùng</div>
                             <div class="voucher-summary__number">${fn:length(usedVouchers)}</div>
                         </div>
                     </div>
@@ -301,12 +301,12 @@
             <section class="voucher-panel" aria-labelledby="availableVoucherTitle">
                 <div class="voucher-panel__header">
                     <div>
-                        <div class="voucher-section-label">CÃ³ thá»ƒ sá»­ dá»¥ng</div>
-                        <h2 id="availableVoucherTitle" class="h4 fw-semibold mb-0 mt-1">Æ¯u Ä‘Ã£i Ä‘ang má»Ÿ</h2>
+                        <div class="voucher-section-label">Có thể sử dụng</div>
+                        <h2 id="availableVoucherTitle" class="h4 fw-semibold mb-0 mt-1">Ưu đãi đang mở</h2>
                     </div>
                     <a class="voucher-booking-link" href="${pageContext.request.contextPath}/MainController?action=booking">
                         <i class="fa-solid fa-calendar-check"></i>
-                        Äáº·t bÃ n
+                        Đặt bàn
                     </a>
                 </div>
 
@@ -314,8 +314,8 @@
                     <c:when test="${empty availableVouchers}">
                         <div class="voucher-empty">
                             <i class="fa-solid fa-ticket d-block"></i>
-                            <div class="fw-semibold mb-1">Hiá»‡n chÆ°a cÃ³ voucher kháº£ dá»¥ng</div>
-                            <div class="small">CÃ¡c Æ°u Ä‘Ã£i má»›i sáº½ xuáº¥t hiá»‡n á»Ÿ Ä‘Ã¢y khi tÃ i khoáº£n cá»§a báº¡n Ä‘á»§ Ä‘iá»u kiá»‡n.</div>
+                            <div class="fw-semibold mb-1">Hiện chưa có voucher khả dụng</div>
+                            <div class="small">Các ưu đãi mới sẽ xuất hiện ở đây khi tài khoản của bạn đủ điều kiện.</div>
                         </div>
                     </c:when>
                     <c:otherwise>
@@ -328,21 +328,21 @@
                                         <div class="voucher-benefit">
                                             <c:choose>
                                                 <c:when test="${not empty v.discountPercent}">
-                                                    Giáº£m ${v.discountPercent}%<c:if test="${not empty v.maxDiscount}">, tá»‘i Ä‘a <fmt:formatNumber value="${v.maxDiscount}" pattern="#,##0"/>Ä‘</c:if>
+                                                    Giảm ${v.discountPercent}%<c:if test="${not empty v.maxDiscount}">, tối đa <fmt:formatNumber value="${v.maxDiscount}" pattern="#,##0"/>đ</c:if>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    Giáº£m <fmt:formatNumber value="${v.discountAmount}" pattern="#,##0"/>Ä‘ trá»±c tiáº¿p trÃªn hÃ³a Ä‘Æ¡n
+                                                    Giảm <fmt:formatNumber value="${v.discountAmount}" pattern="#,##0"/>đ trực tiếp trên hóa đơn
                                                 </c:otherwise>
                                             </c:choose>
                                         </div>
                                         <div class="voucher-meta-grid">
-                                            <span class="voucher-chip"><i class="fa-solid fa-bowl-food"></i>Tá»« <fmt:formatNumber value="${v.minOrderValue}" pattern="#,##0"/>Ä‘</span>
-                                            <span class="voucher-chip"><i class="fa-regular fa-clock"></i>Äáº¿n <fmt:formatDate value="${v.validTo}" pattern="dd/MM/yyyy HH:mm"/></span>
+                                            <span class="voucher-chip"><i class="fa-solid fa-bowl-food"></i>Từ <fmt:formatNumber value="${v.minOrderValue}" pattern="#,##0"/>đ</span>
+                                            <span class="voucher-chip"><i class="fa-regular fa-clock"></i>Đến <fmt:formatDate value="${v.validTo}" pattern="dd/MM/yyyy HH:mm"/></span>
                                         </div>
                                     </div>
                                     <div class="voucher-uses">
                                         <strong>${v.remainingUses}</strong>
-                                        <span>lÆ°á»£t cÃ²n láº¡i</span>
+                                        <span>lượt còn lại</span>
                                     </div>
                                 </article>
                             </c:forEach>
@@ -354,8 +354,8 @@
             <aside class="voucher-panel" aria-labelledby="usedVoucherTitle">
                 <div class="voucher-panel__header">
                     <div>
-                        <div class="voucher-section-label">Lá»‹ch sá»­</div>
-                        <h2 id="usedVoucherTitle" class="h4 fw-semibold mb-0 mt-1">ÄÃ£ sá»­ dá»¥ng</h2>
+                        <div class="voucher-section-label">Lịch sử</div>
+                        <h2 id="usedVoucherTitle" class="h4 fw-semibold mb-0 mt-1">Đã sử dụng</h2>
                     </div>
                 </div>
 
@@ -365,7 +365,7 @@
                             <tr>
                                 <th>Voucher</th>
                                 <th>Invoice</th>
-                                <th>NgÃ y dÃ¹ng</th>
+                                <th>Ngày dùng</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -380,7 +380,7 @@
                                 <tr>
                                     <td colspan="3" class="text-center text-muted py-5">
                                         <i class="fa-regular fa-clock d-block mb-2"></i>
-                                        ChÆ°a dÃ¹ng voucher nÃ o.
+                                        Chưa dùng voucher nào.
                                     </td>
                                 </tr>
                             </c:if>

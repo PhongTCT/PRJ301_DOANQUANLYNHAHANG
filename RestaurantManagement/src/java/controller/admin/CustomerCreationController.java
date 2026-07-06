@@ -50,7 +50,18 @@ public class CustomerCreationController extends HttpServlet {
             User newUser = new User();
             newUser.setFullName(fullName);
             newUser.setPhone(phone);
-            newUser.setEmail(email != null && !email.trim().isEmpty() ? email : null);
+            
+            if (email != null && !email.trim().isEmpty()) {
+                if (userDAO.searchByEmail(email) != null) {
+                    request.setAttribute("error", "A user with this email already exists.");
+                    request.getRequestDispatcher("/admin/create-customer.jsp").forward(request, response);
+                    return;
+                }
+                newUser.setEmail(email);
+            } else {
+                newUser.setEmail("walkin_" + phone + "@dummy.local");
+            }
+            
             newUser.setUsername(phone); // Use phone as username
             
             // Set password to phone number, securely hashed

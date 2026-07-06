@@ -39,11 +39,11 @@ public class DiningTableDAO extends AbstractDAO<DiningTable, Integer> {
         }
     }
 
-    public ArrayList<DiningTable> findAvailableTables(java.util.Date reservationDate, java.sql.Time reservationTime, int totalGuests) {
+    public ArrayList<DiningTable> findAvailableTables(java.util.Date reservationDate, java.sql.Time reservationTime, int totalGuests, Long currentUserId) {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             String jpql = "SELECT d FROM DiningTable d WHERE d.isActive = true " +
-                          "AND d.capacity >= :totalGuests " +
+                          "AND (d.status = enums.TableStatus.AVAILABLE OR (d.status = enums.TableStatus.HOLD AND (d.holdExpiration < CURRENT_TIMESTAMP OR d.holdUserId = :currentUserId))) " +
                           "AND d.id NOT IN (" +
                           "  SELECT rt.diningTable.id FROM ReservationTable rt " +
                           "  WHERE rt.reservation.reservationDate = :rDate " +
@@ -53,7 +53,7 @@ public class DiningTableDAO extends AbstractDAO<DiningTable, Integer> {
             TypedQuery<DiningTable> query = em.createQuery(jpql, DiningTable.class);
             query.setParameter("rDate", reservationDate, TemporalType.DATE);
             query.setParameter("rTime", reservationTime, TemporalType.TIME);
-            query.setParameter("totalGuests", totalGuests);
+            query.setParameter("currentUserId", currentUserId == null ? -1 : currentUserId);
             return new ArrayList<>(query.getResultList());
         } finally {
             em.close();
@@ -62,5 +62,16 @@ public class DiningTableDAO extends AbstractDAO<DiningTable, Integer> {
 
     public ArrayList<DiningTable> findAllForAdmin() {
         return super.ListAll();
+    }
+    
+    public DiningTable findByTableCode(String tableCode) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            TypedQuery<DiningTable> query = em.createQuery("SELECT d FROM DiningTable d WHERE d.tableCode = :code", DiningTable.class);
+            query.setParameter("code", tableCode);
+            return query.getResultStream().findFirst().orElse(null);
+        } finally {
+            em.close();
+        }
     }
 }

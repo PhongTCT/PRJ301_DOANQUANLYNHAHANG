@@ -193,7 +193,7 @@
                                                                         <c:forEach items="${res.reservationTables}" var="rt">
                                                                             <li class="list-group-item px-0 d-flex justify-content-between">
                                                                                 <span>Table ${rt.diningTable.tableCode} <small class="text-muted">(${rt.diningTable.capacity} seats)</small></span>
-                                                                                <span class="text-success fw-bold"><fmt:formatNumber value="${rt.diningTable.basePrice}" pattern="#,##0" />Ä‘</span>
+                                                                                <span class="text-success fw-bold"><fmt:formatNumber value="${rt.diningTable.basePrice}" pattern="#,##0" />đ</span>
                                                                             </li>
                                                                         </c:forEach>
                                                                         <c:if test="${empty res.reservationTables}">
@@ -206,7 +206,7 @@
                                                                         <c:forEach items="${res.reservationMenuItems}" var="rmi">
                                                                             <li class="list-group-item px-0 d-flex justify-content-between">
                                                                                 <span>${not empty rmi.menuItem ? (not empty rmi.menuItem.itemNameVi ? rmi.menuItem.itemNameVi : rmi.menuItem.itemName) : (not empty rmi.menuSet.setNameVi ? rmi.menuSet.setNameVi : rmi.menuSet.setName)} <span class="badge bg-secondary ms-1">x${rmi.quantity}</span></span>
-                                                                                <span class="text-success fw-bold"><fmt:formatNumber value="${rmi.unitPrice * rmi.quantity}" pattern="#,##0" />Ä‘</span>
+                                                                                <span class="text-success fw-bold"><fmt:formatNumber value="${rmi.unitPrice * rmi.quantity}" pattern="#,##0" />đ</span>
                                                                             </li>
                                                                         </c:forEach>
                                                                         <c:if test="${empty res.reservationMenuItems}">
@@ -219,7 +219,7 @@
                                                                         <c:forEach items="${res.reservationAddons}" var="ra">
                                                                             <li class="list-group-item px-0 d-flex justify-content-between">
                                                                                 <span>${ra.addonService.serviceName} <span class="badge bg-secondary ms-1">x${ra.quantity}</span></span>
-                                                                                <span class="text-success fw-bold"><fmt:formatNumber value="${ra.unitPrice * ra.quantity}" pattern="#,##0" />Ä‘</span>
+                                                                                <span class="text-success fw-bold"><fmt:formatNumber value="${ra.unitPrice * ra.quantity}" pattern="#,##0" />đ</span>
                                                                             </li>
                                                                         </c:forEach>
                                                                         <c:if test="${empty res.reservationAddons}">

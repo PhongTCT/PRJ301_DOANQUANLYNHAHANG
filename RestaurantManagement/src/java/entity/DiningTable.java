@@ -43,6 +43,13 @@ public class DiningTable implements Serializable {
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
 
+    @Column(name = "hold_expiration")
+    @Temporal(TemporalType.TIMESTAMP)
+    private java.util.Date holdExpiration;
+
+    @Column(name = "hold_user_id")
+    private Long holdUserId;
+
     @OneToMany(mappedBy = "diningTable", fetch = FetchType.LAZY)
     private List<ReservationTable> reservationTables;
 
@@ -67,4 +74,8 @@ public class DiningTable implements Serializable {
     public Boolean getIsActive() { return isActive; }
     public boolean isActive() { return Boolean.TRUE.equals(isActive); }
     public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+    public java.util.Date getHoldExpiration() { return holdExpiration; }
+    public void setHoldExpiration(java.util.Date holdExpiration) { this.holdExpiration = holdExpiration; }
+    public Long getHoldUserId() { return holdUserId; }
+    public void setHoldUserId(Long holdUserId) { this.holdUserId = holdUserId; }
 }

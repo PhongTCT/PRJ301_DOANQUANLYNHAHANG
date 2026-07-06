@@ -25,10 +25,17 @@ import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.text.MessageFormat;
 import javax.servlet.http.HttpServletRequest;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.OptimisticLockException;
 import util.JPAUtil;
 
 public class BookingService {
@@ -39,13 +46,14 @@ public class BookingService {
     private final AddonServiceDAO addonServiceDAO = new AddonServiceDAO();
     private final BillingService billingService = new BillingService();
 
-    public List<DiningTable> getAvailableTables(BookingDraft draft) {
+    public List<DiningTable> getAvailableTables(BookingDraft draft, User currentUser) {
         if (draft != null && draft.getReservationDate() != null && draft.getReservationTime() != null) {
             java.sql.Time time = parseTime(draft.getReservationTime());
             int totalGuests = (draft.getAdultsCount() != null ? draft.getAdultsCount() : 0) 
                             + (draft.getChildrenCount() != null ? draft.getChildrenCount() : 0);
             if (totalGuests == 0) totalGuests = 1; // Safeguard
-            return diningTableDAO.findAvailableTables(draft.getReservationDate(), time, totalGuests);
+            Long currentUserId = currentUser != null ? currentUser.getId() : null;
+            return diningTableDAO.findAvailableTables(draft.getReservationDate(), time, totalGuests, currentUserId);
         }
         // Fallback if no draft info
         return diningTableDAO.ListAll();
@@ -67,6 +75,53 @@ public class BookingService {
         return addonServiceDAO.findActiveAddons();
     }
 
+    public void holdTables(List<Integer> tableIds, Map<Integer, Integer> tableVersions, User currentUser, HttpServletRequest request) throws OptimisticLockException {
+        if (tableIds == null || tableIds.isEmpty()) return;
+        if (currentUser == null || currentUser.getId() == null) throw new IllegalArgumentException("User not logged in");
+
+        String lang = (String) request.getSession().getAttribute("lang");
+        if (lang == null) lang = "vi";
+        ResourceBundle messages = ResourceBundle.getBundle("i18n.messages", new Locale(lang));
+
+        EntityManager em = JPAUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            for (Integer id : tableIds) {
+                DiningTable table = em.find(DiningTable.class, id);
+                if (table == null) continue;
+                
+                if (table.getStatus() == TableStatus.RESERVED || table.getStatus() == TableStatus.OCCUPIED) {
+                    throw new OptimisticLockException(MessageFormat.format(messages.getString("error.table.reserved"), table.getTableCode()));
+                }
+                
+                // If the table is held by someone else and the hold is not expired, it's unavailable
+                if (table.getStatus() == TableStatus.HOLD && table.getHoldExpiration() != null && table.getHoldExpiration().after(new java.util.Date()) && !table.getHoldUserId().equals(currentUser.getId())) {
+                    throw new OptimisticLockException(MessageFormat.format(messages.getString("error.table.held"), table.getTableCode()));
+                }
+                
+                // Check if the version matches what the user saw. If it's different, someone else updated it (e.g. held it or reserved it)
+                Integer clientVersion = tableVersions.get(id);
+                if (clientVersion != null && !clientVersion.equals(table.getVersion())) {
+                    throw new OptimisticLockException(messages.getString("error.table.changed"));
+                }
+                
+                // Lock the table for 15 minutes
+                table.setStatus(TableStatus.HOLD);
+                table.setHoldUserId(currentUser.getId());
+                long fifteenMinsInMillis = 15 * 60 * 1000;
+                table.setHoldExpiration(new java.util.Date(System.currentTimeMillis() + fifteenMinsInMillis));
+                em.merge(table);
+            }
+            tx.commit();
+        } catch (RuntimeException e) {
+            if (tx.isActive()) tx.rollback();
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
     public BookingDraft buildDraft(HttpServletRequest request) throws ParseException {
         BookingDraft draft = new BookingDraft();
         String date = request.getParameter("reservationDate");
@@ -76,10 +131,16 @@ public class BookingService {
             // Check holiday surcharge
             dao.HolidaySurchargeDAO hsDAO = new dao.HolidaySurchargeDAO();
             entity.HolidaySurcharge holiday = hsDAO.findByDate(draft.getReservationDate());
+            
+            String lang = (String) request.getSession().getAttribute("lang");
+            if (lang == null) lang = "vi";
+            ResourceBundle messages = ResourceBundle.getBundle("i18n.messages", new Locale(lang));
+
             if (holiday != null) {
                 draft.setHasSurcharge(true);
                 draft.setSurchargePercent(holiday.getSurchargePercent());
-                request.getSession().setAttribute("surchargeWarning", "Ngày đặt bàn rơi vào dịp lễ (" + holiday.getHolidayName() + "). Hóa đơn sẽ có phụ thu " + holiday.getSurchargePercent() + "%.");
+                String warning = MessageFormat.format(messages.getString("booking.surcharge.warning"), holiday.getHolidayName(), holiday.getSurchargePercent());
+                request.getSession().setAttribute("surchargeWarning", warning);
             } else {
                 draft.setHasSurcharge(false);
                 draft.setSurchargePercent(java.math.BigDecimal.ZERO);
@@ -240,12 +301,21 @@ public class BookingService {
             for (Integer tableId : draft.getSelectedTableIds()) {
                 DiningTable table = em.find(DiningTable.class, tableId);
                 if (table != null) {
+                    if (table.getStatus() == TableStatus.RESERVED || table.getStatus() == TableStatus.OCCUPIED) {
+                        throw new IllegalArgumentException("Bàn " + table.getTableCode() + " đã được đặt hoặc đang sử dụng.");
+                    }
+                    if (table.getStatus() == TableStatus.HOLD && !currentUser.getId().equals(table.getHoldUserId())) {
+                        throw new IllegalArgumentException("Table " + table.getTableCode() + " is being held by another user.");
+                    }
+                    
                     ReservationTable rt = new ReservationTable();
                     rt.setReservation(reservation);
                     rt.setDiningTable(table);
                     em.persist(rt);
                     
                     table.setStatus(TableStatus.RESERVED);
+                    table.setHoldExpiration(null);
+                    table.setHoldUserId(null);
                     em.merge(table);
                 }
             }

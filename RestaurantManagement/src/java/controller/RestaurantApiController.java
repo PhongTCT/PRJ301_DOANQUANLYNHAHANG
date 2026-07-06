@@ -72,6 +72,20 @@ public class RestaurantApiController extends HttpServlet {
                 writeOk(response, menuSetsJson(activeSets(request.getParameter("mealTime"))));
             } else if ("/addon-services".equals(path)) {
                 writeOk(response, addonsJson(addonDAO.findActiveAddons()));
+            } else if ("/surcharge".equals(path)) {
+                String dateStr = request.getParameter("date");
+                if (dateStr == null || dateStr.trim().isEmpty()) {
+                    writeError(response, HttpServletResponse.SC_BAD_REQUEST, "Missing date parameter");
+                    return;
+                }
+                Date checkDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateStr);
+                dao.HolidaySurchargeDAO surchargeDAO = new dao.HolidaySurchargeDAO();
+                entity.HolidaySurcharge surcharge = surchargeDAO.findByDate(checkDate);
+                if (surcharge != null) {
+                    writeOk(response, "{\"hasSurcharge\":true,\"surchargePercent\":" + surcharge.getSurchargePercent() + ",\"holidayName\":\"" + surcharge.getHolidayName().replace("\"", "\\\"") + "\"}");
+                } else {
+                    writeOk(response, "{\"hasSurcharge\":false}");
+                }
             } else {
                 writeError(response, HttpServletResponse.SC_NOT_FOUND, "API endpoint not found.");
             }
@@ -146,7 +160,8 @@ public class RestaurantApiController extends HttpServlet {
         Integer capacity = parsePositiveInt(request.getParameter("capacity"), "capacity");
         Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateParam);
         Time time = Time.valueOf(timeParam.length() == 5 ? timeParam + ":00" : timeParam);
-        return tableDAO.findAvailableTables(date, time, capacity);
+        // For public API, we don't have a current user ID, so we pass null for currentUserId
+        return tableDAO.findAvailableTables(date, time, capacity, null);
     }
 
     private List<MenuCategory> activeCategories(String mealTimeParam) {

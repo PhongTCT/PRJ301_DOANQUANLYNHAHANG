@@ -1,4 +1,4 @@
-﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -32,12 +32,12 @@
         .cat-btn:hover, .cat-btn.active { background: #4F46E5; color: white; border-color: #4F46E5; }
         
         .menu-items-grid { flex: 1; overflow-y: auto; padding: 15px; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; align-content: start; }
-        .menu-item-card { border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; transition: all 0.2s; background: white; display: flex; flex-direction: column; height: 220px; position: relative; }
+        .menu-item-card { border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; transition: all 0.2s; background: white; display: flex; flex-direction: column; height: 100%; min-height: 220px; position: relative; }
         .menu-item-card:hover { border-color: #4F46E5; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15); transform: translateY(-2px); }
         .menu-item-img { height: 130px; min-height: 130px; object-fit: cover; width: 100%; border-bottom: 1px solid #f1f5f9; }
         .menu-item-img-placeholder { height: 130px; min-height: 130px; width: 100%; background: #f1f5f9; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 2rem; border-bottom: 1px solid #e2e8f0; }
-        .menu-item-info { padding: 10px; display: flex; flex-direction: column; justify-content: space-between; height: 90px; background: white; z-index: 2; }
-        .menu-item-name { font-weight: 600; font-size: 0.9rem; color: #1e293b; margin-bottom: 5px; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        .menu-item-info { padding: 10px; display: flex; flex-direction: column; justify-content: space-between; flex: 1; background: white; z-index: 2; }
+        .menu-item-name { font-weight: 600; font-size: 0.9rem; color: #1e293b; margin-bottom: 5px; line-height: 1.4; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
         .menu-item-price { font-weight: 700; color: #059669; font-size: 0.95rem; margin-top: auto; }
         
         /* Cart Section */
@@ -124,7 +124,7 @@
                                         <img src="${pageContext.request.contextPath}/assets/img/le-royal/Seared Fish with Herb Puree.png" alt="${itemDisplayName}" class="menu-item-img">
                                     </c:when>
                                     <c:when test="${item.itemName == 'Bordeaux Red Wine'}">
-                                        <img src="${pageContext.request.contextPath}/assets/img/le-royal/RosÃ© Wine.jpg" alt="${itemDisplayName}" class="menu-item-img">
+                                        <img src="${pageContext.request.contextPath}/assets/img/le-royal/Rosé Wine.jpg" alt="${itemDisplayName}" class="menu-item-img">
                                     </c:when>
                                     <c:when test="${item.itemName == 'Fresh Orange Juice'}">
                                         <img src="${pageContext.request.contextPath}/assets/img/le-royal/Passion Fruit Fizz.jpg" alt="${itemDisplayName}" class="menu-item-img">
@@ -136,7 +136,7 @@
                                 <div class="menu-item-info">
                                     <div class="menu-item-name">${itemDisplayName}</div>
                                     <div class="d-flex justify-content-between align-items-end mt-auto">
-                                        <div class="menu-item-price"><fmt:formatNumber value="${item.basePrice}" pattern="#,##0"/> â‚«</div>
+                                        <div class="menu-item-price"><fmt:formatNumber value="${item.basePrice}" pattern="#,##0"/> ₫</div>
                                         <button type="button" class="btn btn-sm btn-outline-primary rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('${item.id}', `${fn:escapeXml(itemDisplayName)}`, ${item.basePrice}, 'item')">
                                             <i class="fa-solid fa-plus"></i>
                                         </button>
@@ -169,7 +169,7 @@
                                         ${setDisplayName}
                                     </div>
                                     <div class="d-flex justify-content-between align-items-end mt-auto">
-                                        <div class="menu-item-price"><fmt:formatNumber value="${set.discountedPrice}" pattern="#,##0"/> â‚«</div>
+                                        <div class="menu-item-price"><fmt:formatNumber value="${set.discountedPrice}" pattern="#,##0"/> ₫</div>
                                         <button type="button" class="btn btn-sm btn-outline-primary rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('S_${set.id}', `${fn:escapeXml(setDisplayName)}`, ${set.discountedPrice}, 'set')">
                                             <i class="fa-solid fa-plus"></i>
                                         </button>
@@ -219,7 +219,7 @@
                                     <select class="form-select fw-medium" name="tableId" id="tableId" style="border-color: #cbd5e1;">
                                         <option value="" data-capacity="0">-- Select Table --</option>
                                         <c:forEach items="${availableTables}" var="t">
-                                            <option value="${t.id}" data-price="${t.basePrice}" data-capacity="${t.capacity}">Table ${t.tableCode} (Cap: ${t.capacity}) - Base: <fmt:formatNumber value="${t.basePrice}" pattern="#,##0"/>â‚«</option>
+                                            <option value="${t.id}" data-price="${t.basePrice}" data-capacity="${t.capacity}">Table ${t.tableCode} (Cap: ${t.capacity}) - Base: <fmt:formatNumber value="${t.basePrice}" pattern="#,##0"/>₫</option>
                                         </c:forEach>
                                     </select>
                                 </div>
@@ -227,15 +227,15 @@
 
                             <div class="summary-row mt-3">
                                 <span>Subtotal</span>
-                                <span id="summarySubtotal" class="fw-bold text-dark">0 â‚«</span>
+                                <span id="summarySubtotal" class="fw-bold text-dark">0 ₫</span>
                             </div>
                             <div class="summary-row" id="tableFeeRow">
                                 <span>Table Base Price</span>
-                                <span id="summaryTableFee" class="fw-bold text-dark">0 â‚«</span>
+                                <span id="summaryTableFee" class="fw-bold text-dark">0 ₫</span>
                             </div>
                             <div class="summary-total">
                                 <span>Total</span>
-                                <span id="summaryTotal" class="text-primary">0 â‚«</span>
+                                <span id="summaryTotal" class="text-primary">0 ₫</span>
                             </div>
                             
                             <button type="button" class="btn btn-primary w-100 py-3 mt-3 fw-bold fs-5 shadow-sm" onclick="submitOrder()" style="border-radius: 10px;">
@@ -256,7 +256,7 @@
         
         // Format Currency
         const formatMoney = (amount) => {
-            return new Intl.NumberFormat('vi-VN').format(amount) + ' â‚«';
+            return new Intl.NumberFormat('vi-VN').format(amount) + ' ₫';
         };
 
         // Filter Menu Categories

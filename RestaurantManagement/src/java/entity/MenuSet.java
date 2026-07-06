@@ -64,6 +64,29 @@ public class MenuSet implements Serializable {
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
     public Boolean getIsAvailable() { return isAvailable; }
     public void setIsAvailable(Boolean isAvailable) { this.isAvailable = isAvailable; }
+
+    public String getSetNameEn() {
+        if (setName == null) return "";
+        if (setName.contains("Trăng Về Vĩ Dạ")) return "Moon Over Vi Da Set";
+        if (setName.contains("Dữ Dội Và Dịu Êm")) return "Fierce and Gentle Set";
+        if (setName.contains("Bếp Lửa Ấp Iu")) return "Cozy Hearth Set";
+        if (setName.contains("Đoàn Thuyền")) return "Fishing Fleet at Night Set";
+        if (setName.contains("Tắt Nắng Buộc Gió")) return "Sunbeams and Wind Set";
+        return setName;
+    }
+
+    public String getDescriptionEn() {
+        if (description == null) return "";
+        if (setName != null) {
+            if (setName.contains("Trăng Về Vĩ Dạ")) return "A delicate combination of light and fresh flavors, inspired by the peaceful moonlit nights.";
+            if (setName.contains("Dữ Dội Và Dịu Êm")) return "A contrasting yet harmonious pairing of bold spices and soothing textures.";
+            if (setName.contains("Bếp Lửa Ấp Iu")) return "Warm, comforting dishes that evoke the feeling of a cozy hearth.";
+            if (setName.contains("Đoàn Thuyền")) return "A bountiful selection of the freshest premium seafood.";
+            if (setName.contains("Tắt Nắng Buộc Gió")) return "A poetic set menu featuring seasonal ingredients and vibrant flavors.";
+        }
+        return description;
+    }
+
     public List<MenuSetItem> getMenuSetItems() { return menuSetItems; }
     public void setMenuSetItems(List<MenuSetItem> menuSetItems) { this.menuSetItems = menuSetItems; }
 }

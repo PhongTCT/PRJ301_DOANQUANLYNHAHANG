@@ -9,12 +9,18 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.text.MessageFormat;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.persistence.EntityManager;
+import javax.persistence.OptimisticLockException;
 import service.BookingService;
 import service.BillingService;
 import service.VnPayService;
@@ -39,6 +45,14 @@ public class BookingController extends HttpServlet {
 
         String action = request.getParameter("action");
         HttpSession session = request.getSession();
+        
+        // Strict Login Guard: Must be logged in to access ANY booking feature
+        entity.User user = (entity.User) session.getAttribute("currentUser");
+        if (user == null) {
+            response.sendRedirect("MainController?action=login");
+            return;
+        }
+
         BookingDraft draft = (BookingDraft) session.getAttribute("bookingDraft");
 
         if ("bookingConfirmation".equals(action)) {
@@ -47,13 +61,17 @@ public class BookingController extends HttpServlet {
         }
 
         if ("dobooking".equals(action)) {
+            String lang = (String) session.getAttribute("lang");
+            if (lang == null) lang = "vi";
+            ResourceBundle messages = ResourceBundle.getBundle("i18n.messages", new Locale(lang));
+            
             try {
                 draft = bookingService.buildDraft(request);
                 session.setAttribute("bookingDraft", draft);
                 response.sendRedirect("MainController?action=booking&step=2");
                 return;
             } catch (Exception e) {
-                request.setAttribute("error", e.getMessage() == null ? "Booking information is invalid." : e.getMessage());
+                request.setAttribute("error", e.getMessage() == null ? messages.getString("error.booking.invalidInfo") : e.getMessage());
                 step = 1; // stay on step 1
             }
         }
@@ -64,11 +82,32 @@ public class BookingController extends HttpServlet {
                     response.sendRedirect("MainController?action=booking&step=1");
                     return;
                 }
-                draft.setSelectedTableIds(bookingService.parseTableIds(request));
+                
+                List<Integer> tableIds = bookingService.parseTableIds(request);
+                draft.setSelectedTableIds(tableIds);
+                
+                Map<Integer, Integer> versions = new HashMap<>();
+                for (Integer tid : tableIds) {
+                    String vStr = request.getParameter("tableVersion_" + tid);
+                    if (vStr != null) {
+                        try {
+                            versions.put(tid, Integer.parseInt(vStr));
+                        } catch(NumberFormatException ignored) {}
+                    }
+                }
+                
+                bookingService.holdTables(tableIds, versions, user, request);
+                
                 response.sendRedirect("MainController?action=booking&step=3");
                 return;
+            } catch (OptimisticLockException ole) {
+                request.setAttribute("pageError", ole.getMessage());
+                step = 2;
             } catch (Exception e) {
-                request.setAttribute("error", e.getMessage() == null ? "Could not select table(s)." : e.getMessage());
+                String lang = (String) session.getAttribute("lang");
+                if (lang == null) lang = "vi";
+                ResourceBundle messages = ResourceBundle.getBundle("i18n.messages", new Locale(lang));
+                request.setAttribute("error", e.getMessage() == null ? messages.getString("error.booking.selectTables") : e.getMessage());
                 step = 2;
             }
         }
@@ -77,11 +116,6 @@ public class BookingController extends HttpServlet {
             try {
                 if (draft == null) {
                     response.sendRedirect("MainController?action=booking&step=1");
-                    return;
-                }
-                User user = (User) session.getAttribute("currentUser");
-                if (user == null) {
-                    response.sendRedirect("MainController?action=login");
                     return;
                 }
                 String voucherCode = request.getParameter("voucherCode");
@@ -99,7 +133,12 @@ public class BookingController extends HttpServlet {
                 session.removeAttribute("bookingDraft");
                 session.setAttribute("lastReservation", reservation);
                 session.setAttribute("lastInvoice", reservation.getInvoice());
-                session.setAttribute("successMessage", "Đặt bàn thành công! Mã đặt bàn của bạn là #" + reservation.getId());
+                
+                String lang = (String) session.getAttribute("lang");
+                if (lang == null) lang = "vi";
+                ResourceBundle messages = ResourceBundle.getBundle("i18n.messages", new Locale(lang));
+                session.setAttribute("successMessage", MessageFormat.format(messages.getString("booking.success"), reservation.getId()));
+                
                 if (paymentMethod == PaymentMethod.VNPAY) {
                     response.sendRedirect(vnPayService.createPaymentUrl(request, reservation.getInvoice()));
                     return;
@@ -107,7 +146,10 @@ public class BookingController extends HttpServlet {
                 response.sendRedirect("MainController?action=bookingConfirmation");
                 return;
             } catch (Exception e) {
-                request.setAttribute("error", e.getMessage() == null ? "Could not finalize booking." : e.getMessage());
+                String lang = (String) session.getAttribute("lang");
+                if (lang == null) lang = "vi";
+                ResourceBundle messages = ResourceBundle.getBundle("i18n.messages", new Locale(lang));
+                request.setAttribute("error", e.getMessage() == null ? messages.getString("error.booking.finalize") : e.getMessage());
                 step = 4;
             }
         }
@@ -124,7 +166,10 @@ public class BookingController extends HttpServlet {
                 response.sendRedirect("MainController?action=booking&step=4");
                 return;
             } catch (Exception e) {
-                request.setAttribute("error", e.getMessage() == null ? "Could not save menu selections." : e.getMessage());
+                String lang = (String) session.getAttribute("lang");
+                if (lang == null) lang = "vi";
+                ResourceBundle messages = ResourceBundle.getBundle("i18n.messages", new Locale(lang));
+                request.setAttribute("error", e.getMessage() == null ? messages.getString("error.booking.saveMenu") : e.getMessage());
                 step = 3;
             }
         }
@@ -139,11 +184,11 @@ public class BookingController extends HttpServlet {
             if (step == 1) {
                 request.setAttribute("eventTypes", bookingService.getActiveEventTypes());
             } else if (step == 2) {
-                if (draft == null || draft.getReservationDate() == null) {
+                if (draft == null) {
                     response.sendRedirect("MainController?action=booking&step=1");
                     return;
                 }
-                request.setAttribute("tables", bookingService.getAvailableTables(draft));
+                request.setAttribute("tables", bookingService.getAvailableTables(draft, user));
             } else if (step == 3) {
                 request.setAttribute("menuItems", bookingService.getActiveMenuItems());
                 request.setAttribute("menuSets", bookingService.getActiveMenuSets());
@@ -154,7 +199,10 @@ public class BookingController extends HttpServlet {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("pageError", "Booking data is temporarily unavailable. Error: " + e.getMessage());
+            String lang = (String) session.getAttribute("lang");
+            if (lang == null) lang = "vi";
+            ResourceBundle messages = ResourceBundle.getBundle("i18n.messages", new Locale(lang));
+            request.setAttribute("pageError", MessageFormat.format(messages.getString("error.booking.unavailable"), e.getMessage()));
         }
 
         String targetJsp = "common/booking-step" + step + ".jsp";

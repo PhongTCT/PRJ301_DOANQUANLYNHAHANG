@@ -1,4 +1,4 @@
-﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -61,14 +61,14 @@
         
         <c:if test="${not empty pageError}">
             <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
-                <i class="fa-solid fa-circle-exclamation me-2"></i><strong>Lá»—i trang:</strong> ${pageError}
+                <i class="fa-solid fa-circle-exclamation me-2"></i><strong>Lỗi trang:</strong> ${pageError}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         </c:if>
 
         <c:if test="${not empty sessionScope.surchargeWarning}">
             <div class="alert alert-warning alert-dismissible fade show shadow-sm" role="alert">
-                <i class="fa-solid fa-triangle-exclamation me-2"></i><strong>LÆ°u Ã½ Phá»¥ thu:</strong> ${sessionScope.surchargeWarning}
+                <i class="fa-solid fa-triangle-exclamation me-2"></i><strong>Lưu ý Phụ thu:</strong> ${sessionScope.surchargeWarning}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         </c:if>
@@ -102,7 +102,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h5 class="card-title fw-bold mb-0">BÃ n ${tb.tableCode}</h5>
+                                    <h5 class="card-title fw-bold mb-0">Bàn ${tb.tableCode}</h5>
                                 </div>
                                 <h6 class="card-subtitle mb-3 text-muted small"><i class="fa-solid fa-map-location-dot me-1"></i>${tb.room.roomName}</h6>
                                 
@@ -113,7 +113,7 @@
                                     </li>
                                     <li class="list-group-item px-0 d-flex justify-content-between align-items-center bg-transparent border-0 py-1">
                                         <span class="text-muted"><i class="fa-solid fa-tag me-2"></i><fmt:message key="booking.baseprice"/></span>
-                                        <span class="fw-bold text-success"><fmt:formatNumber value="${tb.basePrice}" pattern="#,##0"/> Ä‘</span>
+                                        <span class="fw-bold text-success"><fmt:formatNumber value="${tb.basePrice}" pattern="#,##0"/> đ</span>
                                     </li>
                                 </ul>
                             </div>
@@ -149,8 +149,9 @@
             const countDisplay = document.getElementById('selectedCountText');
             const btnNext = document.getElementById('btnNext');
             
-            // Láº¥y máº«u chuá»—i text tá»« resource bundle cho javascript (fallback)
+            // Lấy mẫu chuỗi text từ resource bundle cho javascript (fallback)
             const countTemplate = '<fmt:message key="booking.table.count"><fmt:param value="COUNT_PLACEHOLDER"/></fmt:message>';
+            const requiredCapacity = parseInt('${sessionScope.bookingDraft.adultsCount + sessionScope.bookingDraft.childrenCount}') || 0;
             
             function updateSelection() {
                 let totalCap = 0;
@@ -170,7 +171,11 @@
                 capacityDisplay.textContent = totalCap;
                 countDisplay.textContent = countTemplate.replace("COUNT_PLACEHOLDER", count);
                 
-                btnNext.disabled = count === 0;
+                if (count === 0) {
+                    btnNext.disabled = true;
+                } else {
+                    btnNext.disabled = totalCap < requiredCapacity;
+                }
             }
             updateSelection();
             checkboxes.forEach(cb => cb.addEventListener('change', updateSelection));

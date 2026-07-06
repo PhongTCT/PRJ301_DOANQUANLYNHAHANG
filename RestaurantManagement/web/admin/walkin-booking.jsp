@@ -172,7 +172,7 @@
                                             <div class="table-card" onclick="selectCard(this)">
                                                 <h5 class="mb-1 fw-bold">${t.tableCode}</h5>
                                                 <small>${t.capacity} seats</small><br>
-                                                <small class="fw-bold text-success"><fmt:formatNumber value="${t.basePrice}" pattern="#,##0"/>Ä‘</small>
+                                                <small class="fw-bold text-success"><fmt:formatNumber value="${t.basePrice}" pattern="#,##0"/>đ</small>
                                             </div>
                                         </label>
                                     </div>

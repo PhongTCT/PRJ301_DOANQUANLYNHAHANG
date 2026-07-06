@@ -1,4 +1,4 @@
-﻿:root {
+:root {
     --brand-gold: #b99a52;
     --brand-gold-line: rgba(185, 154, 82, 0.52);
     --brand-line: #e7e2d8;
@@ -27,7 +27,6 @@ html {
     max-width: 100%;
     min-height: 100%;
     overflow-x: hidden;
-    overscroll-behavior: none;
     scrollbar-gutter: stable;
 }
 
@@ -43,7 +42,6 @@ body {
     max-width: 100%;
     min-height: 100%;
     overflow-x: hidden;
-    overscroll-behavior: none;
     font-family: var(--bs-body-font-family);
 }
 

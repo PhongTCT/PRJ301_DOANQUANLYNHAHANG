@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tra cá»©u hÃ³a Ä‘Æ¡n - Le Royal</title>
+    <title>Tra cứu hóa đơn - Le Royal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -23,11 +23,11 @@
             <section class="admin-hero">
                 <div>
                     <div class="admin-kicker">Billing desk</div>
-                    <h1 class="admin-title">Tra cá»©u hÃ³a Ä‘Æ¡n</h1>
-                    <p class="admin-copy mb-0">Staff tra cá»©u hÃ³a Ä‘Æ¡n theo khÃ¡ch, thá»i gian vÃ  mÃ£ giao dá»‹ch; admin cÃ³ thá»ƒ xem toÃ n bá»™ invoice.</p>
+                    <h1 class="admin-title">Tra cứu hóa đơn</h1>
+                    <p class="admin-copy mb-0">Staff tra cứu hóa đơn theo khách, thời gian và mã giao dịch; admin có thể xem toàn bộ invoice.</p>
                 </div>
                 <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#generateModal">
-                    <i class="fa-solid fa-plus me-2"></i>Táº¡o tá»« mÃ£ Ä‘áº·t bÃ n
+                    <i class="fa-solid fa-plus me-2"></i>Tạo từ mã đặt bàn
                 </button>
             </section>
 
@@ -37,10 +37,10 @@
             <div class="card mb-4">
                 <div class="card-body p-4">
                     <form method="get" class="row g-3 align-items-end">
-                        <div class="col-md-4"><label class="form-label">Tá»« khÃ³a</label><input name="q" value="${param.q}" class="form-control" placeholder="TÃªn khÃ¡ch, email, mÃ£ giao dá»‹ch"></div>
-                        <div class="col-md-3"><label class="form-label">Tá»« ngÃ y</label><input type="date" name="from" value="${param.from}" class="form-control"></div>
-                        <div class="col-md-3"><label class="form-label">Äáº¿n ngÃ y</label><input type="date" name="to" value="${param.to}" class="form-control"></div>
-                        <div class="col-md-2"><button class="btn btn-primary w-100"><i class="fa-solid fa-magnifying-glass me-2"></i>TÃ¬m</button></div>
+                        <div class="col-md-4"><label class="form-label">Từ khóa</label><input name="q" value="${param.q}" class="form-control" placeholder="Tên khách, email, mã giao dịch"></div>
+                        <div class="col-md-3"><label class="form-label">Từ ngày</label><input type="date" name="from" value="${param.from}" class="form-control"></div>
+                        <div class="col-md-3"><label class="form-label">Đến ngày</label><input type="date" name="to" value="${param.to}" class="form-control"></div>
+                        <div class="col-md-2"><button class="btn btn-primary w-100"><i class="fa-solid fa-magnifying-glass me-2"></i>Tìm</button></div>
                     </form>
                 </div>
             </div>
@@ -49,15 +49,15 @@
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
                         <thead>
-                            <tr><th class="ps-4">Invoice</th><th>KhÃ¡ch</th><th>Tá»•ng</th><th>Giáº£m</th><th>Voucher</th><th>Thanh toÃ¡n</th><th>Staff</th><th class="text-end pe-4">Thao tÃ¡c</th></tr>
+                            <tr><th class="ps-4">Invoice</th><th>Khách</th><th>Tổng</th><th>Giảm</th><th>Voucher</th><th>Thanh toán</th><th>Staff</th><th class="text-end pe-4">Thao tác</th></tr>
                         </thead>
                         <tbody>
                             <c:forEach items="${invoices}" var="i">
                                 <tr>
                                     <td class="ps-4 fw-bold">#${i.id}<div class="small text-muted">${i.transactionRef}</div></td>
                                     <td>${empty i.user ? i.guestName : i.user.fullName}<div class="small text-muted"><c:if test="${not empty i.reservation}">Reservation #${i.reservation.id}</c:if></div></td>
-                                    <td class="fw-bold"><fmt:formatNumber value="${i.totalAmount}" pattern="#,##0"/>Ä‘</td>
-                                    <td><fmt:formatNumber value="${i.voucherDiscount + i.pointsDiscount}" pattern="#,##0"/>Ä‘</td>
+                                    <td class="fw-bold"><fmt:formatNumber value="${i.totalAmount}" pattern="#,##0"/>đ</td>
+                                    <td><fmt:formatNumber value="${i.voucherDiscount + i.pointsDiscount}" pattern="#,##0"/>đ</td>
                                     <td>
                                         <c:forEach items="${i.voucherRedemptions}" var="vr"><span class="badge bg-light text-dark border">${vr.voucher.voucherCode}</span></c:forEach>
                                         <c:if test="${empty i.voucherRedemptions}">-</c:if>
@@ -68,13 +68,13 @@
                                         <c:if test="${i.paymentStatus != 'PAID'}">
                                             <form method="post" class="d-inline">
                                                 <input type="hidden" name="action" value="markPaid"><input type="hidden" name="id" value="${i.id}">
-                                                <button class="btn btn-sm btn-primary">ÄÃ£ thanh toÃ¡n</button>
+                                                <button class="btn btn-sm btn-primary">Đã thanh toán</button>
                                             </form>
                                         </c:if>
                                     </td>
                                 </tr>
                             </c:forEach>
-                            <c:if test="${empty invoices}"><tr><td colspan="8" class="text-center text-muted py-5">KhÃ´ng cÃ³ hÃ³a Ä‘Æ¡n phÃ¹ há»£p.</td></tr></c:if>
+                            <c:if test="${empty invoices}"><tr><td colspan="8" class="text-center text-muted py-5">Không có hóa đơn phù hợp.</td></tr></c:if>
                         </tbody>
                     </table>
                 </div>
@@ -89,16 +89,16 @@
             <form method="post">
                 <input type="hidden" name="action" value="generate">
                 <div class="modal-header">
-                    <h5 class="modal-title">Táº¡o hÃ³a Ä‘Æ¡n tá»« Ä‘áº·t bÃ n</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="ÄÃ³ng"></button>
+                    <h5 class="modal-title">Tạo hóa đơn từ đặt bàn</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
                 </div>
                 <div class="modal-body p-4">
-                    <label class="form-label">MÃ£ Ä‘áº·t bÃ n</label>
+                    <label class="form-label">Mã đặt bàn</label>
                     <input type="number" name="reservationId" class="form-control form-control-lg" required>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Há»§y</button>
-                    <button class="btn btn-primary">Táº¡o hÃ³a Ä‘Æ¡n</button>
+                    <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Hủy</button>
+                    <button class="btn btn-primary">Tạo hóa đơn</button>
                 </div>
             </form>
         </div>

@@ -55,19 +55,40 @@ public class TableController extends HttpServlet {
 
         try {
             if ("add".equals(action)) {
-                DiningTable table = new DiningTable();
-                table.setTableCode(request.getParameter("tableCode"));
-                table.setCapacity(Integer.parseInt(request.getParameter("capacity")));
-                table.setBasePrice(new BigDecimal(request.getParameter("basePrice")));
-                table.setStatus(TableStatus.valueOf(request.getParameter("status")));
+                String tableCode = request.getParameter("tableCode");
+                DiningTable existing = tableDAO.findByTableCode(tableCode);
                 
-                Integer roomId = Integer.parseInt(request.getParameter("roomId"));
-                Room room = roomDAO.searchById(roomId);
-                table.setRoom(room);
-                table.setIsActive(true);
-                
-                tableDAO.insert(table);
-                request.getSession().setAttribute("successMessage", isEn ? "Table added successfully!" : "Thêm bàn thành công!");
+                if (existing != null) {
+                    if (!existing.getIsActive()) {
+                        existing.setIsActive(true);
+                        existing.setCapacity(Integer.parseInt(request.getParameter("capacity")));
+                        existing.setBasePrice(new BigDecimal(request.getParameter("basePrice")));
+                        existing.setStatus(TableStatus.valueOf(request.getParameter("status")));
+                        
+                        Integer roomId = Integer.parseInt(request.getParameter("roomId"));
+                        Room room = roomDAO.searchById(roomId);
+                        existing.setRoom(room);
+                        
+                        tableDAO.update(existing);
+                        request.getSession().setAttribute("successMessage", isEn ? "Table restored successfully!" : "Khôi phục bàn thành công!");
+                    } else {
+                        throw new Exception("UNIQUE KEY"); // Trigger duplicate error handler
+                    }
+                } else {
+                    DiningTable table = new DiningTable();
+                    table.setTableCode(tableCode);
+                    table.setCapacity(Integer.parseInt(request.getParameter("capacity")));
+                    table.setBasePrice(new BigDecimal(request.getParameter("basePrice")));
+                    table.setStatus(TableStatus.valueOf(request.getParameter("status")));
+                    
+                    Integer roomId = Integer.parseInt(request.getParameter("roomId"));
+                    Room room = roomDAO.searchById(roomId);
+                    table.setRoom(room);
+                    table.setIsActive(true);
+                    
+                    tableDAO.insert(table);
+                    request.getSession().setAttribute("successMessage", isEn ? "Table added successfully!" : "Thêm bàn thành công!");
+                }
                 
             } else if ("update".equals(action)) {
                 Integer id = Integer.parseInt(request.getParameter("id"));
@@ -99,7 +120,12 @@ public class TableController extends HttpServlet {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            request.getSession().setAttribute("errorMessage", (isEn ? "An error occurred: " : "Có lỗi xảy ra: ") + e.getMessage());
+            String msg = e.getMessage();
+            if (msg != null && msg.contains("UNIQUE KEY")) {
+                request.getSession().setAttribute("errorMessage", isEn ? "Table code already exists. Please choose a different code." : "Mã bàn này đã tồn tại, vui lòng chọn mã khác!");
+            } else {
+                request.getSession().setAttribute("errorMessage", (isEn ? "An error occurred: " : "Có lỗi xảy ra: ") + msg);
+            }
         }
         
         response.sendRedirect(request.getContextPath() + "/admin/tables");

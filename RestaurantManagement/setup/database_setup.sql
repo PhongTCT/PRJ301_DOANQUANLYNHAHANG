@@ -153,7 +153,7 @@ CREATE TABLE dining_table (
     id INT IDENTITY(1,1) PRIMARY KEY,
     room_id INT NOT NULL CONSTRAINT FK_dining_table_room REFERENCES room(id),
     table_code VARCHAR(20) NOT NULL UNIQUE,
-    capacity INT NOT NULL CHECK (capacity IN (2,4,6,8,10,12,20)),
+    capacity INT NOT NULL CHECK (capacity > 0),
     base_price DECIMAL(10,0) NOT NULL DEFAULT 0 CHECK (base_price >= 0),
     image_url VARCHAR(500) NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'AVAILABLE'
@@ -685,3 +685,22 @@ VALUES
 GO
 
 PRINT 'RestaurantManagement database schema and seed data created successfully.';
+
+
+-- Xóa dữ liệu cũ (nếu có)
+DELETE FROM holiday_surcharge;
+GO
+
+INSERT INTO holiday_surcharge (holiday_name, surcharge_date, surcharge_percent, is_active) VALUES
+(N'Tết Dương Lịch', '2026-01-01', 15.00, 1),
+(N'Mùng 1 Tết Nguyên Đán', '2026-02-17', 20.00, 1),
+(N'Mùng 2 Tết Nguyên Đán', '2026-02-18', 20.00, 1),
+(N'Mùng 3 Tết Nguyên Đán', '2026-02-19', 20.00, 1),
+(N'Quốc tế Phụ nữ', '2026-03-08', 10.00, 1),
+(N'Giỗ Tổ Hùng Vương', '2026-04-26', 15.00, 1),
+(N'Giải phóng Miền Nam', '2026-04-30', 15.00, 1),
+(N'Quốc tế Lao động', '2026-05-01', 15.00, 1),
+(N'Quốc khánh Việt Nam', '2026-09-02', 15.00, 1),
+(N'Phụ nữ Việt Nam', '2026-10-20', 10.00, 1),
+(N'Lễ Giáng Sinh', '2026-12-24', 15.00, 1);
+GO
