@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -7,10 +7,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý voucher - Le Royal</title>
+    <title>Quáº£n lÃ½ voucher - Le Royal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --royal-ink: #171410;
@@ -49,7 +49,7 @@
                 radial-gradient(circle at top right, rgba(185, 154, 82, 0.12), transparent 34rem),
                 linear-gradient(180deg, #fbfaf7 0%, #f3efe8 100%);
             color: var(--royal-ink);
-            font-family: "Inter", Arial, sans-serif;
+            font-family: "Manrope", Arial, sans-serif;
         }
 
         .admin-layout {
@@ -103,7 +103,7 @@
 
         .admin-voucher-title {
             margin: 0.3rem 0 0.4rem;
-            font-family: "Cormorant Garamond", Georgia, serif;
+            font-family: "Marcellus", Georgia, serif;
             font-size: clamp(2.6rem, 5vw, 4.7rem);
             font-weight: 600;
             line-height: 0.92;
@@ -157,7 +157,7 @@
         .admin-stat strong {
             display: block;
             margin-top: 0.35rem;
-            font-family: "Cormorant Garamond", Georgia, serif;
+            font-family: "Marcellus", Georgia, serif;
             font-size: 2.3rem;
             line-height: 1;
             font-weight: 600;
@@ -274,7 +274,7 @@
         }
 
         .voucher-discount {
-            font-family: "Cormorant Garamond", Georgia, serif;
+            font-family: "Marcellus", Georgia, serif;
             font-size: 1.7rem;
             line-height: 1;
             font-weight: 600;
@@ -347,7 +347,7 @@
         }
 
         .admin-modal-title {
-            font-family: "Cormorant Garamond", Georgia, serif;
+            font-family: "Marcellus", Georgia, serif;
             font-size: 2rem;
             font-weight: 600;
         }
@@ -390,28 +390,28 @@
             <section class="admin-voucher-hero">
                 <div>
                     <div class="admin-kicker">Le Royal Operations</div>
-                    <h1 class="admin-voucher-title">Quản lý voucher</h1>
-                    <p class="admin-voucher-copy">Tạo và theo dõi mã ưu đãi cho tổng hóa đơn. Trang này giữ số lượng, thời hạn và trạng thái bật/tắt để đội vận hành kiểm soát khuyến mãi rõ hơn.</p>
+                    <h1 class="admin-voucher-title">Quáº£n lÃ½ voucher</h1>
+                    <p class="admin-voucher-copy">Táº¡o vÃ  theo dÃµi mÃ£ Æ°u Ä‘Ã£i cho tá»•ng hÃ³a Ä‘Æ¡n. Trang nÃ y giá»¯ sá»‘ lÆ°á»£ng, thá»i háº¡n vÃ  tráº¡ng thÃ¡i báº­t/táº¯t Ä‘á»ƒ Ä‘á»™i váº­n hÃ nh kiá»ƒm soÃ¡t khuyáº¿n mÃ£i rÃµ hÆ¡n.</p>
                 </div>
                 <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
                     <button type="button" class="admin-primary-action" data-bs-toggle="modal" data-bs-target="#voucherModal">
                         <i class="fa-solid fa-plus"></i>
-                        Thêm voucher
+                        ThÃªm voucher
                     </button>
                 </c:if>
             </section>
 
             <div class="admin-stat-grid">
                 <div class="admin-stat">
-                    <div class="admin-section-label">Tổng mã</div>
+                    <div class="admin-section-label">Tá»•ng mÃ£</div>
                     <strong>${fn:length(vouchers)}</strong>
                 </div>
                 <div class="admin-stat">
-                    <div class="admin-section-label">Đang theo dõi</div>
+                    <div class="admin-section-label">Äang theo dÃµi</div>
                     <strong>Manual</strong>
                 </div>
                 <div class="admin-stat">
-                    <div class="admin-section-label">Nguồn dùng</div>
+                    <div class="admin-section-label">Nguá»“n dÃ¹ng</div>
                     <strong>Invoice</strong>
                 </div>
             </div>
@@ -429,9 +429,9 @@
                 <div class="admin-panel-header">
                     <div>
                         <div class="admin-section-label">Voucher list</div>
-                        <h2 id="voucherTableTitle" class="h4 fw-semibold mb-0 mt-1">Danh sách mã ưu đãi</h2>
+                        <h2 id="voucherTableTitle" class="h4 fw-semibold mb-0 mt-1">Danh sÃ¡ch mÃ£ Æ°u Ä‘Ã£i</h2>
                     </div>
-                    <span class="voucher-use-tag"><i class="fa-solid fa-ticket me-2"></i>${fn:length(vouchers)} mã</span>
+                    <span class="voucher-use-tag"><i class="fa-solid fa-ticket me-2"></i>${fn:length(vouchers)} mÃ£</span>
                 </div>
 
                 <div class="table-responsive voucher-table-wrap">
@@ -439,13 +439,13 @@
                         <thead>
                             <tr>
                                 <th class="ps-4">Code</th>
-                                <th>Giảm giá</th>
-                                <th>Điều kiện</th>
-                                <th>Thời hạn</th>
-                                <th>Số lượng</th>
-                                <th>Trạng thái</th>
+                                <th>Giáº£m giÃ¡</th>
+                                <th>Äiá»u kiá»‡n</th>
+                                <th>Thá»i háº¡n</th>
+                                <th>Sá»‘ lÆ°á»£ng</th>
+                                <th>Tráº¡ng thÃ¡i</th>
                                 <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
-                                    <th class="text-end pe-4">Thao tác</th>
+                                    <th class="text-end pe-4">Thao tÃ¡c</th>
                                 </c:if>
                             </tr>
                         </thead>
@@ -462,16 +462,16 @@
                                         <div class="voucher-discount">
                                             <c:choose>
                                                 <c:when test="${not empty v.discountPercent}">${v.discountPercent}%</c:when>
-                                                <c:otherwise><fmt:formatNumber value="${v.discountAmount}" pattern="#,##0"/>đ</c:otherwise>
+                                                <c:otherwise><fmt:formatNumber value="${v.discountAmount}" pattern="#,##0"/>Ä‘</c:otherwise>
                                             </c:choose>
                                         </div>
                                         <c:if test="${not empty v.maxDiscount}">
-                                            <div class="voucher-discount-note">Tối đa <fmt:formatNumber value="${v.maxDiscount}" pattern="#,##0"/>đ</div>
+                                            <div class="voucher-discount-note">Tá»‘i Ä‘a <fmt:formatNumber value="${v.maxDiscount}" pattern="#,##0"/>Ä‘</div>
                                         </c:if>
                                     </td>
                                     <td>
-                                        <div class="voucher-condition">Hóa đơn từ</div>
-                                        <div class="fw-semibold"><fmt:formatNumber value="${v.minOrderValue}" pattern="#,##0"/>đ</div>
+                                        <div class="voucher-condition">HÃ³a Ä‘Æ¡n tá»«</div>
+                                        <div class="fw-semibold"><fmt:formatNumber value="${v.minOrderValue}" pattern="#,##0"/>Ä‘</div>
                                     </td>
                                     <td>
                                         <div class="voucher-date"><fmt:formatDate value="${v.validFrom}" pattern="dd/MM/yyyy HH:mm"/></div>
@@ -482,19 +482,19 @@
                                     </td>
                                     <td>
                                         <span class="voucher-status ${v.isActive ? 'is-on' : 'is-off'}">
-                                            ${v.isActive ? 'Đang bật' : 'Đã tắt'}
+                                            ${v.isActive ? 'Äang báº­t' : 'ÄÃ£ táº¯t'}
                                         </span>
                                     </td>
                                     <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
                                         <td class="text-end pe-4">
                                             <div class="voucher-actions">
-                                                <button type="button" class="voucher-icon-btn" title="Sửa voucher" data-bs-toggle="modal" data-bs-target="#editVoucher${v.id}">
+                                                <button type="button" class="voucher-icon-btn" title="Sá»­a voucher" data-bs-toggle="modal" data-bs-target="#editVoucher${v.id}">
                                                     <i class="fa-solid fa-pen"></i>
                                                 </button>
                                                 <form method="post" action="${pageContext.request.contextPath}/admin/vouchers" class="d-inline">
                                                     <input type="hidden" name="action" value="toggle">
                                                     <input type="hidden" name="id" value="${v.id}">
-                                                    <button type="submit" class="voucher-icon-btn" title="${v.isActive ? 'Tắt voucher' : 'Bật voucher'}">
+                                                    <button type="submit" class="voucher-icon-btn" title="${v.isActive ? 'Táº¯t voucher' : 'Báº­t voucher'}">
                                                         <i class="fa-solid fa-power-off"></i>
                                                     </button>
                                                 </form>
@@ -507,7 +507,7 @@
                                 <tr>
                                     <td colspan="${sessionScope.currentUser.role == 'ADMIN' ? 7 : 6}" class="voucher-empty-row">
                                         <i class="fa-solid fa-ticket"></i>
-                                        Chưa có voucher. Tạo mã đầu tiên để bắt đầu quản lý ưu đãi.
+                                        ChÆ°a cÃ³ voucher. Táº¡o mÃ£ Ä‘áº§u tiÃªn Ä‘á»ƒ báº¯t Ä‘áº§u quáº£n lÃ½ Æ°u Ä‘Ã£i.
                                     </td>
                                 </tr>
                             </c:if>
@@ -530,55 +530,55 @@
                 <div class="modal-header">
                     <div>
                         <div class="admin-kicker">New privilege</div>
-                        <h5 id="voucherModalTitle" class="admin-modal-title modal-title mb-0">Thêm voucher</h5>
+                        <h5 id="voucherModalTitle" class="admin-modal-title modal-title mb-0">ThÃªm voucher</h5>
                     </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="ÄÃ³ng"></button>
                 </div>
                 <div class="modal-body p-4">
                     <div class="row g-3">
                         <div class="col-md-4">
-                            <label class="form-label">Mã voucher</label>
+                            <label class="form-label">MÃ£ voucher</label>
                             <input name="voucherCode" class="form-control" placeholder="ROYAL10" required>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Loại</label>
+                            <label class="form-label">Loáº¡i</label>
                             <select name="voucherType" class="form-select">
                                 <c:forEach items="${voucherTypes}" var="t"><option value="${t}">${t}</option></c:forEach>
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Số lượng</label>
+                            <label class="form-label">Sá»‘ lÆ°á»£ng</label>
                             <input type="number" name="usageLimit" class="form-control" min="1" value="1" required>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Giảm %</label>
+                            <label class="form-label">Giáº£m %</label>
                             <input type="number" step="0.01" name="discountPercent" class="form-control" placeholder="10">
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Giảm tiền</label>
+                            <label class="form-label">Giáº£m tiá»n</label>
                             <input type="number" step="1000" name="discountAmount" class="form-control" placeholder="50000">
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Đơn tối thiểu</label>
+                            <label class="form-label">ÄÆ¡n tá»‘i thiá»ƒu</label>
                             <input type="number" step="1000" name="minOrderValue" value="0" class="form-control">
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Giảm tối đa</label>
+                            <label class="form-label">Giáº£m tá»‘i Ä‘a</label>
                             <input type="number" step="1000" name="maxDiscount" class="form-control" placeholder="200000">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Từ ngày</label>
+                            <label class="form-label">Tá»« ngÃ y</label>
                             <input type="datetime-local" name="validFrom" class="form-control" required>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Đến ngày</label>
+                            <label class="form-label">Äáº¿n ngÃ y</label>
                             <input type="datetime-local" name="validTo" class="form-control" required>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Hủy</button>
-                    <button type="submit" class="admin-primary-action">Tạo voucher</button>
+                    <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Há»§y</button>
+                    <button type="submit" class="admin-primary-action">Táº¡o voucher</button>
                 </div>
             </form>
         </div>
@@ -598,9 +598,9 @@
                     <div class="modal-header">
                         <div>
                             <div class="admin-kicker">Edit privilege</div>
-                            <h5 id="editVoucherTitle${v.id}" class="admin-modal-title modal-title mb-0">Sửa ${v.voucherCode}</h5>
+                            <h5 id="editVoucherTitle${v.id}" class="admin-modal-title modal-title mb-0">Sá»­a ${v.voucherCode}</h5>
                         </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="ÄÃ³ng"></button>
                     </div>
                     <div class="modal-body p-4">
                         <jsp:include page="/admin/voucher-form-fields.jsp">
@@ -622,8 +622,8 @@
                         };
                     </script>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Hủy</button>
-                        <button type="submit" class="admin-primary-action">Lưu thay đổi</button>
+                        <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Há»§y</button>
+                        <button type="submit" class="admin-primary-action">LÆ°u thay Ä‘á»•i</button>
                     </div>
                 </form>
             </div>

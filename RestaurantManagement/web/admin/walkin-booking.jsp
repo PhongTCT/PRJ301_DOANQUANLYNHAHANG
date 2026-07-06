@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
@@ -10,13 +10,13 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f8f9fa; font-family: 'Inter', sans-serif; }
+        body { background-color: #f8f9fa; font-family: 'Manrope', sans-serif; }
         .sidebar { min-height: 100vh; background-color: #1a1d20; color: white; }
         .sidebar a { color: rgba(255,255,255,.7); text-decoration: none; padding: 12px 20px; display: block; border-radius: 8px; margin-bottom: 5px; transition: 0.2s; }
         .sidebar a:hover, .sidebar a.active { background-color: rgba(255,255,255,0.1); color: white; }
@@ -172,7 +172,7 @@
                                             <div class="table-card" onclick="selectCard(this)">
                                                 <h5 class="mb-1 fw-bold">${t.tableCode}</h5>
                                                 <small>${t.capacity} seats</small><br>
-                                                <small class="fw-bold text-success"><fmt:formatNumber value="${t.basePrice}" pattern="#,##0"/>đ</small>
+                                                <small class="fw-bold text-success"><fmt:formatNumber value="${t.basePrice}" pattern="#,##0"/>Ä‘</small>
                                             </div>
                                         </label>
                                     </div>

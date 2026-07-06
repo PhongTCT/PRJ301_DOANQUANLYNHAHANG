@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -10,9 +10,9 @@
     <title>Le Royal - Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #f8f9fa; font-family: 'Inter', sans-serif; }
+        body { background-color: #f8f9fa; font-family: 'Manrope', sans-serif; }
         .sidebar { min-height: 100vh; background-color: #1a1d20; color: white; }
         .sidebar a { color: rgba(255,255,255,.7); text-decoration: none; padding: 12px 20px; display: block; border-radius: 8px; margin-bottom: 5px; transition: 0.2s; }
         .sidebar a:hover, .sidebar a.active { background-color: rgba(255,255,255,0.1); color: white; }
@@ -193,7 +193,7 @@
                                                                         <c:forEach items="${res.reservationTables}" var="rt">
                                                                             <li class="list-group-item px-0 d-flex justify-content-between">
                                                                                 <span>Table ${rt.diningTable.tableCode} <small class="text-muted">(${rt.diningTable.capacity} seats)</small></span>
-                                                                                <span class="text-success fw-bold"><fmt:formatNumber value="${rt.diningTable.basePrice}" pattern="#,##0" />đ</span>
+                                                                                <span class="text-success fw-bold"><fmt:formatNumber value="${rt.diningTable.basePrice}" pattern="#,##0" />Ä‘</span>
                                                                             </li>
                                                                         </c:forEach>
                                                                         <c:if test="${empty res.reservationTables}">
@@ -206,7 +206,7 @@
                                                                         <c:forEach items="${res.reservationMenuItems}" var="rmi">
                                                                             <li class="list-group-item px-0 d-flex justify-content-between">
                                                                                 <span>${not empty rmi.menuItem ? (not empty rmi.menuItem.itemNameVi ? rmi.menuItem.itemNameVi : rmi.menuItem.itemName) : (not empty rmi.menuSet.setNameVi ? rmi.menuSet.setNameVi : rmi.menuSet.setName)} <span class="badge bg-secondary ms-1">x${rmi.quantity}</span></span>
-                                                                                <span class="text-success fw-bold"><fmt:formatNumber value="${rmi.unitPrice * rmi.quantity}" pattern="#,##0" />đ</span>
+                                                                                <span class="text-success fw-bold"><fmt:formatNumber value="${rmi.unitPrice * rmi.quantity}" pattern="#,##0" />Ä‘</span>
                                                                             </li>
                                                                         </c:forEach>
                                                                         <c:if test="${empty res.reservationMenuItems}">
@@ -219,7 +219,7 @@
                                                                         <c:forEach items="${res.reservationAddons}" var="ra">
                                                                             <li class="list-group-item px-0 d-flex justify-content-between">
                                                                                 <span>${ra.addonService.serviceName} <span class="badge bg-secondary ms-1">x${ra.quantity}</span></span>
-                                                                                <span class="text-success fw-bold"><fmt:formatNumber value="${ra.unitPrice * ra.quantity}" pattern="#,##0" />đ</span>
+                                                                                <span class="text-success fw-bold"><fmt:formatNumber value="${ra.unitPrice * ra.quantity}" pattern="#,##0" />Ä‘</span>
                                                                             </li>
                                                                         </c:forEach>
                                                                         <c:if test="${empty res.reservationAddons}">

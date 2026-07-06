@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -11,13 +11,13 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f8f9fa; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        body { background-color: #f8f9fa; font-family: 'Manrope', sans-serif; overflow-x: hidden; }
         .sidebar { min-height: 100vh; background-color: #1a1d20; color: white; }
         .sidebar a { color: rgba(255,255,255,.7); text-decoration: none; padding: 12px 20px; display: block; border-radius: 8px; margin-bottom: 5px; transition: 0.2s; }
         .sidebar a:hover, .sidebar a.active { background-color: rgba(255,255,255,0.1); color: white; }
@@ -124,7 +124,7 @@
                                         <img src="${pageContext.request.contextPath}/assets/img/le-royal/Seared Fish with Herb Puree.png" alt="${itemDisplayName}" class="menu-item-img">
                                     </c:when>
                                     <c:when test="${item.itemName == 'Bordeaux Red Wine'}">
-                                        <img src="${pageContext.request.contextPath}/assets/img/le-royal/Rosé Wine.jpg" alt="${itemDisplayName}" class="menu-item-img">
+                                        <img src="${pageContext.request.contextPath}/assets/img/le-royal/RosÃ© Wine.jpg" alt="${itemDisplayName}" class="menu-item-img">
                                     </c:when>
                                     <c:when test="${item.itemName == 'Fresh Orange Juice'}">
                                         <img src="${pageContext.request.contextPath}/assets/img/le-royal/Passion Fruit Fizz.jpg" alt="${itemDisplayName}" class="menu-item-img">
@@ -136,7 +136,7 @@
                                 <div class="menu-item-info">
                                     <div class="menu-item-name">${itemDisplayName}</div>
                                     <div class="d-flex justify-content-between align-items-end mt-auto">
-                                        <div class="menu-item-price"><fmt:formatNumber value="${item.basePrice}" pattern="#,##0"/> ₫</div>
+                                        <div class="menu-item-price"><fmt:formatNumber value="${item.basePrice}" pattern="#,##0"/> â‚«</div>
                                         <button type="button" class="btn btn-sm btn-outline-primary rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('${item.id}', `${fn:escapeXml(itemDisplayName)}`, ${item.basePrice}, 'item')">
                                             <i class="fa-solid fa-plus"></i>
                                         </button>
@@ -169,7 +169,7 @@
                                         ${setDisplayName}
                                     </div>
                                     <div class="d-flex justify-content-between align-items-end mt-auto">
-                                        <div class="menu-item-price"><fmt:formatNumber value="${set.discountedPrice}" pattern="#,##0"/> ₫</div>
+                                        <div class="menu-item-price"><fmt:formatNumber value="${set.discountedPrice}" pattern="#,##0"/> â‚«</div>
                                         <button type="button" class="btn btn-sm btn-outline-primary rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('S_${set.id}', `${fn:escapeXml(setDisplayName)}`, ${set.discountedPrice}, 'set')">
                                             <i class="fa-solid fa-plus"></i>
                                         </button>
@@ -219,7 +219,7 @@
                                     <select class="form-select fw-medium" name="tableId" id="tableId" style="border-color: #cbd5e1;">
                                         <option value="" data-capacity="0">-- Select Table --</option>
                                         <c:forEach items="${availableTables}" var="t">
-                                            <option value="${t.id}" data-price="${t.basePrice}" data-capacity="${t.capacity}">Table ${t.tableCode} (Cap: ${t.capacity}) - Base: <fmt:formatNumber value="${t.basePrice}" pattern="#,##0"/>₫</option>
+                                            <option value="${t.id}" data-price="${t.basePrice}" data-capacity="${t.capacity}">Table ${t.tableCode} (Cap: ${t.capacity}) - Base: <fmt:formatNumber value="${t.basePrice}" pattern="#,##0"/>â‚«</option>
                                         </c:forEach>
                                     </select>
                                 </div>
@@ -227,15 +227,15 @@
 
                             <div class="summary-row mt-3">
                                 <span>Subtotal</span>
-                                <span id="summarySubtotal" class="fw-bold text-dark">0 ₫</span>
+                                <span id="summarySubtotal" class="fw-bold text-dark">0 â‚«</span>
                             </div>
                             <div class="summary-row" id="tableFeeRow">
                                 <span>Table Base Price</span>
-                                <span id="summaryTableFee" class="fw-bold text-dark">0 ₫</span>
+                                <span id="summaryTableFee" class="fw-bold text-dark">0 â‚«</span>
                             </div>
                             <div class="summary-total">
                                 <span>Total</span>
-                                <span id="summaryTotal" class="text-primary">0 ₫</span>
+                                <span id="summaryTotal" class="text-primary">0 â‚«</span>
                             </div>
                             
                             <button type="button" class="btn btn-primary w-100 py-3 mt-3 fw-bold fs-5 shadow-sm" onclick="submitOrder()" style="border-radius: 10px;">
@@ -256,7 +256,7 @@
         
         // Format Currency
         const formatMoney = (amount) => {
-            return new Intl.NumberFormat('vi-VN').format(amount) + ' ₫';
+            return new Intl.NumberFormat('vi-VN').format(amount) + ' â‚«';
         };
 
         // Filter Menu Categories

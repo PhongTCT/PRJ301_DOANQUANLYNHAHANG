@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -12,7 +12,7 @@
     <title><fmt:message key="booking.title"/></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/minimal.css">
     <link href="${pageContext.request.contextPath}/assets/css/admin-royal.css" rel="stylesheet">
 </head>
@@ -61,14 +61,14 @@
         
         <c:if test="${not empty pageError}">
             <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
-                <i class="fa-solid fa-circle-exclamation me-2"></i><strong>Lỗi trang:</strong> ${pageError}
+                <i class="fa-solid fa-circle-exclamation me-2"></i><strong>Lá»—i trang:</strong> ${pageError}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         </c:if>
 
         <c:if test="${not empty sessionScope.surchargeWarning}">
             <div class="alert alert-warning alert-dismissible fade show shadow-sm" role="alert">
-                <i class="fa-solid fa-triangle-exclamation me-2"></i><strong>Lưu ý Phụ thu:</strong> ${sessionScope.surchargeWarning}
+                <i class="fa-solid fa-triangle-exclamation me-2"></i><strong>LÆ°u Ã½ Phá»¥ thu:</strong> ${sessionScope.surchargeWarning}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         </c:if>
@@ -102,7 +102,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h5 class="card-title fw-bold mb-0">Bàn ${tb.tableCode}</h5>
+                                    <h5 class="card-title fw-bold mb-0">BÃ n ${tb.tableCode}</h5>
                                 </div>
                                 <h6 class="card-subtitle mb-3 text-muted small"><i class="fa-solid fa-map-location-dot me-1"></i>${tb.room.roomName}</h6>
                                 
@@ -113,7 +113,7 @@
                                     </li>
                                     <li class="list-group-item px-0 d-flex justify-content-between align-items-center bg-transparent border-0 py-1">
                                         <span class="text-muted"><i class="fa-solid fa-tag me-2"></i><fmt:message key="booking.baseprice"/></span>
-                                        <span class="fw-bold text-success"><fmt:formatNumber value="${tb.basePrice}" pattern="#,##0"/> đ</span>
+                                        <span class="fw-bold text-success"><fmt:formatNumber value="${tb.basePrice}" pattern="#,##0"/> Ä‘</span>
                                     </li>
                                 </ul>
                             </div>
@@ -149,7 +149,7 @@
             const countDisplay = document.getElementById('selectedCountText');
             const btnNext = document.getElementById('btnNext');
             
-            // Lấy mẫu chuỗi text từ resource bundle cho javascript (fallback)
+            // Láº¥y máº«u chuá»—i text tá»« resource bundle cho javascript (fallback)
             const countTemplate = '<fmt:message key="booking.table.count"><fmt:param value="COUNT_PLACEHOLDER"/></fmt:message>';
             
             function updateSelection() {

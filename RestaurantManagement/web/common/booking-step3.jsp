@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -12,7 +12,7 @@
     <title><fmt:message key="booking.title"/></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/minimal.css">
     <style>
         .category-tabs { display: flex; overflow-x: auto; gap: 10px; padding-bottom: 10px; }
@@ -110,7 +110,7 @@
                                                 ${setDisplayName}
                                             </div>
                                             <div class="d-flex justify-content-between align-items-end mt-auto">
-                                                <div class="menu-item-price"><fmt:formatNumber value="${set.discountedPrice}" pattern="#,##0"/> ₫</div>
+                                                <div class="menu-item-price"><fmt:formatNumber value="${set.discountedPrice}" pattern="#,##0"/> â‚«</div>
                                                 <button type="button" class="btn btn-sm btn-outline-primary rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('combo', ${set.id}, this.getAttribute('data-name'), ${set.discountedPrice})" data-name="Set: ${fn:escapeXml(setDisplayName)}">
                                                     <i class="fa-solid fa-plus"></i>
                                                 </button>
@@ -148,7 +148,7 @@
                                                 <img src="${pageContext.request.contextPath}/assets/img/le-royal/Seared Fish with Herb Puree.png" class="menu-item-img" alt="Item">
                                             </c:when>
                                             <c:when test="${item.itemName == 'Bordeaux Red Wine'}">
-                                                <img src="${pageContext.request.contextPath}/assets/img/le-royal/Rosé Wine.jpg" class="menu-item-img" alt="Item">
+                                                <img src="${pageContext.request.contextPath}/assets/img/le-royal/RosÃ© Wine.jpg" class="menu-item-img" alt="Item">
                                             </c:when>
                                             <c:when test="${item.itemName == 'Fresh Orange Juice'}">
                                                 <img src="${pageContext.request.contextPath}/assets/img/le-royal/Passion Fruit Fizz.jpg" class="menu-item-img" alt="Item">
@@ -160,7 +160,7 @@
                                         <div class="menu-item-info">
                                             <div class="menu-item-name">${sessionScope.lang == 'en' ? item.itemNameEn : item.itemName}</div>
                                             <div class="d-flex justify-content-between align-items-end mt-auto">
-                                                <div class="menu-item-price"><fmt:formatNumber value="${item.basePrice}" pattern="#,##0"/> ₫</div>
+                                                <div class="menu-item-price"><fmt:formatNumber value="${item.basePrice}" pattern="#,##0"/> â‚«</div>
                                                 <button type="button" class="btn btn-sm btn-outline-primary rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('menu', ${item.id}, this.getAttribute('data-name'), ${item.basePrice})" data-name="${fn:escapeXml(sessionScope.lang == 'en' ? item.itemNameEn : item.itemName)}">
                                                     <i class="fa-solid fa-plus"></i>
                                                 </button>
@@ -179,7 +179,7 @@
                                         <div class="menu-item-info">
                                             <div class="menu-item-name">${addon.serviceName}</div>
                                             <div class="d-flex justify-content-between align-items-end mt-auto">
-                                                <div class="menu-item-price"><fmt:formatNumber value="${addon.price}" pattern="#,##0"/> ₫</div>
+                                                <div class="menu-item-price"><fmt:formatNumber value="${addon.price}" pattern="#,##0"/> â‚«</div>
                                                 <button type="button" class="btn btn-sm btn-outline-primary rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('addon', ${addon.id}, this.getAttribute('data-name'), ${addon.price})" data-name="${fn:escapeXml(addon.serviceName)}">
                                                     <i class="fa-solid fa-plus"></i>
                                                 </button>
@@ -205,7 +205,7 @@
                             <ul class="list-group list-group-flush" id="cartItemsList">
                                 <li class="list-group-item p-4 text-center text-muted" id="emptyCartMsg">
                                     <i class="fa-solid fa-cart-arrow-down fa-3x mb-3 text-light"></i>
-                                    <p class="mb-0">Chưa có món nào được chọn</p>
+                                    <p class="mb-0">ChÆ°a cÃ³ mÃ³n nÃ o Ä‘Æ°á»£c chá»n</p>
                                 </li>
                             </ul>
                             
@@ -214,21 +214,21 @@
                                 <li class="list-group-item p-3 bg-light">
                                     <div class="d-flex justify-content-between mb-1">
                                         <span class="text-muted small"><fmt:message key="booking.step3.cart.deposit"/></span>
-                                        <span class="fw-medium">Tùy thuộc quy định</span>
+                                        <span class="fw-medium">TÃ¹y thuá»™c quy Ä‘á»‹nh</span>
                                     </div>
                                 </li>
                                 <c:if test="${sessionScope.bookingDraft.hasSurcharge}">
                                 <li class="list-group-item p-3 bg-warning bg-opacity-10 border-warning border-opacity-25">
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <span class="fw-medium text-warning-emphasis"><i class="fa-solid fa-bolt me-1"></i>Phụ thu lễ (${sessionScope.bookingDraft.surchargePercent}%)</span>
-                                        <span class="fw-bold text-warning-emphasis" id="cartSurcharge">0đ</span>
+                                        <span class="fw-medium text-warning-emphasis"><i class="fa-solid fa-bolt me-1"></i>Phá»¥ thu lá»… (${sessionScope.bookingDraft.surchargePercent}%)</span>
+                                        <span class="fw-bold text-warning-emphasis" id="cartSurcharge">0Ä‘</span>
                                     </div>
                                 </li>
                                 </c:if>
                                 <li class="list-group-item p-3">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <span class="fw-bold fs-5"><fmt:message key="booking.step3.cart.total"/></span>
-                                        <span class="fw-bold fs-4 text-primary" id="cartTotal">0đ</span>
+                                        <span class="fw-bold fs-4 text-primary" id="cartTotal">0Ä‘</span>
                                     </div>
                                 </li>
                             </ul>
@@ -299,7 +299,7 @@
         }
 
         function formatCurrency(amount) {
-            return new Intl.NumberFormat('vi-VN').format(amount) + 'đ';
+            return new Intl.NumberFormat('vi-VN').format(amount) + 'Ä‘';
         }
 
         function renderCart() {

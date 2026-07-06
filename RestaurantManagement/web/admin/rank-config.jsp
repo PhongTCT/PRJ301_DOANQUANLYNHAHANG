@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -10,14 +10,14 @@
     <title>Cau hinh hang - Le Royal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root{--royal-ink:#171410;--royal-muted:#70675b;--royal-gold:#b99a52;--royal-line:#e8dfcf;--royal-paper:#fbfaf7}
-        body{margin:0;background:radial-gradient(circle at top right,rgba(185,154,82,.12),transparent 34rem),linear-gradient(180deg,#fbfaf7 0%,#f3efe8 100%);color:var(--royal-ink);font-family:"Inter",Arial,sans-serif}
+        body{margin:0;background:radial-gradient(circle at top right,rgba(185,154,82,.12),transparent 34rem),linear-gradient(180deg,#fbfaf7 0%,#f3efe8 100%);color:var(--royal-ink);font-family:"Manrope",Arial,sans-serif}
         .admin-main{min-width:0;padding:2rem}.admin-shell{max-width:1280px;margin:0 auto}
         .admin-hero{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:1.5rem;padding:1.25rem 0 1.5rem}
         .admin-kicker,.admin-section-label,.admin-table thead th{color:#917337;font-size:.72rem;font-weight:800;letter-spacing:.13em!important;text-transform:uppercase}
-        .admin-title{margin:.3rem 0 .4rem;font-family:"Cormorant Garamond",Georgia,serif;font-size:clamp(2.6rem,5vw,4.7rem);font-weight:600;line-height:.92}
+        .admin-title{margin:.3rem 0 .4rem;font-family:"Marcellus",Georgia,serif;font-size:clamp(2.6rem,5vw,4.7rem);font-weight:600;line-height:.92}
         .admin-copy{max-width:680px;margin:0;color:var(--royal-muted);line-height:1.7}
         .admin-primary-action{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:44px;padding:0 1.1rem;border:0;background:var(--royal-ink);color:#fff;font-weight:700;text-decoration:none;transition:transform .22s ease,background-color .22s ease,box-shadow .22s ease}
         .admin-primary-action:hover{background:#2d2618;color:#fff;transform:translateY(-2px);box-shadow:0 .8rem 1.8rem rgba(45,38,24,.16)}
@@ -32,8 +32,8 @@
         .admin-form .form-check-input:checked{background-color:#b99a52;border-color:#b99a52}
         .admin-modal .modal-content{border:0;border-radius:0;box-shadow:0 1.5rem 4rem rgba(23,20,16,.18)}
         .admin-modal .modal-header,.admin-modal .modal-footer{border-color:var(--royal-line);background:#fbf7ef}
-        .admin-modal-title{font-family:"Cormorant Garamond",Georgia,serif;font-size:2rem;font-weight:600}
-        .admin-sidebar{width:260px;min-width:260px;max-width:260px;min-height:100vh;flex:0 0 260px;background:radial-gradient(circle at top left,rgba(185,154,82,.16),transparent 22rem),#171a1d;color:#fff;padding:18px 16px;border-right:1px solid rgba(185,154,82,.22);position:sticky;top:0;align-self:start}.admin-sidebar__brand{min-height:58px;display:flex;align-items:center;margin:8px 2px 26px;color:#fff;font-family:"Cormorant Garamond",Georgia,serif;font-size:1.75rem;font-weight:600;letter-spacing:.04em}.admin-sidebar__link{min-height:44px;color:rgba(255,255,255,.76);text-decoration:none;padding:11px 14px;display:flex;align-items:center;gap:10px;border:1px solid transparent;border-radius:0;margin-bottom:6px;font-weight:600;transition:background-color .22s,color .22s,border-color .22s,transform .22s;white-space:nowrap}.admin-sidebar__link:hover,.admin-sidebar__link.active{background-color:rgba(255,255,255,.08);border-color:rgba(185,154,82,.32);color:#fff;transform:translateX(2px)}.admin-sidebar__link.active{background:linear-gradient(90deg,rgba(185,154,82,.24),rgba(255,255,255,.08));box-shadow:inset 2px 0 0 #b99a52}.admin-sidebar__link i{width:18px;text-align:center;color:#d5bc79}
+        .admin-modal-title{font-family:"Marcellus",Georgia,serif;font-size:2rem;font-weight:600}
+        .admin-sidebar{width:260px;min-width:260px;max-width:260px;min-height:100vh;flex:0 0 260px;background:radial-gradient(circle at top left,rgba(185,154,82,.16),transparent 22rem),#171a1d;color:#fff;padding:18px 16px;border-right:1px solid rgba(185,154,82,.22);position:sticky;top:0;align-self:start}.admin-sidebar__brand{min-height:58px;display:flex;align-items:center;margin:8px 2px 26px;color:#fff;font-family:"Marcellus",Georgia,serif;font-size:1.75rem;font-weight:600;letter-spacing:.04em}.admin-sidebar__link{min-height:44px;color:rgba(255,255,255,.76);text-decoration:none;padding:11px 14px;display:flex;align-items:center;gap:10px;border:1px solid transparent;border-radius:0;margin-bottom:6px;font-weight:600;transition:background-color .22s,color .22s,border-color .22s,transform .22s;white-space:nowrap}.admin-sidebar__link:hover,.admin-sidebar__link.active{background-color:rgba(255,255,255,.08);border-color:rgba(185,154,82,.32);color:#fff;transform:translateX(2px)}.admin-sidebar__link.active{background:linear-gradient(90deg,rgba(185,154,82,.24),rgba(255,255,255,.08));box-shadow:inset 2px 0 0 #b99a52}.admin-sidebar__link i{width:18px;text-align:center;color:#d5bc79}
     </style>
 </head>
 <body>

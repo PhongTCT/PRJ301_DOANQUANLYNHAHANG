@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <style>
     :root {
@@ -73,10 +73,10 @@
         gap: 13px;
         margin: 2px 4px 28px;
         color: #f8f3ea;
-        font-family: "Cormorant Garamond", Georgia, serif;
+        font-family: "Marcellus", Georgia, serif;
         font-size: 1.18rem;
         font-weight: 500;
-        letter-spacing: 0.24em !important;
+        letter-spacing: 0.18em !important;
         text-transform: uppercase;
         text-decoration: none;
     }
@@ -116,7 +116,7 @@
     .admin-sidebar__brand-text small {
         display: block;
         margin-top: 8px;
-        font-family: "Inter", Arial, sans-serif;
+        font-family: "Manrope", Arial, sans-serif;
         font-size: 0.62rem;
         font-weight: 700;
         letter-spacing: 0.18em !important;

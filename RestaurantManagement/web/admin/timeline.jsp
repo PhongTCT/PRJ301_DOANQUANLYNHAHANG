@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="vi">
@@ -8,12 +8,12 @@
     <title>Le Royal - Weekly Timeline</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/assets/css/admin-royal.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
     <style>
-        .fc .fc-toolbar-title { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 1.75rem; color: #1a1d20; }
+        .fc .fc-toolbar-title { font-family: 'Marcellus', serif; font-weight: 600; font-size: 1.75rem; color: #1a1d20; }
         .fc-theme-standard .fc-scrollgrid { border-radius: 8px; overflow: hidden; }
         .fc .fc-button-primary { background-color: #1a1d20; border-color: #1a1d20; }
         .fc .fc-button-primary:hover { background-color: #d4af37; border-color: #d4af37; color: #1a1d20; }

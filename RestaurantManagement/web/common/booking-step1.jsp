@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <fmt:setLocale value="${sessionScope.lang != null ? sessionScope.lang : 'vi'}" scope="session" />
@@ -13,7 +13,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/minimal.css">
     <link href="${pageContext.request.contextPath}/assets/css/admin-royal.css" rel="stylesheet">
 </head>
@@ -92,7 +92,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-floating">
                                         <select class="form-select" id="reservationTime" name="reservationTime" required>
-                                            <option value="" disabled ${empty sessionScope.bookingDraft.reservationTime ? 'selected' : ''}>-- Chọn giờ --</option>
+                                            <option value="" disabled ${empty sessionScope.bookingDraft.reservationTime ? 'selected' : ''}>-- Chá»n giá» --</option>
                                             <option value="17:30" ${sessionScope.bookingDraft.reservationTime == '17:30' || sessionScope.bookingDraft.reservationTime == '17:30:00' ? 'selected' : ''}>17:30</option>
                                             <option value="18:00" ${sessionScope.bookingDraft.reservationTime == '18:00' || sessionScope.bookingDraft.reservationTime == '18:00:00' ? 'selected' : ''}>18:00</option>
                                             <option value="18:30" ${sessionScope.bookingDraft.reservationTime == '18:30' || sessionScope.bookingDraft.reservationTime == '18:30:00' ? 'selected' : ''}>18:30</option>
@@ -104,7 +104,7 @@
                                         </select>
                                         <label for="reservationTime"><fmt:message key="booking.time"/></label>
                                     </div>
-                                    <div class="form-text text-muted small mt-1"><i class="fa-regular fa-clock me-1"></i>Giờ nhận khách: 17:30 - 21:00</div>
+                                    <div class="form-text text-muted small mt-1"><i class="fa-regular fa-clock me-1"></i>Giá» nháº­n khÃ¡ch: 17:30 - 21:00</div>
                                 </div>
                             </div>
 

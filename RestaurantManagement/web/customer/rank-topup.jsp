@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -13,8 +13,8 @@
     .rank-title{max-width:760px;font-size:clamp(3rem,7vw,5.75rem);line-height:.9;text-wrap:balance}
     .rank-copy{max-width:620px;color:#6f685d;line-height:1.8}
     .rank-profile-card{background:rgba(255,255,255,.82);border:1px solid #e7e0d2;box-shadow:0 1rem 2.5rem rgba(94,77,45,.08);padding:1.5rem}
-    .rank-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem 1rem;font-family:"Cormorant Garamond",Georgia,serif;font-size:1.8rem;font-weight:600;background:linear-gradient(135deg,#d4af37,#c5a028);color:#1a1a2e}
-    .rank-stat{font-family:"Cormorant Garamond",Georgia,serif;font-size:2.2rem;line-height:1;font-weight:600;font-variant-numeric:tabular-nums}
+    .rank-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem 1rem;font-family:"Marcellus",Georgia,serif;font-size:1.8rem;font-weight:600;background:linear-gradient(135deg,#d4af37,#c5a028);color:#1a1a2e}
+    .rank-stat{font-family:"Marcellus",Georgia,serif;font-size:2.2rem;line-height:1;font-weight:600;font-variant-numeric:tabular-nums}
     .rank-progress{height:8px;background:#e8e3db;border-radius:0;margin-top:.5rem}
     .rank-progress-bar{height:100%;background:linear-gradient(90deg,#d4af37,#c5a028);transition:width .6s ease}
     .rank-panel{background:rgba(255,255,255,.82);border:1px solid #e7e0d2;box-shadow:0 1rem 2.5rem rgba(94,77,45,.08)}
@@ -22,7 +22,7 @@
     .rank-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1px;background:rgba(185,154,82,.26);border:1px solid rgba(185,154,82,.28)}
     .rank-card{background:rgba(255,255,255,.78);padding:1.35rem;transition:background .22s,transform .22s}
     .rank-card:hover{background:rgba(255,255,255,.95);transform:translateY(-2px)}
-    .rank-card__name{font-family:"Cormorant Garamond",Georgia,serif;font-size:1.6rem;font-weight:600;color:#191714}
+    .rank-card__name{font-family:"Marcellus",Georgia,serif;font-size:1.6rem;font-weight:600;color:#191714}
     .rank-card__label{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:#9a7d3e;font-weight:700}
     .rank-card__value{font-weight:700;color:#191714}
     .rank-card__status{display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .65rem;font-size:.78rem;font-weight:700;border:1px solid}

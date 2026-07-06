@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -14,7 +14,7 @@
     .reserve-copy{max-width:620px;color:#6f685d;line-height:1.8}
     .reserve-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:rgba(185,154,82,.26);border:1px solid rgba(185,154,82,.28)}
     .reserve-summary__item{background:rgba(255,255,255,.78);padding:1.15rem}
-    .reserve-summary__number{font-family:"Cormorant Garamond",Georgia,serif;font-size:2.4rem;line-height:1;font-weight:600;font-variant-numeric:tabular-nums}
+    .reserve-summary__number{font-family:"Marcellus",Georgia,serif;font-size:2.4rem;line-height:1;font-weight:600;font-variant-numeric:tabular-nums}
     .reserve-panel{background:rgba(255,255,255,.82);border:1px solid #e7e0d2;box-shadow:0 1rem 2.5rem rgba(94,77,45,.08)}
     .reserve-panel__header{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.25rem 1.35rem;border-bottom:1px solid #e7e0d2}
     .reserve-table{width:100%;margin:0}
@@ -41,7 +41,7 @@
     .reserve-booking-link:hover,.reserve-booking-link:focus{background:#2d2618;color:#fff;transform:translateY(-2px)}
     .reserve-modal .modal-content{border:0;border-radius:0;box-shadow:0 1.5rem 4rem rgba(23,20,16,.18)}
     .reserve-modal .modal-header,.reserve-modal .modal-footer{border-color:#e7e0d2;background:#fbf7ef}
-    .reserve-modal-title{font-family:"Cormorant Garamond",Georgia,serif;font-size:2rem;font-weight:600}
+    .reserve-modal-title{font-family:"Marcellus",Georgia,serif;font-size:2rem;font-weight:600}
     .reserve-detail-label{letter-spacing:.12em!important;text-transform:uppercase;font-size:.72rem;font-weight:700;color:#9a7d3e}
     .reserve-detail-item{display:flex;justify-content:space-between;padding:.5rem 0}
     .reserve-detail-item+.reserve-detail-item{border-top:1px solid #eee6d8}
@@ -54,17 +54,17 @@
             <div class="row g-4 align-items-end">
                 <div class="col-lg-8">
                     <div class="reserve-kicker mb-3">Guest Book</div>
-                    <h1 class="reserve-title mb-3">Đặt bàn của tôi</h1>
-                    <p class="reserve-copy mb-0">Theo dõi lịch sử đặt bàn, kiểm tra trạng thái và quản lý các đơn đặt bàn đang chờ xử lý.</p>
+                    <h1 class="reserve-title mb-3">Äáº·t bÃ n cá»§a tÃ´i</h1>
+                    <p class="reserve-copy mb-0">Theo dÃµi lá»‹ch sá»­ Ä‘áº·t bÃ n, kiá»ƒm tra tráº¡ng thÃ¡i vÃ  quáº£n lÃ½ cÃ¡c Ä‘Æ¡n Ä‘áº·t bÃ n Ä‘ang chá» xá»­ lÃ½.</p>
                 </div>
                 <div class="col-lg-4">
                     <div class="reserve-summary">
                         <div class="reserve-summary__item">
-                            <div class="reserve-meta-label mb-2">Tổng</div>
+                            <div class="reserve-meta-label mb-2">Tá»•ng</div>
                             <div class="reserve-summary__number">${fn:length(myReservations)}</div>
                         </div>
                         <div class="reserve-summary__item">
-                            <div class="reserve-meta-label mb-2">Sắp tới</div>
+                            <div class="reserve-meta-label mb-2">Sáº¯p tá»›i</div>
                             <div class="reserve-summary__number">
                                 <c:set var="upcoming" value="0"/>
                                 <c:forEach items="${myReservations}" var="r"><c:if test="${r.status == 'PENDING' || r.status == 'CONFIRMED'}"><c:set var="upcoming" value="${upcoming + 1}"/></c:if></c:forEach>
@@ -72,7 +72,7 @@
                             </div>
                         </div>
                         <div class="reserve-summary__item">
-                            <div class="reserve-meta-label mb-2">Đã hoàn tất</div>
+                            <div class="reserve-meta-label mb-2">ÄÃ£ hoÃ n táº¥t</div>
                             <div class="reserve-summary__number">
                                 <c:set var="done" value="0"/>
                                 <c:forEach items="${myReservations}" var="r"><c:if test="${r.status == 'COMPLETED' || r.status == 'CHECKED_IN'}"><c:set var="done" value="${done + 1}"/></c:if></c:forEach>
@@ -103,11 +103,11 @@
             <div class="reserve-panel__header">
                 <div>
                     <div class="reserve-section-label">Reservations</div>
-                    <h2 id="reserveTableTitle" class="h4 fw-semibold mb-0 mt-1">Lịch sử đặt bàn</h2>
+                    <h2 id="reserveTableTitle" class="h4 fw-semibold mb-0 mt-1">Lá»‹ch sá»­ Ä‘áº·t bÃ n</h2>
                 </div>
                 <a class="reserve-booking-link" href="${pageContext.request.contextPath}/MainController?action=booking">
                     <i class="fa-solid fa-plus"></i>
-                    Đặt bàn mới
+                    Äáº·t bÃ n má»›i
                 </a>
             </div>
 
@@ -115,8 +115,8 @@
                 <c:when test="${empty myReservations}">
                     <div class="reserve-empty">
                         <i class="fa-solid fa-calendar-plus d-block"></i>
-                        <div class="fw-semibold mb-1">Bạn chưa có đặt bàn nào</div>
-                        <div class="small">Hãy đặt bàn ngay để trải nghiệm ẩm thực tại Le Royal.</div>
+                        <div class="fw-semibold mb-1">Báº¡n chÆ°a cÃ³ Ä‘áº·t bÃ n nÃ o</div>
+                        <div class="small">HÃ£y Ä‘áº·t bÃ n ngay Ä‘á»ƒ tráº£i nghiá»‡m áº©m thá»±c táº¡i Le Royal.</div>
                     </div>
                 </c:when>
                 <c:otherwise>
@@ -124,11 +124,11 @@
                         <table class="table align-middle reserve-table">
                             <thead>
                                 <tr>
-                                    <th class="ps-4">Mã</th>
-                                    <th>Thời gian</th>
-                                    <th>Khách</th>
-                                    <th>Trạng thái</th>
-                                    <th class="text-end pe-4">Thao tác</th>
+                                    <th class="ps-4">MÃ£</th>
+                                    <th>Thá»i gian</th>
+                                    <th>KhÃ¡ch</th>
+                                    <th>Tráº¡ng thÃ¡i</th>
+                                    <th class="text-end pe-4">Thao tÃ¡c</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -147,22 +147,22 @@
                                         </td>
                                         <td>
                                             <c:choose>
-                                                <c:when test="${res.status == 'PENDING'}"><span class="reserve-status reserve-status--pending"><i class="fa-regular fa-clock"></i>Chờ xác nhận</span></c:when>
-                                                <c:when test="${res.status == 'CONFIRMED'}"><span class="reserve-status reserve-status--confirmed"><i class="fa-regular fa-circle-check"></i>Đã xác nhận</span></c:when>
-                                                <c:when test="${res.status == 'CHECKED_IN'}"><span class="reserve-status reserve-status--checkedin"><i class="fa-solid fa-check"></i>Đã đến</span></c:when>
-                                                <c:when test="${res.status == 'COMPLETED'}"><span class="reserve-status reserve-status--completed"><i class="fa-solid fa-check-double"></i>Hoàn tất</span></c:when>
-                                                <c:when test="${res.status == 'CANCELLED'}"><span class="reserve-status reserve-status--cancelled"><i class="fa-solid fa-ban"></i>Đã hủy</span></c:when>
+                                                <c:when test="${res.status == 'PENDING'}"><span class="reserve-status reserve-status--pending"><i class="fa-regular fa-clock"></i>Chá» xÃ¡c nháº­n</span></c:when>
+                                                <c:when test="${res.status == 'CONFIRMED'}"><span class="reserve-status reserve-status--confirmed"><i class="fa-regular fa-circle-check"></i>ÄÃ£ xÃ¡c nháº­n</span></c:when>
+                                                <c:when test="${res.status == 'CHECKED_IN'}"><span class="reserve-status reserve-status--checkedin"><i class="fa-solid fa-check"></i>ÄÃ£ Ä‘áº¿n</span></c:when>
+                                                <c:when test="${res.status == 'COMPLETED'}"><span class="reserve-status reserve-status--completed"><i class="fa-solid fa-check-double"></i>HoÃ n táº¥t</span></c:when>
+                                                <c:when test="${res.status == 'CANCELLED'}"><span class="reserve-status reserve-status--cancelled"><i class="fa-solid fa-ban"></i>ÄÃ£ há»§y</span></c:when>
                                             </c:choose>
                                         </td>
                                         <td class="text-end pe-4">
                                             <button class="reserve-action" data-bs-toggle="modal" data-bs-target="#detailsModal${res.id}">
-                                                <i class="fa-regular fa-eye"></i>Chi tiết
+                                                <i class="fa-regular fa-eye"></i>Chi tiáº¿t
                                             </button>
                                             <c:if test="${res.status == 'PENDING' || res.status == 'CONFIRMED'}">
-                                                <form action="${pageContext.request.contextPath}/customer/reservations" method="POST" class="d-inline" onsubmit="return confirm('Bạn có chắc muốn hủy đặt bàn này? Hành động này không thể hoàn tác.');">
+                                                <form action="${pageContext.request.contextPath}/customer/reservations" method="POST" class="d-inline" onsubmit="return confirm('Báº¡n cÃ³ cháº¯c muá»‘n há»§y Ä‘áº·t bÃ n nÃ y? HÃ nh Ä‘á»™ng nÃ y khÃ´ng thá»ƒ hoÃ n tÃ¡c.');">
                                                     <input type="hidden" name="action" value="cancel">
                                                     <input type="hidden" name="id" value="${res.id}">
-                                                    <button type="submit" class="reserve-action reserve-action--danger"><i class="fa-solid fa-ban"></i>Hủy</button>
+                                                    <button type="submit" class="reserve-action reserve-action--danger"><i class="fa-solid fa-ban"></i>Há»§y</button>
                                                 </form>
                                             </c:if>
                                         </td>
@@ -184,46 +184,46 @@
                 <div class="modal-header">
                     <div>
                         <div class="reserve-kicker">Reservation</div>
-                        <h5 id="detailsModalTitle${res.id}" class="reserve-modal-title modal-title mb-0">Đặt bàn #${res.id}</h5>
+                        <h5 id="detailsModalTitle${res.id}" class="reserve-modal-title modal-title mb-0">Äáº·t bÃ n #${res.id}</h5>
                     </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="ÄÃ³ng"></button>
                 </div>
                 <div class="modal-body p-4">
-                    <div class="reserve-detail-label mb-2"><i class="fa-solid fa-chair me-2"></i>Bàn</div>
+                    <div class="reserve-detail-label mb-2"><i class="fa-solid fa-chair me-2"></i>BÃ n</div>
                     <c:forEach items="${res.reservationTables}" var="rt">
                         <div class="reserve-detail-item">
-                            <span>Bàn ${rt.diningTable.tableCode} <span class="text-muted small">(${rt.diningTable.capacity} chỗ)</span></span>
-                            <span class="fw-bold"><fmt:formatNumber value="${rt.diningTable.basePrice}" pattern="#,##0"/>đ</span>
+                            <span>BÃ n ${rt.diningTable.tableCode} <span class="text-muted small">(${rt.diningTable.capacity} chá»—)</span></span>
+                            <span class="fw-bold"><fmt:formatNumber value="${rt.diningTable.basePrice}" pattern="#,##0"/>Ä‘</span>
                         </div>
                     </c:forEach>
                     <c:if test="${empty res.reservationTables}">
-                        <div class="text-muted small mb-3">Chưa xếp bàn.</div>
+                        <div class="text-muted small mb-3">ChÆ°a xáº¿p bÃ n.</div>
                     </c:if>
 
-                    <div class="reserve-detail-label mt-4 mb-2"><i class="fa-solid fa-utensils me-2"></i>Món đã gọi</div>
+                    <div class="reserve-detail-label mt-4 mb-2"><i class="fa-solid fa-utensils me-2"></i>MÃ³n Ä‘Ã£ gá»i</div>
                     <c:forEach items="${res.reservationMenuItems}" var="rmi">
                         <div class="reserve-detail-item">
                             <span>${not empty rmi.menuItem ? (not empty rmi.menuItem.itemNameVi ? rmi.menuItem.itemNameVi : rmi.menuItem.itemName) : (not empty rmi.menuSet.setNameVi ? rmi.menuSet.setNameVi : rmi.menuSet.setName)} <span class="badge bg-secondary ms-1">x${rmi.quantity}</span></span>
-                            <span class="fw-bold"><fmt:formatNumber value="${rmi.unitPrice * rmi.quantity}" pattern="#,##0"/>đ</span>
+                            <span class="fw-bold"><fmt:formatNumber value="${rmi.unitPrice * rmi.quantity}" pattern="#,##0"/>Ä‘</span>
                         </div>
                     </c:forEach>
                     <c:if test="${empty res.reservationMenuItems}">
-                        <div class="text-muted small mb-3">Chưa gọi món.</div>
+                        <div class="text-muted small mb-3">ChÆ°a gá»i mÃ³n.</div>
                     </c:if>
 
-                    <div class="reserve-detail-label mt-4 mb-2"><i class="fa-solid fa-star me-2"></i>Dịch vụ thêm</div>
+                    <div class="reserve-detail-label mt-4 mb-2"><i class="fa-solid fa-star me-2"></i>Dá»‹ch vá»¥ thÃªm</div>
                     <c:forEach items="${res.reservationAddons}" var="ra">
                         <div class="reserve-detail-item">
                             <span>${ra.addonService.serviceName} <span class="badge bg-secondary ms-1">x${ra.quantity}</span></span>
-                            <span class="fw-bold"><fmt:formatNumber value="${ra.unitPrice * ra.quantity}" pattern="#,##0"/>đ</span>
+                            <span class="fw-bold"><fmt:formatNumber value="${ra.unitPrice * ra.quantity}" pattern="#,##0"/>Ä‘</span>
                         </div>
                     </c:forEach>
                     <c:if test="${empty res.reservationAddons}">
-                        <div class="text-muted small mb-3">Không có dịch vụ thêm.</div>
+                        <div class="text-muted small mb-3">KhÃ´ng cÃ³ dá»‹ch vá»¥ thÃªm.</div>
                     </c:if>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-light border" data-bs-dismiss="modal">ÄÃ³ng</button>
                 </div>
             </div>
         </div>
