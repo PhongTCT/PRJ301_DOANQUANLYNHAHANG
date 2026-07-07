@@ -20,235 +20,238 @@
 
     <main class="flex-grow-1">
         <div class="admin-shell">
-            <section id="adminWorkspace" class="card mb-4 d-none">
-                <div class="card-body p-0">
-                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 p-3 border-bottom">
-                        <div>
-                            <div class="admin-section-label">Workspace</div>
-                            <h2 id="adminWorkspaceTitle" class="h4 mb-0">Restaurant admin</h2>
-                        </div>
-                        <div class="d-flex gap-2">
-                            <a class="btn btn-sm btn-outline-secondary" href="${pageContext.request.contextPath}/admin/">Dashboard</a>
-                            <a id="adminWorkspaceOpen" class="btn btn-sm btn-outline-secondary" href="#" target="_blank" rel="noopener">Open full page</a>
-                        </div>
-                    </div>
-                    <iframe id="adminWorkspaceFrame" class="admin-workspace-frame" title="Restaurant admin workspace"></iframe>
+
+            <div class="admin-dash-header">
+                <div class="admin-dash-header__text">
+                    <div class="admin-kicker">Le Royal operations</div>
+                    <h1 class="admin-title">Admin Dashboard</h1>
+                    <p class="admin-copy">Quản lý đặt bàn, hóa đơn, khách hàng và trải nghiệm nhà hàng từ một màn hình gọn hơn.</p>
                 </div>
+                <div class="admin-dash-header__actions">
+                    <a class="btn btn-primary" href="${pageContext.request.contextPath}/admin/quick-bill">
+                        <i class="fa-solid fa-bolt me-2"></i>Quick Bill
+                    </a>
+                    <a class="btn btn-outline-primary" href="${pageContext.request.contextPath}/admin/reservations">
+                        <i class="fa-solid fa-clipboard-list me-2"></i>Reservations
+                    </a>
+                </div>
+            </div>
+
+            <section id="adminWorkspace" class="admin-workspace-panel d-none mb-4">
+                <div class="admin-workspace-panel__header">
+                    <div>
+                        <div class="admin-section-label">Workspace</div>
+                        <h2 id="adminWorkspaceTitle" class="h4 mb-0">Restaurant admin</h2>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-outline-secondary" id="adminWorkspaceClose" type="button">
+                            <i class="fa-solid fa-xmark me-1"></i>Close
+                        </button>
+                        <a id="adminWorkspaceOpen" class="btn btn-sm btn-outline-secondary" href="#" target="_blank" rel="noopener">
+                            <i class="fa-solid fa-arrow-up-right-from-square me-1"></i>Open
+                        </a>
+                    </div>
+                </div>
+                <iframe id="adminWorkspaceFrame" class="admin-workspace-frame" title="Restaurant admin workspace"></iframe>
             </section>
 
             <div id="dashboardHome">
-            <section class="admin-dashboard-hero mb-4">
-                <div class="admin-dashboard-hero__content">
-                    <div class="admin-kicker">Le Royal operations</div>
-                    <h1 class="admin-title">Admin Dashboard</h1>
-                    <p class="admin-copy mb-4">Quản lý đặt bàn, hóa đơn, khách hàng và trải nghiệm nhà hàng từ một màn hình gọn hơn.</p>
-                    <div class="d-flex flex-wrap gap-2">
-                        <a class="btn btn-primary" href="${pageContext.request.contextPath}/admin/quick-bill">
-                            <i class="fa-solid fa-bolt me-2"></i>Quick Bill
-                        </a>
-                        <a class="btn btn-outline-primary" href="${pageContext.request.contextPath}/admin/reservations">
-                            <i class="fa-solid fa-clipboard-list me-2"></i>Reservations
-                        </a>
-                        <a class="btn btn-outline-primary" href="${pageContext.request.contextPath}/admin/reports">
-                            <i class="fa-solid fa-chart-line me-2"></i>Reports
-                        </a>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="metric h-100">
+                            <div class="admin-section-label">Paid revenue</div>
+                            <div class="fs-4 fw-bold"><fmt:formatNumber value="${summary[0]}" pattern="#,##0"/>đ</div>
+                            <div class="text-muted small mt-2">Tổng doanh thu từ hóa đơn đã thanh toán.</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="metric h-100">
+                            <div class="admin-section-label">Today's bookings</div>
+                            <div class="fs-4 fw-bold">${todayReservations}</div>
+                            <div class="text-muted small mt-2">Số reservation trong ngày hôm nay.</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="metric h-100">
+                            <div class="admin-section-label">Need attention</div>
+                            <div class="fs-4 fw-bold">${noShowCandidates}</div>
+                            <div class="text-muted small mt-2">Booking có thể cần kiểm tra no-show.</div>
+                        </div>
                     </div>
                 </div>
-                <div class="admin-dashboard-hero__media" aria-hidden="true">
-                    <img src="${pageContext.request.contextPath}/assets/img/le-royal/Grand Degustation Set.webp" alt="">
-                </div>
-            </section>
 
-            <div class="row g-3 mb-4">
-                <div class="col-md-4">
-                    <div class="metric h-100">
-                        <div class="admin-section-label">Paid revenue</div>
-                        <div class="fs-4 fw-bold"><fmt:formatNumber value="${summary[0]}" pattern="#,##0"/>đ</div>
-                        <div class="text-muted small mt-2">Tổng doanh thu từ hóa đơn đã thanh toán.</div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="metric h-100">
-                        <div class="admin-section-label">Today's bookings</div>
-                        <div class="fs-4 fw-bold">${todayReservations}</div>
-                        <div class="text-muted small mt-2">Số reservation trong ngày hôm nay.</div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="metric h-100">
-                        <div class="admin-section-label">Need attention</div>
-                        <div class="fs-4 fw-bold">${noShowCandidates}</div>
-                        <div class="text-muted small mt-2">Booking có thể cần kiểm tra no-show.</div>
-                    </div>
-                </div>
-            </div>
-
-            <section class="card mb-4">
-                <div class="card-body p-4">
-                    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
-                        <div>
-                            <div class="admin-section-label">Restaurant setup</div>
-                            <h2 class="h4 mb-0">Quản lý món, menu, bàn và dịch vụ thêm</h2>
-                        </div>
-                        <a class="btn btn-sm btn-outline-secondary" href="${pageContext.request.contextPath}/admin/?workspace=areas" data-workspace="areas" data-workspace-url="${pageContext.request.contextPath}/MainController?action=adminAreas&embed=1">Restaurant admin</a>
-                    </div>
-                    <div class="row g-3">
-                        <div class="col-sm-6 col-xl-3">
-                            <a class="admin-action-tile" href="${pageContext.request.contextPath}/admin/?workspace=menu-items" data-workspace="menu-items" data-workspace-url="${pageContext.request.contextPath}/MainController?action=adminMenuItems&embed=1">
-                                <span class="admin-action-icon"><i class="fa-solid fa-bowl-food"></i></span>
-                                <span><strong>Menu items</strong><small>Thêm, sửa, ẩn hoặc hiện món ăn.</small></span>
-                            </a>
-                        </div>
-                        <div class="col-sm-6 col-xl-3">
-                            <a class="admin-action-tile" href="${pageContext.request.contextPath}/admin/?workspace=menu-sets" data-workspace="menu-sets" data-workspace-url="${pageContext.request.contextPath}/MainController?action=adminMenuSets&embed=1">
-                                <span class="admin-action-icon"><i class="fa-solid fa-layer-group"></i></span>
-                                <span><strong>Set menus</strong><small>Xây tasting menu theo course.</small></span>
-                            </a>
-                        </div>
-                        <div class="col-sm-6 col-xl-3">
-                            <a class="admin-action-tile" href="${pageContext.request.contextPath}/admin/?workspace=tables" data-workspace="tables" data-workspace-url="${pageContext.request.contextPath}/MainController?action=adminTables&embed=1">
-                                <span class="admin-action-icon"><i class="fa-solid fa-chair"></i></span>
-                                <span><strong>Dining tables</strong><small>Quản lý bàn, ảnh và trạng thái.</small></span>
-                            </a>
-                        </div>
-                        <div class="col-sm-6 col-xl-3">
-                            <a class="admin-action-tile" href="${pageContext.request.contextPath}/admin/?workspace=addon-services" data-workspace="addon-services" data-workspace-url="${pageContext.request.contextPath}/MainController?action=adminAddonServices&embed=1">
-                                <span class="admin-action-icon"><i class="fa-solid fa-music"></i></span>
-                                <span><strong>Add-on services</strong><small>Hoa, đàn hát và dịch vụ đặt thêm.</small></span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <div class="row g-4">
-                <div class="col-xl-8">
-                    <section class="card h-100">
-                        <div class="card-body p-4">
-                            <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
-                                <div>
-                                    <div class="admin-section-label">Work queue</div>
-                                    <h2 class="h4 mb-0">Thao tác thường dùng</h2>
-                                </div>
-                                <a class="btn btn-sm btn-outline-secondary" href="${pageContext.request.contextPath}/">Back to site</a>
-                            </div>
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <a class="admin-action-tile" href="${pageContext.request.contextPath}/admin/walkin">
-                                        <span class="admin-action-icon"><i class="fa-solid fa-cash-register"></i></span>
-                                        <span><strong>Walk-in POS</strong><small>Tạo bàn mới và nhận khách tại quầy.</small></span>
-                                    </a>
-                                </div>
-                                <div class="col-md-6">
-                                    <a class="admin-action-tile" href="${pageContext.request.contextPath}/admin/timeline">
-                                        <span class="admin-action-icon"><i class="fa-solid fa-timeline"></i></span>
-                                        <span><strong>Timeline</strong><small>Theo dõi lịch phục vụ theo khung giờ.</small></span>
-                                    </a>
-                                </div>
-                                <div class="col-md-6">
-                                    <a class="admin-action-tile" href="${pageContext.request.contextPath}/admin/invoices">
-                                        <span class="admin-action-icon"><i class="fa-solid fa-file-invoice"></i></span>
-                                        <span><strong>Invoices</strong><small>Tra cứu hóa đơn, trạng thái thanh toán.</small></span>
-                                    </a>
-                                </div>
-                                <div class="col-md-6">
-                                    <a class="admin-action-tile" href="${pageContext.request.contextPath}/admin/?workspace=menu-sets" data-workspace="menu-sets" data-workspace-url="${pageContext.request.contextPath}/MainController?action=adminMenuSets&embed=1">
-                                        <span class="admin-action-icon"><i class="fa-solid fa-utensils"></i></span>
-                                        <span><strong>Menu sets</strong><small>Xây tasting menu theo course.</small></span>
-                                    </a>
-                                </div>
+                <section class="card mb-4">
+                    <div class="card-body p-4">
+                        <div class="admin-section-header">
+                            <div>
+                                <div class="admin-section-label">Restaurant setup</div>
+                                <h2 class="h4 mb-0">Quản lý món, menu, bàn và dịch vụ thêm</h2>
                             </div>
                         </div>
-                    </section>
-                </div>
-
-                <div class="col-xl-4">
-                    <section class="card h-100">
-                        <div class="card-body p-4">
-                            <div class="admin-section-label">Management</div>
-                            <h2 class="h4 mb-3">Quản trị nhanh</h2>
-                            <div class="list-group list-group-flush admin-link-list">
-                                <a class="list-group-item" href="${pageContext.request.contextPath}/admin/users"><i class="fa-solid fa-users"></i><span>Users</span></a>
-                                <a class="list-group-item" href="${pageContext.request.contextPath}/admin/vouchers"><i class="fa-solid fa-ticket"></i><span>Vouchers</span></a>
-                                <a class="list-group-item" href="${pageContext.request.contextPath}/admin/reviews"><i class="fa-solid fa-star-half-stroke"></i><span>Reviews</span></a>
-                                <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
-                                    <a class="list-group-item" href="${pageContext.request.contextPath}/admin/?workspace=tables" data-workspace="tables" data-workspace-url="${pageContext.request.contextPath}/MainController?action=adminTables&embed=1"><i class="fa-solid fa-chair"></i><span>Tables</span></a>
-                                    <a class="list-group-item" href="${pageContext.request.contextPath}/admin/surcharges"><i class="fa-solid fa-calendar-day"></i><span>Holidays</span></a>
-                                    <a class="list-group-item" href="${pageContext.request.contextPath}/admin/rank-config"><i class="fa-solid fa-ranking-star"></i><span>Rank Config</span></a>
-                                </c:if>
+                        <div class="row g-3">
+                            <div class="col-sm-6 col-xl-3">
+                                <a class="admin-action-tile" href="${pageContext.request.contextPath}/admin/?workspace=menu-items" data-workspace="menu-items" data-workspace-url="${pageContext.request.contextPath}/MainController?action=adminMenuItems&embed=1">
+                                    <span class="admin-action-icon"><i class="fa-solid fa-bowl-food"></i></span>
+                                    <span><strong>Menu items</strong><small>Thêm, sửa, ẩn hoặc hiện món ăn.</small></span>
+                                </a>
+                            </div>
+                            <div class="col-sm-6 col-xl-3">
+                                <a class="admin-action-tile" href="${pageContext.request.contextPath}/admin/?workspace=menu-sets" data-workspace="menu-sets" data-workspace-url="${pageContext.request.contextPath}/MainController?action=adminMenuSets&embed=1">
+                                    <span class="admin-action-icon"><i class="fa-solid fa-layer-group"></i></span>
+                                    <span><strong>Set menus</strong><small>Xây tasting menu theo course.</small></span>
+                                </a>
+                            </div>
+                            <div class="col-sm-6 col-xl-3">
+                                <a class="admin-action-tile" href="${pageContext.request.contextPath}/admin/?workspace=tables" data-workspace="tables" data-workspace-url="${pageContext.request.contextPath}/MainController?action=adminTables&embed=1">
+                                    <span class="admin-action-icon"><i class="fa-solid fa-chair"></i></span>
+                                    <span><strong>Dining tables</strong><small>Quản lý bàn, ảnh và trạng thái.</small></span>
+                                </a>
+                            </div>
+                            <div class="col-sm-6 col-xl-3">
+                                <a class="admin-action-tile" href="${pageContext.request.contextPath}/admin/?workspace=addon-services" data-workspace="addon-services" data-workspace-url="${pageContext.request.contextPath}/MainController?action=adminAddonServices&embed=1">
+                                    <span class="admin-action-icon"><i class="fa-solid fa-music"></i></span>
+                                    <span><strong>Add-on services</strong><small>Hoa, đàn hát và dịch vụ đặt thêm.</small></span>
+                                </a>
                             </div>
                         </div>
-                    </section>
+                    </div>
+                </section>
+
+                <div class="row g-4">
+                    <div class="col-xl-8">
+                        <section class="card h-100">
+                            <div class="card-body p-4">
+                                <div class="admin-section-header">
+                                    <div>
+                                        <div class="admin-section-label">Work queue</div>
+                                        <h2 class="h4 mb-0">Thao tác thường dùng</h2>
+                                    </div>
+                                    <a class="btn btn-sm btn-outline-secondary" href="${pageContext.request.contextPath}/"><i class="fa-solid fa-arrow-left me-1"></i>Back to site</a>
+                                </div>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <a class="admin-action-tile" href="${pageContext.request.contextPath}/admin/walkin">
+                                            <span class="admin-action-icon"><i class="fa-solid fa-cash-register"></i></span>
+                                            <span><strong>Walk-in POS</strong><small>Tạo bàn mới và nhận khách tại quầy.</small></span>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a class="admin-action-tile" href="${pageContext.request.contextPath}/admin/timeline">
+                                            <span class="admin-action-icon"><i class="fa-solid fa-timeline"></i></span>
+                                            <span><strong>Timeline</strong><small>Theo dõi lịch phục vụ theo khung giờ.</small></span>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a class="admin-action-tile" href="${pageContext.request.contextPath}/admin/invoices">
+                                            <span class="admin-action-icon"><i class="fa-solid fa-file-invoice"></i></span>
+                                            <span><strong>Invoices</strong><small>Tra cứu hóa đơn, trạng thái thanh toán.</small></span>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a class="admin-action-tile" href="${pageContext.request.contextPath}/admin/?workspace=menu-sets" data-workspace="menu-sets" data-workspace-url="${pageContext.request.contextPath}/MainController?action=adminMenuSets&embed=1">
+                                            <span class="admin-action-icon"><i class="fa-solid fa-utensils"></i></span>
+                                            <span><strong>Menu sets</strong><small>Xây tasting menu theo course.</small></span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="col-xl-4">
+                        <section class="card h-100">
+                            <div class="card-body p-4">
+                                <div class="admin-section-label">Management</div>
+                                <h2 class="h4 mb-3">Quản trị nhanh</h2>
+                                <div class="list-group list-group-flush admin-link-list">
+                                    <a class="list-group-item" href="${pageContext.request.contextPath}/admin/users"><i class="fa-solid fa-users"></i><span>Users</span></a>
+                                    <a class="list-group-item" href="${pageContext.request.contextPath}/admin/vouchers"><i class="fa-solid fa-ticket"></i><span>Vouchers</span></a>
+                                    <a class="list-group-item" href="${pageContext.request.contextPath}/admin/reviews"><i class="fa-solid fa-star-half-stroke"></i><span>Reviews</span></a>
+                                    <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
+                                        <a class="list-group-item" href="${pageContext.request.contextPath}/admin/?workspace=tables" data-workspace="tables" data-workspace-url="${pageContext.request.contextPath}/MainController?action=adminTables&embed=1"><i class="fa-solid fa-chair"></i><span>Tables</span></a>
+                                        <a class="list-group-item" href="${pageContext.request.contextPath}/admin/surcharges"><i class="fa-solid fa-calendar-day"></i><span>Holidays</span></a>
+                                        <a class="list-group-item" href="${pageContext.request.contextPath}/admin/rank-config"><i class="fa-solid fa-ranking-star"></i><span>Rank Config</span></a>
+                                    </c:if>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
                 </div>
-            </div>
             </div>
         </div>
     </main>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    (function () {
-        var workspace = document.getElementById('adminWorkspace');
-        var frame = document.getElementById('adminWorkspaceFrame');
-        var title = document.getElementById('adminWorkspaceTitle');
-        var openLink = document.getElementById('adminWorkspaceOpen');
-        var dashboardHome = document.getElementById('dashboardHome');
-        if (!workspace || !frame) {
-            return;
-        }
+(function () {
+    var workspace = document.getElementById('adminWorkspace');
+    var frame = document.getElementById('adminWorkspaceFrame');
+    var title = document.getElementById('adminWorkspaceTitle');
+    var openLink = document.getElementById('adminWorkspaceOpen');
+    var closeBtn = document.getElementById('adminWorkspaceClose');
+    var dashboardHome = document.getElementById('dashboardHome');
+    if (!workspace || !frame) return;
 
-        var labels = {
-            'menu-items': 'Menu items',
-            'menu-sets': 'Set menus',
-            'categories': 'Categories',
-            'tables': 'Dining tables',
-            'addon-services': 'Add-on services',
-            'areas': 'Areas & rooms'
-        };
+    var labels = {
+        'menu-items': 'Menu items',
+        'menu-sets': 'Set menus',
+        'categories': 'Categories',
+        'tables': 'Dining tables',
+        'addon-services': 'Add-on services',
+        'areas': 'Areas & rooms'
+    };
 
-        function setActive(key) {
-            document.querySelectorAll('[data-workspace]').forEach(function (link) {
-                link.classList.toggle('active', link.getAttribute('data-workspace') === key);
-            });
-        }
-
-        function openWorkspace(key, url, pushState) {
-            if (!url) {
-                return;
-            }
-            workspace.classList.remove('d-none');
-            if (dashboardHome) {
-                dashboardHome.classList.add('d-none');
-            }
-            frame.src = url;
-            if (title) {
-                title.textContent = labels[key] || 'Restaurant admin';
-            }
-            if (openLink) {
-                openLink.href = url.replace(/[?&]embed=1/, '');
-            }
-            setActive(key);
-            if (pushState && window.history) {
-                window.history.replaceState(null, '', '${pageContext.request.contextPath}/admin/?workspace=' + encodeURIComponent(key));
-            }
-            workspace.scrollIntoView({behavior: 'smooth', block: 'start'});
-        }
-
-        document.querySelectorAll('[data-workspace-url]').forEach(function (link) {
-            link.addEventListener('click', function (event) {
-                event.preventDefault();
-                openWorkspace(link.getAttribute('data-workspace'), link.getAttribute('data-workspace-url'), true);
-            });
+    function setActive(key) {
+        document.querySelectorAll('[data-workspace]').forEach(function (link) {
+            link.classList.toggle('active', link.getAttribute('data-workspace') === key);
         });
+    }
 
-        var current = new URLSearchParams(window.location.search).get('workspace');
-        if (current) {
-            var initial = document.querySelector('[data-workspace="' + current + '"][data-workspace-url]');
-            if (initial) {
-                openWorkspace(current, initial.getAttribute('data-workspace-url'), false);
-            }
+    function openWorkspace(key, url, pushState) {
+        if (!url) return;
+        workspace.classList.remove('d-none');
+        if (dashboardHome) dashboardHome.classList.add('d-none');
+        frame.src = url;
+        if (title) title.textContent = labels[key] || 'Restaurant admin';
+        if (openLink) openLink.href = url.replace(/[?&]embed=1/, '');
+        setActive(key);
+        if (pushState && window.history) {
+            window.history.replaceState(null, '', '${pageContext.request.contextPath}/admin/?workspace=' + encodeURIComponent(key));
         }
-    })();
+        workspace.scrollIntoView({behavior: 'smooth', block: 'start'});
+    }
+
+    function closeWorkspace() {
+        workspace.classList.add('d-none');
+        if (dashboardHome) dashboardHome.classList.remove('d-none');
+        frame.src = '';
+        if (window.history) {
+            window.history.replaceState(null, '', '${pageContext.request.contextPath}/admin/');
+        }
+        document.querySelectorAll('[data-workspace]').forEach(function (link) {
+            link.classList.remove('active');
+        });
+    }
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeWorkspace);
+    }
+
+    document.querySelectorAll('[data-workspace-url]').forEach(function (link) {
+        link.addEventListener('click', function (event) {
+            event.preventDefault();
+            openWorkspace(link.getAttribute('data-workspace'), link.getAttribute('data-workspace-url'), true);
+        });
+    });
+
+    var current = new URLSearchParams(window.location.search).get('workspace');
+    if (current) {
+        var initial = document.querySelector('[data-workspace="' + current + '"][data-workspace-url]');
+        if (initial) {
+            openWorkspace(current, initial.getAttribute('data-workspace-url'), false);
+        }
+    }
+})();
 </script>
 </body>
 </html>

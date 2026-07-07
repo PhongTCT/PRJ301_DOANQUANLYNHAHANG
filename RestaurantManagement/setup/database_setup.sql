@@ -157,9 +157,11 @@ CREATE TABLE dining_table (
     base_price DECIMAL(10,0) NOT NULL DEFAULT 0 CHECK (base_price >= 0),
     image_url VARCHAR(500) NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'AVAILABLE'
-        CHECK (status IN ('AVAILABLE','RESERVED','OCCUPIED')),
+        CHECK (status IN ('AVAILABLE','RESERVED','OCCUPIED','HOLD')),
     version INT NOT NULL DEFAULT 0 CHECK (version >= 0),
-    is_active BIT NOT NULL DEFAULT 1
+    is_active BIT NOT NULL DEFAULT 1,
+    hold_expiration DATETIME2 NULL,
+    hold_user_id BIGINT NULL
 );
 
 CREATE TABLE menu_category (

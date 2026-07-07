@@ -70,6 +70,7 @@ body.admin-royal .category-tabs::-webkit-scrollbar {
 body.admin-royal {
     margin: 0;
     min-height: 100vh;
+    overflow-x: hidden;
     background:
         radial-gradient(circle at top right, rgba(185, 154, 82, 0.13), transparent 34rem),
         linear-gradient(180deg, var(--admin-paper) 0%, var(--admin-wash) 100%) !important;
@@ -96,12 +97,36 @@ body.admin-royal main.flex-grow-1,
 body.admin-royal > .d-flex > .flex-grow-1,
 body.admin-royal .container-fluid > .d-flex > .flex-grow-1 {
     min-width: 0;
+    max-width: 100%;
+    overflow-x: hidden;
     padding: 2rem !important;
 }
 
 .admin-shell {
     max-width: 1280px;
     margin: 0 auto;
+}
+
+.admin-dash-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1.5rem;
+    padding: 0.5rem 0 1.5rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid var(--admin-line);
+}
+
+.admin-dash-header__text {
+    flex: 1;
+    min-width: 280px;
+}
+
+.admin-dash-header__actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
 }
 
 .admin-hero {
@@ -120,6 +145,15 @@ body.admin-royal .container-fluid > .d-flex > .flex-grow-1 > .d-flex.justify-con
     gap: 1.5rem;
     padding: 1.25rem 0 1.5rem;
     margin-bottom: 0.5rem !important;
+}
+
+.admin-section-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+    margin-bottom: 1rem;
 }
 
 .admin-kicker,
@@ -141,7 +175,7 @@ body.admin-royal .flex-grow-1.p-5 > .d-flex h2,
 body.admin-royal .flex-grow-1.p-5 > h2 {
     margin: 0.3rem 0 0.4rem;
     font-family: "Marcellus", Georgia, serif;
-    font-size: clamp(2.45rem, 4.6vw, 4.45rem);
+    font-size: clamp(2rem, 3.5vw, 3.2rem);
     font-weight: 600 !important;
     line-height: 0.95;
     color: var(--admin-ink);
@@ -376,34 +410,6 @@ body.admin-royal .main-content {
     padding: 1.25rem !important;
 }
 
-.admin-dashboard-hero {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(280px, 36%);
-    min-height: 340px;
-    overflow: hidden;
-    border: 1px solid var(--admin-line);
-    background: rgba(255, 255, 255, 0.82);
-    box-shadow: 0 1rem 2.5rem rgba(94, 77, 45, 0.09);
-}
-
-.admin-dashboard-hero__content {
-    align-self: end;
-    padding: clamp(1.5rem, 3vw, 2.5rem);
-}
-
-.admin-dashboard-hero__media {
-    min-height: 100%;
-    border-left: 1px solid var(--admin-line);
-    background: #171410;
-}
-
-.admin-dashboard-hero__media img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0.86;
-}
-
 .admin-action-tile,
 .admin-link-list .list-group-item {
     display: flex;
@@ -481,15 +487,38 @@ body.admin-royal .main-content {
     color: #917337;
 }
 
+.admin-workspace-panel {
+    border: 1px solid var(--admin-line);
+    background: var(--admin-panel);
+    box-shadow: 0 1rem 2.5rem rgba(94, 77, 45, 0.09);
+}
+
+.admin-workspace-panel__header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--admin-line);
+    background: #fbf7ef;
+}
+
 .admin-workspace-frame {
     width: 100%;
-    min-height: calc(100vh - 125px);
+    min-height: calc(100vh - 200px);
     border: 0;
     background: #fbfaf7;
 }
 
 body.admin-royal.admin-embed {
     background: #fbfaf7 !important;
+    overflow-x: visible;
+}
+
+body.admin-royal.admin-embed > .d-flex > .flex-grow-1 {
+    padding: 0 !important;
+    overflow-x: visible;
 }
 
 body.admin-royal.admin-embed main.container,
@@ -514,13 +543,12 @@ body.admin-royal.admin-embed footer {
         grid-template-columns: 1fr;
     }
 
-    .admin-dashboard-hero {
-        grid-template-columns: 1fr;
+    .admin-dash-header {
+        flex-direction: column;
+        align-items: flex-start;
     }
 
-    .admin-dashboard-hero__media {
-        min-height: 220px;
-        border-left: 0;
-        border-top: 1px solid var(--admin-line);
+    .admin-workspace-frame {
+        min-height: calc(100vh - 250px);
     }
 }
