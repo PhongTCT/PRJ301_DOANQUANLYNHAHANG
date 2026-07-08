@@ -21,22 +21,6 @@
     <main class="flex-grow-1">
         <div class="admin-shell">
 
-            <div class="admin-dash-header">
-                <div class="admin-dash-header__text">
-                    <div class="admin-kicker">Le Royal operations</div>
-                    <h1 class="admin-title">Admin Dashboard</h1>
-                    <p class="admin-copy">Quản lý đặt bàn, hóa đơn, khách hàng và trải nghiệm nhà hàng từ một màn hình gọn hơn.</p>
-                </div>
-                <div class="admin-dash-header__actions">
-                    <a class="btn btn-primary" href="${pageContext.request.contextPath}/admin/quick-bill">
-                        <i class="fa-solid fa-bolt me-2"></i>Quick Bill
-                    </a>
-                    <a class="btn btn-outline-primary" href="${pageContext.request.contextPath}/admin/reservations">
-                        <i class="fa-solid fa-clipboard-list me-2"></i>Reservations
-                    </a>
-                </div>
-            </div>
-
             <section id="adminWorkspace" class="admin-workspace-panel d-none mb-4">
                 <div class="admin-workspace-panel__header">
                     <div>
@@ -80,42 +64,44 @@
                     </div>
                 </div>
 
-                <section class="card mb-4">
-                    <div class="card-body p-4">
-                        <div class="admin-section-header">
-                            <div>
-                                <div class="admin-section-label">Restaurant setup</div>
-                                <h2 class="h4 mb-0">Quản lý món, menu, bàn và dịch vụ thêm</h2>
+                <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
+                    <section class="card mb-4">
+                        <div class="card-body p-4">
+                            <div class="admin-section-header">
+                                <div>
+                                    <div class="admin-section-label">Restaurant setup</div>
+                                    <h2 class="h4 mb-0">Quản lý món, menu, bàn và dịch vụ thêm</h2>
+                                </div>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-sm-6 col-xl-3">
+                                    <a class="admin-action-tile" href="${pageContext.request.contextPath}/MainController?action=adminMenuItems">
+                                        <span class="admin-action-icon"><i class="fa-solid fa-bowl-food"></i></span>
+                                        <span><strong>Menu items</strong><small>Thêm, sửa, ẩn hoặc hiện món ăn.</small></span>
+                                    </a>
+                                </div>
+                                <div class="col-sm-6 col-xl-3">
+                                    <a class="admin-action-tile" href="${pageContext.request.contextPath}/MainController?action=adminMenuSets">
+                                        <span class="admin-action-icon"><i class="fa-solid fa-layer-group"></i></span>
+                                        <span><strong>Set menus</strong><small>Xây tasting menu theo course.</small></span>
+                                    </a>
+                                </div>
+                                <div class="col-sm-6 col-xl-3">
+                                    <a class="admin-action-tile" href="${pageContext.request.contextPath}/MainController?action=adminTables">
+                                        <span class="admin-action-icon"><i class="fa-solid fa-chair"></i></span>
+                                        <span><strong>Dining tables</strong><small>Quản lý bàn, ảnh và trạng thái.</small></span>
+                                    </a>
+                                </div>
+                                <div class="col-sm-6 col-xl-3">
+                                    <a class="admin-action-tile" href="${pageContext.request.contextPath}/MainController?action=adminAddonServices">
+                                        <span class="admin-action-icon"><i class="fa-solid fa-music"></i></span>
+                                        <span><strong>Add-on services</strong><small>Hoa, đàn hát và dịch vụ đặt thêm.</small></span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                        <div class="row g-3">
-                            <div class="col-sm-6 col-xl-3">
-                                <a class="admin-action-tile" href="${pageContext.request.contextPath}/admin/?workspace=menu-items" data-workspace="menu-items" data-workspace-url="${pageContext.request.contextPath}/MainController?action=adminMenuItems&embed=1">
-                                    <span class="admin-action-icon"><i class="fa-solid fa-bowl-food"></i></span>
-                                    <span><strong>Menu items</strong><small>Thêm, sửa, ẩn hoặc hiện món ăn.</small></span>
-                                </a>
-                            </div>
-                            <div class="col-sm-6 col-xl-3">
-                                <a class="admin-action-tile" href="${pageContext.request.contextPath}/admin/?workspace=menu-sets" data-workspace="menu-sets" data-workspace-url="${pageContext.request.contextPath}/MainController?action=adminMenuSets&embed=1">
-                                    <span class="admin-action-icon"><i class="fa-solid fa-layer-group"></i></span>
-                                    <span><strong>Set menus</strong><small>Xây tasting menu theo course.</small></span>
-                                </a>
-                            </div>
-                            <div class="col-sm-6 col-xl-3">
-                                <a class="admin-action-tile" href="${pageContext.request.contextPath}/admin/?workspace=tables" data-workspace="tables" data-workspace-url="${pageContext.request.contextPath}/MainController?action=adminTables&embed=1">
-                                    <span class="admin-action-icon"><i class="fa-solid fa-chair"></i></span>
-                                    <span><strong>Dining tables</strong><small>Quản lý bàn, ảnh và trạng thái.</small></span>
-                                </a>
-                            </div>
-                            <div class="col-sm-6 col-xl-3">
-                                <a class="admin-action-tile" href="${pageContext.request.contextPath}/admin/?workspace=addon-services" data-workspace="addon-services" data-workspace-url="${pageContext.request.contextPath}/MainController?action=adminAddonServices&embed=1">
-                                    <span class="admin-action-icon"><i class="fa-solid fa-music"></i></span>
-                                    <span><strong>Add-on services</strong><small>Hoa, đàn hát và dịch vụ đặt thêm.</small></span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+                    </section>
+                </c:if>
 
                 <div class="row g-4">
                     <div class="col-xl-8">
@@ -147,12 +133,14 @@
                                             <span><strong>Invoices</strong><small>Tra cứu hóa đơn, trạng thái thanh toán.</small></span>
                                         </a>
                                     </div>
-                                    <div class="col-md-6">
-                                        <a class="admin-action-tile" href="${pageContext.request.contextPath}/admin/?workspace=menu-sets" data-workspace="menu-sets" data-workspace-url="${pageContext.request.contextPath}/MainController?action=adminMenuSets&embed=1">
-                                            <span class="admin-action-icon"><i class="fa-solid fa-utensils"></i></span>
-                                            <span><strong>Menu sets</strong><small>Xây tasting menu theo course.</small></span>
-                                        </a>
-                                    </div>
+                                    <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
+                                        <div class="col-md-6">
+                                            <a class="admin-action-tile" href="${pageContext.request.contextPath}/MainController?action=adminMenuSets">
+                                                <span class="admin-action-icon"><i class="fa-solid fa-utensils"></i></span>
+                                                <span><strong>Menu sets</strong><small>Xây tasting menu theo course.</small></span>
+                                            </a>
+                                        </div>
+                                    </c:if>
                                 </div>
                             </div>
                         </section>
@@ -168,7 +156,7 @@
                                     <a class="list-group-item" href="${pageContext.request.contextPath}/admin/vouchers"><i class="fa-solid fa-ticket"></i><span>Vouchers</span></a>
                                     <a class="list-group-item" href="${pageContext.request.contextPath}/admin/reviews"><i class="fa-solid fa-star-half-stroke"></i><span>Reviews</span></a>
                                     <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
-                                        <a class="list-group-item" href="${pageContext.request.contextPath}/admin/?workspace=tables" data-workspace="tables" data-workspace-url="${pageContext.request.contextPath}/MainController?action=adminTables&embed=1"><i class="fa-solid fa-chair"></i><span>Tables</span></a>
+                                        <a class="list-group-item" href="${pageContext.request.contextPath}/MainController?action=adminTables"><i class="fa-solid fa-chair"></i><span>Tables</span></a>
                                         <a class="list-group-item" href="${pageContext.request.contextPath}/admin/surcharges"><i class="fa-solid fa-calendar-day"></i><span>Holidays</span></a>
                                         <a class="list-group-item" href="${pageContext.request.contextPath}/admin/rank-config"><i class="fa-solid fa-ranking-star"></i><span>Rank Config</span></a>
                                     </c:if>

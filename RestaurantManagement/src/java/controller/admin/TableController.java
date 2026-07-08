@@ -63,6 +63,7 @@ public class TableController extends HttpServlet {
                         existing.setIsActive(true);
                         existing.setCapacity(Integer.parseInt(request.getParameter("capacity")));
                         existing.setBasePrice(new BigDecimal(request.getParameter("basePrice")));
+                        existing.setImageUrl(trim(request.getParameter("imageUrl")));
                         existing.setStatus(TableStatus.valueOf(request.getParameter("status")));
                         
                         Integer roomId = Integer.parseInt(request.getParameter("roomId"));
@@ -79,6 +80,7 @@ public class TableController extends HttpServlet {
                     table.setTableCode(tableCode);
                     table.setCapacity(Integer.parseInt(request.getParameter("capacity")));
                     table.setBasePrice(new BigDecimal(request.getParameter("basePrice")));
+                    table.setImageUrl(trim(request.getParameter("imageUrl")));
                     table.setStatus(TableStatus.valueOf(request.getParameter("status")));
                     
                     Integer roomId = Integer.parseInt(request.getParameter("roomId"));
@@ -98,6 +100,7 @@ public class TableController extends HttpServlet {
                     table.setTableCode(request.getParameter("tableCode"));
                     table.setCapacity(Integer.parseInt(request.getParameter("capacity")));
                     table.setBasePrice(new BigDecimal(request.getParameter("basePrice")));
+                    table.setImageUrl(trim(request.getParameter("imageUrl")));
                     table.setStatus(TableStatus.valueOf(request.getParameter("status")));
                     
                     Integer roomId = Integer.parseInt(request.getParameter("roomId"));
@@ -129,5 +132,9 @@ public class TableController extends HttpServlet {
         }
         
         response.sendRedirect(request.getContextPath() + "/admin/tables");
+    }
+
+    private String trim(String value) {
+        return value == null ? null : value.trim();
     }
 }

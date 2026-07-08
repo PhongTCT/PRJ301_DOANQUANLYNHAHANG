@@ -200,12 +200,13 @@
     <a class="admin-sidebar__link ${param.active == 'reservations' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/reservations"><i class="fa-solid fa-clipboard-list"></i><span>Reservations</span></a>
     <a class="admin-sidebar__link ${param.active == 'timeline' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/timeline"><i class="fa-solid fa-timeline"></i><span>Timeline</span></a>
 
-    <div class="admin-sidebar__section">Restaurant</div>
-    <a class="admin-sidebar__link ${param.active == 'menu-items' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/?workspace=menu-items" data-workspace="menu-items" data-workspace-url="${pageContext.request.contextPath}/MainController?action=adminMenuItems&embed=1"><i class="fa-solid fa-bowl-food"></i><span>Menu items</span></a>
-    <a class="admin-sidebar__link ${param.active == 'menu-sets' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/?workspace=menu-sets" data-workspace="menu-sets" data-workspace-url="${pageContext.request.contextPath}/MainController?action=adminMenuSets&embed=1"><i class="fa-solid fa-layer-group"></i><span>Set menus</span></a>
-    <a class="admin-sidebar__link ${param.active == 'categories' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/?workspace=categories" data-workspace="categories" data-workspace-url="${pageContext.request.contextPath}/MainController?action=adminCategories&embed=1"><i class="fa-solid fa-list-ul"></i><span>Categories</span></a>
-    <a class="admin-sidebar__link ${param.active == 'tables-admin' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/?workspace=tables" data-workspace="tables" data-workspace-url="${pageContext.request.contextPath}/MainController?action=adminTables&embed=1"><i class="fa-solid fa-chair"></i><span>Dining tables</span></a>
-    <a class="admin-sidebar__link ${param.active == 'addon-services' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/?workspace=addon-services" data-workspace="addon-services" data-workspace-url="${pageContext.request.contextPath}/MainController?action=adminAddonServices&embed=1"><i class="fa-solid fa-music"></i><span>Add-on services</span></a>
+    <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
+        <div class="admin-sidebar__section">Restaurant</div>
+        <a class="admin-sidebar__link ${param.active == 'menu-items' ? 'active' : ''}" href="${pageContext.request.contextPath}/MainController?action=adminMenuItems"><i class="fa-solid fa-bowl-food"></i><span>Menu items</span></a>
+        <a class="admin-sidebar__link ${param.active == 'menu-sets' ? 'active' : ''}" href="${pageContext.request.contextPath}/MainController?action=adminMenuSets"><i class="fa-solid fa-layer-group"></i><span>Set menus</span></a>
+        <a class="admin-sidebar__link ${param.active == 'tables' ? 'active' : ''}" href="${pageContext.request.contextPath}/MainController?action=adminTables"><i class="fa-solid fa-chair"></i><span>Dining tables</span></a>
+        <a class="admin-sidebar__link ${param.active == 'addon-services' ? 'active' : ''}" href="${pageContext.request.contextPath}/MainController?action=adminAddonServices"><i class="fa-solid fa-music"></i><span>Add-on services</span></a>
+    </c:if>
 
     <div class="admin-sidebar__section">Office</div>
     <a class="admin-sidebar__link ${param.active == 'invoices' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/invoices"><i class="fa-solid fa-file-invoice"></i><span>Invoices</span></a>

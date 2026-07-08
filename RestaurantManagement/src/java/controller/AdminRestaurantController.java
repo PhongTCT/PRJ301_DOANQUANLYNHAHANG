@@ -1,6 +1,8 @@
 package controller;
 
+import entity.User;
 import entity.MenuSet;
+import enums.UserRole;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,6 +17,11 @@ public class AdminRestaurantController extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
+
+        if (!isRestaurantAdmin(request)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
 
         String action = request.getParameter("action");
         if (action == null || action.trim().isEmpty()) {
@@ -47,6 +54,11 @@ public class AdminRestaurantController extends HttpServlet {
         }
     }
 
+    private boolean isRestaurantAdmin(HttpServletRequest request) {
+        Object currentUser = request.getSession().getAttribute("currentUser");
+        return currentUser instanceof User && ((User) currentUser).getRole() == UserRole.ADMIN;
+    }
+
     private void prepareList(String action, HttpServletRequest request) {
         request.setAttribute("areas", service.getAreas());
         request.setAttribute("rooms", service.getRooms());
@@ -63,6 +75,7 @@ public class AdminRestaurantController extends HttpServlet {
             request.setAttribute("editRoom", service.findRoom(paramInt(request, "id")));
         } else if ("adminTables".equals(action)) {
             request.setAttribute("tableList", service.getTables());
+            request.setAttribute("tables", service.getTables());
             request.setAttribute("editTable", service.findTable(paramInt(request, "id")));
         } else if ("adminCategories".equals(action)) {
             request.setAttribute("categoryList", service.getCategories());
@@ -107,15 +120,18 @@ public class AdminRestaurantController extends HttpServlet {
             service.saveMenuItemSize(request);
         } else if ("saveMenuSet".equals(action)) {
             MenuSet savedSet = service.saveMenuSet(request);
-            return "MainController?action=adminMenuSets&id=" + savedSet.getId() + "&saved=1";
+            if ("true".equalsIgnoreCase(request.getParameter("finalize"))) {
+                return "MainController?action=adminMenuSets&saved=1";
+            }
+            return "MainController?action=adminMenuSets&id=" + savedSet.getId() + "&mode=build&saved=1";
         } else if ("saveMenuSetItem".equals(action)) {
             service.saveMenuSetItem(request);
             if ("adminMenuSets".equals(request.getParameter("returnTo"))) {
-                return "MainController?action=adminMenuSets&id=" + paramInt(request, "menuSetId") + "&saved=1";
+                return "MainController?action=adminMenuSets&id=" + paramInt(request, "menuSetId") + "&mode=build&saved=1";
             }
         } else if ("saveMenuSetCourseItems".equals(action)) {
             service.saveMenuSetCourseItems(request);
-            return "MainController?action=adminMenuSets&id=" + paramInt(request, "menuSetId") + "&saved=1";
+            return "MainController?action=adminMenuSets&id=" + paramInt(request, "menuSetId") + "&mode=build&saved=1";
         } else if ("saveAddonService".equals(action)) {
             service.saveAddonService(request);
         }
@@ -189,7 +205,7 @@ public class AdminRestaurantController extends HttpServlet {
 
     private String redirectAfterDelete(String action, HttpServletRequest request) {
         if ("deleteMenuSetItem".equals(action) && "adminMenuSets".equals(request.getParameter("returnTo"))) {
-            return "MainController?action=adminMenuSets&id=" + paramInt(request, "menuSetId") + "&saved=1";
+            return "MainController?action=adminMenuSets&id=" + paramInt(request, "menuSetId") + "&mode=build&saved=1";
         }
         return "MainController?action=" + listActionForDelete(action) + "&saved=1";
     }

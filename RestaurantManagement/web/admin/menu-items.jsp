@@ -1,8 +1,36 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<jsp:include page="/header.jsp" />
-<main class="container py-4 py-lg-5">
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<c:if test="${param.embed != '1'}">
+<!DOCTYPE html>
+<html lang="${sessionScope.lang}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu items - Le Royal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/admin-royal.css">
+</head>
+<body class="admin-royal">
+<div class="d-flex">
+    <jsp:include page="/admin/sidebar.jsp">
+        <jsp:param name="active" value="menu-items"/>
+    </jsp:include>
+    <main class="flex-grow-1">
+        <div class="admin-shell">
+</c:if>
+<c:if test="${param.embed == '1'}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/admin-royal.css">
+    <script>document.body.classList.add('admin-royal');</script>
+    <style>body { margin: 0; background: transparent; }</style>
+    <main class="container-fluid py-4">
+</c:if>
     <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
         <div>
             <p class="text-uppercase text-secondary small mb-1">Restaurant Admin</p>
@@ -10,11 +38,11 @@
             <p class="text-secondary mb-0">Search, filter and manage dishes without leaving the admin workspace.</p>
         </div>
         <div class="d-flex flex-wrap gap-2">
-            <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminMenuSets">
+            <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminMenuSets${param.embed == '1' ? '&embed=1' : ''}">
                 <i class="fa-solid fa-layer-group me-2"></i>Set menus
             </a>
-            <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminCategories">
-                <i class="fa-solid fa-list-ul me-2"></i>Categories
+            <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminCategories${param.embed == '1' ? '&embed=1' : ''}">
+                <i class="fa-solid fa-list-ul me-2"></i>Manage dish groups
             </a>
             <button class="btn btn-dark btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#menuItemFormPanel" aria-expanded="${not empty editMenuItem ? 'true' : 'false'}">
                 <i class="fa-solid fa-plus me-2"></i>Add item
@@ -26,7 +54,7 @@
     <c:if test="${param.saved == '1'}"><div class="alert alert-success">Saved successfully.</div></c:if>
 
     <section id="menuItemFormPanel" class="collapse ${not empty editMenuItem ? 'show' : ''} mb-4">
-        <form class="card" method="post" action="MainController">
+        <form id="menuItemEditorForm" class="card" method="post" action="MainController">
             <div class="card-body p-4">
                 <input type="hidden" name="action" value="saveMenuItem">
                 <input type="hidden" name="id" value="${editMenuItem.id}">
@@ -36,13 +64,13 @@
                         <h2 class="h5 mb-0">${empty editMenuItem ? 'Create item' : 'Edit item'}</h2>
                     </div>
                     <c:if test="${not empty editMenuItem}">
-                        <a class="btn btn-outline-secondary btn-sm" href="MainController?action=adminMenuItems">Clear edit</a>
+                        <a class="btn btn-outline-secondary btn-sm" href="MainController?action=adminMenuItems${param.embed == '1' ? '&embed=1' : ''}">Clear edit</a>
                     </c:if>
                 </div>
                 <div class="row g-3">
                     <div class="col-md-4">
                         <label class="form-label">Category</label>
-                        <select class="form-select" name="categoryId" required>
+                        <select id="draftItemCategory" class="form-select" name="categoryId" required>
                             <c:forEach items="${categories}" var="cat">
                                 <option value="${cat.id}" ${not empty editMenuItem && editMenuItem.category.id == cat.id ? 'selected' : ''}>${not empty cat.categoryNameVi ? cat.categoryNameVi : cat.categoryName}</option>
                             </c:forEach>
@@ -50,7 +78,7 @@
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Item name (VI)</label>
-                        <input class="form-control" name="itemNameVi" value="${editMenuItem.itemNameVi}" required>
+                        <input id="draftItemName" class="form-control" name="itemNameVi" value="${editMenuItem.itemNameVi}" required>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Item name (EN, optional)</label>
@@ -58,7 +86,7 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Description (VI)</label>
-                        <textarea class="form-control" name="descriptionVi" rows="3">${editMenuItem.descriptionVi}</textarea>
+                        <textarea id="draftItemDescription" class="form-control" name="descriptionVi" rows="3">${editMenuItem.descriptionVi}</textarea>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Description (EN, optional)</label>
@@ -66,25 +94,82 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Image URL</label>
-                        <input class="form-control" name="imageUrl" value="${editMenuItem.imageUrl}">
+                        <input id="draftItemImage" class="form-control" name="imageUrl" value="${editMenuItem.imageUrl}">
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Base price</label>
-                        <input class="form-control" name="basePrice" type="number" min="0" step="1" value="${empty editMenuItem ? 0 : editMenuItem.basePrice}">
+                        <input id="draftItemPrice" class="form-control" name="basePrice" type="number" min="0" step="1" value="${empty editMenuItem ? 0 : editMenuItem.basePrice}">
                     </div>
                     <div class="col-md-3 d-flex align-items-end">
                         <div class="form-check form-switch mb-2">
-                            <input class="form-check-input" type="checkbox" name="isAvailable" value="true" ${empty editMenuItem || editMenuItem.isAvailable ? 'checked' : ''}>
+                            <input id="draftItemAvailable" class="form-check-input" type="checkbox" name="isAvailable" value="true" ${empty editMenuItem || editMenuItem.isAvailable ? 'checked' : ''}>
                             <label class="form-check-label">Available</label>
                         </div>
                     </div>
                     <div class="col-12 d-flex justify-content-end">
                         <button class="btn btn-dark px-4" type="submit">Save item</button>
                     </div>
+                    <div class="col-12">
+                        <aside class="admin-draft-preview rounded-3 p-3">
+                            <div class="row g-3 align-items-center">
+                                <div class="col-md-4">
+                                    <div id="draftItemImageWrap" class="admin-draft-placeholder rounded-3 d-flex align-items-center justify-content-center">
+                                        <i class="fa-solid fa-bowl-food fa-2x"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <p class="text-uppercase text-secondary small mb-1">Draft preview</p>
+                                    <h3 id="draftItemTitle" class="h5 mb-1">New dish</h3>
+                                    <p id="draftItemText" class="text-secondary mb-2">No description yet.</p>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <span id="draftItemCategoryLabel" class="badge text-bg-light border text-dark">Category</span>
+                                        <span id="draftItemPriceLabel" class="badge text-bg-light border text-dark">0đ</span>
+                                        <span id="draftItemStatusLabel" class="badge text-bg-success">Available</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+                    </div>
                 </div>
             </div>
         </form>
     </section>
+
+    <div class="modal fade" id="menuItemConfirmModal" tabindex="-1" aria-labelledby="menuItemConfirmTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header">
+                    <div>
+                        <p class="text-uppercase text-secondary small mb-1">Confirm dish</p>
+                        <h5 class="modal-title" id="menuItemConfirmTitle">Review menu item</h5>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="menu-confirm-summary mb-3">
+                        <div id="menuItemConfirmImage" class="menu-confirm-hero" style="width:280px; height:110px; max-width:100%; margin:0 auto;">
+                            <i class="fa-solid fa-bowl-food fa-2x"></i>
+                        </div>
+                    </div>
+                    <div class="row g-3 align-items-center">
+                        <div class="col-12">
+                            <h3 id="menuItemConfirmName" class="h5 mb-1">New dish</h3>
+                            <p id="menuItemConfirmText" class="text-secondary mb-2">No description yet.</p>
+                            <div class="d-flex flex-wrap gap-2">
+                                <span id="menuItemConfirmCategory" class="badge text-bg-light border text-dark">Category</span>
+                                <span id="menuItemConfirmPrice" class="badge text-bg-light border text-dark">0đ</span>
+                                <span id="menuItemConfirmStatus" class="badge text-bg-success">Available</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Keep editing</button>
+                    <button id="menuItemConfirmSave" type="button" class="btn btn-dark">Confirm save</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <section class="card">
         <div class="card-body p-4">
@@ -128,11 +213,6 @@
                         <option value="hidden">Hidden</option>
                     </select>
                 </div>
-                <div class="col-sm-6 col-lg-1">
-                    <button id="menuFilterReset" class="btn btn-outline-secondary w-100" type="button" title="Reset filters">
-                        <i class="fa-solid fa-rotate-left"></i>
-                    </button>
-                </div>
             </div>
 
             <div class="table-responsive">
@@ -158,7 +238,14 @@
                                     <div class="d-flex align-items-center gap-3">
                                         <c:choose>
                                             <c:when test="${not empty item.imageUrl}">
-                                                <img class="admin-menu-thumb" src="${pageContext.request.contextPath}/${item.imageUrl}" alt="">
+                                                <c:choose>
+                                                    <c:when test="${fn:startsWith(item.imageUrl, 'http') || fn:startsWith(item.imageUrl, '/')}">
+                                                        <img class="admin-menu-thumb" src="${item.imageUrl}" alt="">
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <img class="admin-menu-thumb" src="${pageContext.request.contextPath}/${item.imageUrl}" alt="">
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </c:when>
                                             <c:otherwise>
                                                 <div class="admin-menu-thumb admin-menu-thumb--empty"><i class="fa-solid fa-bowl-food"></i></div>
@@ -176,8 +263,8 @@
                                 <td><fmt:formatNumber value="${item.basePrice}" pattern="#,##0"/></td>
                                 <td><span class="badge ${item.isAvailable ? 'text-bg-success' : 'text-bg-secondary'}">${item.isAvailable ? 'Available' : 'Hidden'}</span></td>
                                 <td class="text-end">
-                                    <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminMenuItems&id=${item.id}">Edit</a>
-                                    <a class="btn btn-outline-secondary btn-sm" href="MainController?action=toggleMenuItem&id=${item.id}&enabled=${!item.isAvailable}">${item.isAvailable ? 'Hide' : 'Show'}</a>
+                                    <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminMenuItems&id=${item.id}${param.embed == '1' ? '&embed=1' : ''}">Edit</a>
+                                    <a class="btn btn-outline-secondary btn-sm" href="MainController?action=toggleMenuItem&id=${item.id}&enabled=${!item.isAvailable}${param.embed == '1' ? '&embed=1' : ''}">${item.isAvailable ? 'Hide' : 'Restore'}</a>
                                 </td>
                             </tr>
                         </c:forEach>
@@ -194,6 +281,9 @@
             </div>
         </div>
     </section>
+<c:if test="${param.embed != '1'}">
+        </div>
+</c:if>
 </main>
 <script>
     (function () {
@@ -202,7 +292,6 @@
         var category = document.getElementById('menuCategoryFilter');
         var type = document.getElementById('menuTypeFilter');
         var status = document.getElementById('menuStatusFilter');
-        var reset = document.getElementById('menuFilterReset');
         var empty = document.getElementById('menuItemEmpty');
         var count = document.getElementById('menuItemResultCount');
         var pagination = document.getElementById('menuPagination');
@@ -285,17 +374,108 @@
                 });
             }
         });
-        if (reset) {
-            reset.addEventListener('click', function () {
-                if (search) search.value = '';
-                if (category) category.value = '';
-                if (type) type.value = '';
-                if (status) status.value = '';
-                currentPage = 1;
-                render();
-            });
-        }
         render();
     })();
+
+    (function () {
+        var contextPath = '${pageContext.request.contextPath}';
+        var name = document.getElementById('draftItemName');
+        var description = document.getElementById('draftItemDescription');
+        var category = document.getElementById('draftItemCategory');
+        var price = document.getElementById('draftItemPrice');
+        var image = document.getElementById('draftItemImage');
+        var available = document.getElementById('draftItemAvailable');
+        var imageWrap = document.getElementById('draftItemImageWrap');
+        var title = document.getElementById('draftItemTitle');
+        var text = document.getElementById('draftItemText');
+        var categoryLabel = document.getElementById('draftItemCategoryLabel');
+        var priceLabel = document.getElementById('draftItemPriceLabel');
+        var statusLabel = document.getElementById('draftItemStatusLabel');
+
+        function imageSrc(value) {
+            value = (value || '').trim();
+            if (!value) return '';
+            return (/^(https?:)?\/\//i.test(value) || value.charAt(0) === '/') ? value : contextPath + '/' + value;
+        }
+        function money(value) {
+            var number = Number(value || 0);
+            return (isNaN(number) ? 0 : number).toLocaleString('vi-VN') + 'đ';
+        }
+        function renderDraft() {
+            if (!title || !imageWrap) return;
+            title.textContent = (name.value || '').trim() || 'New dish';
+            text.textContent = (description.value || '').trim() || 'No description yet.';
+            categoryLabel.textContent = category.options[category.selectedIndex] ? category.options[category.selectedIndex].text : 'Category';
+            priceLabel.textContent = money(price.value);
+            statusLabel.textContent = available.checked ? 'Available' : 'Hidden';
+            statusLabel.className = available.checked ? 'badge text-bg-success' : 'badge text-bg-secondary';
+            var src = imageSrc(image.value);
+            imageWrap.innerHTML = src
+                    ? '<img class="rounded-3" src="' + src + '" alt="">'
+                    : '<i class="fa-solid fa-bowl-food fa-2x"></i>';
+        }
+        [name, description, category, price, image, available].forEach(function (field) {
+            if (!field) return;
+            field.addEventListener('input', renderDraft);
+            field.addEventListener('change', renderDraft);
+        });
+        renderDraft();
+
+        var form = document.getElementById('menuItemEditorForm');
+        var modal = document.getElementById('menuItemConfirmModal');
+        var confirmSave = document.getElementById('menuItemConfirmSave');
+        var confirmed = false;
+        function renderConfirm() {
+            renderDraft();
+            var confirmImage = document.getElementById('menuItemConfirmImage');
+            var confirmName = document.getElementById('menuItemConfirmName');
+            var confirmText = document.getElementById('menuItemConfirmText');
+            var confirmCategory = document.getElementById('menuItemConfirmCategory');
+            var confirmPrice = document.getElementById('menuItemConfirmPrice');
+            var confirmStatus = document.getElementById('menuItemConfirmStatus');
+            if (confirmImage) {
+                var src = imageSrc(image.value);
+                confirmImage.innerHTML = src
+                        ? '<img style="width:100%; height:100%; object-fit:cover;" src="' + src + '" alt="">'
+                        : '<i class="fa-solid fa-bowl-food fa-2x"></i>';
+            }
+            if (confirmName && title) confirmName.textContent = title.textContent;
+            if (confirmText && text) confirmText.textContent = text.textContent;
+            if (confirmCategory && categoryLabel) confirmCategory.textContent = categoryLabel.textContent;
+            if (confirmPrice && priceLabel) confirmPrice.textContent = priceLabel.textContent;
+            if (confirmStatus && statusLabel) {
+                confirmStatus.textContent = statusLabel.textContent;
+                confirmStatus.className = statusLabel.className;
+            }
+        }
+        if (form) {
+            form.addEventListener('submit', function (event) {
+                if (confirmed) return;
+                event.preventDefault();
+                renderConfirm();
+                if (window.bootstrap && modal) {
+                    window.bootstrap.Modal.getOrCreateInstance(modal).show();
+                } else if (window.confirm('Review this dish and save?')) {
+                    confirmed = true;
+                    form.submit();
+                }
+            });
+        }
+        if (confirmSave && form) {
+            confirmSave.addEventListener('click', function () {
+                confirmed = true;
+                form.submit();
+            });
+        }
+    })();
 </script>
-<jsp:include page="/footer.jsp" />
+<c:if test="${param.embed == '1'}">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</c:if>
+<c:if test="${param.embed != '1'}">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    </div>
+</div>
+</body>
+</html>
+</c:if>

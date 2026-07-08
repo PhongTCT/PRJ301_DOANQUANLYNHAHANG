@@ -1,8 +1,25 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<jsp:include page="/header.jsp" />
-<main class="container py-5">
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<!DOCTYPE html>
+<html lang="${sessionScope.lang}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set menus - Le Royal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/admin-royal.css?v=menu-confirm-compact">
+</head>
+<body class="admin-royal">
+<div class="d-flex">
+    <jsp:include page="/admin/sidebar.jsp">
+        <jsp:param name="active" value="menu-sets"/>
+    </jsp:include>
+    <main class="flex-grow-1">
+        <div class="admin-shell py-4">
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
         <div>
             <p class="text-uppercase text-secondary small mb-1">Restaurant Admin</p>
@@ -11,6 +28,9 @@
         <div class="btn-group">
             <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminMenuItems">Menu items</a>
             <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminCategories">Categories</a>
+            <button class="btn btn-dark btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#setFormPanel" aria-expanded="${not empty editMenuSet ? 'true' : 'false'}">
+                <i class="fa-solid fa-plus me-2"></i>Add set
+            </button>
         </div>
     </div>
 
@@ -18,42 +38,87 @@
     <c:if test="${param.saved == '1'}"><div class="alert alert-success">Saved successfully.</div></c:if>
 
     <c:if test="${empty selectedMenuSet || param.mode == 'details'}">
-    <div class="row g-4 mb-4">
-        <div class="col-lg-4">
-            <form class="border rounded-3 p-4 bg-light h-100" method="post" action="MainController">
+    <section id="setFormPanel" class="collapse ${not empty editMenuSet ? 'show' : ''} mb-4">
+        <form id="setEditorForm" class="card" method="post" action="MainController">
+            <div class="card-body p-4">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+                    <div>
+                        <div class="admin-section-label">Set menu editor</div>
+                        <h2 class="h5 mb-0">${empty editMenuSet ? 'Create set' : 'Edit set'}</h2>
+                    </div>
+                    <c:if test="${not empty editMenuSet}">
+                        <a class="btn btn-outline-secondary btn-sm" href="MainController?action=adminMenuSets">Clear edit</a>
+                    </c:if>
+                </div>
                 <input type="hidden" name="action" value="saveMenuSet">
                 <input type="hidden" name="id" value="${editMenuSet.id}">
                 <input type="hidden" name="originalPrice" value="${empty editMenuSet ? 0 : editMenuSet.originalPrice}">
                 <input type="hidden" name="discountedPrice" value="${empty editMenuSet ? 0 : editMenuSet.discountedPrice}">
-                <h2 class="h5 mb-3">${empty editMenuSet ? 'Create set' : 'Edit set'}</h2>
-                <label class="form-label">Set name (VI)</label>
-                <input id="setNameInput" class="form-control mb-3" name="setNameVi" value="${not empty editMenuSet.setNameVi ? editMenuSet.setNameVi : editMenuSet.setName}" required>
-                <label class="form-label">Set name (EN, optional)</label>
-                <input class="form-control mb-3" name="setName" value="${editMenuSet.setName}">
-                <label class="form-label">Description (VI)</label>
-                <textarea id="setDescriptionInput" class="form-control mb-3" name="descriptionVi" rows="3">${not empty editMenuSet.descriptionVi ? editMenuSet.descriptionVi : editMenuSet.description}</textarea>
-                <label class="form-label">Description (EN, optional)</label>
-                <textarea class="form-control mb-3" name="description" rows="3">${editMenuSet.description}</textarea>
-                <label class="form-label">Service period</label>
-                <select id="setServiceInput" class="form-select mb-3" name="mealTime">
-                    <option value="LUNCH" ${editMenuSet.mealTime == 'LUNCH' ? 'selected' : ''}>Lunch Service</option>
-                    <option value="DINNER" ${empty editMenuSet || editMenuSet.mealTime == 'DINNER' || editMenuSet.mealTime == 'BREAKFAST' ? 'selected' : ''}>Dinner Service</option>
-                    <option value="ALL_DAY" ${editMenuSet.mealTime == 'ALL_DAY' ? 'selected' : ''}>All Services</option>
-                </select>
-                <label class="form-label">Image URL</label>
-                <input class="form-control mb-3" name="imageUrl" value="${editMenuSet.imageUrl}">
-                <div class="form-check form-switch mb-3">
-                    <input id="setAvailableInput" class="form-check-input" type="checkbox" name="isAvailable" value="true" ${empty editMenuSet || editMenuSet.isAvailable ? 'checked' : ''}>
-                    <label class="form-check-label">Available</label>
+                <div class="row g-4 align-items-start">
+                    <div class="col-lg-8">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Set name (VI)</label>
+                        <input id="setNameInput" class="form-control" name="setNameVi" value="${not empty editMenuSet.setNameVi ? editMenuSet.setNameVi : editMenuSet.setName}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Set name (EN, optional)</label>
+                        <input class="form-control" name="setName" value="${editMenuSet.setName}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Description (VI)</label>
+                        <textarea id="setDescriptionInput" class="form-control" name="descriptionVi" rows="3">${not empty editMenuSet.descriptionVi ? editMenuSet.descriptionVi : editMenuSet.description}</textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Description (EN, optional)</label>
+                        <textarea class="form-control" name="description" rows="3">${editMenuSet.description}</textarea>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Service period</label>
+                        <select id="setServiceInput" class="form-select" name="mealTime">
+                            <option value="LUNCH" ${editMenuSet.mealTime == 'LUNCH' ? 'selected' : ''}>Lunch Service</option>
+                            <option value="DINNER" ${empty editMenuSet || editMenuSet.mealTime == 'DINNER' || editMenuSet.mealTime == 'BREAKFAST' ? 'selected' : ''}>Dinner Service</option>
+                            <option value="ALL_DAY" ${editMenuSet.mealTime == 'ALL_DAY' ? 'selected' : ''}>All Services</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Image URL</label>
+                        <input id="setImageInput" class="form-control" name="imageUrl" value="${editMenuSet.imageUrl}">
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <div class="form-check form-switch mb-2">
+                            <input id="setAvailableInput" class="form-check-input" type="checkbox" name="isAvailable" value="true" ${empty editMenuSet || editMenuSet.isAvailable ? 'checked' : ''}>
+                            <label class="form-check-label">Available</label>
+                        </div>
+                    </div>
+                    <div class="col-12 d-flex justify-content-end">
+                        <button class="btn btn-dark px-4" type="submit">Save set</button>
+                    </div>
                 </div>
-                <button class="btn btn-dark w-100" type="submit">Save set</button>
-            </form>
-        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <aside class="admin-draft-preview rounded-3 p-3">
+                            <div id="setDraftImageWrap" class="admin-draft-placeholder rounded-3 d-flex align-items-center justify-content-center mb-3">
+                                <i class="fa-solid fa-layer-group fa-2x"></i>
+                            </div>
+                            <p class="text-uppercase text-secondary small mb-1">Preview</p>
+                            <h3 id="setDraftName" class="h5 mb-1">Untitled menu set</h3>
+                            <p id="setDraftDescription" class="text-secondary mb-3">No description yet.</p>
+                            <div class="d-flex flex-wrap gap-2">
+                                <span id="setDraftService" class="badge text-bg-light border text-dark">Dinner Service</span>
+                                <span id="setDraftStatus" class="badge text-bg-success">Available</span>
+                            </div>
+                        </aside>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
 
-        <div class="col-lg-8">
+    <c:if test="${not empty selectedMenuSet}">
+    <div class="row g-4 mb-4">
+        <div class="col-12">
             <section class="border rounded-3 p-4 h-100">
-                <c:choose>
-                    <c:when test="${not empty selectedMenuSet}">
                         <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
                             <div>
                                 <p class="text-uppercase text-secondary small mb-1">Selected set</p>
@@ -85,7 +150,7 @@
                         <h3 class="h6 mb-3">Tasting menu courses</h3>
                         <c:choose>
                             <c:when test="${empty selectedMenuSetItems}">
-                                <p class="text-secondary mb-0">No dishes yet. Build the courses below after saving the set.</p>
+                                <p class="text-secondary mb-0">No dishes yet. Add courses after saving the set.</p>
                             </c:when>
                             <c:otherwise>
                                 <div class="vstack gap-3">
@@ -162,45 +227,13 @@
                                 </div>
                             </c:otherwise>
                         </c:choose>
-                    </c:when>
-                    <c:otherwise>
-                        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
-                            <div>
-                                <p class="text-uppercase text-secondary small mb-1">Draft set</p>
-                                <h2 id="setPreviewName" class="h4 mb-1">Untitled menu set</h2>
-                                <p id="setPreviewDescription" class="text-secondary mb-0">No description yet.</p>
-                            </div>
-                            <span id="setPreviewStatus" class="badge text-bg-success">Available</span>
-                        </div>
-                        <div class="row g-3 mb-4">
-                            <div class="col-sm-4">
-                                <div class="border rounded-3 p-3">
-                                    <div class="small text-secondary">Service</div>
-                                    <strong id="setPreviewService">Dinner Service</strong>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="border rounded-3 p-3">
-                                    <div class="small text-secondary">Suggested</div>
-                                    <strong id="setPreviewSuggested">After dishes</strong>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="border rounded-3 p-3">
-                                    <div class="small text-secondary">Selling</div>
-                                    <strong id="setPreviewSelling">After dishes</strong>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="alert alert-light border mb-0">Save this set first, then the add-dish row will appear here.</div>
-                    </c:otherwise>
-                </c:choose>
             </section>
         </div>
     </div>
     </c:if>
+    </c:if>
 
-    <c:if test="${not empty selectedMenuSet && param.mode != 'details'}">
+    <c:if test="${not empty selectedMenuSet && param.mode == 'build'}">
         <section class="border rounded-3 p-4 mb-4">
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
                 <div>
@@ -285,6 +318,7 @@
                 <input type="hidden" name="mealTime" value="${selectedMenuSet.mealTime}">
                 <input type="hidden" name="originalPrice" value="${selectedMenuSet.originalPrice}">
                 <input type="hidden" name="imageUrl" value="${selectedMenuSet.imageUrl}">
+                <input type="hidden" name="finalize" value="true">
                 <c:if test="${selectedMenuSet.isAvailable}">
                     <input type="hidden" name="isAvailable" value="true">
                 </c:if>
@@ -424,7 +458,20 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <p class="text-secondary">${not empty selectedMenuSet.descriptionVi ? selectedMenuSet.descriptionVi : selectedMenuSet.description}</p>
+                        <c:set var="modalSetImage" value="${empty selectedMenuSet.imageUrl ? 'assets/img/le-royal/menu/lotus-stem-salad.jpg' : selectedMenuSet.imageUrl}" />
+                        <div class="menu-confirm-summary mb-3">
+                            <div class="menu-confirm-hero" style="width:280px; height:110px; max-width:100%; margin:0 auto;">
+                                <c:choose>
+                                    <c:when test="${fn:startsWith(modalSetImage, 'http') || fn:startsWith(modalSetImage, '/')}">
+                                        <img style="width:100%; height:100%; object-fit:cover;" src="${modalSetImage}" alt="${not empty selectedMenuSet.setNameVi ? selectedMenuSet.setNameVi : selectedMenuSet.setName}">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <img style="width:100%; height:100%; object-fit:cover;" src="${pageContext.request.contextPath}/${modalSetImage}" alt="${not empty selectedMenuSet.setNameVi ? selectedMenuSet.setNameVi : selectedMenuSet.setName}">
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
+                            <p class="text-secondary mb-0">${not empty selectedMenuSet.descriptionVi ? selectedMenuSet.descriptionVi : selectedMenuSet.description}</p>
+                        </div>
                         <div class="row g-3 mb-4">
                             <div class="col-sm-4"><div class="border rounded-3 p-3"><div class="small text-secondary">Service</div><strong><c:choose><c:when test="${selectedMenuSet.mealTime == 'LUNCH'}">Lunch Service</c:when><c:when test="${selectedMenuSet.mealTime == 'ALL_DAY'}">All Services</c:when><c:otherwise>Dinner Service</c:otherwise></c:choose></strong></div></div>
                             <div class="col-sm-4"><div class="border rounded-3 p-3"><div class="small text-secondary">Suggested</div><strong><fmt:formatNumber value="${selectedMenuSet.originalPrice}" pattern="#,##0"/></strong></div></div>
@@ -475,13 +522,41 @@
     <section>
         <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
             <h2 class="h5 mb-0">All menu sets</h2>
-            <span class="text-secondary small">Select a set to edit and add dishes.</span>
+            <span class="text-secondary small">Edit a set to manage courses and pricing.</span>
+        </div>
+        <div class="card mb-3">
+            <div class="card-body p-3">
+                <div class="row g-2 align-items-center">
+                    <div class="col-lg-6">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+                            <input id="setSearch" class="form-control" type="search" placeholder="Search set name or description">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <select id="setServiceFilter" class="form-select">
+                            <option value="">All services</option>
+                            <option value="LUNCH">Lunch Service</option>
+                            <option value="DINNER">Dinner Service</option>
+                            <option value="ALL_DAY">All Services</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 col-lg-2">
+                        <select id="setStatusFilter" class="form-select">
+                            <option value="">All status</option>
+                            <option value="available">Available</option>
+                            <option value="hidden">Hidden</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="table-responsive">
             <table class="table align-middle">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                            <th>Image</th>
+                            <th>ID</th>
                         <th>Set</th>
                         <th>Service</th>
                         <th>Suggested</th>
@@ -490,9 +565,24 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="setRows">
                     <c:forEach items="${menuSetList}" var="set">
-                        <tr class="${not empty selectedMenuSet && selectedMenuSet.id == set.id ? 'table-light' : ''}">
+                        <tr data-set-row
+                            data-search="${set.setNameVi} ${set.setName} ${set.descriptionVi} ${set.description}"
+                            data-service="${set.mealTime}"
+                            data-status="${set.isAvailable ? 'available' : 'hidden'}"
+                            class="${not empty selectedMenuSet && selectedMenuSet.id == set.id ? 'table-light' : ''}">
+                            <td>
+                                <c:set var="setImage" value="${empty set.imageUrl ? 'assets/img/le-royal/menu/lotus-stem-salad.jpg' : set.imageUrl}" />
+                                <c:choose>
+                                    <c:when test="${fn:startsWith(setImage, 'http') || fn:startsWith(setImage, '/')}">
+                                        <img class="admin-menu-thumb rounded-2" src="${setImage}" alt="${not empty set.setNameVi ? set.setNameVi : set.setName}">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <img class="admin-menu-thumb rounded-2" src="${pageContext.request.contextPath}/${setImage}" alt="${not empty set.setNameVi ? set.setNameVi : set.setName}">
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
                             <td>${set.id}</td>
                             <td>
                                 <strong>${not empty set.setNameVi ? set.setNameVi : set.setName}</strong>
@@ -504,21 +594,88 @@
                             <td><fmt:formatNumber value="${set.discountedPrice}" pattern="#,##0"/></td>
                             <td><span class="badge ${set.isAvailable ? 'text-bg-success' : 'text-bg-secondary'}">${set.isAvailable ? 'Available' : 'Hidden'}</span></td>
                             <td class="text-end">
-                                <a class="btn btn-outline-primary btn-sm" href="MainController?action=adminMenuSets&id=${set.id}">Select</a>
-                                <a class="btn btn-outline-secondary btn-sm" href="MainController?action=toggleMenuSet&id=${set.id}&enabled=${!set.isAvailable}">${set.isAvailable ? 'Hide' : 'Show'}</a>
+                                <a class="btn btn-outline-primary btn-sm" href="MainController?action=adminMenuSets&id=${set.id}&mode=build">Edit</a>
+                                <a class="btn btn-outline-secondary btn-sm" href="MainController?action=toggleMenuSet&id=${set.id}&enabled=${!set.isAvailable}">${set.isAvailable ? 'Hide' : 'Restore'}</a>
                             </td>
                         </tr>
                     </c:forEach>
+                    <tr id="setEmpty" class="d-none"><td colspan="8" class="text-center text-secondary py-5">No menu sets match these filters.</td></tr>
                 </tbody>
             </table>
         </div>
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mt-3">
+            <div id="setPaginationText" class="small text-secondary"></div>
+            <div id="setPagination" class="btn-group btn-group-sm" role="group" aria-label="Set menu pagination"></div>
+        </div>
     </section>
+</div>
 </main>
 <script>
+    (function () {
+        var rows = Array.prototype.slice.call(document.querySelectorAll('[data-set-row]'));
+        var search = document.getElementById('setSearch');
+        var service = document.getElementById('setServiceFilter');
+        var status = document.getElementById('setStatusFilter');
+        var empty = document.getElementById('setEmpty');
+        var pagination = document.getElementById('setPagination');
+        var paginationText = document.getElementById('setPaginationText');
+        var pageSize = 8;
+        var currentPage = 1;
+
+        function normalized(value) { return (value || '').toLowerCase(); }
+        function filteredRows() {
+            var q = normalized(search && search.value);
+            var serviceValue = service ? service.value : '';
+            var statusValue = status ? status.value : '';
+            return rows.filter(function (row) {
+                return (!q || normalized(row.getAttribute('data-search')).indexOf(q) !== -1)
+                        && (!serviceValue || row.getAttribute('data-service') === serviceValue)
+                        && (!statusValue || row.getAttribute('data-status') === statusValue);
+            });
+        }
+        function renderPagination(totalPages) {
+            if (!pagination) return;
+            pagination.innerHTML = '';
+            for (var i = 1; i <= totalPages; i++) {
+                var button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'btn ' + (i === currentPage ? 'btn-dark' : 'btn-outline-secondary');
+                button.textContent = i;
+                button.setAttribute('data-page', i);
+                button.addEventListener('click', function () {
+                    currentPage = Number(this.getAttribute('data-page'));
+                    render();
+                });
+                pagination.appendChild(button);
+            }
+        }
+        function render() {
+            var visibleRows = filteredRows();
+            var totalPages = Math.max(1, Math.ceil(visibleRows.length / pageSize));
+            if (currentPage > totalPages) currentPage = totalPages;
+            rows.forEach(function (row) { row.classList.add('d-none'); });
+            var start = (currentPage - 1) * pageSize;
+            visibleRows.slice(start, start + pageSize).forEach(function (row) { row.classList.remove('d-none'); });
+            if (empty) empty.classList.toggle('d-none', visibleRows.length > 0);
+            if (paginationText) {
+                var end = Math.min(start + pageSize, visibleRows.length);
+                paginationText.textContent = visibleRows.length ? ('Showing ' + (start + 1) + '-' + end + ' of ' + visibleRows.length) : 'No set menus';
+            }
+            renderPagination(totalPages);
+        }
+        [search, service, status].forEach(function (field) {
+            if (!field) return;
+            field.addEventListener('input', function () { currentPage = 1; render(); });
+            field.addEventListener('change', function () { currentPage = 1; render(); });
+        });
+        render();
+    })();
+
     (function () {
         var nameInput = document.getElementById('setNameInput');
         var descriptionInput = document.getElementById('setDescriptionInput');
         var serviceInput = document.getElementById('setServiceInput');
+        var imageInput = document.getElementById('setImageInput');
         var suggestedInput = document.getElementById('setSuggestedInput');
         var sellingInput = document.getElementById('setSellingInput');
         var availableInput = document.getElementById('setAvailableInput');
@@ -528,6 +685,11 @@
         var previewSuggested = document.getElementById('setPreviewSuggested');
         var previewSelling = document.getElementById('setPreviewSelling');
         var previewStatus = document.getElementById('setPreviewStatus');
+        var draftImageWrap = document.getElementById('setDraftImageWrap');
+        var draftName = document.getElementById('setDraftName');
+        var draftDescription = document.getElementById('setDraftDescription');
+        var draftService = document.getElementById('setDraftService');
+        var draftStatus = document.getElementById('setDraftStatus');
         var courseTypeInput = document.getElementById('courseTypeInput');
         var courseMenuItemInput = document.getElementById('courseMenuItemInput');
         var courseSizeInput = document.getElementById('courseSizeInput');
@@ -562,15 +724,26 @@
             return new Intl.NumberFormat('en-US', {maximumFractionDigits: 0}).format(number);
         }
 
+        function imageSrc(value) {
+            value = (value || '').trim();
+            if (!value) {
+                return '';
+            }
+            return (/^(https?:)?\/\//i.test(value) || value.charAt(0) === '/') ? value : '${pageContext.request.contextPath}/' + value;
+        }
+
         function updatePreview() {
+            var nameText = nameInput ? (nameInput.value.trim() || 'Untitled menu set') : 'Untitled menu set';
+            var descriptionText = descriptionInput ? (descriptionInput.value.trim() || 'No description yet.') : 'No description yet.';
+            var serviceText = serviceInput ? serviceLabel(serviceInput.value) : 'Dinner Service';
             if (previewName && nameInput) {
-                previewName.textContent = nameInput.value.trim() || 'Untitled menu set';
+                previewName.textContent = nameText;
             }
             if (previewDescription && descriptionInput) {
-                previewDescription.textContent = descriptionInput.value.trim() || 'No description yet.';
+                previewDescription.textContent = descriptionText;
             }
             if (previewService && serviceInput) {
-                previewService.textContent = serviceLabel(serviceInput.value);
+                previewService.textContent = serviceText;
             }
             if (previewSuggested && suggestedInput) {
                 previewSuggested.textContent = moneyLabel(suggestedInput.value);
@@ -581,6 +754,19 @@
             if (previewStatus && availableInput) {
                 previewStatus.textContent = availableInput.checked ? 'Available' : 'Hidden';
                 previewStatus.className = availableInput.checked ? 'badge text-bg-success' : 'badge text-bg-secondary';
+            }
+            if (draftName) draftName.textContent = nameText;
+            if (draftDescription) draftDescription.textContent = descriptionText;
+            if (draftService) draftService.textContent = serviceText;
+            if (draftStatus && availableInput) {
+                draftStatus.textContent = availableInput.checked ? 'Available' : 'Hidden';
+                draftStatus.className = availableInput.checked ? 'badge text-bg-success' : 'badge text-bg-secondary';
+            }
+            if (draftImageWrap) {
+                var src = imageInput ? imageSrc(imageInput.value) : '';
+                draftImageWrap.innerHTML = src
+                        ? '<img class="rounded-3" src="' + src + '" alt="">'
+                        : '<i class="fa-solid fa-layer-group fa-2x"></i>';
             }
         }
 
@@ -717,7 +903,7 @@
             }
         }
 
-        [nameInput, descriptionInput, serviceInput, suggestedInput, sellingInput, availableInput].forEach(function (field) {
+        [nameInput, descriptionInput, serviceInput, imageInput, suggestedInput, sellingInput, availableInput].forEach(function (field) {
             if (field) {
                 field.addEventListener('input', updatePreview);
                 field.addEventListener('change', updatePreview);
@@ -745,4 +931,7 @@
         updatePendingState();
     })();
 </script>
-<jsp:include page="/footer.jsp" />
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</div>
+</body>
+</html>

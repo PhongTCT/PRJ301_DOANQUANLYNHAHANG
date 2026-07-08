@@ -1,62 +1,87 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<jsp:include page="/header.jsp" />
-<main class="container py-5">
+<!DOCTYPE html>
+<html lang="${sessionScope.lang}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add-on services - Le Royal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/admin-royal.css">
+</head>
+<body class="admin-royal">
+<div class="d-flex">
+    <jsp:include page="/admin/sidebar.jsp">
+        <jsp:param name="active" value="addon-services"/>
+    </jsp:include>
+    <main class="flex-grow-1">
+        <div class="admin-shell py-4">
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
         <div>
             <p class="text-uppercase text-secondary small mb-1">Restaurant Admin</p>
             <h1 class="h3 mb-0">Addon services</h1>
         </div>
-        <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminAreas">Restaurant admin</a>
+        <button class="btn btn-dark btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#addonFormPanel" aria-expanded="${not empty editAddon ? 'true' : 'false'}">
+            <i class="fa-solid fa-plus me-2"></i>Add service
+        </button>
     </div>
     <c:if test="${not empty error}"><div class="alert alert-danger">${error}</div></c:if>
     <c:if test="${param.saved == '1'}"><div class="alert alert-success">Saved successfully.</div></c:if>
     <div class="row g-4">
-        <div class="col-lg-4">
-            <form class="border rounded-3 p-4 bg-light" method="post" action="MainController">
+        <div id="addonFormPanel" class="col-lg-4 collapse ${not empty editAddon ? 'show' : ''}">
+            <form id="addonEditorForm" class="border rounded-3 p-4 bg-light" method="post" action="MainController">
                 <input type="hidden" name="action" value="saveAddonService">
                 <input type="hidden" name="id" value="${editAddon.id}">
                 <h2 class="h5 mb-3">${empty editAddon ? 'Create addon' : 'Edit addon'}</h2>
                 <label class="form-label">Service name</label>
-                <input class="form-control mb-3" name="serviceName" value="${editAddon.serviceName}" required>
+                <input id="draftAddonName" class="form-control mb-3" name="serviceName" value="${editAddon.serviceName}" required>
                 <label class="form-label">Description</label>
-                <textarea class="form-control mb-3" name="description" rows="3">${editAddon.description}</textarea>
+                <textarea id="draftAddonDescription" class="form-control mb-3" name="description" rows="3">${editAddon.description}</textarea>
                 <label class="form-label">Price</label>
-                <input class="form-control mb-3" name="price" type="number" min="0" step="1" value="${empty editAddon ? 0 : editAddon.price}">
+                <input id="draftAddonPrice" class="form-control mb-3" name="price" type="number" min="0" step="1" value="${empty editAddon ? 0 : editAddon.price}">
                 <label class="form-label">Image URL</label>
-                <input class="form-control mb-3" name="imageUrl" value="${editAddon.imageUrl}" placeholder="assets/img/le-royal/Private Live Pianist.jpg">
+                <input id="draftAddonImage" class="form-control mb-3" name="imageUrl" value="${editAddon.imageUrl}" placeholder="assets/img/le-royal/Private Live Pianist.jpg">
                 <div class="form-check form-switch mb-3">
-                    <input class="form-check-input" type="checkbox" name="isAvailable" value="true" ${empty editAddon || editAddon.isAvailable ? 'checked' : ''}>
+                    <input id="draftAddonAvailable" class="form-check-input" type="checkbox" name="isAvailable" value="true" ${empty editAddon || editAddon.isAvailable ? 'checked' : ''}>
                     <label class="form-check-label">Available</label>
                 </div>
+                <aside class="admin-draft-preview rounded-3 p-3 mb-3">
+                    <div id="draftAddonImageWrap" class="admin-draft-placeholder rounded-3 d-flex align-items-center justify-content-center mb-3">
+                        <i class="fa-solid fa-music fa-2x"></i>
+                    </div>
+                    <p class="text-uppercase text-secondary small mb-1">Draft preview</p>
+                    <h3 id="draftAddonTitle" class="h5 mb-1">New service</h3>
+                    <p id="draftAddonText" class="text-secondary mb-2">No description yet.</p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span id="draftAddonPriceLabel" class="badge text-bg-light border text-dark">0</span>
+                        <span id="draftAddonStatusLabel" class="badge text-bg-success">Available</span>
+                    </div>
+                </aside>
                 <button class="btn btn-dark w-100" type="submit">Save</button>
             </form>
         </div>
         <div class="col-lg-8">
-            <div class="row g-3 mb-4">
-                <c:forEach items="${addonList}" var="addon">
-                    <c:set var="addonImage" value="${empty addon.imageUrl ? 'assets/img/le-royal/Champagne Welcome Service.jpg' : addon.imageUrl}" />
-                    <div class="col-md-6">
-                        <article class="border rounded-3 overflow-hidden h-100 bg-white">
-                            <div class="position-relative">
-                                <img src="${addonImage}" class="w-100" style="height: 180px; object-fit: cover;" alt="${addon.serviceName}">
-                                <span class="badge position-absolute top-0 end-0 m-2 ${addon.isAvailable ? 'text-bg-success' : 'text-bg-secondary'}">${addon.isAvailable ? 'Available' : 'Hidden'}</span>
+            <div class="card mb-3">
+                <div class="card-body p-3">
+                    <div class="row g-2 align-items-center">
+                        <div class="col-lg-8">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+                                <input id="addonSearch" class="form-control" type="search" placeholder="Search service name or description">
                             </div>
-                            <div class="p-3">
-                                <h2 class="h6 mb-1">${addon.serviceName}</h2>
-                                <p class="small text-secondary mb-3">${addon.description}</p>
-                                <div class="d-flex justify-content-between align-items-center gap-3">
-                                    <strong><fmt:formatNumber value="${addon.price}" pattern="#,##0"/></strong>
-                                    <div class="d-flex gap-2">
-                                        <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminAddonServices&id=${addon.id}">Edit</a>
-                                        <a class="btn btn-outline-secondary btn-sm" href="MainController?action=toggleAddonService&id=${addon.id}&enabled=${!addon.isAvailable}">${addon.isAvailable ? 'Hide' : 'Show'}</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
+                        </div>
+                        <div class="col-sm-6 col-lg-2">
+                            <select id="addonStatusFilter" class="form-select">
+                                <option value="">All status</option>
+                                <option value="available">Available</option>
+                                <option value="hidden">Hidden</option>
+                            </select>
+                        </div>
                     </div>
-                </c:forEach>
+                </div>
             </div>
             <div class="table-responsive">
                 <table class="table align-middle">
@@ -73,7 +98,7 @@
                     <tbody>
                         <c:forEach items="${addonList}" var="addon">
                             <c:set var="addonImage" value="${empty addon.imageUrl ? 'assets/img/le-royal/Champagne Welcome Service.jpg' : addon.imageUrl}" />
-                            <tr>
+                            <tr data-addon-row data-search="${addon.serviceName} ${addon.description}" data-status="${addon.isAvailable ? 'available' : 'hidden'}">
                                 <td><img src="${addonImage}" style="width: 76px; height: 52px; object-fit: cover;" class="rounded-2" alt="${addon.serviceName}"></td>
                                 <td>${addon.id}</td>
                                 <td><strong>${addon.serviceName}</strong><div class="small text-secondary">${addon.description}</div></td>
@@ -81,14 +106,197 @@
                                 <td><span class="badge ${addon.isAvailable ? 'text-bg-success' : 'text-bg-secondary'}">${addon.isAvailable ? 'Available' : 'Hidden'}</span></td>
                                 <td class="text-end">
                                     <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminAddonServices&id=${addon.id}">Edit</a>
-                                    <a class="btn btn-outline-secondary btn-sm" href="MainController?action=toggleAddonService&id=${addon.id}&enabled=${!addon.isAvailable}">${addon.isAvailable ? 'Hide' : 'Show'}</a>
+                                    <a class="btn btn-outline-secondary btn-sm" href="MainController?action=toggleAddonService&id=${addon.id}&enabled=${!addon.isAvailable}">${addon.isAvailable ? 'Hide' : 'Restore'}</a>
                                 </td>
                             </tr>
                         </c:forEach>
+                        <tr id="addonEmpty" class="d-none"><td colspan="6" class="text-center text-secondary py-5">No services match these filters.</td></tr>
                     </tbody>
                 </table>
             </div>
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mt-3">
+                <div id="addonPaginationText" class="small text-secondary"></div>
+                <div id="addonPagination" class="btn-group btn-group-sm" role="group" aria-label="Add-on pagination"></div>
+            </div>
         </div>
     </div>
+</div>
 </main>
-<jsp:include page="/footer.jsp" />
+</div>
+<div class="modal fade" id="addonConfirmModal" tabindex="-1" aria-labelledby="addonConfirmTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header">
+                <div>
+                    <p class="text-uppercase text-secondary small mb-1">Confirm add-on service</p>
+                    <h5 class="modal-title" id="addonConfirmTitle">Review service</h5>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="menu-confirm-summary mb-3">
+                    <div id="addonConfirmImage" class="menu-confirm-hero" style="width:280px; height:110px; max-width:100%; margin:0 auto;">
+                        <i class="fa-solid fa-music fa-2x"></i>
+                    </div>
+                </div>
+                <div class="row g-3 align-items-center">
+                    <div class="col-12">
+                        <h3 id="addonConfirmName" class="h5 mb-1">New service</h3>
+                        <p id="addonConfirmText" class="text-secondary mb-2">No description yet.</p>
+                        <div class="d-flex flex-wrap gap-2">
+                            <span id="addonConfirmPrice" class="badge text-bg-light border text-dark">0</span>
+                            <span id="addonConfirmStatus" class="badge text-bg-success">Available</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Keep editing</button>
+                <button id="addonConfirmSave" type="button" class="btn btn-dark">Confirm save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    (function () {
+        var rows = Array.prototype.slice.call(document.querySelectorAll('[data-addon-row]'));
+        var search = document.getElementById('addonSearch');
+        var status = document.getElementById('addonStatusFilter');
+        var empty = document.getElementById('addonEmpty');
+        var pagination = document.getElementById('addonPagination');
+        var paginationText = document.getElementById('addonPaginationText');
+        var pageSize = 6;
+        var currentPage = 1;
+
+        function normalized(value) { return (value || '').toLowerCase(); }
+        function matches(item) {
+            var q = normalized(search && search.value);
+            var statusValue = status ? status.value : '';
+            return (!q || normalized(item.getAttribute('data-search')).indexOf(q) !== -1)
+                    && (!statusValue || item.getAttribute('data-status') === statusValue);
+        }
+        function filteredRows() { return rows.filter(matches); }
+        function renderPagination(totalPages) {
+            if (!pagination) return;
+            pagination.innerHTML = '';
+            for (var i = 1; i <= totalPages; i++) {
+                var button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'btn ' + (i === currentPage ? 'btn-dark' : 'btn-outline-secondary');
+                button.textContent = i;
+                button.setAttribute('data-page', i);
+                button.addEventListener('click', function () {
+                    currentPage = Number(this.getAttribute('data-page'));
+                    render();
+                });
+                pagination.appendChild(button);
+            }
+        }
+        function render() {
+            var visibleRows = filteredRows();
+            var totalPages = Math.max(1, Math.ceil(visibleRows.length / pageSize));
+            if (currentPage > totalPages) currentPage = totalPages;
+            rows.forEach(function (row) { row.classList.add('d-none'); });
+            var start = (currentPage - 1) * pageSize;
+            visibleRows.slice(start, start + pageSize).forEach(function (row) { row.classList.remove('d-none'); });
+            if (empty) empty.classList.toggle('d-none', visibleRows.length > 0);
+            if (paginationText) {
+                var end = Math.min(start + pageSize, visibleRows.length);
+                paginationText.textContent = visibleRows.length ? ('Showing ' + (start + 1) + '-' + end + ' of ' + visibleRows.length) : 'No services';
+            }
+            renderPagination(totalPages);
+        }
+        [search, status].forEach(function (field) {
+            if (!field) return;
+            field.addEventListener('input', function () { currentPage = 1; render(); });
+            field.addEventListener('change', function () { currentPage = 1; render(); });
+        });
+        render();
+    })();
+
+    (function () {
+        var contextPath = '${pageContext.request.contextPath}';
+        var name = document.getElementById('draftAddonName');
+        var description = document.getElementById('draftAddonDescription');
+        var price = document.getElementById('draftAddonPrice');
+        var image = document.getElementById('draftAddonImage');
+        var available = document.getElementById('draftAddonAvailable');
+        var imageWrap = document.getElementById('draftAddonImageWrap');
+        var title = document.getElementById('draftAddonTitle');
+        var text = document.getElementById('draftAddonText');
+        var priceLabel = document.getElementById('draftAddonPriceLabel');
+        var statusLabel = document.getElementById('draftAddonStatusLabel');
+
+        function imageSrc(value) {
+            value = (value || '').trim();
+            if (!value) return '';
+            return (/^(https?:)?\/\//i.test(value) || value.charAt(0) === '/') ? value : contextPath + '/' + value;
+        }
+        function money(value) {
+            var number = Number(value || 0);
+            return (isNaN(number) ? 0 : number).toLocaleString('vi-VN');
+        }
+        function renderDraft() {
+            if (!title || !imageWrap) return;
+            title.textContent = (name.value || '').trim() || 'New service';
+            text.textContent = (description.value || '').trim() || 'No description yet.';
+            priceLabel.textContent = money(price.value);
+            statusLabel.textContent = available.checked ? 'Available' : 'Hidden';
+            statusLabel.className = available.checked ? 'badge text-bg-success' : 'badge text-bg-secondary';
+            var src = imageSrc(image.value) || contextPath + '/assets/img/le-royal/Champagne Welcome Service.jpg';
+            imageWrap.innerHTML = '<img class="rounded-3" src="' + src + '" alt="">';
+        }
+        [name, description, price, image, available].forEach(function (field) {
+            if (!field) return;
+            field.addEventListener('input', renderDraft);
+            field.addEventListener('change', renderDraft);
+        });
+        renderDraft();
+
+        var form = document.getElementById('addonEditorForm');
+        var modal = document.getElementById('addonConfirmModal');
+        var confirmSave = document.getElementById('addonConfirmSave');
+        var confirmed = false;
+        function renderConfirm() {
+            renderDraft();
+            var confirmImage = document.getElementById('addonConfirmImage');
+            var confirmName = document.getElementById('addonConfirmName');
+            var confirmText = document.getElementById('addonConfirmText');
+            var confirmPrice = document.getElementById('addonConfirmPrice');
+            var confirmStatus = document.getElementById('addonConfirmStatus');
+            if (confirmImage) {
+                var src = imageSrc(image.value) || contextPath + '/assets/img/le-royal/Champagne Welcome Service.jpg';
+                confirmImage.innerHTML = '<img style="width:100%; height:100%; object-fit:cover;" src="' + src + '" alt="">';
+            }
+            if (confirmName && title) confirmName.textContent = title.textContent;
+            if (confirmText && text) confirmText.textContent = text.textContent;
+            if (confirmPrice && priceLabel) confirmPrice.textContent = priceLabel.textContent;
+            if (confirmStatus && statusLabel) {
+                confirmStatus.textContent = statusLabel.textContent;
+                confirmStatus.className = statusLabel.className;
+            }
+        }
+        if (form) {
+            form.addEventListener('submit', function (event) {
+                if (confirmed) return;
+                event.preventDefault();
+                renderConfirm();
+                if (window.bootstrap && modal) {
+                    window.bootstrap.Modal.getOrCreateInstance(modal).show();
+                } else if (window.confirm('Review this service and save?')) {
+                    confirmed = true;
+                    form.submit();
+                }
+            });
+        }
+        if (confirmSave && form) {
+            confirmSave.addEventListener('click', function () {
+                confirmed = true;
+                form.submit();
+            });
+        }
+    })();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

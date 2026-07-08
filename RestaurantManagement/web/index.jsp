@@ -69,8 +69,8 @@
             <div class="journey-path" data-journey-path>
                 <div class="journey-line" aria-hidden="true">
                     <svg class="journey-line-svg" viewBox="0 0 100 100" preserveAspectRatio="none" focusable="false">
-                        <path class="journey-line-base" d="M50 3 C6 8 6 13 50 16 C94 20 94 26 50 31 C6 36 6 42 50 47 C94 52 94 58 50 63 C6 68 6 74 50 79 C94 84 94 91 50 97" />
-                        <path class="journey-line-progress" data-journey-progress pathLength="100" d="M50 3 C6 8 6 13 50 16 C94 20 94 26 50 31 C6 36 6 42 50 47 C94 52 94 58 50 63 C6 68 6 74 50 79 C94 84 94 91 50 97" />
+                        <path class="journey-line-base" d="M50 3 C2 8 2 13 50 16 C98 20 98 26 50 31 C2 36 2 42 50 47 C98 52 98 58 50 63 C2 68 2 74 50 79 C98 84 98 91 50 97" />
+                        <path class="journey-line-progress" data-journey-progress pathLength="100" d="M50 3 C2 8 2 13 50 16 C98 20 98 26 50 31 C2 36 2 42 50 47 C98 52 98 58 50 63 C2 68 2 74 50 79 C98 84 98 91 50 97" />
                     </svg>
                 </div>
                 <article class="journey-point journey-point-left">
@@ -305,7 +305,7 @@
                 }
                 var previous = markerStops[index - 1];
                 var span = stop - previous;
-                var swingX = index % 2 === 1 ? 6 : 94;
+                var swingX = index % 2 === 1 ? 2 : 98;
                 var mid = previous + span * 0.5;
                 var controlA = previous + span * 0.22;
                 var controlB = previous + span * 0.78;

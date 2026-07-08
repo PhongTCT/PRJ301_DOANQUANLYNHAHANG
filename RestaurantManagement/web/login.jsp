@@ -2,26 +2,40 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <jsp:include page="header.jsp" />
 
-<main class="container py-5">
-    <div class="row justify-content-center align-items-center g-4">
-        <div class="col-lg-6">
-            <div class="pe-lg-4">
-                <span class="badge text-bg-light border text-dark text-uppercase fw-semibold mb-3"><i class="fa-solid fa-lock"></i> Secure access</span>
-                <h1 class="display-5 fw-bold mb-3">Welcome Back</h1>
-                <p class="text-secondary mb-4">Sign in to keep your booking draft, manage reservations, and continue the dining plan you started.</p>
-                <img src="https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=900&q=80" class="img-fluid rounded-4 shadow-lift" alt="Bright restaurant dining room">
+<main class="auth-page">
+    <div class="container py-5">
+        <div class="row justify-content-center align-items-center g-5">
+            <div class="col-lg-6">
+                <div class="auth-story pe-lg-4">
+                    <span class="badge text-bg-light border text-dark text-uppercase fw-semibold mb-3"><i class="fa-solid fa-lock"></i> Secure access</span>
+                    <h1 class="auth-title mb-3">Welcome Back</h1>
+                    <p class="auth-copy mb-4">Sign in to keep your booking draft, manage reservations, and continue the dining plan you started.</p>
+                    <figure class="auth-visual shadow-lift mb-0">
+                        <img src="${pageContext.request.contextPath}/assets/img/le-royal/seating/dining-room.jpg" alt="Le Royal dining room">
+                        <figcaption>
+                            <span>Le Royal</span>
+                            <small>Quiet dining, seasonal rhythm</small>
+                        </figcaption>
+                    </figure>
+                </div>
             </div>
-        </div>
-        <div class="col-md-8 col-lg-5">
-            <section class="card shadow-sm border-0 p-4 shadow-lift">
-                <ul class="nav nav-pills nav-fill mb-4" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link fw-semibold ${not showRegisterForm ? 'active' : ''}" id="loginTab" data-bs-toggle="pill" data-bs-target="#loginPanel" type="button" role="tab">Login</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link fw-semibold ${showRegisterForm ? 'active' : ''}" id="registerTab" data-bs-toggle="pill" data-bs-target="#registerPanel" type="button" role="tab">Register</button>
-                    </li>
-                </ul>
+            <div class="col-md-9 col-lg-5">
+                <section class="auth-card">
+                    <div class="auth-card-header mb-4">
+                        <div>
+                            <span class="auth-eyebrow">Member entrance</span>
+                            <h2>Access your table</h2>
+                        </div>
+                        <span class="auth-mark" aria-hidden="true">LR</span>
+                    </div>
+                    <ul class="nav nav-pills nav-fill auth-tabs mb-4" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-semibold ${not showRegisterForm ? 'active' : ''}" id="loginTab" data-bs-toggle="pill" data-bs-target="#loginPanel" type="button" role="tab">Login</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-semibold ${showRegisterForm ? 'active' : ''}" id="registerTab" data-bs-toggle="pill" data-bs-target="#registerPanel" type="button" role="tab">Register</button>
+                        </li>
+                    </ul>
 
                 <c:if test="${not empty error}">
                     <div class="alert alert-danger py-2 small">${error}</div>
@@ -38,7 +52,7 @@
                         <c:set var="pendingGoogle" value="${not empty googleDraft ? googleDraft : sessionScope.pendingGoogleLogin}" />
                         <form action="MainController" method="POST">
                             <input type="hidden" name="action" value="registerGoogle">
-                            <div class="bg-light border rounded p-3 mb-4">
+                            <div class="auth-account-note p-3 mb-4">
                                 <div class="d-flex align-items-center gap-3">
                                     <c:if test="${not empty pendingGoogle.avatarUrl}">
                                         <img src="${pendingGoogle.avatarUrl}" class="rounded-circle" style="width:52px;height:52px;object-fit:cover;" alt="Google account avatar">
@@ -65,7 +79,7 @@
                                 <label class="form-label small fw-bold">Date of birth</label>
                                 <input type="date" name="dateOfBirth" class="form-control">
                             </div>
-                            <button type="submit" class="btn btn-dark w-100">Create account and continue</button>
+                            <button type="submit" class="btn btn-dark w-100 py-2">Create account and continue</button>
                             <div class="text-center mt-3">
                                 <a href="MainController?action=login&clearGoogleDraft=1" class="small text-secondary">Use another login method</a>
                             </div>
@@ -75,7 +89,7 @@
                         <c:set var="pendingFacebook" value="${not empty facebookDraft ? facebookDraft : sessionScope.pendingFacebookLogin}" />
                         <form action="MainController" method="POST">
                             <input type="hidden" name="action" value="registerFacebook">
-                            <div class="bg-light border rounded p-3 mb-4">
+                            <div class="auth-account-note p-3 mb-4">
                                 <div class="d-flex align-items-center gap-3">
                                     <c:if test="${not empty pendingFacebook.avatarUrl}">
                                         <img src="${pendingFacebook.avatarUrl}" class="rounded-circle" style="width:52px;height:52px;object-fit:cover;" alt="Facebook account avatar">
@@ -102,7 +116,7 @@
                                 <label class="form-label small fw-bold">Date of birth</label>
                                 <input type="date" name="dateOfBirth" class="form-control">
                             </div>
-                            <button type="submit" class="btn btn-dark w-100">Create account and continue</button>
+                            <button type="submit" class="btn btn-dark w-100 py-2">Create account and continue</button>
                             <div class="text-center mt-3">
                                 <a href="MainController?action=login&clearFacebookDraft=1" class="small text-secondary">Use another login method</a>
                             </div>
@@ -121,7 +135,7 @@
                                 <label class="form-label small fw-bold">Password</label>
                                 <input type="password" name="password" class="form-control" placeholder="123456" required>
                             </div>
-                            <button type="submit" class="btn btn-dark w-100">Login</button>
+                            <button type="submit" class="btn btn-dark w-100 py-2">Login</button>
                         </form>
 
                         <div class="d-flex align-items-center gap-3 my-4">
@@ -149,7 +163,7 @@
                             <input type="hidden" name="facebookAccessToken" id="facebookAccessToken">
                         </form>
 
-                        <div class="bg-light border rounded p-3 mt-4 small">
+                        <div class="auth-account-note p-3 mt-4 small">
                             <div class="fw-bold mb-2">Quick test accounts</div>
                             <div class="mb-1"><code>admin / 123456</code> (admin)</div>
                             <div class="mb-1"><code>staff / 123456</code> (staff)</div>
@@ -180,13 +194,14 @@
                                 <label class="form-label small fw-bold">Password</label>
                                 <input type="password" name="password" class="form-control" placeholder="At least 6 characters" required>
                             </div>
-                            <button type="submit" class="btn btn-dark w-100">Create Account</button>
+                            <button type="submit" class="btn btn-dark w-100 py-2">Create Account</button>
                         </form>
                     </div>
                 </div>
                     </c:otherwise>
                 </c:choose>
             </section>
+        </div>
         </div>
     </div>
 </main>
