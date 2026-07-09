@@ -1,6 +1,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
+<fmt:setBundle basename="i18n.messages" />
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <c:if test="${param.embed != '1'}">
 <!DOCTYPE html>
@@ -8,7 +10,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu items - Le Royal</title>
+    <title><fmt:message key="admin.menuitems.title" /> - Le Royal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -33,25 +35,25 @@
 </c:if>
     <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
         <div>
-            <p class="text-uppercase text-secondary small mb-1">Restaurant Admin</p>
-            <h1 class="h3 mb-1">Menu items</h1>
-            <p class="text-secondary mb-0">Search, filter and manage dishes without leaving the admin workspace.</p>
+            <p class="text-uppercase text-secondary small mb-1"><fmt:message key="admin.dashboard.workspace.title" /></p>
+            <h1 class="h3 mb-1"><fmt:message key="admin.menuitems.title" /></h1>
+            <p class="text-secondary mb-0"><fmt:message key="admin.menuitems.desc" /></p>
         </div>
         <div class="d-flex flex-wrap gap-2">
             <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminMenuSets${param.embed == '1' ? '&embed=1' : ''}">
-                <i class="fa-solid fa-layer-group me-2"></i>Set menus
+                <i class="fa-solid fa-layer-group me-2"></i><fmt:message key="admin.menuitems.btn.setmenus" />
             </a>
             <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminCategories${param.embed == '1' ? '&embed=1' : ''}">
-                <i class="fa-solid fa-list-ul me-2"></i>Manage dish groups
+                <i class="fa-solid fa-list-ul me-2"></i><fmt:message key="admin.menuitems.btn.categories" />
             </a>
             <button class="btn btn-dark btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#menuItemFormPanel" aria-expanded="${not empty editMenuItem ? 'true' : 'false'}">
-                <i class="fa-solid fa-plus me-2"></i>Add item
+                <i class="fa-solid fa-plus me-2"></i><fmt:message key="admin.menuitems.btn.add" />
             </button>
         </div>
     </div>
 
     <c:if test="${not empty error}"><div class="alert alert-danger">${error}</div></c:if>
-    <c:if test="${param.saved == '1'}"><div class="alert alert-success">Saved successfully.</div></c:if>
+    <c:if test="${param.saved == '1'}"><div class="alert alert-success"><fmt:message key="admin.common.saved.success" /></div></c:if>
 
     <section id="menuItemFormPanel" class="collapse ${not empty editMenuItem ? 'show' : ''} mb-4">
         <form id="menuItemEditorForm" class="card" method="post" action="MainController">
@@ -60,16 +62,21 @@
                 <input type="hidden" name="id" value="${editMenuItem.id}">
                 <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
                     <div>
-                        <div class="admin-section-label">Dish editor</div>
-                        <h2 class="h5 mb-0">${empty editMenuItem ? 'Create item' : 'Edit item'}</h2>
+                        <div class="admin-section-label"><fmt:message key="admin.menuitems.editor.title" /></div>
+                        <h2 class="h5 mb-0">
+                            <c:choose>
+                                <c:when test="${empty editMenuItem}"><fmt:message key="admin.menuitems.editor.create" /></c:when>
+                                <c:otherwise><fmt:message key="admin.menuitems.editor.edit" /></c:otherwise>
+                            </c:choose>
+                        </h2>
                     </div>
                     <c:if test="${not empty editMenuItem}">
-                        <a class="btn btn-outline-secondary btn-sm" href="MainController?action=adminMenuItems${param.embed == '1' ? '&embed=1' : ''}">Clear edit</a>
+                        <a class="btn btn-outline-secondary btn-sm" href="MainController?action=adminMenuItems${param.embed == '1' ? '&embed=1' : ''}"><fmt:message key="admin.menuitems.editor.clear" /></a>
                     </c:if>
                 </div>
                 <div class="row g-3">
                     <div class="col-md-4">
-                        <label class="form-label">Category</label>
+                        <label class="form-label"><fmt:message key="admin.menuitems.label.category" /></label>
                         <select id="draftItemCategory" class="form-select" name="categoryId" required>
                             <c:forEach items="${categories}" var="cat">
                                 <option value="${cat.id}" ${not empty editMenuItem && editMenuItem.category.id == cat.id ? 'selected' : ''}>${not empty cat.categoryNameVi ? cat.categoryNameVi : cat.categoryName}</option>
@@ -77,37 +84,37 @@
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Item name (VI)</label>
+                        <label class="form-label"><fmt:message key="admin.menuitems.label.name.vi" /></label>
                         <input id="draftItemName" class="form-control" name="itemNameVi" value="${editMenuItem.itemNameVi}" required>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Item name (EN, optional)</label>
+                        <label class="form-label"><fmt:message key="admin.menuitems.label.name.en" /></label>
                         <input class="form-control" name="itemName" value="${editMenuItem.itemName}">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Description (VI)</label>
+                        <label class="form-label"><fmt:message key="admin.menuitems.label.desc.vi" /></label>
                         <textarea id="draftItemDescription" class="form-control" name="descriptionVi" rows="3">${editMenuItem.descriptionVi}</textarea>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Description (EN, optional)</label>
+                        <label class="form-label"><fmt:message key="admin.menuitems.label.desc.en" /></label>
                         <textarea class="form-control" name="description" rows="3">${editMenuItem.description}</textarea>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Image URL</label>
+                        <label class="form-label"><fmt:message key="admin.menuitems.label.image" /></label>
                         <input id="draftItemImage" class="form-control" name="imageUrl" value="${editMenuItem.imageUrl}">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Base price</label>
+                        <label class="form-label"><fmt:message key="admin.menuitems.label.baseprice" /></label>
                         <input id="draftItemPrice" class="form-control" name="basePrice" type="number" min="0" step="1" value="${empty editMenuItem ? 0 : editMenuItem.basePrice}">
                     </div>
                     <div class="col-md-3 d-flex align-items-end">
                         <div class="form-check form-switch mb-2">
                             <input id="draftItemAvailable" class="form-check-input" type="checkbox" name="isAvailable" value="true" ${empty editMenuItem || editMenuItem.isAvailable ? 'checked' : ''}>
-                            <label class="form-check-label">Available</label>
+                            <label class="form-check-label"><fmt:message key="admin.common.available" /></label>
                         </div>
                     </div>
                     <div class="col-12 d-flex justify-content-end">
-                        <button class="btn btn-dark px-4" type="submit">Save item</button>
+                        <button class="btn btn-dark px-4" type="submit"><fmt:message key="admin.common.save" /></button>
                     </div>
                     <div class="col-12">
                         <aside class="admin-draft-preview rounded-3 p-3">
@@ -118,13 +125,13 @@
                                     </div>
                                 </div>
                                 <div class="col-md-8">
-                                    <p class="text-uppercase text-secondary small mb-1">Draft preview</p>
-                                    <h3 id="draftItemTitle" class="h5 mb-1">New dish</h3>
-                                    <p id="draftItemText" class="text-secondary mb-2">No description yet.</p>
+                                    <p class="text-uppercase text-secondary small mb-1"><fmt:message key="admin.menuitems.preview.title" /></p>
+                                    <h3 id="draftItemTitle" class="h5 mb-1"><fmt:message key="admin.menuitems.preview.new" /></h3>
+                                    <p id="draftItemText" class="text-secondary mb-2"><fmt:message key="admin.menuitems.preview.nodesc" /></p>
                                     <div class="d-flex flex-wrap gap-2">
-                                        <span id="draftItemCategoryLabel" class="badge text-bg-light border text-dark">Category</span>
+                                        <span id="draftItemCategoryLabel" class="badge text-bg-light border text-dark"><fmt:message key="admin.menuitems.label.category" /></span>
                                         <span id="draftItemPriceLabel" class="badge text-bg-light border text-dark">0đ</span>
-                                        <span id="draftItemStatusLabel" class="badge text-bg-success">Available</span>
+                                        <span id="draftItemStatusLabel" class="badge text-bg-success"><fmt:message key="admin.common.available" /></span>
                                     </div>
                                 </div>
                             </div>
@@ -140,10 +147,10 @@
             <div class="modal-content border-0 shadow">
                 <div class="modal-header">
                     <div>
-                        <p class="text-uppercase text-secondary small mb-1">Confirm dish</p>
-                        <h5 class="modal-title" id="menuItemConfirmTitle">Review menu item</h5>
+                        <p class="text-uppercase text-secondary small mb-1"><fmt:message key="admin.menuitems.modal.confirm" /></p>
+                        <h5 class="modal-title" id="menuItemConfirmTitle"><fmt:message key="admin.menuitems.modal.review" /></h5>
                     </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<fmt:message key="admin.common.close" />"></button>
                 </div>
                 <div class="modal-body">
                     <div class="menu-confirm-summary mb-3">
@@ -153,19 +160,19 @@
                     </div>
                     <div class="row g-3 align-items-center">
                         <div class="col-12">
-                            <h3 id="menuItemConfirmName" class="h5 mb-1">New dish</h3>
-                            <p id="menuItemConfirmText" class="text-secondary mb-2">No description yet.</p>
+                            <h3 id="menuItemConfirmName" class="h5 mb-1"><fmt:message key="admin.menuitems.preview.new" /></h3>
+                            <p id="menuItemConfirmText" class="text-secondary mb-2"><fmt:message key="admin.menuitems.preview.nodesc" /></p>
                             <div class="d-flex flex-wrap gap-2">
-                                <span id="menuItemConfirmCategory" class="badge text-bg-light border text-dark">Category</span>
+                                <span id="menuItemConfirmCategory" class="badge text-bg-light border text-dark"><fmt:message key="admin.menuitems.label.category" /></span>
                                 <span id="menuItemConfirmPrice" class="badge text-bg-light border text-dark">0đ</span>
-                                <span id="menuItemConfirmStatus" class="badge text-bg-success">Available</span>
+                                <span id="menuItemConfirmStatus" class="badge text-bg-success"><fmt:message key="admin.common.available" /></span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Keep editing</button>
-                    <button id="menuItemConfirmSave" type="button" class="btn btn-dark">Confirm save</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><fmt:message key="admin.menuitems.modal.keep" /></button>
+                    <button id="menuItemConfirmSave" type="button" class="btn btn-dark"><fmt:message key="admin.menuitems.modal.save" /></button>
                 </div>
             </div>
         </div>
@@ -175,8 +182,8 @@
         <div class="card-body p-4">
             <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
                 <div>
-                    <div class="admin-section-label">Dish library</div>
-                    <h2 class="h5 mb-0">All dishes</h2>
+                    <div class="admin-section-label"><fmt:message key="admin.menuitems.library.title" /></div>
+                    <h2 class="h5 mb-0"><fmt:message key="admin.menuitems.library.sub" /></h2>
                 </div>
                 <div class="small text-secondary"><span id="menuItemResultCount">${menuItemList.size()}</span> items</div>
             </div>
@@ -185,12 +192,12 @@
                 <div class="col-lg-4">
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
-                        <input id="menuItemSearch" class="form-control" type="search" placeholder="Search dish name or description">
+                        <input id="menuItemSearch" class="form-control" type="search" placeholder="<fmt:message key="admin.menuitems.search" />">
                     </div>
                 </div>
                 <div class="col-sm-6 col-lg-3">
                     <select id="menuCategoryFilter" class="form-select">
-                        <option value="">All categories</option>
+                        <option value=""><fmt:message key="admin.common.filter.all.categories" /></option>
                         <c:forEach items="${categories}" var="cat">
                             <option value="${cat.id}">${not empty cat.categoryNameVi ? cat.categoryNameVi : cat.categoryName}</option>
                         </c:forEach>
@@ -198,19 +205,19 @@
                 </div>
                 <div class="col-sm-6 col-lg-2">
                     <select id="menuTypeFilter" class="form-select">
-                        <option value="">All types</option>
-                        <option value="APPETIZER">Appetizer</option>
-                        <option value="SOUP">Soup</option>
-                        <option value="MAIN">Main</option>
-                        <option value="DESSERT">Dessert</option>
-                        <option value="DRINK">Drink</option>
+                        <option value=""><fmt:message key="admin.common.filter.all.types" /></option>
+                        <option value="APPETIZER"><fmt:message key="admin.menuitems.type.appetizer" /></option>
+                        <option value="SOUP"><fmt:message key="admin.menuitems.type.soup" /></option>
+                        <option value="MAIN"><fmt:message key="admin.menuitems.type.main" /></option>
+                        <option value="DESSERT"><fmt:message key="admin.menuitems.type.dessert" /></option>
+                        <option value="DRINK"><fmt:message key="admin.menuitems.type.drink" /></option>
                     </select>
                 </div>
                 <div class="col-sm-6 col-lg-2">
                     <select id="menuStatusFilter" class="form-select">
-                        <option value="">All status</option>
-                        <option value="available">Available</option>
-                        <option value="hidden">Hidden</option>
+                        <option value=""><fmt:message key="admin.common.filter.all.status" /></option>
+                        <option value="available"><fmt:message key="admin.common.available" /></option>
+                        <option value="hidden"><fmt:message key="admin.common.hidden" /></option>
                     </select>
                 </div>
             </div>
@@ -219,11 +226,11 @@
                 <table class="table align-middle">
                     <thead>
                         <tr>
-                            <th>Dish</th>
-                            <th>Category</th>
-                            <th>Type</th>
-                            <th>Price</th>
-                            <th>Status</th>
+                            <th><fmt:message key="admin.menuitems.col.dish" /></th>
+                            <th><fmt:message key="admin.menuitems.col.category" /></th>
+                            <th><fmt:message key="admin.menuitems.col.type" /></th>
+                            <th><fmt:message key="admin.menuitems.col.price" /></th>
+                            <th><fmt:message key="admin.common.status" /></th>
                             <th></th>
                         </tr>
                     </thead>
@@ -261,15 +268,25 @@
                                 <td>${not empty item.category.categoryNameVi ? item.category.categoryNameVi : item.category.categoryName}</td>
                                 <td><span class="badge bg-light">${item.category.categoryType}</span></td>
                                 <td><fmt:formatNumber value="${item.basePrice}" pattern="#,##0"/></td>
-                                <td><span class="badge ${item.isAvailable ? 'text-bg-success' : 'text-bg-secondary'}">${item.isAvailable ? 'Available' : 'Hidden'}</span></td>
+                                <td><span class="badge ${item.isAvailable ? 'text-bg-success' : 'text-bg-secondary'}">
+                                    <c:choose>
+                                        <c:when test="${item.isAvailable}"><fmt:message key="admin.common.available"/></c:when>
+                                        <c:otherwise><fmt:message key="admin.common.hidden"/></c:otherwise>
+                                    </c:choose>
+                                </span></td>
                                 <td class="text-end">
-                                    <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminMenuItems&id=${item.id}${param.embed == '1' ? '&embed=1' : ''}">Edit</a>
-                                    <a class="btn btn-outline-secondary btn-sm" href="MainController?action=toggleMenuItem&id=${item.id}&enabled=${!item.isAvailable}${param.embed == '1' ? '&embed=1' : ''}">${item.isAvailable ? 'Hide' : 'Restore'}</a>
+                                    <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminMenuItems&id=${item.id}${param.embed == '1' ? '&embed=1' : ''}"><fmt:message key="admin.menuitems.btn.edit" /></a>
+                                    <a class="btn btn-outline-secondary btn-sm" href="MainController?action=toggleMenuItem&id=${item.id}&enabled=${!item.isAvailable}${param.embed == '1' ? '&embed=1' : ''}">
+                                        <c:choose>
+                                            <c:when test="${item.isAvailable}"><fmt:message key="admin.common.hide"/></c:when>
+                                            <c:otherwise><fmt:message key="admin.common.restore"/></c:otherwise>
+                                        </c:choose>
+                                    </a>
                                 </td>
                             </tr>
                         </c:forEach>
                         <tr id="menuItemEmpty" class="d-none">
-                            <td colspan="6" class="text-center text-secondary py-5">No dishes match these filters.</td>
+                            <td colspan="6" class="text-center text-secondary py-5"><fmt:message key="admin.menuitems.empty" /></td>
                         </tr>
                     </tbody>
                 </table>
@@ -277,7 +294,7 @@
 
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mt-3">
                 <div id="menuPaginationText" class="small text-secondary"></div>
-                <div id="menuPagination" class="btn-group btn-group-sm" role="group" aria-label="Menu item pagination"></div>
+                <div id="menuPagination" class="btn-group btn-group-sm" role="group" aria-label="<fmt:message key="admin.menuitems.library.sub" />"></div>
             </div>
         </div>
     </section>
@@ -338,7 +355,7 @@
             }
             if (paginationText) {
                 var end = Math.min(start + pageSize, visibleRows.length);
-                paginationText.textContent = visibleRows.length ? ('Showing ' + (start + 1) + '-' + end + ' of ' + visibleRows.length) : 'No items';
+                paginationText.textContent = visibleRows.length ? ('<fmt:message key="admin.common.pagination.show"><fmt:param value="' + (start + 1) + '"/><fmt:param value="' + end + '"/><fmt:param value="' + visibleRows.length + '"/></fmt:message>') : '<fmt:message key="admin.common.pagination.no.items"/>';
             }
             renderPagination(totalPages);
         }
@@ -403,11 +420,11 @@
         }
         function renderDraft() {
             if (!title || !imageWrap) return;
-            title.textContent = (name.value || '').trim() || 'New dish';
-            text.textContent = (description.value || '').trim() || 'No description yet.';
-            categoryLabel.textContent = category.options[category.selectedIndex] ? category.options[category.selectedIndex].text : 'Category';
+            title.textContent = (name.value || '').trim() || '<fmt:message key="admin.menuitems.preview.new"/>';
+            text.textContent = (description.value || '').trim() || '<fmt:message key="admin.menuitems.preview.nodesc"/>';
+            categoryLabel.textContent = category.options[category.selectedIndex] ? category.options[category.selectedIndex].text : '<fmt:message key="admin.menuitems.label.category"/>';
             priceLabel.textContent = money(price.value);
-            statusLabel.textContent = available.checked ? 'Available' : 'Hidden';
+            statusLabel.textContent = available.checked ? '<fmt:message key="admin.common.available"/>' : '<fmt:message key="admin.common.hidden"/>';
             statusLabel.className = available.checked ? 'badge text-bg-success' : 'badge text-bg-secondary';
             var src = imageSrc(image.value);
             imageWrap.innerHTML = src
@@ -455,7 +472,7 @@
                 renderConfirm();
                 if (window.bootstrap && modal) {
                     window.bootstrap.Modal.getOrCreateInstance(modal).show();
-                } else if (window.confirm('Review this dish and save?')) {
+                } else if (window.confirm('<fmt:message key="admin.menuitems.modal.review"/>')) {
                     confirmed = true;
                     form.submit();
                 }

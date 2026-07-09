@@ -1,11 +1,14 @@
 ﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
+<fmt:setBundle basename="i18n.messages" />
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Le Royal - Weekly Timeline</title>
+    <title>Le Royal - <fmt:message key="admin.timeline.title"/></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -31,11 +34,11 @@
             <div class="flex-grow-1 p-5 bg-light">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                        <h2 class="fw-bold mb-0">Weekly Timeline</h2>
-                        <p class="text-muted">Visual schedule of all reservations</p>
+                        <h2 class="fw-bold mb-0"><fmt:message key="admin.timeline.title"/></h2>
+                        <p class="text-muted"><fmt:message key="admin.timeline.desc"/></p>
                     </div>
                     <div class="d-flex align-items-center">
-                        <label for="datePicker" class="form-label mb-0 me-3 fw-bold text-muted">Jump to Date:</label>
+                        <label for="datePicker" class="form-label mb-0 me-3 fw-bold text-muted"><fmt:message key="admin.timeline.jump"/></label>
                         <input type="date" id="datePicker" class="form-control shadow-sm border-0" style="width: 200px; padding: 0.5rem 1rem;">
                     </div>
                 </div>

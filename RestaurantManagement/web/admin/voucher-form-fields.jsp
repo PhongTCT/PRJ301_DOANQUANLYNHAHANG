@@ -1,61 +1,62 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <div class="row g-3">
     <div class="col-12">
-        <div class="admin-fieldset-title">Thông tin mã</div>
+        <div class="admin-fieldset-title"><fmt:message key="admin.voucherfield.section.info"/></div>
     </div>
     <div class="col-md-4">
-        <label class="form-label">Mã voucher</label>
+        <label class="form-label"><fmt:message key="admin.voucherfield.label.code"/></label>
         <input name="voucherCode" class="form-control" required>
     </div>
     <div class="col-md-4">
-        <label class="form-label">Loại</label>
+        <label class="form-label"><fmt:message key="admin.voucherfield.label.type"/></label>
         <select name="voucherType" class="form-select">
             <c:forEach items="${voucherTypes}" var="t"><option value="${t}">${t}</option></c:forEach>
         </select>
     </div>
     <div class="col-md-4">
-        <label class="form-label">Trạng thái</label>
+        <label class="form-label"><fmt:message key="admin.voucherfield.label.status"/></label>
         <select name="isActive" class="form-select">
-            <option value="true">Đang bật</option>
-            <option value="false">Đã tắt</option>
+            <option value="true"><fmt:message key="admin.voucherfield.label.active"/></option>
+            <option value="false"><fmt:message key="admin.voucherfield.label.inactive"/></option>
         </select>
     </div>
 
     <div class="col-12 pt-2">
-        <div class="admin-fieldset-title">Mức giảm và điều kiện</div>
+        <div class="admin-fieldset-title"><fmt:message key="admin.voucherfield.section.discount"/></div>
     </div>
     <div class="col-md-3">
-        <label class="form-label">Giảm %</label>
+        <label class="form-label"><fmt:message key="admin.voucherfield.label.discount.percent"/></label>
         <input type="number" step="0.01" name="discountPercent" class="form-control">
     </div>
     <div class="col-md-3">
-        <label class="form-label">Giảm tiền</label>
+        <label class="form-label"><fmt:message key="admin.voucherfield.label.discount.amount"/></label>
         <input type="number" step="1000" name="discountAmount" class="form-control">
     </div>
     <div class="col-md-3">
-        <label class="form-label">Đơn tối thiểu</label>
+        <label class="form-label"><fmt:message key="admin.voucherfield.label.minorder"/></label>
         <input type="number" step="1000" name="minOrderValue" class="form-control">
     </div>
     <div class="col-md-3">
-        <label class="form-label">Giảm tối đa</label>
+        <label class="form-label"><fmt:message key="admin.voucherfield.label.maxdiscount"/></label>
         <input type="number" step="1000" name="maxDiscount" class="form-control">
     </div>
 
     <div class="col-12 pt-2">
-        <div class="admin-fieldset-title">Thời hạn và số lượng</div>
+        <div class="admin-fieldset-title"><fmt:message key="admin.voucherfield.section.validity"/></div>
     </div>
     <div class="col-md-4">
-        <label class="form-label">Số lượng</label>
+        <label class="form-label"><fmt:message key="admin.voucherfield.label.quantity"/></label>
         <input type="number" name="usageLimit" class="form-control" min="1" required>
     </div>
     <div class="col-md-4">
-        <label class="form-label">Từ ngày</label>
+        <label class="form-label"><fmt:message key="admin.voucherfield.label.from"/></label>
         <input type="datetime-local" name="validFrom" class="form-control" required>
     </div>
     <div class="col-md-4">
-        <label class="form-label">Đến ngày</label>
+        <label class="form-label"><fmt:message key="admin.voucherfield.label.to"/></label>
         <input type="datetime-local" name="validTo" class="form-control" required>
     </div>
 </div>

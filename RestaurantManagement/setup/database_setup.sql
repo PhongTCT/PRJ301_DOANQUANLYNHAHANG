@@ -104,13 +104,17 @@ CREATE TABLE customer_profile (
 CREATE TABLE rank_topup (
     id BIGINT IDENTITY(1,1) PRIMARY KEY,
     user_id BIGINT NOT NULL CONSTRAINT FK_rank_topup_user REFERENCES users(id),
-    target_rank VARCHAR(20) NOT NULL
-        CHECK (target_rank IN ('SILVER','GOLD','PLATINUM','DIAMOND')),
+    target_rank VARCHAR(20) NULL
+        CONSTRAINT CK_rank_topup_target_rank CHECK (target_rank IS NULL OR target_rank IN ('SILVER','GOLD','PLATINUM','DIAMOND')),
     amount DECIMAL(12,0) NOT NULL CHECK (amount >= 0),
     payment_method VARCHAR(10) NOT NULL CHECK (payment_method IN ('VNPAY','MOMO')),
     transaction_ref VARCHAR(100) NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'PENDING'
         CHECK (status IN ('PENDING','SUCCESS','FAILED')),
+    topup_type VARCHAR(20) NOT NULL CONSTRAINT DF_rank_topup_topup_type DEFAULT 'RANK',
+    voucher_code VARCHAR(50) NULL,
+    original_amount DECIMAL(12,0) NOT NULL CONSTRAINT DF_rank_topup_original_amount DEFAULT 0,
+    final_amount DECIMAL(12,0) NOT NULL CONSTRAINT DF_rank_topup_final_amount DEFAULT 0,
     created_at DATETIME2 NOT NULL DEFAULT GETDATE()
 );
 

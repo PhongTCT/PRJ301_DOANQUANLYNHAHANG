@@ -18,12 +18,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import service.BillingService;
+import service.LoyaltyService;
 import util.JPAUtil;
 
 @WebServlet(name = "InvoiceLookupController", urlPatterns = {"/staff/invoices", "/admin/invoices", "/customer/invoices"})
 public class InvoiceLookupController extends HttpServlet {
     private final InvoiceDAO invoiceDAO = new InvoiceDAO();
     private final BillingService billingService = new BillingService();
+    private final LoyaltyService loyaltyService = new LoyaltyService();
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
@@ -61,6 +63,7 @@ public class InvoiceLookupController extends HttpServlet {
             return;
         }
         String action = request.getParameter("action");
+        Long paidInvoiceId = null;
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
@@ -71,6 +74,7 @@ public class InvoiceLookupController extends HttpServlet {
                 invoice.setPaidAt(new Date());
                 invoice.setIssuedByStaff(em.find(User.class, user.getId()));
                 em.merge(invoice);
+                paidInvoiceId = invoice.getId();
                 request.getSession().setAttribute("successMessage", "Đã xác nhận thanh toán hóa đơn.");
             } else if ("generate".equals(action)) {
                 Reservation reservation = em.find(Reservation.class, Long.valueOf(request.getParameter("reservationId")));
@@ -95,6 +99,13 @@ public class InvoiceLookupController extends HttpServlet {
             request.getSession().setAttribute("errorMessage", e.getMessage());
         } finally {
             em.close();
+        }
+        if (paidInvoiceId != null) {
+            try {
+                loyaltyService.processPaidInvoice(paidInvoiceId);
+            } catch (Exception e) {
+                System.err.println("Loyalty processing failed for invoice " + paidInvoiceId + ": " + e.getMessage());
+            }
         }
         response.sendRedirect(request.getContextPath() + (request.getRequestURI().contains("/admin/") ? "/admin/invoices" : "/staff/invoices"));
     }

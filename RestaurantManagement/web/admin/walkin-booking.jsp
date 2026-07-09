@@ -1,12 +1,14 @@
 ﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
+<fmt:setBundle basename="i18n.messages" />
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Walk-in POS - Admin Dashboard</title>
+    <title><fmt:message key="admin.walkin.title"/> - Admin Dashboard</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -81,7 +83,7 @@
             <!-- Main Content -->
             <div class="flex-grow-1 p-5">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2 class="h3 mb-0 text-gray-800 fw-bold">Walk-in POS</h2>
+                    <h2 class="h3 mb-0 text-gray-800 fw-bold"><fmt:message key="admin.walkin.title"/></h2>
                 </div>
 
             <c:if test="${not empty sessionScope.successMessage}">
@@ -102,37 +104,37 @@
             <div class="pos-container">
                 <div class="card pos-card">
                     <div class="pos-header text-center">
-                        <h4 class="mb-0"><i class="fa-solid fa-cash-register me-2"></i>New Walk-in Order</h4>
-                        <p class="mb-0 text-white-50 mt-1">Create an instant reservation for walk-in customers (Type A)</p>
+                        <h4 class="mb-0"><i class="fa-solid fa-cash-register me-2"></i><fmt:message key="admin.walkin.subtitle"/></h4>
+                        <p class="mb-0 text-white-50 mt-1"><fmt:message key="admin.walkin.desc"/></p>
                     </div>
                     <div class="card-body p-4 p-md-5">
                         <form action="${pageContext.request.contextPath}/admin/walkin" method="POST">
                             
                             <!-- Customer Info -->
-                            <h5 class="fw-bold mb-3"><i class="fa-solid fa-user me-2 text-primary"></i>1. Customer Information</h5>
+                            <h5 class="fw-bold mb-3"><i class="fa-solid fa-user me-2 text-primary"></i>1. <fmt:message key="admin.walkin.customer.title"/></h5>
                             <div class="row mb-4">
                                 <div class="col-md-12">
-                                    <label class="form-label fw-medium">Customer Phone Number <span class="text-danger">*</span></label>
+                                    <label class="form-label fw-medium"><fmt:message key="admin.walkin.customer.phone"/> <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text bg-white"><i class="fa-solid fa-phone text-muted"></i></span>
-                                        <input type="tel" class="form-control" name="phone" id="phoneInput" placeholder="Enter registered phone number..." required>
+                                        <input type="tel" class="form-control" name="phone" id="phoneInput" placeholder="<fmt:message key='admin.walkin.customer.phone.placeholder'/>" required>
                                     </div>
                                     <small id="phoneError" class="text-danger mt-1 d-block fw-bold d-none"></small>
-                                    <small class="text-muted mt-1 d-block"><i class="fa-solid fa-info-circle me-1"></i>Must be an existing Type A customer.</small>
+                                    <small class="text-muted mt-1 d-block"><i class="fa-solid fa-info-circle me-1"></i><fmt:message key="admin.walkin.customer.phone.note"/></small>
                                 </div>
                             </div>
 
                             <hr class="my-4">
 
                             <!-- Guests Count -->
-                            <h5 class="fw-bold mb-3"><i class="fa-solid fa-users me-2 text-primary"></i>2. Guests</h5>
+                            <h5 class="fw-bold mb-3"><i class="fa-solid fa-users me-2 text-primary"></i>2. <fmt:message key="admin.walkin.guests"/></h5>
                             <div class="row mb-4">
                                 <div class="col-md-6 mb-3 mb-md-0">
-                                    <label class="form-label fw-medium">Adults <span class="text-danger">*</span></label>
+                                    <label class="form-label fw-medium"><fmt:message key="admin.walkin.adults"/> <span class="text-danger">*</span></label>
                                     <input type="number" class="form-control" name="adultsCount" value="2" min="1" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label fw-medium">Children</label>
+                                    <label class="form-label fw-medium"><fmt:message key="admin.walkin.children"/></label>
                                     <input type="number" class="form-control" name="childrenCount" value="0" min="0">
                                 </div>
                             </div>
@@ -140,28 +142,28 @@
                             <hr class="my-4">
 
                             <!-- Event Type -->
-                            <h5 class="fw-bold mb-3"><i class="fa-solid fa-glass-cheers me-2 text-primary"></i>3. Event Type</h5>
+                            <h5 class="fw-bold mb-3"><i class="fa-solid fa-glass-cheers me-2 text-primary"></i>3. <fmt:message key="admin.walkin.event"/></h5>
                             <div class="row mb-4">
                                 <div class="col-md-12">
-                                    <label class="form-label fw-medium">Dining Purpose / Event</label>
+                                    <label class="form-label fw-medium"><fmt:message key="admin.walkin.event.label"/></label>
                                     <select class="form-select" name="eventTypeId">
                                         <c:forEach items="${eventTypes}" var="et">
                                             <option value="${et.id}">${et.name}</option>
                                         </c:forEach>
                                     </select>
-                                    <small class="text-muted mt-1 d-block"><i class="fa-solid fa-info-circle me-1"></i>Defaults to Normal Dining if not changed.</small>
+                                    <small class="text-muted mt-1 d-block"><i class="fa-solid fa-info-circle me-1"></i><fmt:message key="admin.walkin.event.note"/></small>
                                 </div>
                             </div>
 
                             <hr class="my-4">
 
                             <!-- Table Selection -->
-                            <h5 class="fw-bold mb-3"><i class="fa-solid fa-chair me-2 text-primary"></i>4. Assign Table (Available Now) <span class="text-danger">*</span></h5>
+                            <h5 class="fw-bold mb-3"><i class="fa-solid fa-chair me-2 text-primary"></i>4. <fmt:message key="admin.walkin.table.title"/></h5>
                             <div class="row g-3 mb-4">
                                 <c:if test="${empty availableTables}">
                                     <div class="col-12">
                                         <div class="alert alert-warning">
-                                            <i class="fa-solid fa-exclamation-triangle me-2"></i>No tables available at the moment!
+                                            <i class="fa-solid fa-exclamation-triangle me-2"></i><fmt:message key="admin.walkin.table.none"/>
                                         </div>
                                     </div>
                                 </c:if>
@@ -171,7 +173,7 @@
                                             <input type="radio" name="tableId" value="${t.id}" class="table-radio" required>
                                             <div class="table-card" onclick="selectCard(this)">
                                                 <h5 class="mb-1 fw-bold">${t.tableCode}</h5>
-                                                <small>${t.capacity} seats</small><br>
+                                                <small>${t.capacity} <fmt:message key="admin.walkin.table.seats"/></small><br>
                                                 <small class="fw-bold text-success"><fmt:formatNumber value="${t.basePrice}" pattern="#,##0"/>đ</small>
                                             </div>
                                         </label>
@@ -181,7 +183,7 @@
 
                             <div class="text-end mt-5">
                                 <button type="submit" id="submitBtn" class="btn btn-pos btn-lg w-100 w-md-auto" ${empty availableTables ? 'disabled' : ''}>
-                                    <i class="fa-solid fa-bolt me-2"></i>Open Table & Create Order
+                                    <i class="fa-solid fa-bolt me-2"></i><fmt:message key="admin.walkin.btn.create"/>
                                 </button>
                             </div>
                         </form>

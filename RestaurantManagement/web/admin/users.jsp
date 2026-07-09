@@ -2,12 +2,14 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
+<fmt:setBundle basename="i18n.messages" />
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Users - Le Royal</title>
+    <title><fmt:message key="admin.users.title" /> - Le Royal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -52,9 +54,16 @@
         <div class="admin-shell">
             <section class="admin-hero">
                 <div>
-                    <div class="admin-kicker">Account Management</div>
-                    <h1 class="admin-title">Users</h1>
-                    <p class="admin-copy">${isAdmin ? 'Manage, ban, or change roles for all user accounts.' : 'View user accounts and account details.'}</p>
+                    <div class="admin-kicker"><fmt:message key="admin.users.title" /></div>
+                    <h1 class="admin-title"><fmt:message key="admin.users.list" /></h1>
+                    <c:choose>
+                        <c:when test="${isAdmin}">
+                            <p class="admin-copy"><fmt:message key="admin.users.desc" /></p>
+                        </c:when>
+                        <c:otherwise>
+                            <p class="admin-copy"><fmt:message key="admin.users.desc.view" /></p>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </section>
 
@@ -68,23 +77,28 @@
             <section class="admin-panel">
                 <div class="admin-panel-header">
                     <div>
-                        <div class="admin-section-label">User list</div>
-                        <h2 class="h4 fw-semibold mb-0 mt-1">All accounts <span class="text-secondary fw-normal fs-6">(${fn:length(users)} total)</span></h2>
+                        <div class="admin-section-label"><fmt:message key="admin.users.list" /></div>
+                        <h2 class="h4 fw-semibold mb-0 mt-1"><fmt:message key="admin.users.list.sub" /> <span class="text-secondary fw-normal fs-6">(${fn:length(users)} <fmt:message key="admin.users.records" />)</span></h2>
                     </div>
+                    <c:if test="${isAdmin || isStaff}">
+                        <button class="btn btn-dark btn-sm" style="border-radius:0" data-bs-toggle="modal" data-bs-target="#addCustomerModal">
+                            <i class="fa-solid fa-plus me-1"></i><fmt:message key="admin.users.add" />
+                        </button>
+                    </c:if>
                 </div>
 
                 <div class="p-3 pb-0">
                     <form method="GET" action="${pageContext.request.contextPath}/admin/users" class="admin-form d-flex align-items-center gap-2 admin-search">
                         <div class="input-group">
                             <span class="input-group-text"><i class="fa-solid fa-search"></i></span>
-                            <input type="text" name="keyword" class="form-control" placeholder="Search name, email, username, phone..." value="${keyword}">
+                            <input type="text" name="keyword" class="form-control" placeholder="<fmt:message key="admin.users.search" />" value="${keyword}">
                         </div>
                         <c:if test="${not empty keyword}">
-                            <a href="${pageContext.request.contextPath}/admin/users" class="btn btn-sm btn-outline-secondary" style="border-radius:0;border-color:#ded4c5">Clear</a>
+                            <a href="${pageContext.request.contextPath}/admin/users" class="btn btn-sm btn-outline-secondary" style="border-radius:0;border-color:#ded4c5"><fmt:message key="admin.users.clear" /></a>
                         </c:if>
                     </form>
                     <div class="admin-stats">
-                        <span class="admin-stat">Total: <strong>${fn:length(users)} users</strong></span>
+                        <span class="admin-stat"><strong>${fn:length(users)} <fmt:message key="admin.users.records" /></strong></span>
                     </div>
                 </div>
 
@@ -92,14 +106,14 @@
                     <table class="table table-hover align-middle admin-table">
                         <thead>
                             <tr>
-                                <th class="ps-4">ID</th>
-                                <th>Username</th>
-                                <th>Full Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>Role</th>
-                                <th>Status</th>
-                                <th class="text-end pe-4">Actions</th>
+                                <th class="ps-4"><fmt:message key="admin.users.col.id" /></th>
+                                <th><fmt:message key="admin.users.col.username" /></th>
+                                <th><fmt:message key="admin.users.col.fullname" /></th>
+                                <th><fmt:message key="admin.users.col.email" /></th>
+                                <th><fmt:message key="admin.users.col.phone" /></th>
+                                <th><fmt:message key="admin.users.col.role" /></th>
+                                <th><fmt:message key="admin.users.col.status" /></th>
+                                <th class="text-end pe-4"><fmt:message key="admin.users.col.actions" /></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -129,7 +143,7 @@
                                                         <c:if test="${u.role != 'ADMIN'}">
                                                             <c:choose>
                                                                 <c:when test="${u.status == 'ACTIVE'}">
-                                                                    <li><button class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#banModal${u.id}"><i class="fa-solid fa-ban me-2"></i>Ban</button></li>
+                                                                    <li><button class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#banModal${u.id}"><i class="fa-solid fa-ban me-2"></i><fmt:message key="admin.users.btn.ban" /></button></li>
                                                                 </c:when>
                                                                 <c:otherwise>
                                                                     <li>
@@ -137,7 +151,7 @@
                                                                             <input type="hidden" name="action" value="unban">
                                                                             <input type="hidden" name="userId" value="${u.id}">
                                                                             <input type="hidden" name="keyword" value="${keyword}">
-                                                                            <button class="dropdown-item text-success"><i class="fa-solid fa-check me-2"></i>Unban</button>
+                                                                            <button class="dropdown-item text-success"><i class="fa-solid fa-check me-2"></i><fmt:message key="admin.users.btn.unban" /></button>
                                                                         </form>
                                                                     </li>
                                                                 </c:otherwise>
@@ -149,25 +163,25 @@
                                                                     <input type="hidden" name="userId" value="${u.id}">
                                                                     <input type="hidden" name="keyword" value="${keyword}">
                                                                     <select name="role" class="dropdown-item border-0 bg-transparent" onchange="this.form.submit()" style="padding:.5rem .85rem;font-size:inherit">
-                                                                        <option value="" disabled selected>Change role...</option>
-                                                                        <option value="CUSTOMER">Customer</option>
-                                                                        <option value="STAFF">Staff</option>
+                                                                        <option value="" disabled selected><fmt:message key="admin.users.btn.changerole" /></option>
+                                                                        <option value="CUSTOMER"><fmt:message key="admin.users.role.customer" /></option>
+                                                                        <option value="STAFF"><fmt:message key="admin.users.role.staff" /></option>
                                                                     </select>
                                                                 </form>
                                                             </li>
                                                             <li><hr class="dropdown-divider"></li>
                                                             <li>
-                                                                <form method="POST" action="${pageContext.request.contextPath}/admin/users" class="d-inline" onsubmit="var p=prompt('Enter new password (min 6 chars):');if(p){this.querySelector('[name=newPassword]').value=p;return true}return false">
+                                                                <form method="POST" action="${pageContext.request.contextPath}/admin/users" class="d-inline" onsubmit="var p=prompt('<fmt:message key="admin.users.btn.resetpw" />:');if(p){this.querySelector('[name=newPassword]').value=p;return true}return false">
                                                                     <input type="hidden" name="action" value="resetPassword">
                                                                     <input type="hidden" name="userId" value="${u.id}">
                                                                     <input type="hidden" name="keyword" value="${keyword}">
                                                                     <input type="hidden" name="newPassword" value="">
-                                                                    <button class="dropdown-item"><i class="fa-solid fa-key me-2"></i>Reset Password</button>
+                                                                    <button class="dropdown-item"><i class="fa-solid fa-key me-2"></i><fmt:message key="admin.users.btn.resetpw" /></button>
                                                                 </form>
                                                             </li>
                                                         </c:if>
                                                         <c:if test="${u.role == 'ADMIN'}">
-                                                            <li><span class="dropdown-item text-secondary disabled"><i class="fa-solid fa-lock me-2"></i>Protected account</span></li>
+                                                            <li><span class="dropdown-item text-secondary disabled"><i class="fa-solid fa-lock me-2"></i><fmt:message key="admin.users.protected" /></span></li>
                                                         </c:if>
                                                     </ul>
                                                 </div>
@@ -178,16 +192,16 @@
                                                             <div class="modal-content">
                                                                 <div class="modal-body text-center py-4">
                                                                     <i class="fa-solid fa-ban text-danger fs-3 mb-3"></i>
-                                                                    <h5 class="fw-bold mb-2">Ban this user?</h5>
-                                                                    <p class="small text-secondary mb-0">This will prevent <strong>${u.username}</strong> from logging in.</p>
+                                                                    <h5 class="fw-bold mb-2"><fmt:message key="admin.users.modal.ban.title" /></h5>
+                                                                    <p class="small text-secondary mb-0"><fmt:message key="admin.users.modal.ban.desc"><fmt:param value="${u.username}"/></fmt:message></p>
                                                                 </div>
                                                                 <div class="modal-footer border-0 justify-content-center pt-0">
                                                                     <form method="POST" action="${pageContext.request.contextPath}/admin/users">
                                                                         <input type="hidden" name="action" value="ban">
                                                                         <input type="hidden" name="userId" value="${u.id}">
                                                                         <input type="hidden" name="keyword" value="${keyword}">
-                                                                        <button type="button" class="btn btn-light border" data-bs-dismiss="modal" style="border-radius:0">Cancel</button>
-                                                                        <button type="submit" class="btn btn-dark" style="border-radius:0">Ban</button>
+                                                                        <button type="button" class="btn btn-light border" data-bs-dismiss="modal" style="border-radius:0"><fmt:message key="admin.users.modal.ban.cancel" /></button>
+                                                                        <button type="submit" class="btn btn-dark" style="border-radius:0"><fmt:message key="admin.users.modal.ban.confirm" /></button>
                                                                     </form>
                                                                 </div>
                                                             </div>
@@ -196,7 +210,7 @@
                                                 </c:if>
                                             </c:when>
                                             <c:otherwise>
-                                                <span class="text-secondary small">View only</span>
+                                                <span class="text-secondary small"><fmt:message key="admin.users.viewonly" /></span>
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
@@ -207,7 +221,7 @@
                                     <td colspan="8">
                                         <div class="admin-empty">
                                             <i class="fa-regular fa-user"></i>
-                                            <p class="mb-0">No users found.</p>
+                                            <p class="mb-0"><fmt:message key="admin.users.empty" /></p>
                                         </div>
                                     </td>
                                 </tr>
@@ -217,14 +231,55 @@
                 </div>
 
                 <div class="admin-panel-footer d-flex justify-content-between align-items-center">
-                    <span>${fn:length(users)} record(s)</span>
+                    <span>${fn:length(users)} <fmt:message key="admin.users.records" /></span>
                     <c:if test="${not empty keyword and fn:length(users) > 0}">
-                        <span>Filtered by: <strong>"${keyword}"</strong></span>
+                        <span><fmt:message key="admin.users.filtered" /> <strong>"${keyword}"</strong></span>
                     </c:if>
                 </div>
             </section>
         </div>
     </main>
+</div>
+
+<!-- Add Customer Modal -->
+<div class="modal fade admin-modal" id="addCustomerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title admin-modal-title" style="font-size:1.5rem"><fmt:message key="admin.users.add.title" /></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="${pageContext.request.contextPath}/admin/users" class="admin-form">
+                <input type="hidden" name="action" value="create">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold"><fmt:message key="admin.users.add.username" /> <span class="text-danger">*</span></label>
+                        <input type="text" name="username" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold"><fmt:message key="admin.users.add.email" /> <span class="text-danger">*</span></label>
+                        <input type="email" name="email" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold"><fmt:message key="admin.users.add.password" /> <span class="text-danger">*</span></label>
+                        <input type="password" name="password" class="form-control" required minlength="6">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold"><fmt:message key="admin.users.add.fullname" /> <span class="text-danger">*</span></label>
+                        <input type="text" name="fullName" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold"><fmt:message key="admin.users.add.phone" /></label>
+                        <input type="text" name="phone" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light border" data-bs-dismiss="modal" style="border-radius:0"><fmt:message key="admin.users.modal.cancel" /></button>
+                    <button type="submit" class="btn btn-dark" style="border-radius:0"><fmt:message key="admin.users.add.submit" /></button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -2,12 +2,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
+<fmt:setBundle basename="i18n.messages" />
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quick Bill POS - Le Royal</title>
+    <title><fmt:message key="admin.quickbill.title"/> - Le Royal</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -88,8 +90,8 @@
                 <!-- Menu Section -->
                 <div class="menu-section">
                     <div class="category-tabs">
-                        <button class="cat-btn active" onclick="filterCategory('ALL', this)">All Items</button>
-                        <button class="cat-btn" onclick="filterCategory('combo', this)"><i class="fa-solid fa-layer-group me-1"></i>Combo Sets</button>
+                        <button class="cat-btn active" onclick="filterCategory('ALL', this)"><fmt:message key="admin.quickbill.tab.all"/></button>
+                        <button class="cat-btn" onclick="filterCategory('combo', this)"><i class="fa-solid fa-layer-group me-1"></i><fmt:message key="admin.quickbill.tab.combo"/></button>
                         <c:forEach items="${categories}" var="cat">
                             <button class="cat-btn" onclick="filterCategory('${cat.id}', this)">${cat.categoryName}</button>
                         </c:forEach>
@@ -165,7 +167,7 @@
                                 </c:choose>
                                 <div class="menu-item-info">
                                     <div class="menu-item-name">
-                                        <span class="badge bg-warning text-dark me-1" style="font-size: 0.7rem;">SET</span>
+                                        <span class="badge bg-warning text-dark me-1" style="font-size: 0.7rem;"><fmt:message key="admin.quickbill.badge.set"/></span>
                                         ${setDisplayName}
                                     </div>
                                     <div class="d-flex justify-content-between align-items-end mt-auto">
@@ -183,14 +185,14 @@
                 <!-- Cart Section -->
                 <div class="cart-section">
                     <div class="cart-header">
-                        <h5 class="m-0 fw-bold"><i class="fa-solid fa-cart-shopping me-2"></i>Current Order</h5>
+                        <h5 class="m-0 fw-bold"><i class="fa-solid fa-cart-shopping me-2"></i><fmt:message key="admin.quickbill.order.title"/></h5>
                     </div>
                     
                     <div class="cart-items" id="cartItems">
                         <div class="empty-cart" id="emptyCart">
                             <i class="fa-solid fa-basket-shopping"></i>
-                            <p class="m-0 fw-medium">No items in cart</p>
-                            <small>Click items from the menu to add them</small>
+                            <p class="m-0 fw-medium"><fmt:message key="admin.quickbill.order.empty"/></p>
+                            <small><fmt:message key="admin.quickbill.order.empty.sub"/></small>
                         </div>
                     </div>
                     
@@ -200,24 +202,24 @@
                             <div class="dining-options">
                                 <label class="dining-opt-btn active" id="btnDineIn">
                                     <input type="radio" name="diningType" value="DINE_IN" checked onchange="toggleDiningType()">
-                                    <i class="fa-solid fa-bell-concierge me-1"></i> Dine In
+                                    <i class="fa-solid fa-bell-concierge me-1"></i> <fmt:message key="admin.quickbill.order.dinein"/>
                                 </label>
                                 <label class="dining-opt-btn" id="btnTakeAway">
                                     <input type="radio" name="diningType" value="TAKE_AWAY" onchange="toggleDiningType()">
-                                    <i class="fa-solid fa-bag-shopping me-1"></i> Take Away
+                                    <i class="fa-solid fa-bag-shopping me-1"></i> <fmt:message key="admin.quickbill.order.takeaway"/>
                                 </label>
                             </div>
                             
                             <!-- Guest Count & Table Selection (Only for Dine In) -->
                             <div id="dineInOptions">
                                 <div class="mb-3 mt-3">
-                                    <label class="form-label fw-bold text-secondary" style="font-size: 0.85rem;">Number of Guests</label>
+                                    <label class="form-label fw-bold text-secondary" style="font-size: 0.85rem;"><fmt:message key="admin.quickbill.order.guests"/></label>
                                     <input type="number" class="form-control fw-medium" name="guestCount" id="guestCount" min="1" value="1">
                                 </div>
                                 
                                 <div class="table-selector" id="tableSelectorDiv">
                                     <select class="form-select fw-medium" name="tableId" id="tableId" style="border-color: #cbd5e1;">
-                                        <option value="" data-capacity="0">-- Select Table --</option>
+                                        <option value="" data-capacity="0"><fmt:message key="admin.quickbill.order.selecttable"/></option>
                                         <c:forEach items="${availableTables}" var="t">
                                             <option value="${t.id}" data-price="${t.basePrice}" data-capacity="${t.capacity}">Table ${t.tableCode} (Cap: ${t.capacity}) - Base: <fmt:formatNumber value="${t.basePrice}" pattern="#,##0"/>₫</option>
                                         </c:forEach>
@@ -226,20 +228,20 @@
                             </div>
 
                             <div class="summary-row mt-3">
-                                <span>Subtotal</span>
+                                <span><fmt:message key="admin.quickbill.order.subtotal"/></span>
                                 <span id="summarySubtotal" class="fw-bold text-dark">0 ₫</span>
                             </div>
                             <div class="summary-row" id="tableFeeRow">
-                                <span>Table Base Price</span>
+                                <span><fmt:message key="admin.quickbill.order.tablefee"/></span>
                                 <span id="summaryTableFee" class="fw-bold text-dark">0 ₫</span>
                             </div>
                             <div class="summary-total">
-                                <span>Total</span>
+                                <span><fmt:message key="admin.quickbill.order.total"/></span>
                                 <span id="summaryTotal" class="text-primary">0 ₫</span>
                             </div>
                             
                             <button type="button" class="btn btn-primary w-100 py-3 mt-3 fw-bold fs-5 shadow-sm" onclick="submitOrder()" style="border-radius: 10px;">
-                                <i class="fa-solid fa-file-invoice-dollar me-2"></i>Checkout & Print Bill
+                                <i class="fa-solid fa-file-invoice-dollar me-2"></i><fmt:message key="admin.quickbill.btn.checkout"/>
                             </button>
                         </form>
                     </div>
@@ -434,7 +436,7 @@
         // Submit Order
         function submitOrder() {
             if (Object.keys(cart).length === 0) {
-                Swal.fire('Empty Cart', 'Please add some items to the cart first.', 'warning');
+                Swal.fire('<fmt:message key="admin.quickbill.alert.empty.title"/>', '<fmt:message key="admin.quickbill.alert.empty.msg"/>', 'warning');
                 return;
             }
             
@@ -444,11 +446,11 @@
             
             if (isDineIn) {
                 if (!tableId) {
-                    Swal.fire('Table Required', 'Please select a table for Dine In.', 'warning');
+                    Swal.fire('<fmt:message key="admin.quickbill.alert.table.title"/>', '<fmt:message key="admin.quickbill.alert.table.msg"/>', 'warning');
                     return;
                 }
                 if (!guestCount || guestCount < 1) {
-                    Swal.fire('Invalid Input', 'Please enter a valid number of guests.', 'warning');
+                    Swal.fire('<fmt:message key="admin.quickbill.alert.guests.title"/>', '<fmt:message key="admin.quickbill.alert.guests.msg"/>', 'warning');
                     return;
                 }
                 
@@ -458,7 +460,7 @@
                 const capacity = parseInt(selectedOption.getAttribute('data-capacity')) || 0;
                 
                 if (guestCount > capacity) {
-                    Swal.fire('Over Capacity', 'The number of guests (' + guestCount + ') exceeds the selected table capacity (' + capacity + '). Please select a larger table.', 'warning');
+                    Swal.fire('<fmt:message key="admin.quickbill.alert.capacity"/>', 'The number of guests (' + guestCount + ') exceeds the selected table capacity (' + capacity + '). Please select a larger table.', 'warning');
                     return;
                 }
             }
@@ -487,8 +489,8 @@
             
             // Show loading
             Swal.fire({
-                title: 'Processing Payment...',
-                text: 'Please wait',
+                title: '<fmt:message key="admin.quickbill.processing"/>',
+                text: '<fmt:message key="admin.quickbill.processing.wait"/>',
                 allowOutsideClick: false,
                 didOpen: () => {
                     Swal.showLoading();
@@ -509,9 +511,9 @@
                 if (data.success) {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Payment Successful!',
-                        text: 'Invoice generated successfully.',
-                        confirmButtonText: 'Print Bill & New Order'
+                        title: '<fmt:message key="admin.quickbill.success"/>',
+                        text: '<fmt:message key="admin.quickbill.success.msg"/>',
+                        confirmButtonText: '<fmt:message key="admin.quickbill.success.neworder"/>'
                     }).then(() => {
                         window.location.reload(); // Reload for new order
                     });

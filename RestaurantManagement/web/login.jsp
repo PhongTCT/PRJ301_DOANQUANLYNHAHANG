@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <jsp:include page="header.jsp" />
 
 <main class="auth-page">
@@ -7,14 +8,14 @@
         <div class="row justify-content-center align-items-center g-5">
             <div class="col-lg-6">
                 <div class="auth-story pe-lg-4">
-                    <span class="badge text-bg-light border text-dark text-uppercase fw-semibold mb-3"><i class="fa-solid fa-lock"></i> Secure access</span>
-                    <h1 class="auth-title mb-3">Welcome Back</h1>
-                    <p class="auth-copy mb-4">Sign in to keep your booking draft, manage reservations, and continue the dining plan you started.</p>
+                    <span class="badge text-bg-light border text-dark text-uppercase fw-semibold mb-3"><i class="fa-solid fa-lock"></i> <fmt:message key="auth.badge.secure"/></span>
+                    <h1 class="auth-title mb-3"><fmt:message key="auth.title.welcome"/></h1>
+                    <p class="auth-copy mb-4"><fmt:message key="auth.subtitle"/></p>
                     <figure class="auth-visual shadow-lift mb-0">
                         <img src="${pageContext.request.contextPath}/assets/img/le-royal/seating/dining-room.jpg" alt="Le Royal dining room">
                         <figcaption>
                             <span>Le Royal</span>
-                            <small>Quiet dining, seasonal rhythm</small>
+                            <small><fmt:message key="auth.le-royal.sub"/></small>
                         </figcaption>
                     </figure>
                 </div>
@@ -23,17 +24,17 @@
                 <section class="auth-card">
                     <div class="auth-card-header mb-4">
                         <div>
-                            <span class="auth-eyebrow">Member entrance</span>
-                            <h2>Access your table</h2>
+                            <span class="auth-eyebrow"><fmt:message key="auth.eyebrow"/></span>
+                            <h2><fmt:message key="auth.title"/></h2>
                         </div>
                         <span class="auth-mark" aria-hidden="true">LR</span>
                     </div>
                     <ul class="nav nav-pills nav-fill auth-tabs mb-4" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link fw-semibold ${not showRegisterForm ? 'active' : ''}" id="loginTab" data-bs-toggle="pill" data-bs-target="#loginPanel" type="button" role="tab">Login</button>
+                            <button class="nav-link fw-semibold ${not showRegisterForm ? 'active' : ''}" id="loginTab" data-bs-toggle="pill" data-bs-target="#loginPanel" type="button" role="tab"><fmt:message key="auth.tab.login"/></button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link fw-semibold ${showRegisterForm ? 'active' : ''}" id="registerTab" data-bs-toggle="pill" data-bs-target="#registerPanel" type="button" role="tab">Register</button>
+                            <button class="nav-link fw-semibold ${showRegisterForm ? 'active' : ''}" id="registerTab" data-bs-toggle="pill" data-bs-target="#registerPanel" type="button" role="tab"><fmt:message key="auth.tab.register"/></button>
                         </li>
                     </ul>
 
@@ -58,30 +59,30 @@
                                         <img src="${pendingGoogle.avatarUrl}" class="rounded-circle" style="width:52px;height:52px;object-fit:cover;" alt="Google account avatar">
                                     </c:if>
                                     <div>
-                                        <div class="fw-bold">Complete your Google account</div>
+                                        <div class="fw-bold"><fmt:message key="auth.google.complete"/></div>
                                         <div class="small text-secondary">${pendingGoogle.email}</div>
                                     </div>
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label small fw-bold">Email</label>
+                                <label class="form-label small fw-bold"><fmt:message key="auth.label.email"/></label>
                                 <input type="email" class="form-control" value="${pendingGoogle.email}" readonly>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label small fw-bold">Full name</label>
+                                <label class="form-label small fw-bold"><fmt:message key="auth.label.fullname"/></label>
                                 <input type="text" name="fullName" class="form-control" value="${pendingGoogle.fullName}" required>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label small fw-bold">Phone</label>
+                                <label class="form-label small fw-bold"><fmt:message key="auth.label.phone"/></label>
                                 <input type="tel" name="phone" class="form-control" placeholder="0901234567" required>
                             </div>
                             <div class="mb-4">
-                                <label class="form-label small fw-bold">Date of birth</label>
+                                <label class="form-label small fw-bold"><fmt:message key="auth.label.dob"/></label>
                                 <input type="date" name="dateOfBirth" class="form-control">
                             </div>
-                            <button type="submit" class="btn btn-dark w-100 py-2">Create account and continue</button>
+                            <button type="submit" class="btn btn-dark w-100 py-2"><fmt:message key="auth.btn.continue"/></button>
                             <div class="text-center mt-3">
-                                <a href="MainController?action=login&clearGoogleDraft=1" class="small text-secondary">Use another login method</a>
+                                <a href="MainController?action=login&clearGoogleDraft=1" class="small text-secondary"><fmt:message key="auth.link.otherLogin"/></a>
                             </div>
                         </form>
                     </c:when>
@@ -95,30 +96,30 @@
                                         <img src="${pendingFacebook.avatarUrl}" class="rounded-circle" style="width:52px;height:52px;object-fit:cover;" alt="Facebook account avatar">
                                     </c:if>
                                     <div>
-                                        <div class="fw-bold">Complete your Facebook account</div>
+                                        <div class="fw-bold"><fmt:message key="auth.facebook.complete"/></div>
                                         <div class="small text-secondary">${pendingFacebook.email}</div>
                                     </div>
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label small fw-bold">Email</label>
+                                <label class="form-label small fw-bold"><fmt:message key="auth.label.email"/></label>
                                 <input type="email" class="form-control" value="${pendingFacebook.email}" readonly>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label small fw-bold">Full name</label>
+                                <label class="form-label small fw-bold"><fmt:message key="auth.label.fullname"/></label>
                                 <input type="text" name="fullName" class="form-control" value="${pendingFacebook.fullName}" required>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label small fw-bold">Phone</label>
+                                <label class="form-label small fw-bold"><fmt:message key="auth.label.phone"/></label>
                                 <input type="tel" name="phone" class="form-control" placeholder="0901234567" required>
                             </div>
                             <div class="mb-4">
-                                <label class="form-label small fw-bold">Date of birth</label>
+                                <label class="form-label small fw-bold"><fmt:message key="auth.label.dob"/></label>
                                 <input type="date" name="dateOfBirth" class="form-control">
                             </div>
-                            <button type="submit" class="btn btn-dark w-100 py-2">Create account and continue</button>
+                            <button type="submit" class="btn btn-dark w-100 py-2"><fmt:message key="auth.btn.continue"/></button>
                             <div class="text-center mt-3">
-                                <a href="MainController?action=login&clearFacebookDraft=1" class="small text-secondary">Use another login method</a>
+                                <a href="MainController?action=login&clearFacebookDraft=1" class="small text-secondary"><fmt:message key="auth.link.otherLogin"/></a>
                             </div>
                         </form>
                     </c:when>
@@ -128,31 +129,31 @@
                         <form action="MainController" method="POST">
                             <input type="hidden" name="action" value="dologin">
                             <div class="mb-3">
-                                <label class="form-label small fw-bold">Username or Email</label>
+                                <label class="form-label small fw-bold"><fmt:message key="auth.label.username"/></label>
                                 <input type="text" name="username" class="form-control" placeholder="admin / admin@restaurant.com" required>
                             </div>
                             <div class="mb-4">
-                                <label class="form-label small fw-bold">Password</label>
+                                <label class="form-label small fw-bold"><fmt:message key="auth.label.password"/></label>
                                 <input type="password" name="password" class="form-control" placeholder="123456" required>
                             </div>
-                            <button type="submit" class="btn btn-dark w-100 py-2">Login</button>
+                            <button type="submit" class="btn btn-dark w-100 py-2"><fmt:message key="auth.btn.login"/></button>
                         </form>
 
                         <div class="d-flex align-items-center gap-3 my-4">
                             <hr class="flex-grow-1 my-0">
-                            <span class="small text-secondary">or</span>
+                            <span class="small text-secondary"><fmt:message key="auth.separator"/></span>
                             <hr class="flex-grow-1 my-0">
                         </div>
 
                         <button type="button" id="googleLoginButton" class="btn btn-outline-dark w-100 d-flex align-items-center justify-content-center gap-2 py-2 shadow-sm" disabled>
                             <span id="googleLoginSpinner" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
                             <i id="googleLoginIcon" class="fa-brands fa-google text-danger d-none"></i>
-                            <span id="googleLoginText" class="fw-bold">Loading Google sign-in...</span>
+                            <span id="googleLoginText" class="fw-bold"><fmt:message key="auth.btn.google.loading"/></span>
                         </button>
                         <button type="button" id="facebookLoginButton" class="btn btn-outline-primary w-100 d-flex align-items-center justify-content-center gap-2 py-2 shadow-sm mt-2" disabled>
                             <span id="facebookLoginSpinner" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
                             <i id="facebookLoginIcon" class="fa-brands fa-facebook-f d-none"></i>
-                            <span id="facebookLoginText" class="fw-bold">Loading Facebook sign-in...</span>
+                            <span id="facebookLoginText" class="fw-bold"><fmt:message key="auth.btn.facebook.loading"/></span>
                         </button>
                         <form id="googleLoginForm" action="MainController" method="POST" class="d-none">
                             <input type="hidden" name="action" value="googleLogin">
@@ -164,7 +165,7 @@
                         </form>
 
                         <div class="auth-account-note p-3 mt-4 small">
-                            <div class="fw-bold mb-2">Quick test accounts</div>
+                            <div class="fw-bold mb-2"><fmt:message key="auth.testAccounts"/></div>
                             <div class="mb-1"><code>admin / 123456</code> (admin)</div>
                             <div class="mb-1"><code>staff / 123456</code> (staff)</div>
                             <div><code>customer / 123456</code> (customer)</div>
@@ -175,26 +176,26 @@
                         <form action="MainController" method="POST">
                             <input type="hidden" name="action" value="doregister">
                             <div class="mb-3">
-                                <label class="form-label small fw-bold">Username</label>
-                                <input type="text" name="username" class="form-control" placeholder="Choose a username" required>
+                                <label class="form-label small fw-bold"><fmt:message key="auth.label.username.register"/></label>
+                                <input type="text" name="username" class="form-control" placeholder="<fmt:message key="auth.placeholder.username.register"/>" required>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label small fw-bold">Email</label>
-                                <input type="email" name="email" class="form-control" placeholder="your@email.com" required>
+                                <label class="form-label small fw-bold"><fmt:message key="auth.label.email"/></label>
+                                <input type="email" name="email" class="form-control" placeholder="<fmt:message key="auth.placeholder.email"/>" required>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label small fw-bold">Full Name</label>
-                                <input type="text" name="fullName" class="form-control" placeholder="Your full name" required>
+                                <label class="form-label small fw-bold"><fmt:message key="auth.label.fullname.register"/></label>
+                                <input type="text" name="fullName" class="form-control" placeholder="<fmt:message key="auth.placeholder.fullname.register"/>" required>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label small fw-bold">Phone</label>
-                                <input type="tel" name="phone" class="form-control" placeholder="0901234567">
+                                <label class="form-label small fw-bold"><fmt:message key="auth.label.phone"/></label>
+                                <input type="tel" name="phone" class="form-control" placeholder="<fmt:message key="auth.placeholder.phone"/>">
                             </div>
                             <div class="mb-4">
-                                <label class="form-label small fw-bold">Password</label>
-                                <input type="password" name="password" class="form-control" placeholder="At least 6 characters" required>
+                                <label class="form-label small fw-bold"><fmt:message key="auth.label.password"/></label>
+                                <input type="password" name="password" class="form-control" placeholder="<fmt:message key="auth.placeholder.password.register"/>" required>
                             </div>
-                            <button type="submit" class="btn btn-dark w-100 py-2">Create Account</button>
+                            <button type="submit" class="btn btn-dark w-100 py-2"><fmt:message key="auth.btn.register"/></button>
                         </form>
                     </div>
                 </div>
@@ -228,7 +229,7 @@
                 googleButton.classList.add("btn-outline-dark");
                 googleSpinner.classList.add("d-none");
                 googleIcon.classList.remove("d-none");
-                googleText.textContent = "Continue with Google";
+                googleText.textContent = '<fmt:message key="auth.btn.google"/>';
                 return;
             }
 
@@ -236,7 +237,7 @@
                 googleButton.disabled = true;
                 googleSpinner.classList.remove("d-none");
                 googleIcon.classList.add("d-none");
-                googleText.textContent = "Connecting to Google...";
+                googleText.textContent = '<fmt:message key="auth.google.connecting"/>';
                 return;
             }
 
@@ -245,7 +246,7 @@
             googleButton.classList.add("btn-secondary");
             googleSpinner.classList.add("d-none");
             googleIcon.classList.remove("d-none");
-            googleText.textContent = "Google sign-in unavailable";
+            googleText.textContent = '<fmt:message key="auth.google.unavailable"/>';
         }
 
         function setFacebookButtonState(state) {
@@ -253,7 +254,7 @@
                 facebookButton.disabled = false;
                 facebookSpinner.classList.add("d-none");
                 facebookIcon.classList.remove("d-none");
-                facebookText.textContent = "Continue with Facebook";
+                facebookText.textContent = '<fmt:message key="auth.btn.facebook"/>';
                 return;
             }
 
@@ -261,14 +262,14 @@
                 facebookButton.disabled = true;
                 facebookSpinner.classList.remove("d-none");
                 facebookIcon.classList.add("d-none");
-                facebookText.textContent = "Connecting to Facebook...";
+                facebookText.textContent = '<fmt:message key="auth.facebook.connecting"/>';
                 return;
             }
 
             facebookButton.disabled = true;
             facebookSpinner.classList.add("d-none");
             facebookIcon.classList.remove("d-none");
-            facebookText.textContent = "Facebook sign-in unavailable";
+            facebookText.textContent = '<fmt:message key="auth.facebook.unavailable"/>';
         }
 
         let googleInitialized = false;

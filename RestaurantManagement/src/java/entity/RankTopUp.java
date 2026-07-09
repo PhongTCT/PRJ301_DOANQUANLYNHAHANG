@@ -2,6 +2,7 @@ package entity;
 
 import enums.PaymentMethod;
 import enums.RankName;
+import enums.TopUpType;
 import enums.TransactionStatus;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -20,11 +21,24 @@ public class RankTopUp implements Serializable {
     private User user;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "target_rank", nullable = false, length = 20)
+    @Column(name = "topup_type", nullable = false, length = 20)
+    private TopUpType topupType = TopUpType.RANK;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "target_rank", length = 20)
     private RankName targetRank;
+
+    @Column(name = "original_amount", nullable = false)
+    private BigDecimal originalAmount = BigDecimal.ZERO;
+
+    @Column(name = "final_amount", nullable = false)
+    private BigDecimal finalAmount = BigDecimal.ZERO;
 
     @Column(name = "amount", nullable = false)
     private BigDecimal amount = BigDecimal.ZERO;
+
+    @Column(name = "voucher_code", length = 50)
+    private String voucherCode;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_method", nullable = false, length = 10)
@@ -48,10 +62,18 @@ public class RankTopUp implements Serializable {
     public void setId(Long id) { this.id = id; }
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
+    public TopUpType getTopupType() { return topupType; }
+    public void setTopupType(TopUpType topupType) { this.topupType = topupType; }
     public RankName getTargetRank() { return targetRank; }
     public void setTargetRank(RankName targetRank) { this.targetRank = targetRank; }
+    public BigDecimal getOriginalAmount() { return originalAmount; }
+    public void setOriginalAmount(BigDecimal originalAmount) { this.originalAmount = originalAmount; }
+    public BigDecimal getFinalAmount() { return finalAmount; }
+    public void setFinalAmount(BigDecimal finalAmount) { this.finalAmount = finalAmount; }
     public BigDecimal getAmount() { return amount; }
     public void setAmount(BigDecimal amount) { this.amount = amount; }
+    public String getVoucherCode() { return voucherCode; }
+    public void setVoucherCode(String voucherCode) { this.voucherCode = voucherCode; }
     public PaymentMethod getPaymentMethod() { return paymentMethod; }
     public void setPaymentMethod(PaymentMethod paymentMethod) { this.paymentMethod = paymentMethod; }
     public String getTransactionRef() { return transactionRef; }

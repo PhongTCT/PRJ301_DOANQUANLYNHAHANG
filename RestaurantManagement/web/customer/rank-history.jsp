@@ -34,39 +34,39 @@
         <section class="rh-hero">
             <div class="d-flex align-items-center justify-content-between">
                 <div>
-                    <div class="rh-kicker mb-3">Transaction Log</div>
-                    <h1 class="rh-title mb-3">Lich su giao dich</h1>
-                    <p class="rh-copy mb-0">Tat ca cac thay doi ve diem va hang thanh vien cua ban.</p>
+                    <div class="rh-kicker mb-3"><fmt:message key="rank.history.eyebrow"/></div>
+                    <h1 class="rh-title mb-3"><fmt:message key="rank.history.title"/></h1>
+                    <p class="rh-copy mb-0"><fmt:message key="rank.history.subtitle"/></p>
                 </div>
-                <a href="${pageContext.request.contextPath}/customer/rank" class="rh-back"><i class="fa-solid fa-arrow-left"></i>Quay lai</a>
+                <a href="${pageContext.request.contextPath}/customer/rank" class="rh-back"><i class="fa-solid fa-arrow-left"></i><fmt:message key="rank.history.back"/></a>
             </div>
         </section>
 
         <section class="rh-panel mb-5">
             <div class="rh-panel__header">
-                <div class="rh-section-label">History</div>
+                <div class="rh-section-label"><fmt:message key="rank.history.section"/></div>
             </div>
             <div class="table-responsive">
                 <table class="table align-middle rh-table">
                     <thead>
-                        <tr><th class="ps-4">Loai</th><th>Diem</th><th>Mo ta</th><th class="text-end pe-4">Ngay</th></tr>
+                        <tr><th class="ps-4"><fmt:message key="rank.history.col.type"/></th><th><fmt:message key="rank.history.col.points"/></th><th><fmt:message key="rank.history.col.desc"/></th><th class="text-end pe-4"><fmt:message key="rank.history.col.date"/></th></tr>
                     </thead>
                     <tbody>
                         <c:choose>
                             <c:when test="${empty transactions}">
-                                <tr><td colspan="4" class="rh-empty"><i class="fa-regular fa-clock d-block"></i><div class="fw-semibold">Chua co giao dich nao</div></td></tr>
+                                <tr><td colspan="4" class="rh-empty"><i class="fa-regular fa-clock d-block"></i><div class="fw-semibold"><fmt:message key="rank.history.empty"/></div></td></tr>
                             </c:when>
                             <c:otherwise>
                                 <c:forEach items="${transactions}" var="t">
                                     <tr>
                                         <td class="ps-4">
                                             <c:choose>
-                                                <c:when test="${t.type == 'EARN'}"><span class="rh-type rh-type--earn"><i class="fa-regular fa-circle-check"></i>EARN</span></c:when>
-                                                <c:when test="${t.type == 'REDEEM'}"><span class="rh-type rh-type--redeem"><i class="fa-solid fa-cart-shopping"></i>REDEEM</span></c:when>
-                                                <c:when test="${t.type == 'TOPUP'}"><span class="rh-type rh-type--topup"><i class="fa-solid fa-arrow-up"></i>TOPUP</span></c:when>
-                                                <c:when test="${t.type == 'RANK_UPGRADE'}"><span class="rh-type rh-type--upgrade"><i class="fa-solid fa-crown"></i>UPGRADE</span></c:when>
-                                                <c:when test="${t.type == 'POINTS_DECAY'}"><span class="rh-type rh-type--decay"><i class="fa-solid fa-clock"></i>DECAY</span></c:when>
-                                                <c:when test="${t.type == 'RANK_DOWNGRADE'}"><span class="rh-type rh-type--downgrade"><i class="fa-solid fa-arrow-down"></i>DOWN</span></c:when>
+                                                <c:when test="${t.type == 'EARN'}"><span class="rh-type rh-type--earn"><i class="fa-regular fa-circle-check"></i><fmt:message key="rank.history.type.earn"/></span></c:when>
+                                                <c:when test="${t.type == 'REDEEM'}"><span class="rh-type rh-type--redeem"><i class="fa-solid fa-cart-shopping"></i><fmt:message key="rank.history.type.redeem"/></span></c:when>
+                                                <c:when test="${t.type == 'TOPUP'}"><span class="rh-type rh-type--topup"><i class="fa-solid fa-arrow-up"></i><fmt:message key="rank.history.type.topup"/></span></c:when>
+                                                <c:when test="${t.type == 'RANK_UPGRADE'}"><span class="rh-type rh-type--upgrade"><i class="fa-solid fa-crown"></i><fmt:message key="rank.history.type.upgrade"/></span></c:when>
+                                                <c:when test="${t.type == 'POINTS_DECAY'}"><span class="rh-type rh-type--decay"><i class="fa-solid fa-clock"></i><fmt:message key="rank.history.type.decay"/></span></c:when>
+                                                <c:when test="${t.type == 'RANK_DOWNGRADE'}"><span class="rh-type rh-type--downgrade"><i class="fa-solid fa-arrow-down"></i><fmt:message key="rank.history.type.downgrade"/></span></c:when>
                                             </c:choose>
                                         </td>
                                         <td class="fw-bold ${t.pointsDelta >= 0 ? 'text-success' : 'text-danger'}">${t.pointsDelta >= 0 ? '+' : ''}${t.pointsDelta}</td>

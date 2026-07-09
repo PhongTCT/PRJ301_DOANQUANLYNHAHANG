@@ -2,12 +2,14 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
+<fmt:setBundle basename="i18n.messages" />
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý voucher - Le Royal</title>
+    <title><fmt:message key="admin.vouchers.title" /> - Le Royal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -389,30 +391,30 @@
         <div class="admin-voucher-shell">
             <section class="admin-voucher-hero">
                 <div>
-                    <div class="admin-kicker">Le Royal Operations</div>
-                    <h1 class="admin-voucher-title">Quản lý voucher</h1>
-                    <p class="admin-voucher-copy">Tạo và theo dõi mã ưu đãi cho tổng hóa đơn. Trang này giữ số lượng, thời hạn và trạng thái bật/tắt để đội vận hành kiểm soát khuyến mãi rõ hơn.</p>
+                    <div class="admin-kicker"><fmt:message key="admin.vouchers.modal.new" /></div>
+                    <h1 class="admin-voucher-title"><fmt:message key="admin.vouchers.title" /></h1>
+                    <p class="admin-voucher-copy"><fmt:message key="admin.vouchers.desc" /></p>
                 </div>
                 <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
                     <button type="button" class="admin-primary-action" data-bs-toggle="modal" data-bs-target="#voucherModal">
                         <i class="fa-solid fa-plus"></i>
-                        Thêm voucher
+                        <fmt:message key="admin.vouchers.btn.add" />
                     </button>
                 </c:if>
             </section>
 
             <div class="admin-stat-grid">
                 <div class="admin-stat">
-                    <div class="admin-section-label">Tổng mã</div>
+                    <div class="admin-section-label"><fmt:message key="admin.vouchers.total" /></div>
                     <strong>${fn:length(vouchers)}</strong>
                 </div>
                 <div class="admin-stat">
-                    <div class="admin-section-label">Đang theo dõi</div>
-                    <strong>Manual</strong>
+                    <div class="admin-section-label"><fmt:message key="admin.vouchers.active" /></div>
+                    <strong><fmt:message key="admin.vouchers.source.manual" /></strong>
                 </div>
                 <div class="admin-stat">
-                    <div class="admin-section-label">Nguồn dùng</div>
-                    <strong>Invoice</strong>
+                    <div class="admin-section-label"><fmt:message key="admin.vouchers.source" /></div>
+                    <strong><fmt:message key="admin.vouchers.source.invoice" /></strong>
                 </div>
             </div>
 
@@ -428,24 +430,24 @@
             <section class="admin-panel" aria-labelledby="voucherTableTitle">
                 <div class="admin-panel-header">
                     <div>
-                        <div class="admin-section-label">Voucher list</div>
-                        <h2 id="voucherTableTitle" class="h4 fw-semibold mb-0 mt-1">Danh sách mã ưu đãi</h2>
+                        <div class="admin-section-label"><fmt:message key="admin.vouchers.list" /></div>
+                        <h2 id="voucherTableTitle" class="h4 fw-semibold mb-0 mt-1"><fmt:message key="admin.vouchers.list.sub" /></h2>
                     </div>
-                    <span class="voucher-use-tag"><i class="fa-solid fa-ticket me-2"></i>${fn:length(vouchers)} mã</span>
+                    <span class="voucher-use-tag"><i class="fa-solid fa-ticket me-2"></i>${fn:length(vouchers)} <fmt:message key="admin.vouchers.col.code" /></span>
                 </div>
 
                 <div class="table-responsive voucher-table-wrap">
                     <table class="table table-hover align-middle admin-table">
                         <thead>
                             <tr>
-                                <th class="ps-4">Code</th>
-                                <th>Giảm giá</th>
-                                <th>Điều kiện</th>
-                                <th>Thời hạn</th>
-                                <th>Số lượng</th>
-                                <th>Trạng thái</th>
+                                <th class="ps-4"><fmt:message key="admin.vouchers.col.code" /></th>
+                                <th><fmt:message key="admin.vouchers.col.discount" /></th>
+                                <th><fmt:message key="admin.vouchers.col.condition" /></th>
+                                <th><fmt:message key="admin.vouchers.col.valid" /></th>
+                                <th><fmt:message key="admin.vouchers.col.usage" /></th>
+                                <th><fmt:message key="admin.vouchers.col.status" /></th>
                                 <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
-                                    <th class="text-end pe-4">Thao tác</th>
+                                    <th class="text-end pe-4"><fmt:message key="admin.vouchers.col.actions" /></th>
                                 </c:if>
                             </tr>
                         </thead>
@@ -466,11 +468,11 @@
                                             </c:choose>
                                         </div>
                                         <c:if test="${not empty v.maxDiscount}">
-                                            <div class="voucher-discount-note">Tối đa <fmt:formatNumber value="${v.maxDiscount}" pattern="#,##0"/>đ</div>
+                                            <div class="voucher-discount-note"><fmt:message key="admin.vouchers.maxlabel" /> <fmt:formatNumber value="${v.maxDiscount}" pattern="#,##0"/>đ</div>
                                         </c:if>
                                     </td>
                                     <td>
-                                        <div class="voucher-condition">Hóa đơn từ</div>
+                                        <div class="voucher-condition"><fmt:message key="admin.vouchers.minorder" /></div>
                                         <div class="fw-semibold"><fmt:formatNumber value="${v.minOrderValue}" pattern="#,##0"/>đ</div>
                                     </td>
                                     <td>
@@ -482,19 +484,28 @@
                                     </td>
                                     <td>
                                         <span class="voucher-status ${v.isActive ? 'is-on' : 'is-off'}">
-                                            ${v.isActive ? 'Đang bật' : 'Đã tắt'}
+                                            <c:choose>
+                                                <c:when test="${v.isActive}"><fmt:message key="admin.vouchers.status.on" /></c:when>
+                                                <c:otherwise><fmt:message key="admin.vouchers.status.off" /></c:otherwise>
+                                            </c:choose>
                                         </span>
                                     </td>
                                     <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
                                         <td class="text-end pe-4">
                                             <div class="voucher-actions">
-                                                <button type="button" class="voucher-icon-btn" title="Sửa voucher" data-bs-toggle="modal" data-bs-target="#editVoucher${v.id}">
+                                                <button type="button" class="voucher-icon-btn" title="<fmt:message key="admin.vouchers.modal.edit.title" />" data-bs-toggle="modal" data-bs-target="#editVoucher${v.id}">
                                                     <i class="fa-solid fa-pen"></i>
                                                 </button>
                                                 <form method="post" action="${pageContext.request.contextPath}/admin/vouchers" class="d-inline">
                                                     <input type="hidden" name="action" value="toggle">
                                                     <input type="hidden" name="id" value="${v.id}">
-                                                    <button type="submit" class="voucher-icon-btn" title="${v.isActive ? 'Tắt voucher' : 'Bật voucher'}">
+                                                    <c:set var="toggleTitle">
+                                                        <c:choose>
+                                                            <c:when test="${v.isActive}"><fmt:message key="admin.vouchers.status.off" /></c:when>
+                                                            <c:otherwise><fmt:message key="admin.vouchers.status.on" /></c:otherwise>
+                                                        </c:choose>
+                                                    </c:set>
+                                                    <button type="submit" class="voucher-icon-btn" title="${toggleTitle}">
                                                         <i class="fa-solid fa-power-off"></i>
                                                     </button>
                                                 </form>
@@ -507,7 +518,7 @@
                                 <tr>
                                     <td colspan="${sessionScope.currentUser.role == 'ADMIN' ? 7 : 6}" class="voucher-empty-row">
                                         <i class="fa-solid fa-ticket"></i>
-                                        Chưa có voucher. Tạo mã đầu tiên để bắt đầu quản lý ưu đãi.
+                                        <fmt:message key="admin.vouchers.empty" />
                                     </td>
                                 </tr>
                             </c:if>
@@ -529,56 +540,56 @@
                 <input type="hidden" name="usedCount" value="0">
                 <div class="modal-header">
                     <div>
-                        <div class="admin-kicker">New privilege</div>
-                        <h5 id="voucherModalTitle" class="admin-modal-title modal-title mb-0">Thêm voucher</h5>
+                        <div class="admin-kicker"><fmt:message key="admin.vouchers.modal.new" /></div>
+                        <h5 id="voucherModalTitle" class="admin-modal-title modal-title mb-0"><fmt:message key="admin.vouchers.modal.add" /></h5>
                     </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<fmt:message key="admin.common.close" />"></button>
                 </div>
                 <div class="modal-body p-4">
                     <div class="row g-3">
                         <div class="col-md-4">
-                            <label class="form-label">Mã voucher</label>
+                            <label class="form-label"><fmt:message key="admin.voucherfield.label.code" /></label>
                             <input name="voucherCode" class="form-control" placeholder="ROYAL10" required>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Loại</label>
+                            <label class="form-label"><fmt:message key="admin.voucherfield.label.type" /></label>
                             <select name="voucherType" class="form-select">
                                 <c:forEach items="${voucherTypes}" var="t"><option value="${t}">${t}</option></c:forEach>
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Số lượng</label>
+                            <label class="form-label"><fmt:message key="admin.voucherfield.label.quantity" /></label>
                             <input type="number" name="usageLimit" class="form-control" min="1" value="1" required>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Giảm %</label>
+                            <label class="form-label"><fmt:message key="admin.voucherfield.label.discount.percent" /></label>
                             <input type="number" step="0.01" name="discountPercent" class="form-control" placeholder="10">
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Giảm tiền</label>
+                            <label class="form-label"><fmt:message key="admin.voucherfield.label.discount.amount" /></label>
                             <input type="number" step="1000" name="discountAmount" class="form-control" placeholder="50000">
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Đơn tối thiểu</label>
+                            <label class="form-label"><fmt:message key="admin.voucherfield.label.minorder" /></label>
                             <input type="number" step="1000" name="minOrderValue" value="0" class="form-control">
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Giảm tối đa</label>
+                            <label class="form-label"><fmt:message key="admin.voucherfield.label.maxdiscount" /></label>
                             <input type="number" step="1000" name="maxDiscount" class="form-control" placeholder="200000">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Từ ngày</label>
+                            <label class="form-label"><fmt:message key="admin.voucherfield.label.from" /></label>
                             <input type="datetime-local" name="validFrom" class="form-control" required>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Đến ngày</label>
+                            <label class="form-label"><fmt:message key="admin.voucherfield.label.to" /></label>
                             <input type="datetime-local" name="validTo" class="form-control" required>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Hủy</button>
-                    <button type="submit" class="admin-primary-action">Tạo voucher</button>
+                    <button type="button" class="btn btn-light border" data-bs-dismiss="modal"><fmt:message key="admin.common.cancel" /></button>
+                    <button type="submit" class="admin-primary-action"><fmt:message key="admin.vouchers.modal.add" /></button>
                 </div>
             </form>
         </div>
@@ -597,10 +608,10 @@
                     <input type="hidden" name="usedCount" value="${v.usedCount}">
                     <div class="modal-header">
                         <div>
-                            <div class="admin-kicker">Edit privilege</div>
-                            <h5 id="editVoucherTitle${v.id}" class="admin-modal-title modal-title mb-0">Sửa ${v.voucherCode}</h5>
+                            <div class="admin-kicker"><fmt:message key="admin.vouchers.modal.edit" /></div>
+                            <h5 id="editVoucherTitle${v.id}" class="admin-modal-title modal-title mb-0"><fmt:message key="admin.vouchers.modal.edit.title" /> ${v.voucherCode}</h5>
                         </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<fmt:message key="admin.common.close" />"></button>
                     </div>
                     <div class="modal-body p-4">
                         <jsp:include page="/admin/voucher-form-fields.jsp">
@@ -622,8 +633,8 @@
                         };
                     </script>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Hủy</button>
-                        <button type="submit" class="admin-primary-action">Lưu thay đổi</button>
+                        <button type="button" class="btn btn-light border" data-bs-dismiss="modal"><fmt:message key="admin.common.cancel" /></button>
+                        <button type="submit" class="admin-primary-action"><fmt:message key="admin.vouchers.modal.save" /></button>
                     </div>
                 </form>
             </div>

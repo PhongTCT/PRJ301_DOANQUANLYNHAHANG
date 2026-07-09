@@ -41,18 +41,18 @@
         <section class="invoice-hero">
             <div class="row g-4 align-items-end">
                 <div class="col-lg-8">
-                    <div class="invoice-kicker mb-3">Billing Record</div>
-                    <h1 class="invoice-title mb-3">Hóa đơn của tôi</h1>
-                    <p class="invoice-copy mb-0">Tra cứu lịch sử thanh toán, kiểm tra trạng thái và thực hiện thanh toán các hóa đơn còn nợ.</p>
+                    <div class="invoice-kicker mb-3"><fmt:message key="invoice.eyebrow"/></div>
+                    <h1 class="invoice-title mb-3"><fmt:message key="invoice.title"/></h1>
+                    <p class="invoice-copy mb-0"><fmt:message key="invoice.subtitle"/></p>
                 </div>
                 <div class="col-lg-4">
                     <div class="invoice-summary">
                         <div class="invoice-summary__item">
-                            <div class="invoice-meta-label mb-2">Tổng hóa đơn</div>
+                            <div class="invoice-meta-label mb-2"><fmt:message key="invoice.total"/></div>
                             <div class="invoice-summary__number">${fn:length(invoices)}</div>
                         </div>
                         <div class="invoice-summary__item">
-                            <div class="invoice-meta-label mb-2">Đã thanh toán</div>
+                            <div class="invoice-meta-label mb-2"><fmt:message key="invoice.paid"/></div>
                             <div class="invoice-summary__number">
                                 <c:set var="paidCount" value="0"/>
                                 <c:forEach items="${invoices}" var="i"><c:if test="${i.paymentStatus == 'PAID'}"><c:set var="paidCount" value="${paidCount + 1}"/></c:if></c:forEach>
@@ -60,7 +60,7 @@
                             </div>
                         </div>
                         <div class="invoice-summary__item">
-                            <div class="invoice-meta-label mb-2">Chưa thanh toán</div>
+                            <div class="invoice-meta-label mb-2"><fmt:message key="invoice.unpaid"/></div>
                             <div class="invoice-summary__number">
                                 <c:set var="unpaidCount" value="0"/>
                                 <c:forEach items="${invoices}" var="i"><c:if test="${i.paymentStatus != 'PAID'}"><c:set var="unpaidCount" value="${unpaidCount + 1}"/></c:if></c:forEach>
@@ -75,8 +75,8 @@
         <section class="invoice-panel mb-5" aria-labelledby="invoiceTableTitle">
             <div class="invoice-panel__header">
                 <div>
-                    <div class="invoice-section-label">Invoices</div>
-                    <h2 id="invoiceTableTitle" class="h4 fw-semibold mb-0 mt-1">Lịch sử hóa đơn</h2>
+                    <div class="invoice-section-label"><fmt:message key="invoice.section"/></div>
+                    <h2 id="invoiceTableTitle" class="h4 fw-semibold mb-0 mt-1"><fmt:message key="invoice.heading"/></h2>
                 </div>
             </div>
 
@@ -84,14 +84,14 @@
                 <table class="table align-middle invoice-table">
                     <thead>
                         <tr>
-                            <th class="ps-4">Mã</th>
-                            <th>Đặt bàn</th>
-                            <th>Tổng</th>
-                            <th>Ưu đãi</th>
-                            <th>Voucher</th>
-                            <th>Thanh toán</th>
-                            <th>Ngày tạo</th>
-                            <th class="text-end pe-4">Thao tác</th>
+                            <th class="ps-4"><fmt:message key="invoice.col.code"/></th>
+                            <th><fmt:message key="invoice.col.booking"/></th>
+                            <th><fmt:message key="invoice.col.total"/></th>
+                            <th><fmt:message key="invoice.col.discount"/></th>
+                            <th><fmt:message key="invoice.col.voucher"/></th>
+                            <th><fmt:message key="invoice.col.payment"/></th>
+                            <th><fmt:message key="invoice.col.date"/></th>
+                            <th class="text-end pe-4"><fmt:message key="invoice.col.action"/></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -100,8 +100,8 @@
                                 <tr>
                                     <td colspan="8" class="invoice-empty">
                                         <i class="fa-regular fa-file-lines d-block"></i>
-                                        <div class="fw-semibold mb-1">Bạn chưa có hóa đơn nào</div>
-                                        <div class="small">Hóa đơn sẽ xuất hiện sau khi bạn đặt bàn và hoàn tất bữa ăn tại Le Royal.</div>
+                                        <div class="fw-semibold mb-1"><fmt:message key="invoice.empty"/></div>
+                                        <div class="small"><fmt:message key="invoice.empty.sub"/></div>
                                     </td>
                                 </tr>
                             </c:when>
@@ -109,9 +109,16 @@
                                 <c:forEach items="${invoices}" var="i">
                                     <tr>
                                         <td class="ps-4 invoice-id">#${i.id}</td>
-                                        <td><c:if test="${not empty i.reservation}"><span class="fw-semibold">#${i.reservation.id}</span></c:if></td>
-                                        <td class="invoice-amount"><fmt:formatNumber value="${i.totalAmount}" pattern="#,##0"/>đ</td>
-                                        <td class="invoice-discount"><fmt:formatNumber value="${i.voucherDiscount + i.pointsDiscount}" pattern="#,##0"/>đ</td>
+                                        <td>
+                                            <c:if test="${not empty i.reservation}">
+                                                <span class="fw-semibold">#${i.reservation.id}</span>
+                                            </c:if>
+                                            <c:if test="${empty i.reservation}">
+                                                <span class="text-muted small">-</span>
+                                            </c:if>
+                                        </td>
+                                        <td class="invoice-amount"><fmt:formatNumber value="${i.totalAmount}" pattern="#,##0"/>₫</td>
+                                        <td class="invoice-discount"><fmt:formatNumber value="${i.voucherDiscount + i.pointsDiscount}" pattern="#,##0"/>₫</td>
                                         <td>
                                             <c:forEach items="${i.voucherRedemptions}" var="vr"><span class="invoice-voucher-tag">${vr.voucher.voucherCode}</span></c:forEach>
                                             <c:if test="${empty i.voucherRedemptions}"><span class="text-muted small">-</span></c:if>
@@ -119,22 +126,22 @@
                                         <td>
                                             <c:choose>
                                                 <c:when test="${i.paymentStatus == 'PAID'}">
-                                                    <span class="invoice-paid-tag invoice-paid-tag--paid"><i class="fa-regular fa-circle-check"></i>Đã TT</span>
+                                                    <span class="invoice-paid-tag invoice-paid-tag--paid"><i class="fa-regular fa-circle-check"></i><fmt:message key="invoice.status.paid"/></span>
                                                 </c:when>
                                                 <c:when test="${i.paymentStatus == 'PENDING'}">
-                                                    <span class="invoice-paid-tag invoice-paid-tag--pending"><i class="fa-regular fa-clock"></i>Chờ TT</span>
+                                                    <span class="invoice-paid-tag invoice-paid-tag--pending"><i class="fa-regular fa-clock"></i><fmt:message key="invoice.status.pending"/></span>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <span class="invoice-paid-tag invoice-paid-tag--unpaid"><i class="fa-solid fa-ban"></i>Chưa TT</span>
+                                                    <span class="invoice-paid-tag invoice-paid-tag--unpaid"><i class="fa-solid fa-ban"></i><fmt:message key="invoice.status.unpaid"/></span>
                                                 </c:otherwise>
                                             </c:choose>
-                                            <div class="text-muted small mt-1"><fmt:formatNumber value="${i.totalAmount}" pattern="#,##0"/>đ - ${i.paymentMethod}</div>
+                                            <div class="text-muted small mt-1"><fmt:formatNumber value="${i.totalAmount}" pattern="#,##0"/>₫ - ${i.paymentMethod}</div>
                                         </td>
                                         <td class="invoice-date"><fmt:formatDate value="${i.createdAt}" pattern="dd/MM/yyyy HH:mm"/></td>
                                         <td class="text-end pe-4">
                                             <c:if test="${i.paymentStatus == 'PENDING' and i.paymentMethod == 'VNPAY'}">
                                                 <a class="invoice-pay-btn" href="${pageContext.request.contextPath}/payment/vnpay-pay?invoiceId=${i.id}">
-                                                    <i class="fa-solid fa-credit-card"></i>Thanh toán
+                                                    <i class="fa-solid fa-credit-card"></i><fmt:message key="invoice.pay"/>
                                                 </a>
                                             </c:if>
                                         </td>

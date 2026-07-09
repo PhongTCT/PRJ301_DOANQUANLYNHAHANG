@@ -1,5 +1,6 @@
-﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <style>
     :root {
         --admin-scroll-thumb: rgba(145, 115, 55, 0.42);
@@ -40,11 +41,14 @@
         background: transparent;
     }
     .admin-sidebar {
+        position: sticky;
+        top: 0;
+        align-self: start;
         width: 272px;
         min-width: 272px;
         max-width: 272px;
         height: 100vh;
-        min-height: 0;
+        min-height: 100vh;
         flex: 0 0 272px;
         overflow-y: auto;
         overscroll-behavior: contain;
@@ -193,35 +197,34 @@
         <span class="admin-sidebar__brand-text">Le Royal<small>Admin</small></span>
     </a>
 
-    <div class="admin-sidebar__section">Service</div>
-    <a class="admin-sidebar__link ${param.active == 'dashboard' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></a>
-    <a class="admin-sidebar__link ${param.active == 'walkin' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/walkin"><i class="fa-solid fa-cash-register"></i><span>Walk-in POS</span></a>
-    <a class="admin-sidebar__link ${param.active == 'quick-bill' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/quick-bill"><i class="fa-solid fa-bolt"></i><span>Quick Bill</span></a>
-    <a class="admin-sidebar__link ${param.active == 'reservations' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/reservations"><i class="fa-solid fa-clipboard-list"></i><span>Reservations</span></a>
-    <a class="admin-sidebar__link ${param.active == 'timeline' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/timeline"><i class="fa-solid fa-timeline"></i><span>Timeline</span></a>
+    <div class="admin-sidebar__section"><fmt:message key="admin.sidebar.service"/></div>
+    <a class="admin-sidebar__link ${param.active == 'dashboard' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/"><i class="fa-solid fa-gauge-high"></i><span><fmt:message key="admin.sidebar.dashboard"/></span></a>
+    <a class="admin-sidebar__link ${param.active == 'walkin' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/walkin"><i class="fa-solid fa-cash-register"></i><span><fmt:message key="admin.sidebar.walkin"/></span></a>
+    <a class="admin-sidebar__link ${param.active == 'quick-bill' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/quick-bill"><i class="fa-solid fa-bolt"></i><span><fmt:message key="admin.sidebar.quickbill"/></span></a>
+    <a class="admin-sidebar__link ${param.active == 'reservations' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/reservations"><i class="fa-solid fa-clipboard-list"></i><span><fmt:message key="admin.sidebar.reservations"/></span></a>
+    <a class="admin-sidebar__link ${param.active == 'timeline' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/timeline"><i class="fa-solid fa-timeline"></i><span><fmt:message key="admin.sidebar.timeline"/></span></a>
 
     <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
-        <div class="admin-sidebar__section">Restaurant</div>
-        <a class="admin-sidebar__link ${param.active == 'menu-items' ? 'active' : ''}" href="${pageContext.request.contextPath}/MainController?action=adminMenuItems"><i class="fa-solid fa-bowl-food"></i><span>Menu items</span></a>
-        <a class="admin-sidebar__link ${param.active == 'menu-sets' ? 'active' : ''}" href="${pageContext.request.contextPath}/MainController?action=adminMenuSets"><i class="fa-solid fa-layer-group"></i><span>Set menus</span></a>
-        <a class="admin-sidebar__link ${param.active == 'tables' ? 'active' : ''}" href="${pageContext.request.contextPath}/MainController?action=adminTables"><i class="fa-solid fa-chair"></i><span>Dining tables</span></a>
-        <a class="admin-sidebar__link ${param.active == 'addon-services' ? 'active' : ''}" href="${pageContext.request.contextPath}/MainController?action=adminAddonServices"><i class="fa-solid fa-music"></i><span>Add-on services</span></a>
+        <div class="admin-sidebar__section"><fmt:message key="admin.sidebar.restaurant"/></div>
+        <a class="admin-sidebar__link ${param.active == 'menu-items' ? 'active' : ''}" href="${pageContext.request.contextPath}/MainController?action=adminMenuItems"><i class="fa-solid fa-bowl-food"></i><span><fmt:message key="admin.sidebar.menuitems"/></span></a>
+        <a class="admin-sidebar__link ${param.active == 'menu-sets' ? 'active' : ''}" href="${pageContext.request.contextPath}/MainController?action=adminMenuSets"><i class="fa-solid fa-layer-group"></i><span><fmt:message key="admin.sidebar.menusets"/></span></a>
+        <a class="admin-sidebar__link ${param.active == 'tables' ? 'active' : ''}" href="${pageContext.request.contextPath}/MainController?action=adminTables"><i class="fa-solid fa-chair"></i><span><fmt:message key="admin.sidebar.tables"/></span></a>
+        <a class="admin-sidebar__link ${param.active == 'addon-services' ? 'active' : ''}" href="${pageContext.request.contextPath}/MainController?action=adminAddonServices"><i class="fa-solid fa-music"></i><span><fmt:message key="admin.sidebar.addons"/></span></a>
     </c:if>
 
-    <div class="admin-sidebar__section">Office</div>
-    <a class="admin-sidebar__link ${param.active == 'invoices' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/invoices"><i class="fa-solid fa-file-invoice"></i><span>Invoices</span></a>
-    <a class="admin-sidebar__link ${param.active == 'vouchers' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/vouchers"><i class="fa-solid fa-ticket"></i><span>Vouchers</span></a>
-    <a class="admin-sidebar__link ${param.active == 'reviews' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/reviews"><i class="fa-solid fa-star-half-stroke"></i><span>Reviews</span></a>
-    <a class="admin-sidebar__link ${param.active == 'reports' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/reports"><i class="fa-solid fa-chart-line"></i><span>Reports</span></a>
-    <a class="admin-sidebar__link ${param.active == 'users' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/users"><i class="fa-solid fa-users"></i><span>Users</span></a>
+    <div class="admin-sidebar__section"><fmt:message key="admin.sidebar.office"/></div>
+    <a class="admin-sidebar__link ${param.active == 'invoices' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/invoices"><i class="fa-solid fa-file-invoice"></i><span><fmt:message key="admin.sidebar.invoices"/></span></a>
+    <a class="admin-sidebar__link ${param.active == 'vouchers' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/vouchers"><i class="fa-solid fa-ticket"></i><span><fmt:message key="admin.sidebar.vouchers"/></span></a>
+    <a class="admin-sidebar__link ${param.active == 'reviews' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/reviews"><i class="fa-solid fa-star-half-stroke"></i><span><fmt:message key="admin.sidebar.reviews"/></span></a>
+    <a class="admin-sidebar__link ${param.active == 'reports' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/reports"><i class="fa-solid fa-chart-line"></i><span><fmt:message key="admin.sidebar.reports"/></span></a>
+    <a class="admin-sidebar__link ${param.active == 'users' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/users"><i class="fa-solid fa-users"></i><span><fmt:message key="admin.sidebar.users"/></span></a>
 
     <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
-        <div class="admin-sidebar__section">Admin</div>
-        <a class="admin-sidebar__link ${param.active == 'rank-config' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/rank-config"><i class="fa-solid fa-ranking-star"></i><span>Rank Config</span></a>
-        <a class="admin-sidebar__link ${param.active == 'surcharges' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/surcharges"><i class="fa-solid fa-calendar-day"></i><span>Holidays</span></a>
-        <a class="admin-sidebar__link ${param.active == 'tables' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/tables"><i class="fa-solid fa-chair"></i><span>Tables</span></a>
+        <div class="admin-sidebar__section"><fmt:message key="admin.sidebar.admin"/></div>
+        <a class="admin-sidebar__link ${param.active == 'rank-config' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/rank-config"><i class="fa-solid fa-ranking-star"></i><span><fmt:message key="admin.sidebar.rankconfig"/></span></a>
+        <a class="admin-sidebar__link ${param.active == 'surcharges' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/surcharges"><i class="fa-solid fa-calendar-day"></i><span><fmt:message key="admin.sidebar.holidays"/></span></a>
             </c:if>
 
     <hr class="admin-sidebar__divider">
-    <a class="admin-sidebar__link" href="${pageContext.request.contextPath}/"><i class="fa-solid fa-arrow-left"></i><span>Back to Site</span></a>
+    <a class="admin-sidebar__link" href="${pageContext.request.contextPath}/"><i class="fa-solid fa-arrow-left"></i><span><fmt:message key="admin.sidebar.back"/></span></a>
 </aside>
