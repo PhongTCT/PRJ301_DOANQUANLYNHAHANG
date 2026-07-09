@@ -195,11 +195,11 @@ public class TopUpService {
 
     private void sendNotifications(User user, int earned, RankTopUp topUp) {
         try {
-            String label = topUp.getTopupType() == TopUpType.RANK ? "diem" : "xu";
-            String title = "Nap " + label + " thanh cong";
-            String msg = "Ban da nap +" + earned + " " + label + " thanh cong.";
+            String label = topUp.getTopupType() == TopUpType.RANK ? "điểm" : "xu";
+            String title = "Nạp " + label + " thành công";
+            String msg = "Bạn đã nạp +" + earned + " " + label + " thành công.";
             if (topUp.getFinalAmount() != null && topUp.getFinalAmount().compareTo(BigDecimal.ZERO) == 0) {
-                msg += " (Giao dich mien phi bang ma uu dai)";
+                msg += " (Giao dịch miễn phí bằng mã ưu đãi)";
             }
             new NotificationService().createNotification(user, title, msg);
         } catch (Exception e) {

@@ -53,7 +53,7 @@ public class CustomerRankController extends HttpServlet {
         response.setContentType("application/json;charset=UTF-8");
         User user = (User) request.getSession().getAttribute("currentUser");
         if (user == null) {
-            response.getWriter().write("{\"error\":\"Vui long dang nhap.\"}");
+            response.getWriter().write("{\"error\":\"Vui lòng đăng nhập.\"}");
             return;
         }
 
@@ -69,7 +69,7 @@ public class CustomerRankController extends HttpServlet {
                 handleCheckoutXu(request, response, user);
                 break;
             default:
-                response.getWriter().write("{\"error\":\"Action khong hop le.\"}");
+                response.getWriter().write("{\"error\":\"Thao tác không hợp lệ.\"}");
         }
     }
 

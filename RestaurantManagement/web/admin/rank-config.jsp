@@ -1,4 +1,4 @@
-﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -76,7 +76,7 @@
                                     <td class="ps-4 fw-bold">${r.rankName}</td>
                                     <td><fmt:formatNumber value="${r.minPointThreshold}" pattern="#,##0"/> <fmt:message key="admin.rankconfig.pts"/></td>
                                     <td>${r.discountPercent}%</td>
-                                    <td><fmt:message key="admin.rankconfig.rate"/></td>
+                                    <td>${r.pointsPerThousandVnd} <fmt:message key="admin.rankconfig.rate"/></td>
                                     <td><c:choose><c:when test="${r.canBookVip}"><i class="fa-solid fa-check text-success"></i></c:when><c:otherwise><i class="fa-solid fa-times text-muted"></i></c:otherwise></c:choose></td>
                                     <td><c:choose><c:when test="${r.canBookVvip}"><i class="fa-solid fa-check text-success"></i></c:when><c:otherwise><i class="fa-solid fa-times text-muted"></i></c:otherwise></c:choose></td>
                                     <td><c:choose><c:when test="${r.isActive}"><span class="badge bg-success rounded-0"><fmt:message key="admin.common.active"/></span></c:when><c:otherwise><span class="badge bg-secondary rounded-0"><fmt:message key="admin.common.inactive"/></span></c:otherwise></c:choose></td>
