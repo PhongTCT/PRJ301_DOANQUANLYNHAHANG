@@ -2,13 +2,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
+<fmt:setBundle basename="i18n.messages" />
 <c:if test="${param.embed != '1'}">
 <!DOCTYPE html>
 <html lang="${sessionScope.lang}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${sessionScope.lang == 'en' ? 'Table Management - Admin Dashboard' : 'Quản lý Bàn - Admin Dashboard'}</title>
+    <title><fmt:message key="admin.tables.title" /> - <fmt:message key="admin.dashboard.workspace.title" /></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -36,23 +38,23 @@
 <c:set var="displayTables" value="${not empty tables ? tables : tableList}" />
 <div class="${param.embed == '1' ? 'table-wrap' : ''}">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold m-0 admin-title" style="font-size: clamp(1.5rem, 2.5vw, 2.2rem);">${sessionScope.lang == 'en' ? 'Table List' : 'Danh sách Bàn'}</h2>
+        <h2 class="fw-bold m-0 admin-title" style="font-size: clamp(1.5rem, 2.5vw, 2.2rem);"><fmt:message key="admin.tables.list" /></h2>
         <button class="btn btn-primary px-4" type="button" data-bs-toggle="collapse" data-bs-target="#addTablePanel" aria-expanded="false">
-            <i class="fa-solid fa-plus me-1"></i> ${sessionScope.lang == 'en' ? 'Add New Table' : 'Thêm bàn mới'}
+            <i class="fa-solid fa-plus me-1"></i> <fmt:message key="admin.tables.add" />
         </button>
     </div>
 
     <c:if test="${not empty sessionScope.successMessage}">
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <i class="fa-solid fa-circle-check me-2"></i> ${sessionScope.lang == 'en' ? sessionScope.successMessage : sessionScope.successMessage}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="<fmt:message key="admin.common.close" />"></button>
         </div>
         <c:remove var="successMessage" scope="session" />
     </c:if>
     <c:if test="${not empty sessionScope.errorMessage}">
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <i class="fa-solid fa-circle-exclamation me-2"></i> ${sessionScope.lang == 'en' ? sessionScope.errorMessage : sessionScope.errorMessage}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="<fmt:message key="admin.common.close" />"></button>
         </div>
         <c:remove var="errorMessage" scope="session" />
     </c:if>
@@ -64,26 +66,26 @@
                     <input type="hidden" name="action" value="add">
                     <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
                         <div>
-                            <div class="admin-section-label">${sessionScope.lang == 'en' ? 'Table editor' : 'Chỉnh bàn'}</div>
-                            <h5 class="fw-bold mb-0">${sessionScope.lang == 'en' ? 'Add New Table' : 'Thêm bàn mới'}</h5>
+                            <div class="admin-section-label"><fmt:message key="admin.tables.editor" /></div>
+                            <h5 class="fw-bold mb-0"><fmt:message key="admin.tables.add" /></h5>
                         </div>
-                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="collapse" data-bs-target="#addTablePanel">${sessionScope.lang == 'en' ? 'Close' : 'Đóng'}</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="collapse" data-bs-target="#addTablePanel"><fmt:message key="admin.common.cancel" /></button>
                     </div>
                     <div class="py-2">
                         <div class="row g-4">
                             <div class="col-lg-7">
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label text-muted small fw-bold">${sessionScope.lang == 'en' ? 'TABLE CODE' : 'MÃ BÀN'}</label>
+                                        <label class="form-label text-muted small fw-bold"><fmt:message key="admin.tables.label.code" /></label>
                                         <input id="draftTableCode" type="text" name="tableCode" class="form-control form-control-lg" required>
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label text-muted small fw-bold">${sessionScope.lang == 'en' ? 'CAPACITY (GUESTS)' : 'SỨC CHỨA (NGƯỜI)'}</label>
+                                        <label class="form-label text-muted small fw-bold"><fmt:message key="admin.tables.label.capacity" /></label>
                                         <input id="draftTableCapacity" type="number" name="capacity" class="form-control form-control-lg" value="2" min="1" required>
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label text-muted small fw-bold">${sessionScope.lang == 'en' ? 'ROOM / AREA' : 'PHÒNG / KHU VỰC'}</label>
+                                    <label class="form-label text-muted small fw-bold"><fmt:message key="admin.tables.label.room" /></label>
                                     <select id="draftTableRoom" name="roomId" class="form-select form-select-lg">
                                         <c:forEach items="${rooms}" var="r">
                                             <option value="${r.id}">${sessionScope.lang == 'en' ? r.roomNameEn : r.roomName}</option>
@@ -92,20 +94,20 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label text-muted small fw-bold">${sessionScope.lang == 'en' ? 'BOOKING FEE' : 'PHÍ ĐẶT BÀN'}</label>
+                                        <label class="form-label text-muted small fw-bold"><fmt:message key="admin.tables.label.bookingfee" /></label>
                                         <input id="draftTablePrice" type="number" name="basePrice" class="form-control form-control-lg" value="0" min="0" required>
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label text-muted small fw-bold">${sessionScope.lang == 'en' ? 'STATUS' : 'TRẠNG THÁI'}</label>
+                                        <label class="form-label text-muted small fw-bold"><fmt:message key="admin.tables.label.status" /></label>
                                         <select id="draftTableStatus" name="status" class="form-select form-select-lg">
-                                            <option value="AVAILABLE" selected>${sessionScope.lang == 'en' ? 'Available' : 'Trống'}</option>
-                                            <option value="RESERVED">${sessionScope.lang == 'en' ? 'Reserved' : 'Đã đặt'}</option>
-                                            <option value="OCCUPIED">${sessionScope.lang == 'en' ? 'Occupied' : 'Đang sử dụng'}</option>
+                                            <option value="AVAILABLE" selected><fmt:message key="admin.tables.status.available" /></option>
+                                            <option value="RESERVED"><fmt:message key="admin.tables.status.reserved" /></option>
+                                            <option value="OCCUPIED"><fmt:message key="admin.tables.status.occupied" /></option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="mb-0">
-                                    <label class="form-label text-muted small fw-bold">${sessionScope.lang == 'en' ? 'IMAGE URL' : 'ĐƯỜNG DẪN ẢNH'}</label>
+                                    <label class="form-label text-muted small fw-bold"><fmt:message key="admin.tables.label.image" /></label>
                                     <input id="draftTableImage" type="text" name="imageUrl" class="form-control form-control-lg" placeholder="assets/img/le-royal/seating/dining-room.jpg">
                                 </div>
                             </div>
@@ -115,10 +117,10 @@
                                         <i class="fa-solid fa-chair fa-2x"></i>
                                     </div>
                                     <p class="text-uppercase text-secondary small mb-1">Draft preview</p>
-                                    <h3 id="draftTableTitle" class="h5 mb-1">New table</h3>
+                                    <h3 id="draftTableTitle" class="h5 mb-1"><fmt:message key="admin.tables.preview.new" /></h3>
                                     <p id="draftTableMeta" class="text-secondary mb-2">2 guests · Room</p>
                                     <div class="d-flex flex-wrap gap-2">
-                                        <span id="draftTableStatusBadge" class="badge text-bg-success">Available</span>
+                                        <span id="draftTableStatusBadge" class="badge text-bg-success"><fmt:message key="admin.tables.status.available" /></span>
                                         <span id="draftTablePriceLabel" class="badge text-bg-light border text-dark">0đ</span>
                                     </div>
                                 </aside>
@@ -126,8 +128,8 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-end gap-2 pt-3">
-                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-toggle="collapse" data-bs-target="#addTablePanel">${sessionScope.lang == 'en' ? 'Cancel' : 'Hủy'}</button>
-                        <button type="submit" class="btn btn-primary rounded-pill px-4">${sessionScope.lang == 'en' ? 'Add Table' : 'Thêm Bàn'}</button>
+                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-toggle="collapse" data-bs-target="#addTablePanel"><fmt:message key="admin.common.cancel" /></button>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4"><fmt:message key="admin.tables.btn.add" /></button>
                     </div>
                 </form>
             </div>
@@ -140,16 +142,16 @@
                 <div class="col-lg-6">
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
-                        <input id="tableSearch" class="form-control" type="search" placeholder="${sessionScope.lang == 'en' ? 'Search table code, room or area' : 'Tìm mã bàn, phòng hoặc khu vực'}">
+                        <input id="tableSearch" class="form-control" type="search" placeholder="<fmt:message key="admin.tables.search" />">
                     </div>
                 </div>
                 <div class="col-sm-6 col-lg-3">
                     <select id="tableStatusFilter" class="form-select">
-                        <option value="">${sessionScope.lang == 'en' ? 'All status' : 'Tất cả trạng thái'}</option>
-                        <option value="AVAILABLE">${sessionScope.lang == 'en' ? 'Available' : 'Trống'}</option>
-                        <option value="RESERVED">${sessionScope.lang == 'en' ? 'Reserved' : 'Đã đặt'}</option>
-                        <option value="OCCUPIED">${sessionScope.lang == 'en' ? 'Occupied' : 'Đang sử dụng'}</option>
-                        <option value="HOLD">Hold</option>
+                        <option value=""><fmt:message key="admin.common.filter.all.status" /></option>
+                        <option value="AVAILABLE"><fmt:message key="admin.tables.status.available" /></option>
+                        <option value="RESERVED"><fmt:message key="admin.tables.status.reserved" /></option>
+                        <option value="OCCUPIED"><fmt:message key="admin.tables.status.occupied" /></option>
+                        <option value="HOLD"><fmt:message key="admin.tables.status.hold" /></option>
                     </select>
                 </div>
             </div>
@@ -161,12 +163,12 @@
             <table class="table table-hover align-middle m-0">
                 <thead class="table-light">
                     <tr>
-                        <th class="ps-4 py-3">${sessionScope.lang == 'en' ? 'Table' : 'Bàn'}</th>
-                        <th>${sessionScope.lang == 'en' ? 'Room/Area' : 'Khu vực'}</th>
-                        <th>${sessionScope.lang == 'en' ? 'Capacity' : 'Sức chứa'}</th>
-                        <th>${sessionScope.lang == 'en' ? 'Booking Fee' : 'Phí đặt bàn'}</th>
-                        <th>${sessionScope.lang == 'en' ? 'Status' : 'Trạng thái'}</th>
-                        <th class="text-end pe-4">${sessionScope.lang == 'en' ? 'Action' : 'Hành động'}</th>
+                        <th class="ps-4 py-3"><fmt:message key="admin.tables.col.table" /></th>
+                        <th><fmt:message key="admin.tables.col.room" /></th>
+                        <th><fmt:message key="admin.tables.col.capacity" /></th>
+                        <th><fmt:message key="admin.tables.col.bookingfee" /></th>
+                        <th><fmt:message key="admin.tables.col.status" /></th>
+                        <th class="text-end pe-4"><fmt:message key="admin.tables.col.action" /></th>
                     </tr>
                 </thead>
                 <tbody id="tableRows">
@@ -193,21 +195,21 @@
                             <td><fmt:formatNumber value="${t.basePrice}" pattern="#,##0"/>đ</td>
                             <td>
                                 <c:choose>
-                                    <c:when test="${t.status == 'AVAILABLE'}"><span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1">${sessionScope.lang == 'en' ? 'Available' : 'Trống'}</span></c:when>
-                                    <c:when test="${t.status == 'RESERVED'}"><span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-3 py-1">${sessionScope.lang == 'en' ? 'Reserved' : 'Đã đặt'}</span></c:when>
-                                    <c:when test="${t.status == 'OCCUPIED'}"><span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-3 py-1">${sessionScope.lang == 'en' ? 'Occupied' : 'Đang sử dụng'}</span></c:when>
+                                    <c:when test="${t.status == 'AVAILABLE'}"><span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1"><fmt:message key="admin.tables.status.available" /></span></c:when>
+                                    <c:when test="${t.status == 'RESERVED'}"><span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-3 py-1"><fmt:message key="admin.tables.status.reserved" /></span></c:when>
+                                    <c:when test="${t.status == 'OCCUPIED'}"><span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-3 py-1"><fmt:message key="admin.tables.status.occupied" /></span></c:when>
                                 </c:choose>
                             </td>
                             <td class="text-end pe-4">
-                                <button class="btn btn-sm btn-light border shadow-sm rounded-circle me-1" style="width:32px; height:32px;" data-bs-toggle="modal" data-bs-target="#editModal${t.id}" title="Sửa"><i class="fa-solid fa-pen text-primary"></i></button>
-                                <button class="btn btn-sm btn-light border shadow-sm rounded-circle" style="width:32px; height:32px;" data-bs-toggle="modal" data-bs-target="#deleteModal${t.id}" title="Xóa"><i class="fa-solid fa-trash text-danger"></i></button>
+                                <button class="btn btn-sm btn-light border shadow-sm rounded-circle me-1" style="width:32px; height:32px;" data-bs-toggle="modal" data-bs-target="#editModal${t.id}" title="<fmt:message key="admin.common.edit" />"><i class="fa-solid fa-pen text-primary"></i></button>
+                                <button class="btn btn-sm btn-light border shadow-sm rounded-circle" style="width:32px; height:32px;" data-bs-toggle="modal" data-bs-target="#deleteModal${t.id}" title="<fmt:message key="admin.common.delete" />"><i class="fa-solid fa-trash text-danger"></i></button>
                             </td>
                         </tr>
                     </c:forEach>
                     <c:if test="${empty displayTables}">
-                        <tr><td colspan="6" class="text-center text-muted py-5">${sessionScope.lang == 'en' ? 'No tables found.' : 'Chưa có dữ liệu bàn.'}</td></tr>
+                        <tr><td colspan="6" class="text-center text-muted py-5"><fmt:message key="admin.tables.empty" /></td></tr>
                     </c:if>
-                    <tr id="tableEmpty" class="d-none"><td colspan="6" class="text-center text-muted py-5">${sessionScope.lang == 'en' ? 'No tables match these filters.' : 'Không có bàn phù hợp bộ lọc.'}</td></tr>
+                    <tr id="tableEmpty" class="d-none"><td colspan="6" class="text-center text-muted py-5"><fmt:message key="admin.tables.empty.filter" /></td></tr>
                 </tbody>
             </table>
         </div>
@@ -232,22 +234,22 @@
                     <input type="hidden" name="action" value="update">
                     <input type="hidden" name="id" value="${t.id}">
                     <div class="modal-header border-0 pb-0">
-                        <h5 class="modal-title fw-bold">${sessionScope.lang == 'en' ? 'Update Table: ' : 'Cập nhật Bàn: '} ${t.tableCode}</h5>
+                        <h5 class="modal-title fw-bold"><fmt:message key="admin.tables.modal.update" /> ${t.tableCode}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body py-4">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label text-muted small fw-bold">${sessionScope.lang == 'en' ? 'TABLE CODE' : 'MÃ BÀN'}</label>
+                                <label class="form-label text-muted small fw-bold"><fmt:message key="admin.tables.label.code" /></label>
                                 <input type="text" name="tableCode" class="form-control form-control-lg" value="${t.tableCode}" required>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label text-muted small fw-bold">${sessionScope.lang == 'en' ? 'CAPACITY (GUESTS)' : 'SỨC CHỨA (NGƯỜI)'}</label>
+                                <label class="form-label text-muted small fw-bold"><fmt:message key="admin.tables.label.capacity" /></label>
                                 <input type="number" name="capacity" class="form-control form-control-lg" value="${t.capacity}" min="1" required>
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label text-muted small fw-bold">${sessionScope.lang == 'en' ? 'ROOM / AREA' : 'PHÒNG / KHU VỰC'}</label>
+                            <label class="form-label text-muted small fw-bold"><fmt:message key="admin.tables.label.room" /></label>
                             <select name="roomId" class="form-select form-select-lg">
                                 <c:forEach items="${rooms}" var="r">
                                     <option value="${r.id}" ${t.room.id == r.id ? 'selected' : ''}>${sessionScope.lang == 'en' ? r.roomNameEn : r.roomName}</option>
@@ -256,26 +258,26 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label text-muted small fw-bold">${sessionScope.lang == 'en' ? 'BOOKING FEE' : 'PHÍ ĐẶT BÀN'}</label>
+                                <label class="form-label text-muted small fw-bold"><fmt:message key="admin.tables.label.bookingfee" /></label>
                                 <input type="number" name="basePrice" class="form-control form-control-lg" value="${t.basePrice}" min="0" required>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label text-muted small fw-bold">${sessionScope.lang == 'en' ? 'STATUS' : 'TRẠNG THÁI'}</label>
+                                <label class="form-label text-muted small fw-bold"><fmt:message key="admin.tables.label.status" /></label>
                                 <select name="status" class="form-select form-select-lg">
-                                    <option value="AVAILABLE" ${t.status == 'AVAILABLE' ? 'selected' : ''}>${sessionScope.lang == 'en' ? 'Available' : 'Trống'}</option>
-                                    <option value="RESERVED" ${t.status == 'RESERVED' ? 'selected' : ''}>${sessionScope.lang == 'en' ? 'Reserved' : 'Đã đặt'}</option>
-                                    <option value="OCCUPIED" ${t.status == 'OCCUPIED' ? 'selected' : ''}>${sessionScope.lang == 'en' ? 'Occupied' : 'Đang sử dụng'}</option>
+                                    <option value="AVAILABLE" ${t.status == 'AVAILABLE' ? 'selected' : ''}><fmt:message key="admin.tables.status.available" /></option>
+                                    <option value="RESERVED" ${t.status == 'RESERVED' ? 'selected' : ''}><fmt:message key="admin.tables.status.reserved" /></option>
+                                    <option value="OCCUPIED" ${t.status == 'OCCUPIED' ? 'selected' : ''}><fmt:message key="admin.tables.status.occupied" /></option>
                                 </select>
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label text-muted small fw-bold">${sessionScope.lang == 'en' ? 'IMAGE URL' : 'ĐƯỜNG DẪN ẢNH'}</label>
+                            <label class="form-label text-muted small fw-bold"><fmt:message key="admin.tables.label.image" /></label>
                             <input type="text" name="imageUrl" class="form-control form-control-lg" value="${t.imageUrl}" placeholder="assets/img/le-royal/seating/dining-room.jpg">
                         </div>
                     </div>
                     <div class="modal-footer border-0 pt-0">
-                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">${sessionScope.lang == 'en' ? 'Cancel' : 'Hủy'}</button>
-                        <button type="submit" class="btn btn-primary rounded-pill px-4">${sessionScope.lang == 'en' ? 'Save Changes' : 'Lưu thay đổi'}</button>
+                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal"><fmt:message key="admin.common.cancel" /></button>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4"><fmt:message key="admin.common.save.changes" /></button>
                     </div>
                 </form>
             </div>
@@ -289,15 +291,15 @@
                     <input type="hidden" name="action" value="delete">
                     <input type="hidden" name="id" value="${t.id}">
                     <div class="modal-header border-0 pb-0">
-                        <h5 class="modal-title fw-bold text-danger">${sessionScope.lang == 'en' ? 'Confirm Hide' : 'Xác nhận ẩn bàn'}</h5>
+                        <h5 class="modal-title fw-bold text-danger"><fmt:message key="admin.tables.modal.hide" /></h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body py-4">
-                        ${sessionScope.lang == 'en' ? 'Are you sure you want to hide table' : 'Bạn có chắc chắn muốn ẩn bàn'} <strong class="text-danger">${t.tableCode}</strong>?
+                        <fmt:message key="admin.tables.modal.hide.confirm" /> <strong class="text-danger">${t.tableCode}</strong>?
                     </div>
                     <div class="modal-footer border-0 pt-0">
-                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">${sessionScope.lang == 'en' ? 'Cancel' : 'Hủy'}</button>
-                        <button type="submit" class="btn btn-danger rounded-pill px-4">${sessionScope.lang == 'en' ? 'Hide Table' : 'Đồng ý'}</button>
+                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal"><fmt:message key="admin.common.cancel" /></button>
+                        <button type="submit" class="btn btn-danger rounded-pill px-4"><fmt:message key="admin.tables.modal.hide.btn" /></button>
                     </div>
                 </form>
             </div>
@@ -356,7 +358,7 @@
             if (empty) empty.classList.toggle('d-none', visibleRows.length > 0);
             if (paginationText) {
                 var end = Math.min(start + pageSize, visibleRows.length);
-                paginationText.textContent = visibleRows.length ? ('Showing ' + (start + 1) + '-' + end + ' of ' + visibleRows.length) : 'No tables';
+                paginationText.textContent = visibleRows.length ? ('Showing ' + (start + 1) + '-' + end + ' of ' + visibleRows.length) : '<fmt:message key="admin.common.pagination.no.items" />';
             }
             renderPagination(totalPages);
         }
@@ -394,10 +396,10 @@
         }
         function renderDraft() {
             if (!title || !imageWrap) return;
-            title.textContent = (code.value || '').trim() || 'New table';
+            title.textContent = (code.value || '').trim() || '<fmt:message key="admin.tables.preview.new" />';
             meta.textContent = (capacity.value || '2') + ' guests · ' + (room.options[room.selectedIndex] ? room.options[room.selectedIndex].text : 'Room');
             priceLabel.textContent = money(price.value);
-            statusBadge.textContent = status.options[status.selectedIndex] ? status.options[status.selectedIndex].text : 'Available';
+            statusBadge.textContent = status.options[status.selectedIndex] ? status.options[status.selectedIndex].text : '<fmt:message key="admin.tables.status.available" />';
             statusBadge.className = status.value === 'AVAILABLE' ? 'badge text-bg-success' : (status.value === 'RESERVED' ? 'badge text-bg-warning' : 'badge text-bg-secondary');
             imageWrap.innerHTML = '<img style="width:100%; height:100%; object-fit:cover;" src="' + (imageSrc(image.value) || contextPath + '/assets/img/le-royal/seating/dining-room.jpg') + '" alt="">';
         }

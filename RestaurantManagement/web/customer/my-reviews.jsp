@@ -4,6 +4,8 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
 <fmt:setBundle basename="i18n.messages" />
+<fmt:message key="review.status.approved" var="statusApproved"/>
+<fmt:message key="review.status.pending" var="statusPending"/>
 <jsp:include page="/header.jsp" />
 <style>
     .review-page{min-height:80vh;background:radial-gradient(circle at top left,rgba(185,154,82,.14),transparent 34rem),linear-gradient(180deg,#fbfaf7 0%,#f3efe7 100%);color:#191714}
@@ -40,18 +42,18 @@
         <section class="review-hero">
             <div class="row g-4 align-items-end">
                 <div class="col-lg-8">
-                    <div class="review-kicker mb-3">Guest Voice</div>
-                    <h1 class="review-title mb-3">Đánh giá của tôi</h1>
-                    <p class="review-copy mb-0">Chia sẻ trải nghiệm của bạn sau mỗi bữa ăn và xem lại những đánh giá đã gửi.</p>
+                    <div class="review-kicker mb-3"><fmt:message key="review.eyebrow"/></div>
+                    <h1 class="review-title mb-3"><fmt:message key="review.title"/></h1>
+                    <p class="review-copy mb-0"><fmt:message key="review.subtitle"/></p>
                 </div>
                 <div class="col-lg-4">
                     <div class="review-summary">
                         <div class="review-summary__item">
-                            <div class="review-kicker mb-2">Đã gửi</div>
+                            <div class="review-kicker mb-2"><fmt:message key="review.sent"/></div>
                             <div class="review-summary__number">${fn:length(myReviews)}</div>
                         </div>
                         <div class="review-summary__item">
-                            <div class="review-kicker mb-2">Đã duyệt</div>
+                            <div class="review-kicker mb-2"><fmt:message key="review.approved"/></div>
                             <div class="review-summary__number">
                                 <c:set var="visible" value="0"/>
                                 <c:forEach items="${myReviews}" var="r"><c:if test="${r.isVisible}"><c:set var="visible" value="${visible + 1}"/></c:if></c:forEach>
@@ -82,15 +84,15 @@
             <div class="col-lg-5">
                 <section class="review-panel" aria-labelledby="submitReviewTitle">
                     <div class="review-panel__header">
-                        <div class="review-section-label">Write</div>
-                        <h2 id="submitReviewTitle" class="h4 fw-semibold mb-0 mt-1">Gửi đánh giá</h2>
+                        <div class="review-section-label"><fmt:message key="review.form.section"/></div>
+                        <h2 id="submitReviewTitle" class="h4 fw-semibold mb-0 mt-1"><fmt:message key="review.form.title"/></h2>
                     </div>
                     <div class="review-body">
                         <form method="post" action="${pageContext.request.contextPath}/customer/reviews" class="review-form">
                             <div class="mb-3">
-                                <label>Đơn đã hoàn thành</label>
+                                <label><fmt:message key="review.form.reservation"/></label>
                                 <select name="reservationId" class="form-select" required>
-                                    <option value="">Chọn mã đặt bàn</option>
+                                    <option value=""><fmt:message key="review.form.reservation.placeholder"/></option>
                                     <c:forEach items="${myReservations}" var="r">
                                         <c:if test="${r.status == 'COMPLETED'}">
                                             <option value="${r.id}">#${r.id} - <fmt:formatDate value="${r.reservationDate}" pattern="dd/MM/yyyy"/></option>
@@ -99,18 +101,18 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label>Số sao</label>
+                                <label><fmt:message key="review.form.stars"/></label>
                                 <input type="number" name="rating" class="form-control" min="1" max="5" value="5" required>
                             </div>
                             <div class="mb-3">
-                                <label>Hình ảnh URL</label>
+                                <label><fmt:message key="review.form.image"/></label>
                                 <input name="imageUrl" class="form-control" placeholder="https://...">
                             </div>
                             <div class="mb-3">
-                                <label>Nội dung</label>
+                                <label><fmt:message key="review.form.content"/></label>
                                 <textarea name="comment" class="form-control" rows="5" required></textarea>
                             </div>
-                            <button class="review-submit w-100"><i class="fa-regular fa-paper-plane me-2"></i>Gửi đánh giá</button>
+                            <button class="review-submit w-100"><i class="fa-regular fa-paper-plane me-2"></i><fmt:message key="review.form.submit"/></button>
                         </form>
                     </div>
                 </section>
@@ -119,8 +121,8 @@
                 <section class="review-panel" aria-labelledby="historyTitle">
                     <div class="review-panel__header">
                         <div>
-                            <div class="review-section-label">History</div>
-                            <h2 id="historyTitle" class="h4 fw-semibold mb-0 mt-1">Lịch sử đánh giá</h2>
+                            <div class="review-section-label"><fmt:message key="review.history.section"/></div>
+                            <h2 id="historyTitle" class="h4 fw-semibold mb-0 mt-1"><fmt:message key="review.history.title"/></h2>
                         </div>
                     </div>
                     <div class="review-body">
@@ -128,8 +130,8 @@
                             <c:when test="${empty myReviews}">
                                 <div class="review-empty">
                                     <i class="fa-regular fa-star d-block"></i>
-                                    <div class="fw-semibold mb-1">Bạn chưa có đánh giá nào</div>
-                                    <div class="small">Hãy gửi đánh giá đầu tiên sau bữa ăn tại Le Royal.</div>
+                                    <div class="fw-semibold mb-1"><fmt:message key="review.empty"/></div>
+                                    <div class="small"><fmt:message key="review.empty.sub"/></div>
                                 </div>
                             </c:when>
                             <c:otherwise>
@@ -137,7 +139,7 @@
                                     <div class="review-card">
                                         <div class="review-card__meta">
                                             <span class="review-reservation-id">Reservation #${r.reservation.id}</span>
-                                            <span class="badge ${r.isVisible ? 'bg-success' : 'bg-secondary'} rounded-0 fw-semibold">${r.isVisible ? 'Đã duyệt' : 'Chờ duyệt'}</span>
+                                            <span class="badge ${r.isVisible ? 'bg-success' : 'bg-secondary'} rounded-0 fw-semibold">${r.isVisible ? statusApproved : statusPending}</span>
                                         </div>
                                         <div class="review-stars my-2">
                                             <c:forEach begin="1" end="${r.rating}"><i class="fa-solid fa-star"></i></c:forEach>

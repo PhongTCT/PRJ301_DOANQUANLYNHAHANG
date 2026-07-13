@@ -1,12 +1,15 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
+<fmt:setBundle basename="i18n.messages" />
 <c:if test="${param.embed != '1'}">
 <!DOCTYPE html>
 <html lang="${sessionScope.lang}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dish groups - Le Royal</title>
+    <title><fmt:message key="admin.categories.title" /> - Le Royal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -32,22 +35,22 @@
 <c:if test="${param.embed == '1'}"><main class="container-fluid py-4"></c:if>
     <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
         <div>
-            <p class="text-uppercase text-secondary small mb-1">Menu items</p>
-            <h1 class="h3 mb-1">Dish groups</h1>
-            <p class="text-secondary mb-0">These groups organize dishes for filters, courses, and the public menu.</p>
+            <p class="text-uppercase text-secondary small mb-1"><fmt:message key="admin.menuitems.title" /></p>
+            <h1 class="h3 mb-1"><fmt:message key="admin.categories.title" /></h1>
+            <p class="text-secondary mb-0"><fmt:message key="admin.categories.desc" /></p>
         </div>
         <div class="d-flex flex-wrap gap-2">
             <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminMenuItems${param.embed == '1' ? '&embed=1' : ''}">
                 <i class="fa-solid fa-bowl-food me-2"></i>Back to menu items
             </a>
             <button class="btn btn-dark btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#categoryFormPanel" aria-expanded="${not empty editCategory ? 'true' : 'false'}">
-                <i class="fa-solid fa-plus me-2"></i>Add group
+                <i class="fa-solid fa-plus me-2"></i><fmt:message key="admin.categories.btn.add" />
             </button>
         </div>
     </div>
 
     <c:if test="${not empty error}"><div class="alert alert-danger">${error}</div></c:if>
-    <c:if test="${param.saved == '1'}"><div class="alert alert-success">Saved successfully.</div></c:if>
+    <c:if test="${param.saved == '1'}"><div class="alert alert-success"><fmt:message key="admin.common.saved.success" /></div></c:if>
 
     <section id="categoryFormPanel" class="collapse ${not empty editCategory ? 'show' : ''} mb-4">
         <form id="categoryEditorForm" class="card" method="post" action="MainController">
@@ -58,51 +61,56 @@
                 <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
                     <div>
                         <div class="admin-section-label">Dish group editor</div>
-                        <h2 class="h5 mb-0">${empty editCategory ? 'Create group' : 'Edit group'}</h2>
+                        <h2 class="h5 mb-0">
+                            <c:choose>
+                                <c:when test="${empty editCategory}"><fmt:message key="admin.categories.editor.create" /></c:when>
+                                <c:otherwise><fmt:message key="admin.categories.editor.edit" /></c:otherwise>
+                            </c:choose>
+                        </h2>
                     </div>
                     <c:if test="${not empty editCategory}">
-                        <a class="btn btn-outline-secondary btn-sm" href="MainController?action=adminCategories${param.embed == '1' ? '&embed=1' : ''}">Clear edit</a>
+                        <a class="btn btn-outline-secondary btn-sm" href="MainController?action=adminCategories${param.embed == '1' ? '&embed=1' : ''}"><fmt:message key="admin.categories.editor.clear" /></a>
                     </c:if>
                 </div>
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label">Group name (VI)</label>
+                        <label class="form-label"><fmt:message key="admin.categories.label.name.vi" /></label>
                         <input id="categoryNameViInput" class="form-control" name="categoryNameVi" value="${editCategory.categoryNameVi}" required>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Group name (EN, optional)</label>
+                        <label class="form-label"><fmt:message key="admin.categories.label.name.en" /></label>
                         <input id="categoryNameInput" class="form-control" name="categoryName" value="${editCategory.categoryName}">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Service period</label>
+                        <label class="form-label"><fmt:message key="admin.categories.label.service" /></label>
                         <select id="categoryMealTimeInput" class="form-select" name="mealTime">
-                            <option value="LUNCH" ${editCategory.mealTime == 'LUNCH' ? 'selected' : ''}>Lunch Service</option>
-                            <option value="DINNER" ${editCategory.mealTime == 'DINNER' ? 'selected' : ''}>Dinner Service</option>
-                            <option value="ALL_DAY" ${empty editCategory || editCategory.mealTime == 'ALL_DAY' || editCategory.mealTime == 'BREAKFAST' ? 'selected' : ''}>All Services</option>
+                            <option value="LUNCH" ${editCategory.mealTime == 'LUNCH' ? 'selected' : ''}><fmt:message key="admin.menusets.label.service.lunch" /></option>
+                            <option value="DINNER" ${editCategory.mealTime == 'DINNER' ? 'selected' : ''}><fmt:message key="admin.menusets.label.service.dinner" /></option>
+                            <option value="ALL_DAY" ${empty editCategory || editCategory.mealTime == 'ALL_DAY' || editCategory.mealTime == 'BREAKFAST' ? 'selected' : ''}><fmt:message key="admin.menusets.label.service.all" /></option>
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Course type</label>
+                        <label class="form-label"><fmt:message key="admin.categories.label.coursetype" /></label>
                         <select id="categoryTypeInput" class="form-select" name="categoryType">
-                            <option value="APPETIZER" ${editCategory.categoryType == 'APPETIZER' ? 'selected' : ''}>Appetizer</option>
-                            <option value="SOUP" ${editCategory.categoryType == 'SOUP' ? 'selected' : ''}>Soup</option>
-                            <option value="MAIN" ${editCategory.categoryType == 'MAIN' ? 'selected' : ''}>Main</option>
-                            <option value="DESSERT" ${editCategory.categoryType == 'DESSERT' ? 'selected' : ''}>Dessert</option>
-                            <option value="DRINK" ${editCategory.categoryType == 'DRINK' ? 'selected' : ''}>Drink</option>
+                            <option value="APPETIZER" ${editCategory.categoryType == 'APPETIZER' ? 'selected' : ''}><fmt:message key="admin.menuitems.type.appetizer" /></option>
+                            <option value="SOUP" ${editCategory.categoryType == 'SOUP' ? 'selected' : ''}><fmt:message key="admin.menuitems.type.soup" /></option>
+                            <option value="MAIN" ${editCategory.categoryType == 'MAIN' ? 'selected' : ''}><fmt:message key="admin.menuitems.type.main" /></option>
+                            <option value="DESSERT" ${editCategory.categoryType == 'DESSERT' ? 'selected' : ''}><fmt:message key="admin.menuitems.type.dessert" /></option>
+                            <option value="DRINK" ${editCategory.categoryType == 'DRINK' ? 'selected' : ''}><fmt:message key="admin.menuitems.type.drink" /></option>
                         </select>
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label">Sort order</label>
+                        <label class="form-label"><fmt:message key="admin.categories.label.sort" /></label>
                         <input id="categorySortOrderInput" class="form-control" name="sortOrder" type="number" min="1" value="${empty editCategory ? 1 : editCategory.sortOrder}">
                     </div>
                     <div class="col-md-2 d-flex align-items-end">
                         <div class="form-check form-switch mb-2">
                             <input id="categoryActiveInput" class="form-check-input" type="checkbox" name="isActive" value="true" ${empty editCategory || editCategory.isActive ? 'checked' : ''}>
-                            <label class="form-check-label">Active</label>
+                            <label class="form-check-label"><fmt:message key="admin.common.active" /></label>
                         </div>
                     </div>
                     <div class="col-12 d-flex justify-content-end">
-                        <button class="btn btn-dark px-4" type="submit">Save group</button>
+                        <button class="btn btn-dark px-4" type="submit"><fmt:message key="admin.common.save" /></button>
                     </div>
                 </div>
             </div>
@@ -114,24 +122,24 @@
             <div class="modal-content border-0 shadow">
                 <div class="modal-header">
                     <div>
-                        <p class="text-uppercase text-secondary small mb-1">Confirm dish group</p>
-                        <h5 class="modal-title" id="categoryConfirmTitle">Review group</h5>
+                        <p class="text-uppercase text-secondary small mb-1"><fmt:message key="admin.categories.modal.confirm" /></p>
+                        <h5 class="modal-title" id="categoryConfirmTitle"><fmt:message key="admin.categories.modal.review" /></h5>
                     </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<fmt:message key="admin.common.close" />"></button>
                 </div>
                 <div class="modal-body">
-                    <h3 id="categoryConfirmName" class="h5 mb-2">New group</h3>
-                    <p id="categoryConfirmEnglish" class="text-secondary mb-3">No English name.</p>
+                    <h3 id="categoryConfirmName" class="h5 mb-2"><fmt:message key="admin.categories.preview.new" /></h3>
+                    <p id="categoryConfirmEnglish" class="text-secondary mb-3"><fmt:message key="admin.categories.preview.noen" /></p>
                     <div class="d-flex flex-wrap gap-2">
-                        <span id="categoryConfirmService" class="badge text-bg-light border text-dark">All Services</span>
-                        <span id="categoryConfirmType" class="badge text-bg-light border text-dark">Appetizer</span>
-                        <span id="categoryConfirmOrder" class="badge text-bg-light border text-dark">Order 1</span>
-                        <span id="categoryConfirmStatus" class="badge text-bg-success">Active</span>
+                        <span id="categoryConfirmService" class="badge text-bg-light border text-dark"><fmt:message key="admin.menusets.label.service.all" /></span>
+                        <span id="categoryConfirmType" class="badge text-bg-light border text-dark"><fmt:message key="admin.menuitems.type.appetizer" /></span>
+                        <span id="categoryConfirmOrder" class="badge text-bg-light border text-dark"><fmt:message key="admin.categories.label.sort" /> 1</span>
+                        <span id="categoryConfirmStatus" class="badge text-bg-success"><fmt:message key="admin.common.active" /></span>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Keep editing</button>
-                    <button id="categoryConfirmSave" type="button" class="btn btn-dark">Confirm save</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><fmt:message key="admin.menuitems.modal.keep" /></button>
+                    <button id="categoryConfirmSave" type="button" class="btn btn-dark"><fmt:message key="admin.menuitems.modal.save" /></button>
                 </div>
             </div>
         </div>
@@ -141,8 +149,8 @@
         <div class="card-body p-4">
             <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
                 <div>
-                    <div class="admin-section-label">Menu structure</div>
-                    <h2 class="h5 mb-0">Dish groups used by menu items</h2>
+                    <div class="admin-section-label"><fmt:message key="admin.categories.library.title" /></div>
+                    <h2 class="h5 mb-0"><fmt:message key="admin.categories.library.sub" /></h2>
                 </div>
                 <div class="small text-secondary">${categoryList.size()} groups</div>
             </div>
@@ -150,24 +158,24 @@
                 <div class="col-lg-6">
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
-                        <input id="categorySearch" class="form-control" type="search" placeholder="Search group name">
+                        <input id="categorySearch" class="form-control" type="search" placeholder="<fmt:message key="admin.categories.search" />">
                     </div>
                 </div>
                 <div class="col-sm-6 col-lg-3">
                     <select id="categoryTypeFilter" class="form-select">
-                        <option value="">All types</option>
-                        <option value="APPETIZER">Appetizer</option>
-                        <option value="SOUP">Soup</option>
-                        <option value="MAIN">Main</option>
-                        <option value="DESSERT">Dessert</option>
-                        <option value="DRINK">Drink</option>
+                        <option value=""><fmt:message key="admin.common.filter.all.types" /></option>
+                        <option value="APPETIZER"><fmt:message key="admin.menuitems.type.appetizer" /></option>
+                        <option value="SOUP"><fmt:message key="admin.menuitems.type.soup" /></option>
+                        <option value="MAIN"><fmt:message key="admin.menuitems.type.main" /></option>
+                        <option value="DESSERT"><fmt:message key="admin.menuitems.type.dessert" /></option>
+                        <option value="DRINK"><fmt:message key="admin.menuitems.type.drink" /></option>
                     </select>
                 </div>
                 <div class="col-sm-6 col-lg-2">
                     <select id="categoryStatusFilter" class="form-select">
-                        <option value="">All status</option>
-                        <option value="active">Active</option>
-                        <option value="hidden">Hidden</option>
+                        <option value=""><fmt:message key="admin.common.filter.all.status" /></option>
+                        <option value="active"><fmt:message key="admin.common.active" /></option>
+                        <option value="hidden"><fmt:message key="admin.common.hidden" /></option>
                     </select>
                 </div>
             </div>
@@ -175,11 +183,11 @@
                 <table class="table align-middle">
                     <thead>
                         <tr>
-                            <th>Group</th>
-                            <th>Service</th>
-                            <th>Course type</th>
-                            <th>Order</th>
-                            <th>Status</th>
+                            <th><fmt:message key="admin.categories.col.group" /></th>
+                            <th><fmt:message key="admin.categories.col.service" /></th>
+                            <th><fmt:message key="admin.categories.col.coursetype" /></th>
+                            <th><fmt:message key="admin.categories.col.order" /></th>
+                            <th><fmt:message key="admin.categories.col.status" /></th>
                             <th></th>
                         </tr>
                     </thead>
@@ -195,30 +203,40 @@
                                 </td>
                                 <td>
                                     <c:choose>
-                                        <c:when test="${cat.mealTime == 'LUNCH'}">Lunch Service</c:when>
-                                        <c:when test="${cat.mealTime == 'DINNER'}">Dinner Service</c:when>
-                                        <c:otherwise>All Services</c:otherwise>
+                                        <c:when test="${cat.mealTime == 'LUNCH'}"><fmt:message key="admin.menusets.label.service.lunch" /></c:when>
+                                        <c:when test="${cat.mealTime == 'DINNER'}"><fmt:message key="admin.menusets.label.service.dinner" /></c:when>
+                                        <c:otherwise><fmt:message key="admin.menusets.label.service.all" /></c:otherwise>
                                     </c:choose>
                                 </td>
                                 <td><span class="badge bg-light">${cat.categoryType}</span></td>
                                 <td>${cat.sortOrder}</td>
-                                <td><span class="badge ${cat.isActive ? 'text-bg-success' : 'text-bg-secondary'}">${cat.isActive ? 'Active' : 'Hidden'}</span></td>
+                                <td><span class="badge ${cat.isActive ? 'text-bg-success' : 'text-bg-secondary'}">
+                                    <c:choose>
+                                        <c:when test="${cat.isActive}"><fmt:message key="admin.common.active"/></c:when>
+                                        <c:otherwise><fmt:message key="admin.common.hidden"/></c:otherwise>
+                                    </c:choose>
+                                </span></td>
                                 <td class="text-end">
-                                    <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminCategories&id=${cat.id}${param.embed == '1' ? '&embed=1' : ''}">Edit</a>
-                                    <a class="btn btn-outline-secondary btn-sm" href="MainController?action=toggleMenuCategory&id=${cat.id}&enabled=${!cat.isActive}${param.embed == '1' ? '&embed=1' : ''}">${cat.isActive ? 'Hide' : 'Restore'}</a>
+                                    <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminCategories&id=${cat.id}${param.embed == '1' ? '&embed=1' : ''}"><fmt:message key="admin.common.edit" /></a>
+                                    <a class="btn btn-outline-secondary btn-sm" href="MainController?action=toggleMenuCategory&id=${cat.id}&enabled=${!cat.isActive}${param.embed == '1' ? '&embed=1' : ''}">
+                                        <c:choose>
+                                            <c:when test="${cat.isActive}"><fmt:message key="admin.common.hide"/></c:when>
+                                            <c:otherwise><fmt:message key="admin.common.restore"/></c:otherwise>
+                                        </c:choose>
+                                    </a>
                                 </td>
                             </tr>
                         </c:forEach>
                         <c:if test="${empty categoryList}">
-                            <tr><td colspan="6" class="text-center text-secondary py-5">No dish groups yet.</td></tr>
+                            <tr><td colspan="6" class="text-center text-secondary py-5"><fmt:message key="admin.categories.empty" /></td></tr>
                         </c:if>
-                        <tr id="categoryEmpty" class="d-none"><td colspan="6" class="text-center text-secondary py-5">No dish groups match these filters.</td></tr>
+                        <tr id="categoryEmpty" class="d-none"><td colspan="6" class="text-center text-secondary py-5"><fmt:message key="admin.categories.empty.filter" /></td></tr>
                     </tbody>
                 </table>
             </div>
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mt-3">
                 <div id="categoryPaginationText" class="small text-secondary"></div>
-                <div id="categoryPagination" class="btn-group btn-group-sm" role="group" aria-label="Dish group pagination"></div>
+                <div id="categoryPagination" class="btn-group btn-group-sm" role="group" aria-label="<fmt:message key="admin.categories.library.sub" />"></div>
             </div>
         </div>
     </section>
@@ -273,7 +291,7 @@
             if (empty) empty.classList.toggle('d-none', visibleRows.length > 0);
             if (paginationText) {
                 var end = Math.min(start + pageSize, visibleRows.length);
-                paginationText.textContent = visibleRows.length ? ('Showing ' + (start + 1) + '-' + end + ' of ' + visibleRows.length) : 'No dish groups';
+                paginationText.textContent = visibleRows.length ? ('<fmt:message key="admin.common.pagination.show"><fmt:param value="' + (start + 1) + '"/><fmt:param value="' + end + '"/><fmt:param value="' + visibleRows.length + '"/></fmt:message>') : '<fmt:message key="admin.categories.empty.filter"/>';
             }
             renderPagination(totalPages);
         }
@@ -307,13 +325,13 @@
             var typeLabel = document.getElementById('categoryConfirmType');
             var orderLabel = document.getElementById('categoryConfirmOrder');
             var statusLabel = document.getElementById('categoryConfirmStatus');
-            if (title) title.textContent = (nameVi.value || '').trim() || 'New group';
-            if (english) english.textContent = (nameEn.value || '').trim() || 'No English name.';
-            if (serviceLabel) serviceLabel.textContent = selectedText(service, 'All Services');
-            if (typeLabel) typeLabel.textContent = selectedText(type, 'Appetizer');
-            if (orderLabel) orderLabel.textContent = 'Order ' + (sortOrder.value || '1');
+            if (title) title.textContent = (nameVi.value || '').trim() || '<fmt:message key="admin.categories.preview.new"/>';
+            if (english) english.textContent = (nameEn.value || '').trim() || '<fmt:message key="admin.categories.preview.noen"/>';
+            if (serviceLabel) serviceLabel.textContent = selectedText(service, '<fmt:message key="admin.menusets.label.service.all"/>');
+            if (typeLabel) typeLabel.textContent = selectedText(type, '<fmt:message key="admin.menuitems.type.appetizer"/>');
+            if (orderLabel) orderLabel.textContent = '' + '<fmt:message key="admin.categories.label.sort"/> ' + (sortOrder.value || '1');
             if (statusLabel) {
-                statusLabel.textContent = active.checked ? 'Active' : 'Hidden';
+                statusLabel.textContent = active.checked ? '<fmt:message key="admin.common.active"/>' : '<fmt:message key="admin.common.hidden"/>';
                 statusLabel.className = active.checked ? 'badge text-bg-success' : 'badge text-bg-secondary';
             }
         }
@@ -324,7 +342,7 @@
                 renderConfirm();
                 if (window.bootstrap && modal) {
                     window.bootstrap.Modal.getOrCreateInstance(modal).show();
-                } else if (window.confirm('Review this dish group and save?')) {
+                } else if (window.confirm('<fmt:message key="admin.categories.modal.review"/>')) {
                     confirmed = true;
                     form.submit();
                 }

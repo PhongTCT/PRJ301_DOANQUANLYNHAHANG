@@ -1,10 +1,13 @@
 ﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
+<fmt:setBundle basename="i18n.messages" />
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Create Customer - Walk-in Type C</title>
+    <title><fmt:message key="admin.createcustomer.title"/> - <fmt:message key="admin.createcustomer.sub"/></title>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -17,8 +20,8 @@
             <div class="col-md-6 col-lg-5">
                 <div class="card shadow-sm border-0">
                     <div class="card-header bg-white border-0 pt-4 pb-0 text-center">
-                        <h4 class="fw-bold mb-1">Create Customer</h4>
-                        <p class="text-muted small">Walk-in Type C</p>
+                        <h4 class="fw-bold mb-1"><fmt:message key="admin.createcustomer.title"/></h4>
+                        <p class="text-muted small"><fmt:message key="admin.createcustomer.sub"/></p>
                     </div>
                     <div class="card-body p-4">
                         <c:if test="${not empty error}">
@@ -29,30 +32,30 @@
                         
                         <form action="${pageContext.request.contextPath}/admin/create-customer" method="POST">
                             <div class="mb-3 form-floating">
-                                <input type="text" class="form-control" id="fullName" name="fullName" required placeholder="Full Name">
-                                <label for="fullName">Full Name</label>
+                                <input type="text" class="form-control" id="fullName" name="fullName" required placeholder="<fmt:message key='admin.createcustomer.fullname'/>">
+                                <label for="fullName"><fmt:message key="admin.createcustomer.fullname"/></label>
                             </div>
                             
                             <div class="mb-3 form-floating">
-                                <input type="tel" class="form-control" id="phone" name="phone" required placeholder="Phone Number">
-                                <label for="phone">Phone Number</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" required placeholder="<fmt:message key='admin.createcustomer.phone'/>">
+                                <label for="phone"><fmt:message key="admin.createcustomer.phone"/></label>
                             </div>
                             
                             <div class="mb-4 form-floating">
-                                <input type="email" class="form-control" id="email" name="email" placeholder="Email (Optional)">
-                                <label for="email">Email (Optional)</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="<fmt:message key='admin.createcustomer.email'/>">
+                                <label for="email"><fmt:message key="admin.createcustomer.email"/></label>
                             </div>
                             
                             <div class="alert alert-info border-0 small">
-                                <i class="fa-solid fa-info-circle me-1"></i> The customer's default password will be their phone number. They can log in using their phone number as the username.
+                                <i class="fa-solid fa-info-circle me-1"></i> <fmt:message key="admin.createcustomer.note"/>
                             </div>
                             
                             <div class="d-flex justify-content-between align-items-center">
                                 <a href="${pageContext.request.contextPath}/admin/walkin" class="btn btn-outline-secondary">
-                                    <i class="fa-solid fa-arrow-left me-1"></i> Back to POS
+                                    <i class="fa-solid fa-arrow-left me-1"></i> <fmt:message key="admin.createcustomer.back"/>
                                 </a>
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="fa-solid fa-user-plus me-1"></i> Create Customer
+                                    <i class="fa-solid fa-user-plus me-1"></i> <fmt:message key="admin.createcustomer.btn"/>
                                 </button>
                             </div>
                         </form>

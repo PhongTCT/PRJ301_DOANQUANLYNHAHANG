@@ -1,10 +1,13 @@
 package controller.payment;
 
 import entity.Invoice;
+import entity.RankTopUp;
 import entity.Reservation;
 import entity.User;
 import enums.PaymentMethod;
 import enums.PaymentStatus;
+import enums.TopUpType;
+import enums.TransactionStatus;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -15,11 +18,15 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import service.LoyaltyService;
+import service.TopUpService;
 import service.VnPayService;
 import util.JPAUtil;
 
 public class VnPayController extends HttpServlet {
     private final VnPayService vnPayService = new VnPayService();
+    private final TopUpService topUpService = new TopUpService();
+    private final LoyaltyService loyaltyService = new LoyaltyService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -52,42 +59,69 @@ public class VnPayController extends HttpServlet {
             return;
         }
 
-        Long invoiceId = parseLong(request.getParameter("invoiceId"));
-        Invoice invoice = findInvoice(invoiceId);
-        if (invoice == null || invoice.getPaymentMethod() != PaymentMethod.VNPAY || invoice.getPaymentStatus() == PaymentStatus.PAID) {
-            request.getSession().setAttribute("errorMessage", "Hóa đơn không thể thanh toán bằng VNPay.");
-            response.sendRedirect(request.getContextPath() + "/customer/invoices");
-            return;
+        String type = request.getParameter("type");
+        if ("topup".equals(type)) {
+            Long topUpId = parseLong(request.getParameter("topUpId"));
+            RankTopUp topUp = findTopUp(topUpId);
+            if (topUp == null || topUp.getStatus() != TransactionStatus.PENDING) {
+                request.getSession().setAttribute("errorMessage", "Giao dich nap khong hop le.");
+                response.sendRedirect(request.getContextPath() + "/customer/rank");
+                return;
+            }
+            response.sendRedirect(vnPayService.createTopUpPaymentUrl(request, topUp));
+        } else {
+            Long invoiceId = parseLong(request.getParameter("invoiceId"));
+            Invoice invoice = findInvoice(invoiceId);
+            if (invoice == null || invoice.getPaymentMethod() != PaymentMethod.VNPAY || invoice.getPaymentStatus() == PaymentStatus.PAID) {
+                request.getSession().setAttribute("errorMessage", "Hoa don khong the thanh toan bang VNPay.");
+                response.sendRedirect(request.getContextPath() + "/customer/invoices");
+                return;
+            }
+            if (!canAccessInvoice(user, invoice)) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                return;
+            }
+            response.sendRedirect(vnPayService.createPaymentUrl(request, invoice));
         }
-        if (!canAccessInvoice(user, invoice)) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN);
-            return;
-        }
-
-        response.sendRedirect(vnPayService.createPaymentUrl(request, invoice));
     }
 
     private void handleReturn(HttpServletRequest request, HttpServletResponse response) throws IOException {
         boolean valid = vnPayService.verifyReturn(request);
         Map<String, String> params = vnPayService.extractVnPayParams(request);
-        Long invoiceId = vnPayService.invoiceIdFromTxnRef(params.get("vnp_TxnRef"));
+        String txnRef = params.get("vnp_TxnRef");
+        String prefix = vnPayService.detectTxnRefPrefix(txnRef);
+
         boolean paid = valid && "00".equals(params.get("vnp_ResponseCode")) && "00".equals(params.get("vnp_TransactionStatus"));
 
-        Invoice invoice = paid ? markPaid(invoiceId, params) : findInvoice(invoiceId);
-        if (invoice != null) {
-            Reservation reservation = invoice.getReservation();
-            if (reservation != null) {
-                reservation.getId();
-                reservation.getGuestName();
-                reservation.getReservationDate();
-                reservation.getReservationTime();
+        if ("TOPUP".equals(prefix)) {
+            Long topUpId = vnPayService.topUpIdFromTxnRef(txnRef);
+            if (paid && topUpId != null) {
+                topUpService.completeTopUp(topUpId, params.get("vnp_TransactionNo"));
             }
-            request.getSession().setAttribute("lastInvoice", invoice);
-            request.getSession().setAttribute("lastReservation", reservation);
+            request.getSession().setAttribute(paid ? "successMessage" : "errorMessage",
+                    paid ? "Nap thanh cong." : "Nap chua hoan tat hoac chu ky khong hop le.");
+            response.sendRedirect(request.getContextPath() + "/customer/rank");
+        } else {
+            Long invoiceId = vnPayService.invoiceIdFromTxnRef(txnRef);
+            Invoice invoice = paid ? markPaid(invoiceId, params) : findInvoice(invoiceId);
+            if (paid && invoice != null) {
+                loyaltyService.processPaidInvoice(invoice.getId());
+            }
+            if (invoice != null) {
+                Reservation reservation = invoice.getReservation();
+                if (reservation != null) {
+                    reservation.getId();
+                    reservation.getGuestName();
+                    reservation.getReservationDate();
+                    reservation.getReservationTime();
+                }
+                request.getSession().setAttribute("lastInvoice", invoice);
+                request.getSession().setAttribute("lastReservation", reservation);
+            }
+            request.getSession().setAttribute(paid ? "successMessage" : "errorMessage",
+                    paid ? "Thanh toan VNPay thanh cong." : "Thanh toan VNPay chua hoan tat hoac chu ky khong hop le.");
+            response.sendRedirect(request.getContextPath() + "/MainController?action=bookingConfirmation");
         }
-        request.getSession().setAttribute(paid ? "successMessage" : "errorMessage",
-                paid ? "Thanh toán VNPay thành công." : "Thanh toán VNPay chưa hoàn tất hoặc chữ ký không hợp lệ.");
-        response.sendRedirect(request.getContextPath() + "/MainController?action=bookingConfirmation");
     }
 
     private void handleIpn(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -98,27 +132,57 @@ public class VnPayController extends HttpServlet {
         }
 
         Map<String, String> params = vnPayService.extractVnPayParams(request);
-        Long invoiceId = vnPayService.invoiceIdFromTxnRef(params.get("vnp_TxnRef"));
-        Invoice invoice = findInvoice(invoiceId);
-        if (invoice == null) {
-            response.getWriter().write("{\"RspCode\":\"01\",\"Message\":\"Order not found\"}");
-            return;
-        }
-        if (!amountMatches(invoice, params.get("vnp_Amount"))) {
-            response.getWriter().write("{\"RspCode\":\"04\",\"Message\":\"Invalid amount\"}");
-            return;
-        }
-        if (invoice.getPaymentStatus() == PaymentStatus.PAID) {
-            response.getWriter().write("{\"RspCode\":\"02\",\"Message\":\"Order already confirmed\"}");
-            return;
-        }
-        if (!"00".equals(params.get("vnp_ResponseCode")) || !"00".equals(params.get("vnp_TransactionStatus"))) {
-            response.getWriter().write("{\"RspCode\":\"00\",\"Message\":\"Confirm Success\"}");
-            return;
-        }
+        String txnRef = params.get("vnp_TxnRef");
+        String prefix = vnPayService.detectTxnRefPrefix(txnRef);
 
-        markPaid(invoiceId, params);
-        response.getWriter().write("{\"RspCode\":\"00\",\"Message\":\"Confirm Success\"}");
+        if ("TOPUP".equals(prefix)) {
+            Long topUpId = vnPayService.topUpIdFromTxnRef(txnRef);
+            RankTopUp topUp = findTopUp(topUpId);
+            if (topUp == null) {
+                response.getWriter().write("{\"RspCode\":\"01\",\"Message\":\"Order not found\"}");
+                return;
+            }
+            if (topUp.getStatus() == enums.TransactionStatus.SUCCESS) {
+                response.getWriter().write("{\"RspCode\":\"02\",\"Message\":\"Order already confirmed\"}");
+                return;
+            }
+            if (!topUpAmountMatches(topUp, params.get("vnp_Amount"))) {
+                response.getWriter().write("{\"RspCode\":\"04\",\"Message\":\"Invalid amount\"}");
+                return;
+            }
+            if (!"00".equals(params.get("vnp_ResponseCode")) || !"00".equals(params.get("vnp_TransactionStatus"))) {
+                response.getWriter().write("{\"RspCode\":\"00\",\"Message\":\"Confirm Success\"}");
+                return;
+            }
+            try {
+                topUpService.completeTopUp(topUpId, params.get("vnp_TransactionNo"));
+                response.getWriter().write("{\"RspCode\":\"00\",\"Message\":\"Confirm Success\"}");
+            } catch (Exception e) {
+                response.getWriter().write("{\"RspCode\":\"99\",\"Message\":\"Internal Error\"}");
+            }
+        } else {
+            Long invoiceId = vnPayService.invoiceIdFromTxnRef(txnRef);
+            Invoice invoice = findInvoice(invoiceId);
+            if (invoice == null) {
+                response.getWriter().write("{\"RspCode\":\"01\",\"Message\":\"Order not found\"}");
+                return;
+            }
+            if (!amountMatches(invoice, params.get("vnp_Amount"))) {
+                response.getWriter().write("{\"RspCode\":\"04\",\"Message\":\"Invalid amount\"}");
+                return;
+            }
+            if (invoice.getPaymentStatus() == PaymentStatus.PAID) {
+                response.getWriter().write("{\"RspCode\":\"02\",\"Message\":\"Order already confirmed\"}");
+                return;
+            }
+            if (!"00".equals(params.get("vnp_ResponseCode")) || !"00".equals(params.get("vnp_TransactionStatus"))) {
+                response.getWriter().write("{\"RspCode\":\"00\",\"Message\":\"Confirm Success\"}");
+                return;
+            }
+            markPaid(invoiceId, params);
+            loyaltyService.processPaidInvoice(invoiceId);
+            response.getWriter().write("{\"RspCode\":\"00\",\"Message\":\"Confirm Success\"}");
+        }
     }
 
     private Invoice markPaid(Long invoiceId, Map<String, String> params) {
@@ -188,6 +252,16 @@ public class VnPayController extends HttpServlet {
         }
     }
 
+    private RankTopUp findTopUp(Long topUpId) {
+        if (topUpId == null) return null;
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            return em.find(RankTopUp.class, topUpId);
+        } finally {
+            em.close();
+        }
+    }
+
     private boolean canAccessInvoice(User user, Invoice invoice) {
         if (user == null || invoice == null) {
             return false;
@@ -203,6 +277,20 @@ public class VnPayController extends HttpServlet {
             return false;
         }
         BigDecimal expected = invoice.getTotalAmount().multiply(new BigDecimal("100")).setScale(0, java.math.RoundingMode.HALF_UP);
+        try {
+            return expected.compareTo(new BigDecimal(vnpAmount)) == 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private boolean topUpAmountMatches(RankTopUp topUp, String vnpAmount) {
+        if (topUp == null || vnpAmount == null) {
+            return false;
+        }
+        BigDecimal expected = VnPayService.getActualVnPayAmount(topUp)
+                .multiply(new BigDecimal("100"))
+                .setScale(0, java.math.RoundingMode.HALF_UP);
         try {
             return expected.compareTo(new BigDecimal(vnpAmount)) == 0;
         } catch (NumberFormatException e) {

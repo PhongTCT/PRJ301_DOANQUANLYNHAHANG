@@ -1,6 +1,7 @@
 package controller.admin;
 
 import dao.InvoiceDAO;
+import dao.RankTopUpDAO;
 import dao.ReservationDAO;
 import entity.User;
 import enums.UserRole;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "AdminDashboardController", urlPatterns = {"/admin", "/admin/"})
 public class AdminDashboardController extends HttpServlet {
     private final InvoiceDAO invoiceDAO = new InvoiceDAO();
+    private final RankTopUpDAO rankTopUpDAO = new RankTopUpDAO();
     private final ReservationDAO reservationDAO = new ReservationDAO();
 
     @Override
@@ -29,6 +31,10 @@ public class AdminDashboardController extends HttpServlet {
 
         Object[] summary = invoiceDAO.getRevenueSummary();
         request.setAttribute("summary", summary);
+
+        Object[] topUpSummary = rankTopUpDAO.getTopUpRevenue();
+        request.setAttribute("topUpSummary", topUpSummary);
+
         request.setAttribute("todayReservations", reservationDAO.findAllWithFilter(today(), null, null).size());
         request.setAttribute("noShowCandidates", reservationDAO.findNoShowCandidates().size());
         request.getRequestDispatcher("/admin/dashboard.jsp").forward(request, response);

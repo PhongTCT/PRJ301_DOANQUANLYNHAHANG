@@ -278,18 +278,18 @@
         <section class="voucher-hero">
             <div class="row g-4 align-items-end">
                 <div class="col-lg-8">
-                    <div class="voucher-kicker mb-3">Le Royal Privileges</div>
-                    <h1 class="voucher-title mb-3">Voucher của tôi</h1>
-                    <p class="voucher-copy mb-0">Những ưu đãi đang khả dụng cho lần đặt bàn tiếp theo của bạn. Mỗi mã chỉ được dùng một lần cho mỗi tài khoản và sẽ được kiểm tra lại khi xác nhận hóa đơn.</p>
+                    <div class="voucher-kicker mb-3"><fmt:message key="voucher.eyebrow"/></div>
+                    <h1 class="voucher-title mb-3"><fmt:message key="voucher.title"/></h1>
+                    <p class="voucher-copy mb-0"><fmt:message key="voucher.subtitle"/></p>
                 </div>
                 <div class="col-lg-4">
                     <div class="voucher-summary">
                         <div class="voucher-summary__item">
-                            <div class="voucher-meta-label mb-2">Khả dụng</div>
+                            <div class="voucher-meta-label mb-2"><fmt:message key="voucher.available"/></div>
                             <div class="voucher-summary__number">${fn:length(availableVouchers)}</div>
                         </div>
                         <div class="voucher-summary__item">
-                            <div class="voucher-meta-label mb-2">Đã dùng</div>
+                            <div class="voucher-meta-label mb-2"><fmt:message key="voucher.used"/></div>
                             <div class="voucher-summary__number">${fn:length(usedVouchers)}</div>
                         </div>
                     </div>
@@ -301,12 +301,12 @@
             <section class="voucher-panel" aria-labelledby="availableVoucherTitle">
                 <div class="voucher-panel__header">
                     <div>
-                        <div class="voucher-section-label">Có thể sử dụng</div>
-                        <h2 id="availableVoucherTitle" class="h4 fw-semibold mb-0 mt-1">Ưu đãi đang mở</h2>
+                        <div class="voucher-section-label"><fmt:message key="voucher.section.available"/></div>
+                        <h2 id="availableVoucherTitle" class="h4 fw-semibold mb-0 mt-1"><fmt:message key="voucher.heading.available"/></h2>
                     </div>
                     <a class="voucher-booking-link" href="${pageContext.request.contextPath}/MainController?action=booking">
                         <i class="fa-solid fa-calendar-check"></i>
-                        Đặt bàn
+                        <fmt:message key="voucher.booking"/>
                     </a>
                 </div>
 
@@ -314,8 +314,8 @@
                     <c:when test="${empty availableVouchers}">
                         <div class="voucher-empty">
                             <i class="fa-solid fa-ticket d-block"></i>
-                            <div class="fw-semibold mb-1">Hiện chưa có voucher khả dụng</div>
-                            <div class="small">Các ưu đãi mới sẽ xuất hiện ở đây khi tài khoản của bạn đủ điều kiện.</div>
+                            <div class="fw-semibold mb-1"><fmt:message key="voucher.empty"/></div>
+                            <div class="small"><fmt:message key="voucher.empty.sub"/></div>
                         </div>
                     </c:when>
                     <c:otherwise>
@@ -328,21 +328,51 @@
                                         <div class="voucher-benefit">
                                             <c:choose>
                                                 <c:when test="${not empty v.discountPercent}">
-                                                    Giảm ${v.discountPercent}%<c:if test="${not empty v.maxDiscount}">, tối đa <fmt:formatNumber value="${v.maxDiscount}" pattern="#,##0"/>đ</c:if>
+                                                    <fmt:message key="voucher.discount.percent">
+                                                        <fmt:param value="${v.discountPercent}"/>
+                                                    </fmt:message>
+                                                    <c:if test="${not empty v.maxDiscount}">,
+                                                        <c:set var="formattedMaxDiscount">
+                                                            <fmt:formatNumber value="${v.maxDiscount}" pattern="#,##0"/>
+                                                        </c:set>
+                                                        <fmt:message key="voucher.discount.max">
+                                                            <fmt:param value="${formattedMaxDiscount}"/>
+                                                        </fmt:message>
+                                                    </c:if>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    Giảm <fmt:formatNumber value="${v.discountAmount}" pattern="#,##0"/>đ trực tiếp trên hóa đơn
+                                                    <c:set var="formattedDiscountAmount">
+                                                        <fmt:formatNumber value="${v.discountAmount}" pattern="#,##0"/>
+                                                    </c:set>
+                                                    <fmt:message key="voucher.discount.amount">
+                                                        <fmt:param value="${formattedDiscountAmount}"/>
+                                                    </fmt:message>
                                                 </c:otherwise>
                                             </c:choose>
                                         </div>
                                         <div class="voucher-meta-grid">
-                                            <span class="voucher-chip"><i class="fa-solid fa-bowl-food"></i>Từ <fmt:formatNumber value="${v.minOrderValue}" pattern="#,##0"/>đ</span>
-                                            <span class="voucher-chip"><i class="fa-regular fa-clock"></i>Đến <fmt:formatDate value="${v.validTo}" pattern="dd/MM/yyyy HH:mm"/></span>
+                                            <span class="voucher-chip"><i class="fa-solid fa-bowl-food"></i>
+                                                <c:set var="formattedMinOrder">
+                                                    <fmt:formatNumber value="${v.minOrderValue}" pattern="#,##0"/>
+                                                </c:set>
+                                                <fmt:message key="voucher.from">
+                                                    <fmt:param value="${formattedMinOrder}"/>
+                                                </fmt:message>
+                                            </span>
+                                            <span class="voucher-chip"><i class="fa-regular fa-clock"></i>
+                                                <c:set var="formattedValidTo">
+                                                    <fmt:formatDate value="${v.validTo}" pattern="dd/MM/yyyy HH:mm"/>
+                                                </c:set>
+                                                <fmt:message key="voucher.until">
+                                                    <fmt:param value="${formattedValidTo}"/>
+                                                </fmt:message>
+                                            </span>
                                         </div>
                                     </div>
                                     <div class="voucher-uses">
-                                        <strong>${v.remainingUses}</strong>
-                                        <span>lượt còn lại</span>
+                                        <fmt:message key="voucher.remaining">
+                                            <fmt:param value="${v.remainingUses}"/>
+                                        </fmt:message>
                                     </div>
                                 </article>
                             </c:forEach>
@@ -354,8 +384,8 @@
             <aside class="voucher-panel" aria-labelledby="usedVoucherTitle">
                 <div class="voucher-panel__header">
                     <div>
-                        <div class="voucher-section-label">Lịch sử</div>
-                        <h2 id="usedVoucherTitle" class="h4 fw-semibold mb-0 mt-1">Đã sử dụng</h2>
+                        <div class="voucher-section-label"><fmt:message key="voucher.section.history"/></div>
+                        <h2 id="usedVoucherTitle" class="h4 fw-semibold mb-0 mt-1"><fmt:message key="voucher.heading.used"/></h2>
                     </div>
                 </div>
 
@@ -363,9 +393,9 @@
                     <table class="voucher-history table align-middle">
                         <thead>
                             <tr>
-                                <th>Voucher</th>
-                                <th>Invoice</th>
-                                <th>Ngày dùng</th>
+                                <th><fmt:message key="voucher.history.col.code"/></th>
+                                <th><fmt:message key="voucher.history.col.invoice"/></th>
+                                <th><fmt:message key="voucher.history.col.date"/></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -380,7 +410,7 @@
                                 <tr>
                                     <td colspan="3" class="text-center text-muted py-5">
                                         <i class="fa-regular fa-clock d-block mb-2"></i>
-                                        Chưa dùng voucher nào.
+                                        <fmt:message key="voucher.empty.used"/>
                                     </td>
                                 </tr>
                             </c:if>

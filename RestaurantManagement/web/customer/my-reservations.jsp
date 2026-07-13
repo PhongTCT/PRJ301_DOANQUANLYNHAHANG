@@ -4,6 +4,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
 <fmt:setBundle basename="i18n.messages" />
+<fmt:message key="reservation.cancel.confirm" var="cancelConfirmText"/>
+<fmt:message key="reservation.modal.close" var="modalCloseLabel"/>
 <jsp:include page="/header.jsp" />
 <style>
     .reserve-page{min-height:80vh;background:radial-gradient(circle at top left,rgba(185,154,82,.14),transparent 34rem),linear-gradient(180deg,#fbfaf7 0%,#f3efe7 100%);color:#191714}
@@ -53,18 +55,18 @@
         <section class="reserve-hero">
             <div class="row g-4 align-items-end">
                 <div class="col-lg-8">
-                    <div class="reserve-kicker mb-3">Guest Book</div>
-                    <h1 class="reserve-title mb-3">Đặt bàn của tôi</h1>
-                    <p class="reserve-copy mb-0">Theo dõi lịch sử đặt bàn, kiểm tra trạng thái và quản lý các đơn đặt bàn đang chờ xử lý.</p>
+                    <div class="reserve-kicker mb-3"><fmt:message key="reservation.eyebrow"/></div>
+                    <h1 class="reserve-title mb-3"><fmt:message key="reservation.title"/></h1>
+                    <p class="reserve-copy mb-0"><fmt:message key="reservation.subtitle"/></p>
                 </div>
                 <div class="col-lg-4">
                     <div class="reserve-summary">
                         <div class="reserve-summary__item">
-                            <div class="reserve-meta-label mb-2">Tổng</div>
+                            <div class="reserve-meta-label mb-2"><fmt:message key="reservation.total"/></div>
                             <div class="reserve-summary__number">${fn:length(myReservations)}</div>
                         </div>
                         <div class="reserve-summary__item">
-                            <div class="reserve-meta-label mb-2">Sắp tới</div>
+                            <div class="reserve-meta-label mb-2"><fmt:message key="reservation.upcoming"/></div>
                             <div class="reserve-summary__number">
                                 <c:set var="upcoming" value="0"/>
                                 <c:forEach items="${myReservations}" var="r"><c:if test="${r.status == 'PENDING' || r.status == 'CONFIRMED'}"><c:set var="upcoming" value="${upcoming + 1}"/></c:if></c:forEach>
@@ -72,7 +74,7 @@
                             </div>
                         </div>
                         <div class="reserve-summary__item">
-                            <div class="reserve-meta-label mb-2">Đã hoàn tất</div>
+                            <div class="reserve-meta-label mb-2"><fmt:message key="reservation.completed"/></div>
                             <div class="reserve-summary__number">
                                 <c:set var="done" value="0"/>
                                 <c:forEach items="${myReservations}" var="r"><c:if test="${r.status == 'COMPLETED' || r.status == 'CHECKED_IN'}"><c:set var="done" value="${done + 1}"/></c:if></c:forEach>
@@ -102,12 +104,12 @@
         <section class="reserve-panel mb-5" aria-labelledby="reserveTableTitle">
             <div class="reserve-panel__header">
                 <div>
-                    <div class="reserve-section-label">Reservations</div>
-                    <h2 id="reserveTableTitle" class="h4 fw-semibold mb-0 mt-1">Lịch sử đặt bàn</h2>
+                    <div class="reserve-section-label"><fmt:message key="reservation.section"/></div>
+                    <h2 id="reserveTableTitle" class="h4 fw-semibold mb-0 mt-1"><fmt:message key="reservation.heading"/></h2>
                 </div>
                 <a class="reserve-booking-link" href="${pageContext.request.contextPath}/MainController?action=booking">
                     <i class="fa-solid fa-plus"></i>
-                    Đặt bàn mới
+                    <fmt:message key="reservation.new"/>
                 </a>
             </div>
 
@@ -115,8 +117,8 @@
                 <c:when test="${empty myReservations}">
                     <div class="reserve-empty">
                         <i class="fa-solid fa-calendar-plus d-block"></i>
-                        <div class="fw-semibold mb-1">Bạn chưa có đặt bàn nào</div>
-                        <div class="small">Hãy đặt bàn ngay để trải nghiệm ẩm thực tại Le Royal.</div>
+                        <div class="fw-semibold mb-1"><fmt:message key="reservation.empty"/></div>
+                        <div class="small"><fmt:message key="reservation.empty.sub"/></div>
                     </div>
                 </c:when>
                 <c:otherwise>
@@ -124,11 +126,11 @@
                         <table class="table align-middle reserve-table">
                             <thead>
                                 <tr>
-                                    <th class="ps-4">Mã</th>
-                                    <th>Thời gian</th>
-                                    <th>Khách</th>
-                                    <th>Trạng thái</th>
-                                    <th class="text-end pe-4">Thao tác</th>
+                                    <th class="ps-4"><fmt:message key="reservation.col.code"/></th>
+                                    <th><fmt:message key="reservation.col.time"/></th>
+                                    <th><fmt:message key="reservation.col.guests"/></th>
+                                    <th><fmt:message key="reservation.col.status"/></th>
+                                    <th class="text-end pe-4"><fmt:message key="reservation.col.action"/></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -147,22 +149,22 @@
                                         </td>
                                         <td>
                                             <c:choose>
-                                                <c:when test="${res.status == 'PENDING'}"><span class="reserve-status reserve-status--pending"><i class="fa-regular fa-clock"></i>Chờ xác nhận</span></c:when>
-                                                <c:when test="${res.status == 'CONFIRMED'}"><span class="reserve-status reserve-status--confirmed"><i class="fa-regular fa-circle-check"></i>Đã xác nhận</span></c:when>
-                                                <c:when test="${res.status == 'CHECKED_IN'}"><span class="reserve-status reserve-status--checkedin"><i class="fa-solid fa-check"></i>Đã đến</span></c:when>
-                                                <c:when test="${res.status == 'COMPLETED'}"><span class="reserve-status reserve-status--completed"><i class="fa-solid fa-check-double"></i>Hoàn tất</span></c:when>
-                                                <c:when test="${res.status == 'CANCELLED'}"><span class="reserve-status reserve-status--cancelled"><i class="fa-solid fa-ban"></i>Đã hủy</span></c:when>
+                                                <c:when test="${res.status == 'PENDING'}"><span class="reserve-status reserve-status--pending"><i class="fa-regular fa-clock"></i><fmt:message key="reservation.status.pending"/></span></c:when>
+                                                <c:when test="${res.status == 'CONFIRMED'}"><span class="reserve-status reserve-status--confirmed"><i class="fa-regular fa-circle-check"></i><fmt:message key="reservation.status.confirmed"/></span></c:when>
+                                                <c:when test="${res.status == 'CHECKED_IN'}"><span class="reserve-status reserve-status--checkedin"><i class="fa-solid fa-check"></i><fmt:message key="reservation.status.checkedin"/></span></c:when>
+                                                <c:when test="${res.status == 'COMPLETED'}"><span class="reserve-status reserve-status--completed"><i class="fa-solid fa-check-double"></i><fmt:message key="reservation.status.completed"/></span></c:when>
+                                                <c:when test="${res.status == 'CANCELLED'}"><span class="reserve-status reserve-status--cancelled"><i class="fa-solid fa-ban"></i><fmt:message key="reservation.status.cancelled"/></span></c:when>
                                             </c:choose>
                                         </td>
                                         <td class="text-end pe-4">
                                             <button class="reserve-action" data-bs-toggle="modal" data-bs-target="#detailsModal${res.id}">
-                                                <i class="fa-regular fa-eye"></i>Chi tiết
+                                                <i class="fa-regular fa-eye"></i><fmt:message key="reservation.detail"/>
                                             </button>
                                             <c:if test="${res.status == 'PENDING' || res.status == 'CONFIRMED'}">
-                                                <form action="${pageContext.request.contextPath}/customer/reservations" method="POST" class="d-inline" onsubmit="return confirm('Bạn có chắc muốn hủy đặt bàn này? Hành động này không thể hoàn tác.');">
+                                                <form action="${pageContext.request.contextPath}/customer/reservations" method="POST" class="d-inline" onsubmit="return confirm('${cancelConfirmText}');">
                                                     <input type="hidden" name="action" value="cancel">
                                                     <input type="hidden" name="id" value="${res.id}">
-                                                    <button type="submit" class="reserve-action reserve-action--danger"><i class="fa-solid fa-ban"></i>Hủy</button>
+                                                    <button type="submit" class="reserve-action reserve-action--danger"><i class="fa-solid fa-ban"></i><fmt:message key="reservation.cancel"/></button>
                                                 </form>
                                             </c:if>
                                         </td>
@@ -183,24 +185,24 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <div>
-                        <div class="reserve-kicker">Reservation</div>
-                        <h5 id="detailsModalTitle${res.id}" class="reserve-modal-title modal-title mb-0">Đặt bàn #${res.id}</h5>
+                        <div class="reserve-kicker"><fmt:message key="reservation.section"/></div>
+                        <h5 id="detailsModalTitle${res.id}" class="reserve-modal-title modal-title mb-0"><fmt:message key="reservation.modal.title"><fmt:param value="${res.id}"/></fmt:message></h5>
                     </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="${modalCloseLabel}"></button>
                 </div>
                 <div class="modal-body p-4">
-                    <div class="reserve-detail-label mb-2"><i class="fa-solid fa-chair me-2"></i>Bàn</div>
+                    <div class="reserve-detail-label mb-2"><i class="fa-solid fa-chair me-2"></i><fmt:message key="reservation.modal.tables"/></div>
                     <c:forEach items="${res.reservationTables}" var="rt">
                         <div class="reserve-detail-item">
-                            <span>Bàn ${rt.diningTable.tableCode} <span class="text-muted small">(${rt.diningTable.capacity} chỗ)</span></span>
+                            <span><fmt:message key="booking.table"/> ${rt.diningTable.tableCode} <span class="text-muted small">(<fmt:message key="reservation.table.capacity"><fmt:param value="${rt.diningTable.capacity}"/></fmt:message>)</span></span>
                             <span class="fw-bold"><fmt:formatNumber value="${rt.diningTable.basePrice}" pattern="#,##0"/>đ</span>
                         </div>
                     </c:forEach>
                     <c:if test="${empty res.reservationTables}">
-                        <div class="text-muted small mb-3">Chưa xếp bàn.</div>
+                        <div class="text-muted small mb-3"><fmt:message key="reservation.modal.no.tables"/></div>
                     </c:if>
 
-                    <div class="reserve-detail-label mt-4 mb-2"><i class="fa-solid fa-utensils me-2"></i>Món đã gọi</div>
+                    <div class="reserve-detail-label mt-4 mb-2"><i class="fa-solid fa-utensils me-2"></i><fmt:message key="reservation.modal.menu"/></div>
                     <c:forEach items="${res.reservationMenuItems}" var="rmi">
                         <div class="reserve-detail-item">
                             <span>${not empty rmi.menuItem ? (not empty rmi.menuItem.itemNameVi ? rmi.menuItem.itemNameVi : rmi.menuItem.itemName) : (not empty rmi.menuSet.setNameVi ? rmi.menuSet.setNameVi : rmi.menuSet.setName)} <span class="badge bg-secondary ms-1">x${rmi.quantity}</span></span>
@@ -208,10 +210,10 @@
                         </div>
                     </c:forEach>
                     <c:if test="${empty res.reservationMenuItems}">
-                        <div class="text-muted small mb-3">Chưa gọi món.</div>
+                        <div class="text-muted small mb-3"><fmt:message key="reservation.modal.no.menu"/></div>
                     </c:if>
 
-                    <div class="reserve-detail-label mt-4 mb-2"><i class="fa-solid fa-star me-2"></i>Dịch vụ thêm</div>
+                    <div class="reserve-detail-label mt-4 mb-2"><i class="fa-solid fa-star me-2"></i><fmt:message key="reservation.modal.addons"/></div>
                     <c:forEach items="${res.reservationAddons}" var="ra">
                         <div class="reserve-detail-item">
                             <span>${ra.addonService.serviceName} <span class="badge bg-secondary ms-1">x${ra.quantity}</span></span>
@@ -219,11 +221,11 @@
                         </div>
                     </c:forEach>
                     <c:if test="${empty res.reservationAddons}">
-                        <div class="text-muted small mb-3">Không có dịch vụ thêm.</div>
+                        <div class="text-muted small mb-3"><fmt:message key="reservation.modal.no.addons"/></div>
                     </c:if>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-light border" data-bs-dismiss="modal"><fmt:message key="reservation.modal.close"/></button>
                 </div>
             </div>
         </div>

@@ -54,7 +54,7 @@ public class AdminRankConfigController extends HttpServlet {
                 config.setCanBookVvip("true".equals(request.getParameter("canBookVvip")));
                 config.setIsActive("true".equals(request.getParameter("isActive")));
                 rankConfigDAO.insert(config);
-                request.getSession().setAttribute("successMessage", "Da tao cau hinh hang moi.");
+                request.getSession().setAttribute("successMessage", "Đã tạo cấu hình hạng mới.");
             } else {
                 CustomerRankConfig config = new CustomerRankConfig();
                 config.setId(Integer.valueOf(idStr));
@@ -65,10 +65,10 @@ public class AdminRankConfigController extends HttpServlet {
                 config.setCanBookVvip("true".equals(request.getParameter("canBookVvip")));
                 config.setIsActive("true".equals(request.getParameter("isActive")));
                 loyaltyService.updateRankConfig(config);
-                request.getSession().setAttribute("successMessage", "Da cap nhat cau hinh hang.");
+                request.getSession().setAttribute("successMessage", "Đã cập nhật cấu hình hạng.");
             }
         } catch (Exception e) {
-            request.getSession().setAttribute("errorMessage", "Loi: " + e.getMessage());
+            request.getSession().setAttribute("errorMessage", "Lỗi: " + e.getMessage());
         }
         response.sendRedirect(request.getContextPath() + "/admin/rank-config");
     }

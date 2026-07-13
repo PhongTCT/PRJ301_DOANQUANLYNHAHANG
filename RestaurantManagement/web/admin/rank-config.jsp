@@ -1,13 +1,15 @@
-﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
+<fmt:setBundle basename="i18n.messages" />
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cau hinh hang - Le Royal</title>
+    <title><fmt:message key="admin.rankconfig.title.sub"/> - Le Royal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -43,12 +45,12 @@
         <div class="admin-shell">
             <section class="admin-hero">
                 <div>
-                    <div class="admin-kicker">Loyalty Settings</div>
-                    <h1 class="admin-title">Cau hinh hang</h1>
-                    <p class="admin-copy">Quan ly nguong diem, ty le tich diem, giam gia va quyen VIP/VVIP cho tung hang thanh vien.</p>
+                    <div class="admin-kicker"><fmt:message key="admin.rankconfig.title"/></div>
+                    <h1 class="admin-title"><fmt:message key="admin.rankconfig.title.sub"/></h1>
+                    <p class="admin-copy"><fmt:message key="admin.rankconfig.desc"/></p>
                 </div>
                 <button type="button" class="admin-primary-action" data-bs-toggle="modal" data-bs-target="#rankConfigModal">
-                    <i class="fa-solid fa-plus"></i>Them hang
+                    <i class="fa-solid fa-plus"></i><fmt:message key="admin.rankconfig.btn.add"/>
                 </button>
             </section>
 
@@ -61,32 +63,32 @@
 
             <section class="admin-panel">
                 <div class="admin-panel-header">
-                    <div><div class="admin-section-label">Rank list</div><h2 class="h4 fw-semibold mb-0 mt-1">Danh sach hang</h2></div>
+                    <div><div class="admin-section-label"><fmt:message key="admin.rankconfig.list"/></div><h2 class="h4 fw-semibold mb-0 mt-1"><fmt:message key="admin.rankconfig.list.sub"/></h2></div>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover align-middle admin-table">
                         <thead>
-                            <tr><th class="ps-4">Hang</th><th>Nguong diem</th><th>Giam gia</th><th>Tich diem</th><th>VIP</th><th>VVIP</th><th>Trang thai</th><th class="text-end pe-4">Thao tac</th></tr>
+                            <tr><th class="ps-4"><fmt:message key="admin.rankconfig.col.rank"/></th><th><fmt:message key="admin.rankconfig.col.threshold"/></th><th><fmt:message key="admin.rankconfig.col.discount"/></th><th><fmt:message key="admin.rankconfig.col.rate"/></th><th><fmt:message key="admin.rankconfig.col.vip"/></th><th><fmt:message key="admin.rankconfig.col.vvip"/></th><th><fmt:message key="admin.rankconfig.col.status"/></th><th class="text-end pe-4"><fmt:message key="admin.rankconfig.col.actions"/></th></tr>
                         </thead>
                         <tbody>
                             <c:forEach items="${ranks}" var="r">
                                 <tr>
                                     <td class="ps-4 fw-bold">${r.rankName}</td>
-                                    <td><fmt:formatNumber value="${r.minPointThreshold}" pattern="#,##0"/> pts</td>
+                                    <td><fmt:formatNumber value="${r.minPointThreshold}" pattern="#,##0"/> <fmt:message key="admin.rankconfig.pts"/></td>
                                     <td>${r.discountPercent}%</td>
-                                    <td>${r.pointsPerThousandVnd}pt / 1Kd</td>
+                                    <td>${r.pointsPerThousandVnd} <fmt:message key="admin.rankconfig.rate"/></td>
                                     <td><c:choose><c:when test="${r.canBookVip}"><i class="fa-solid fa-check text-success"></i></c:when><c:otherwise><i class="fa-solid fa-times text-muted"></i></c:otherwise></c:choose></td>
                                     <td><c:choose><c:when test="${r.canBookVvip}"><i class="fa-solid fa-check text-success"></i></c:when><c:otherwise><i class="fa-solid fa-times text-muted"></i></c:otherwise></c:choose></td>
-                                    <td><span class="badge ${r.isActive ? 'bg-success' : 'bg-secondary'} rounded-0">${r.isActive ? 'Active' : 'Inactive'}</span></td>
+                                    <td><c:choose><c:when test="${r.isActive}"><span class="badge bg-success rounded-0"><fmt:message key="admin.common.active"/></span></c:when><c:otherwise><span class="badge bg-secondary rounded-0"><fmt:message key="admin.common.inactive"/></span></c:otherwise></c:choose></td>
                                     <td class="text-end pe-4">
                                         <button class="btn btn-sm btn-outline-secondary border rounded-0" data-bs-toggle="modal" data-bs-target="#editRankConfig${r.id}">
-                                            <i class="fa-solid fa-pen"></i>Sua
+                                            <i class="fa-solid fa-pen"></i><fmt:message key="admin.common.edit"/>
                                         </button>
                                     </td>
                                 </tr>
                             </c:forEach>
                             <c:if test="${empty ranks}">
-                                <tr><td colspan="8" class="text-center text-muted py-5">Chua co cau hinh hang nao.</td></tr>
+                                <tr><td colspan="8" class="text-center text-muted py-5"><fmt:message key="admin.rankconfig.empty"/></td></tr>
                             </c:if>
                         </tbody>
                     </table>
@@ -101,41 +103,41 @@
         <div class="modal-content">
             <form method="post" action="${pageContext.request.contextPath}/admin/rank-config" class="admin-form">
                 <div class="modal-header">
-                    <div><div class="admin-kicker">New rank</div><h5 id="rankConfigModalTitle" class="admin-modal-title modal-title mb-0">Them hang</h5></div>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Dong"></button>
+                    <div><div class="admin-kicker"><fmt:message key="admin.rankconfig.modal.new"/></div><h5 id="rankConfigModalTitle" class="admin-modal-title modal-title mb-0"><fmt:message key="admin.rankconfig.modal.add"/></h5></div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<fmt:message key='admin.common.close'/>"></button>
                 </div>
                 <div class="modal-body p-4">
                     <div class="row g-3">
                         <div class="col-md-4">
-                            <label class="form-label">Ten hang</label>
+                            <label class="form-label"><fmt:message key="admin.rankconfig.modal.name"/></label>
                             <select name="rankName" class="form-select" required>
                                 <c:forEach items="${rankNames}" var="rn"><option value="${rn}">${rn}</option></c:forEach>
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Nguong diem</label>
+                            <label class="form-label"><fmt:message key="admin.rankconfig.modal.threshold"/></label>
                             <input type="number" name="minPointThreshold" class="form-control" min="0" required>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Giam gia %</label>
+                            <label class="form-label"><fmt:message key="admin.rankconfig.modal.discount"/></label>
                             <input type="number" step="0.01" name="discountPercent" class="form-control" min="0" value="0" required>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Tich diem / 1Kd</label>
+                            <label class="form-label"><fmt:message key="admin.rankconfig.modal.rate"/></label>
                             <input type="number" name="pointsPerThousandVnd" class="form-control" min="0" value="1" required>
                         </div>
                         <div class="col-md-4 d-flex align-items-end gap-3">
-                            <div class="form-check"><input type="checkbox" name="canBookVip" class="form-check-input" value="true" id="newVip"><label class="form-check-label" for="newVip">VIP</label></div>
-                            <div class="form-check"><input type="checkbox" name="canBookVvip" class="form-check-input" value="true" id="newVvip"><label class="form-check-label" for="newVvip">VVIP</label></div>
+                            <div class="form-check"><input type="checkbox" name="canBookVip" class="form-check-input" value="true" id="newVip"><label class="form-check-label" for="newVip"><fmt:message key="admin.rankconfig.modal.vip"/></label></div>
+                            <div class="form-check"><input type="checkbox" name="canBookVvip" class="form-check-input" value="true" id="newVvip"><label class="form-check-label" for="newVvip"><fmt:message key="admin.rankconfig.modal.vvip"/></label></div>
                         </div>
                         <div class="col-md-4 d-flex align-items-end">
-                            <div class="form-check"><input type="checkbox" name="isActive" class="form-check-input" value="true" id="newActive" checked><label class="form-check-label" for="newActive">Active</label></div>
+                            <div class="form-check"><input type="checkbox" name="isActive" class="form-check-input" value="true" id="newActive" checked><label class="form-check-label" for="newActive"><fmt:message key="admin.rankconfig.modal.active"/></label></div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Huy</button>
-                    <button type="submit" class="admin-primary-action">Tao hang</button>
+                    <button type="button" class="btn btn-light border" data-bs-dismiss="modal"><fmt:message key="admin.rankconfig.modal.cancel"/></button>
+                    <button type="submit" class="admin-primary-action"><fmt:message key="admin.rankconfig.modal.create"/></button>
                 </div>
             </form>
         </div>
@@ -149,35 +151,35 @@
                 <form method="post" action="${pageContext.request.contextPath}/admin/rank-config" class="admin-form">
                     <input type="hidden" name="id" value="${r.id}">
                     <div class="modal-header">
-                        <div><div class="admin-kicker">Edit rank</div><h5 id="editRankConfigTitle${r.id}" class="admin-modal-title modal-title mb-0">Sua ${r.rankName}</h5></div>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Dong"></button>
+                        <div><div class="admin-kicker"><fmt:message key="admin.rankconfig.modal.edit"/></div><h5 id="editRankConfigTitle${r.id}" class="admin-modal-title modal-title mb-0"><fmt:message key="admin.rankconfig.modal.edit.title"/> ${r.rankName}</h5></div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<fmt:message key='admin.common.close'/>"></button>
                     </div>
                     <div class="modal-body p-4">
                         <div class="row g-3">
                             <div class="col-md-4">
-                                <label class="form-label">Nguong diem</label>
+                                <label class="form-label"><fmt:message key="admin.rankconfig.modal.threshold"/></label>
                                 <input type="number" name="minPointThreshold" class="form-control" value="${r.minPointThreshold}" min="0" required>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label">Giam gia %</label>
+                                <label class="form-label"><fmt:message key="admin.rankconfig.modal.discount"/></label>
                                 <input type="number" step="0.01" name="discountPercent" class="form-control" value="${r.discountPercent}" min="0" required>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label">Tich diem / 1Kd</label>
+                                <label class="form-label"><fmt:message key="admin.rankconfig.modal.rate"/></label>
                                 <input type="number" name="pointsPerThousandVnd" class="form-control" value="${r.pointsPerThousandVnd}" min="0" required>
                             </div>
                             <div class="col-md-4 d-flex align-items-end gap-3">
-                                <div class="form-check"><input type="checkbox" name="canBookVip" class="form-check-input" value="true" id="editVip${r.id}" ${r.canBookVip ? 'checked' : ''}><label class="form-check-label" for="editVip${r.id}">VIP</label></div>
-                                <div class="form-check"><input type="checkbox" name="canBookVvip" class="form-check-input" value="true" id="editVvip${r.id}" ${r.canBookVvip ? 'checked' : ''}><label class="form-check-label" for="editVvip${r.id}">VVIP</label></div>
+                                <div class="form-check"><input type="checkbox" name="canBookVip" class="form-check-input" value="true" id="editVip${r.id}" ${r.canBookVip ? 'checked' : ''}><label class="form-check-label" for="editVip${r.id}"><fmt:message key="admin.rankconfig.modal.vip"/></label></div>
+                                <div class="form-check"><input type="checkbox" name="canBookVvip" class="form-check-input" value="true" id="editVvip${r.id}" ${r.canBookVvip ? 'checked' : ''}><label class="form-check-label" for="editVvip${r.id}"><fmt:message key="admin.rankconfig.modal.vvip"/></label></div>
                             </div>
                             <div class="col-md-4 d-flex align-items-end">
-                                <div class="form-check"><input type="checkbox" name="isActive" class="form-check-input" value="true" id="editActive${r.id}" ${r.isActive ? 'checked' : ''}><label class="form-check-label" for="editActive${r.id}">Active</label></div>
+                                <div class="form-check"><input type="checkbox" name="isActive" class="form-check-input" value="true" id="editActive${r.id}" ${r.isActive ? 'checked' : ''}><label class="form-check-label" for="editActive${r.id}"><fmt:message key="admin.rankconfig.modal.active"/></label></div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Huy</button>
-                        <button type="submit" class="admin-primary-action">Luu thay doi</button>
+                        <button type="button" class="btn btn-light border" data-bs-dismiss="modal"><fmt:message key="admin.rankconfig.modal.cancel"/></button>
+                        <button type="submit" class="admin-primary-action"><fmt:message key="admin.rankconfig.modal.save"/></button>
                     </div>
                 </form>
             </div>

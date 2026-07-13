@@ -2,6 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
+<fmt:setBundle basename="i18n.messages" />
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -32,15 +34,15 @@
             <div class="flex-grow-1 p-5">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                        <h2 class="fw-bold mb-0">Reservation Management</h2>
-                        <p class="text-muted">View and manage all table bookings</p>
+                        <h2 class="fw-bold mb-0"><fmt:message key="admin.reservations.title" /></h2>
+                        <p class="text-muted"><fmt:message key="admin.reservations.desc" /></p>
                     </div>
                 </div>
 
                 <c:if test="${not empty successMessage}">
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         <i class="fa-solid fa-check-circle me-2"></i>${successMessage}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="<fmt:message key="admin.common.close" />"></button>
                         <c:remove var="successMessage" scope="session" />
                     </div>
                 </c:if>
@@ -49,27 +51,27 @@
                     <div class="card-body bg-white">
                         <form action="reservations" method="GET" class="row g-3 align-items-end">
                             <div class="col-md-3">
-                                <label class="form-label small text-muted">Date</label>
+                                <label class="form-label small text-muted"><fmt:message key="admin.reservations.filter.date" /></label>
                                 <input type="date" class="form-control" name="date" value="${param.date}">
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label small text-muted">Status</label>
+                                <label class="form-label small text-muted"><fmt:message key="admin.reservations.filter.status" /></label>
                                 <select class="form-select" name="status">
-                                    <option value="">All Statuses</option>
-                                    <option value="PENDING" ${param.status == 'PENDING' ? 'selected' : ''}>Pending</option>
-                                    <option value="CONFIRMED" ${param.status == 'CONFIRMED' ? 'selected' : ''}>Confirmed</option>
-                                    <option value="CHECKED_IN" ${param.status == 'CHECKED_IN' ? 'selected' : ''}>Checked In</option>
-                                    <option value="COMPLETED" ${param.status == 'COMPLETED' ? 'selected' : ''}>Completed</option>
-                                    <option value="CANCELLED" ${param.status == 'CANCELLED' ? 'selected' : ''}>Cancelled</option>
-                                    <option value="NO_SHOW" ${param.status == 'NO_SHOW' ? 'selected' : ''}>Missed</option>
+                                    <option value=""><fmt:message key="admin.reservations.filter.all" /></option>
+                                    <option value="PENDING" ${param.status == 'PENDING' ? 'selected' : ''}><fmt:message key="admin.reservations.status.pending" /></option>
+                                    <option value="CONFIRMED" ${param.status == 'CONFIRMED' ? 'selected' : ''}><fmt:message key="admin.reservations.status.confirmed" /></option>
+                                    <option value="CHECKED_IN" ${param.status == 'CHECKED_IN' ? 'selected' : ''}><fmt:message key="admin.reservations.status.checkedin" /></option>
+                                    <option value="COMPLETED" ${param.status == 'COMPLETED' ? 'selected' : ''}><fmt:message key="admin.reservations.status.completed" /></option>
+                                    <option value="CANCELLED" ${param.status == 'CANCELLED' ? 'selected' : ''}><fmt:message key="admin.reservations.status.cancelled" /></option>
+                                    <option value="NO_SHOW" ${param.status == 'NO_SHOW' ? 'selected' : ''}><fmt:message key="admin.reservations.status.missed" /></option>
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label small text-muted">Phone Number</label>
-                                <input type="text" class="form-control" name="phone" placeholder="Search by phone..." value="${param.phone}">
+                                <label class="form-label small text-muted"><fmt:message key="admin.reservations.filter.phone" /></label>
+                                <input type="text" class="form-control" name="phone" placeholder="<fmt:message key="admin.reservations.filter.phone.placeholder" />" value="${param.phone}">
                             </div>
                             <div class="col-md-2">
-                                <button type="submit" class="btn btn-primary w-100"><i class="fa-solid fa-filter me-2"></i>Filter</button>
+                                <button type="submit" class="btn btn-primary w-100"><i class="fa-solid fa-filter me-2"></i><fmt:message key="admin.reservations.filter.btn" /></button>
                             </div>
                         </form>
                     </div>
@@ -80,12 +82,12 @@
                         <table class="table table-hover mb-0 align-middle">
                             <thead class="table-light">
                                 <tr>
-                                    <th class="ps-4">ID</th>
-                                    <th>Customer</th>
-                                    <th>Date & Time</th>
-                                    <th>Guests</th>
-                                    <th>Status</th>
-                                    <th class="text-end pe-4">Actions</th>
+                                    <th class="ps-4"><fmt:message key="admin.reservations.col.id" /></th>
+                                    <th><fmt:message key="admin.reservations.col.customer" /></th>
+                                    <th><fmt:message key="admin.reservations.col.datetime" /></th>
+                                    <th><fmt:message key="admin.reservations.col.guests" /></th>
+                                    <th><fmt:message key="admin.reservations.col.status" /></th>
+                                    <th class="text-end pe-4"><fmt:message key="admin.reservations.col.actions" /></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -94,7 +96,7 @@
                                         <tr>
                                             <td colspan="6" class="text-center py-5 text-muted">
                                                 <i class="fa-regular fa-folder-open fs-1 mb-3 d-block"></i>
-                                                No reservations found.
+                                                <fmt:message key="admin.reservations.empty" />
                                             </td>
                                         </tr>
                                     </c:when>
@@ -111,19 +113,19 @@
                                                     <div class="fw-bold text-primary"><i class="fa-regular fa-clock me-1"></i><fmt:formatDate value="${res.reservationTime}" pattern="HH:mm" /></div>
                                                 </td>
                                                 <td>
-                                                    <span class="badge bg-light text-dark border"><i class="fa-solid fa-user me-1"></i>${res.adultsCount} Adults</span>
+                                                    <span class="badge bg-light text-dark border"><i class="fa-solid fa-user me-1"></i>${res.adultsCount} <fmt:message key="admin.reservations.modal.adults" /></span>
                                                     <c:if test="${res.childrenCount > 0}">
-                                                        <span class="badge bg-light text-dark border"><i class="fa-solid fa-child me-1"></i>${res.childrenCount} Children</span>
+                                                        <span class="badge bg-light text-dark border"><i class="fa-solid fa-child me-1"></i>${res.childrenCount} <fmt:message key="admin.reservations.modal.children" /></span>
                                                     </c:if>
                                                 </td>
                                                 <td>
                                                     <c:choose>
-                                                        <c:when test="${res.status == 'PENDING'}"><span class="badge bg-warning text-dark status-badge">Pending</span></c:when>
-                                                        <c:when test="${res.status == 'CONFIRMED'}"><span class="badge bg-info text-dark status-badge">Confirmed</span></c:when>
-                                                        <c:when test="${res.status == 'CHECKED_IN'}"><span class="badge bg-primary status-badge">Checked In</span></c:when>
-                                                        <c:when test="${res.status == 'COMPLETED'}"><span class="badge bg-success status-badge">Completed</span></c:when>
-                                                        <c:when test="${res.status == 'CANCELLED'}"><span class="badge bg-danger status-badge">Cancelled</span></c:when>
-                                                        <c:when test="${res.status == 'NO_SHOW'}"><span class="badge bg-dark status-badge">Missed</span></c:when>
+                                                        <c:when test="${res.status == 'PENDING'}"><span class="badge bg-warning text-dark status-badge"><fmt:message key="admin.reservations.status.pending" /></span></c:when>
+                                                        <c:when test="${res.status == 'CONFIRMED'}"><span class="badge bg-info text-dark status-badge"><fmt:message key="admin.reservations.status.confirmed" /></span></c:when>
+                                                        <c:when test="${res.status == 'CHECKED_IN'}"><span class="badge bg-primary status-badge"><fmt:message key="admin.reservations.status.checkedin" /></span></c:when>
+                                                        <c:when test="${res.status == 'COMPLETED'}"><span class="badge bg-success status-badge"><fmt:message key="admin.reservations.status.completed" /></span></c:when>
+                                                        <c:when test="${res.status == 'CANCELLED'}"><span class="badge bg-danger status-badge"><fmt:message key="admin.reservations.status.cancelled" /></span></c:when>
+                                                        <c:when test="${res.status == 'NO_SHOW'}"><span class="badge bg-dark status-badge"><fmt:message key="admin.reservations.status.missed" /></span></c:when>
                                                     </c:choose>
                                                 </td>
                                                 <td class="text-end pe-4">
@@ -133,7 +135,7 @@
                                                             <input type="hidden" name="action" value="updateStatus">
                                                             <input type="hidden" name="id" value="${res.id}">
                                                             <input type="hidden" name="status" value="CONFIRMED">
-                                                            <button type="submit" class="btn btn-sm btn-outline-info" title="Confirm"><i class="fa-solid fa-check"></i></button>
+                                                            <button type="submit" class="btn btn-sm btn-outline-info" title="<fmt:message key="admin.reservations.status.confirmed" />"><i class="fa-solid fa-check"></i></button>
                                                         </form>
                                                     </c:if>
                                                     <c:if test="${res.status == 'CONFIRMED'}">
@@ -141,7 +143,7 @@
                                                             <input type="hidden" name="action" value="updateStatus">
                                                             <input type="hidden" name="id" value="${res.id}">
                                                             <input type="hidden" name="status" value="CHECKED_IN">
-                                                            <button type="submit" class="btn btn-sm btn-outline-primary" title="Check In"><i class="fa-solid fa-sign-in-alt"></i></button>
+                                                            <button type="submit" class="btn btn-sm btn-outline-primary" title="<fmt:message key="admin.reservations.status.checkedin" />"><i class="fa-solid fa-sign-in-alt"></i></button>
                                                         </form>
                                                     </c:if>
                                                     <c:if test="${res.status == 'CHECKED_IN'}">
@@ -149,15 +151,15 @@
                                                             <input type="hidden" name="action" value="updateStatus">
                                                             <input type="hidden" name="id" value="${res.id}">
                                                             <input type="hidden" name="status" value="COMPLETED">
-                                                            <button type="submit" class="btn btn-sm btn-outline-success" title="Complete"><i class="fa-solid fa-check-double"></i></button>
+                                                            <button type="submit" class="btn btn-sm btn-outline-success" title="<fmt:message key="admin.reservations.status.completed" />"><i class="fa-solid fa-check-double"></i></button>
                                                         </form>
                                                     </c:if>
                                                     <c:if test="${res.status != 'CANCELLED' && res.status != 'COMPLETED'}">
-                                                        <form action="reservations" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to cancel this reservation?');">
+                                                        <form action="reservations" method="POST" class="d-inline" onsubmit="return confirm('<fmt:message key="admin.reservations.cancel.confirm" />');">
                                                             <input type="hidden" name="action" value="updateStatus">
                                                             <input type="hidden" name="id" value="${res.id}">
                                                             <input type="hidden" name="status" value="CANCELLED">
-                                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Cancel"><i class="fa-solid fa-ban"></i></button>
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="<fmt:message key="admin.reservations.status.cancelled" />"><i class="fa-solid fa-ban"></i></button>
                                                         </form>
                                                     </c:if>
                                                     
@@ -170,19 +172,19 @@
                                                         <div class="modal-dialog modal-lg">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
-                                                                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-receipt me-2 text-primary"></i>Reservation #${res.id} Details</h5>
+                                                                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-receipt me-2 text-primary"></i><fmt:message key="admin.reservations.title" /> #${res.id}</h5>
                                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                                 </div>
                                                                 <div class="modal-body">
                                                                     <div class="row mb-4">
                                                                         <div class="col-sm-6">
-                                                                            <h6 class="text-muted small text-uppercase">Customer</h6>
+                                                                            <h6 class="text-muted small text-uppercase"><fmt:message key="admin.reservations.col.customer" /></h6>
                                                                             <div class="fw-bold">${empty res.user ? res.guestName : res.user.fullName}</div>
                                                                             <div>${empty res.user ? res.guestPhone : res.user.phone}</div>
-                                                                            <div class="mt-2 text-muted small">Adults: ${res.adultsCount} | Children: ${res.childrenCount}</div>
+                                                                            <div class="mt-2 text-muted small"><fmt:message key="admin.reservations.modal.adults" />: ${res.adultsCount} | <fmt:message key="admin.reservations.modal.children" />: ${res.childrenCount}</div>
                                                                         </div>
                                                                         <div class="col-sm-6 text-sm-end">
-                                                                            <h6 class="text-muted small text-uppercase">Time</h6>
+                                                                            <h6 class="text-muted small text-uppercase"><fmt:message key="admin.reservations.col.datetime" /></h6>
                                                                             <div class="fw-bold"><fmt:formatDate value="${res.reservationDate}" pattern="dd/MM/yyyy" /></div>
                                                                             <div class="text-primary fw-bold"><fmt:formatDate value="${res.reservationTime}" pattern="HH:mm" /></div>
                                                                         </div>
@@ -192,16 +194,16 @@
                                                                     <ul class="list-group list-group-flush mb-4">
                                                                         <c:forEach items="${res.reservationTables}" var="rt">
                                                                             <li class="list-group-item px-0 d-flex justify-content-between">
-                                                                                <span>Table ${rt.diningTable.tableCode} <small class="text-muted">(${rt.diningTable.capacity} seats)</small></span>
+                                                                                <span>Table ${rt.diningTable.tableCode} <small class="text-muted">(${rt.diningTable.capacity} <fmt:message key="admin.reservations.col.guests" />)</small></span>
                                                                                 <span class="text-success fw-bold"><fmt:formatNumber value="${rt.diningTable.basePrice}" pattern="#,##0" />đ</span>
                                                                             </li>
                                                                         </c:forEach>
                                                                         <c:if test="${empty res.reservationTables}">
-                                                                            <li class="list-group-item px-0 text-muted small">No tables assigned.</li>
+                                                                            <li class="list-group-item px-0 text-muted small"><fmt:message key="admin.reservations.modal.notables" /></li>
                                                                         </c:if>
                                                                     </ul>
                                                                     
-                                                                    <h6 class="fw-bold border-bottom pb-2"><i class="fa-solid fa-utensils me-2"></i>Menu Items</h6>
+                                                                    <h6 class="fw-bold border-bottom pb-2"><i class="fa-solid fa-utensils me-2"></i><fmt:message key="admin.reservations.modal.menuitems" /></h6>
                                                                     <ul class="list-group list-group-flush mb-4">
                                                                         <c:forEach items="${res.reservationMenuItems}" var="rmi">
                                                                             <li class="list-group-item px-0 d-flex justify-content-between">
@@ -210,11 +212,11 @@
                                                                             </li>
                                                                         </c:forEach>
                                                                         <c:if test="${empty res.reservationMenuItems}">
-                                                                            <li class="list-group-item px-0 text-muted small">No menu items ordered.</li>
+                                                                            <li class="list-group-item px-0 text-muted small"><fmt:message key="admin.reservations.modal.nomenu" /></li>
                                                                         </c:if>
                                                                     </ul>
                                                                     
-                                                                    <h6 class="fw-bold border-bottom pb-2"><i class="fa-solid fa-star me-2"></i>Add-on Services</h6>
+                                                                    <h6 class="fw-bold border-bottom pb-2"><i class="fa-solid fa-star me-2"></i><fmt:message key="admin.reservations.modal.addons" /></h6>
                                                                     <ul class="list-group list-group-flush">
                                                                         <c:forEach items="${res.reservationAddons}" var="ra">
                                                                             <li class="list-group-item px-0 d-flex justify-content-between">
@@ -223,12 +225,12 @@
                                                                             </li>
                                                                         </c:forEach>
                                                                         <c:if test="${empty res.reservationAddons}">
-                                                                            <li class="list-group-item px-0 text-muted small">No add-on services requested.</li>
+                                                                            <li class="list-group-item px-0 text-muted small"><fmt:message key="admin.reservations.modal.noaddons" /></li>
                                                                         </c:if>
                                                                     </ul>
                                                                 </div>
                                                                 <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><fmt:message key="admin.reservations.modal.close" /></button>
                                                                 </div>
                                                             </div>
                                                         </div>

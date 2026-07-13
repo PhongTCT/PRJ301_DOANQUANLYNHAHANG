@@ -1,12 +1,14 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
+<fmt:setBundle basename="i18n.messages" />
 <!DOCTYPE html>
 <html lang="${sessionScope.lang}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add-on services - Le Royal</title>
+    <title><fmt:message key="admin.addons.title" /> - Le Royal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -21,46 +23,46 @@
         <div class="admin-shell py-4">
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
         <div>
-            <p class="text-uppercase text-secondary small mb-1">Restaurant Admin</p>
-            <h1 class="h3 mb-0">Addon services</h1>
+            <p class="text-uppercase text-secondary small mb-1"><fmt:message key="admin.dashboard.workspace.title" /></p>
+            <h1 class="h3 mb-0"><fmt:message key="admin.addons.title" /></h1>
         </div>
         <button class="btn btn-dark btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#addonFormPanel" aria-expanded="${not empty editAddon ? 'true' : 'false'}">
-            <i class="fa-solid fa-plus me-2"></i>Add service
+            <i class="fa-solid fa-plus me-2"></i><fmt:message key="admin.addons.btn.add" />
         </button>
     </div>
     <c:if test="${not empty error}"><div class="alert alert-danger">${error}</div></c:if>
-    <c:if test="${param.saved == '1'}"><div class="alert alert-success">Saved successfully.</div></c:if>
+    <c:if test="${param.saved == '1'}"><div class="alert alert-success"><fmt:message key="admin.common.saved.success" /></div></c:if>
     <div class="row g-4">
         <div id="addonFormPanel" class="col-lg-4 collapse ${not empty editAddon ? 'show' : ''}">
             <form id="addonEditorForm" class="border rounded-3 p-4 bg-light" method="post" action="MainController">
                 <input type="hidden" name="action" value="saveAddonService">
                 <input type="hidden" name="id" value="${editAddon.id}">
-                <h2 class="h5 mb-3">${empty editAddon ? 'Create addon' : 'Edit addon'}</h2>
-                <label class="form-label">Service name</label>
+                <h2 class="h5 mb-3">${empty editAddon ? '<fmt:message key="admin.addons.editor.create" />' : '<fmt:message key="admin.addons.editor.edit" />'}</h2>
+                <label class="form-label"><fmt:message key="admin.addons.label.name" /></label>
                 <input id="draftAddonName" class="form-control mb-3" name="serviceName" value="${editAddon.serviceName}" required>
-                <label class="form-label">Description</label>
+                <label class="form-label"><fmt:message key="admin.addons.label.desc" /></label>
                 <textarea id="draftAddonDescription" class="form-control mb-3" name="description" rows="3">${editAddon.description}</textarea>
-                <label class="form-label">Price</label>
+                <label class="form-label"><fmt:message key="admin.addons.label.price" /></label>
                 <input id="draftAddonPrice" class="form-control mb-3" name="price" type="number" min="0" step="1" value="${empty editAddon ? 0 : editAddon.price}">
-                <label class="form-label">Image URL</label>
+                <label class="form-label"><fmt:message key="admin.addons.label.image" /></label>
                 <input id="draftAddonImage" class="form-control mb-3" name="imageUrl" value="${editAddon.imageUrl}" placeholder="assets/img/le-royal/Private Live Pianist.jpg">
                 <div class="form-check form-switch mb-3">
                     <input id="draftAddonAvailable" class="form-check-input" type="checkbox" name="isAvailable" value="true" ${empty editAddon || editAddon.isAvailable ? 'checked' : ''}>
-                    <label class="form-check-label">Available</label>
+                    <label class="form-check-label"><fmt:message key="admin.common.active.switch" /></label>
                 </div>
                 <aside class="admin-draft-preview rounded-3 p-3 mb-3">
                     <div id="draftAddonImageWrap" class="admin-draft-placeholder rounded-3 d-flex align-items-center justify-content-center mb-3">
                         <i class="fa-solid fa-music fa-2x"></i>
                     </div>
                     <p class="text-uppercase text-secondary small mb-1">Draft preview</p>
-                    <h3 id="draftAddonTitle" class="h5 mb-1">New service</h3>
-                    <p id="draftAddonText" class="text-secondary mb-2">No description yet.</p>
+                    <h3 id="draftAddonTitle" class="h5 mb-1"><fmt:message key="admin.addons.preview.new" /></h3>
+                    <p id="draftAddonText" class="text-secondary mb-2"><fmt:message key="admin.addons.preview.nodesc" /></p>
                     <div class="d-flex flex-wrap gap-2">
                         <span id="draftAddonPriceLabel" class="badge text-bg-light border text-dark">0</span>
-                        <span id="draftAddonStatusLabel" class="badge text-bg-success">Available</span>
+                        <span id="draftAddonStatusLabel" class="badge text-bg-success"><fmt:message key="admin.common.available" /></span>
                     </div>
                 </aside>
-                <button class="btn btn-dark w-100" type="submit">Save</button>
+                <button class="btn btn-dark w-100" type="submit"><fmt:message key="admin.common.save" /></button>
             </form>
         </div>
         <div class="col-lg-8">
@@ -70,14 +72,14 @@
                         <div class="col-lg-8">
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
-                                <input id="addonSearch" class="form-control" type="search" placeholder="Search service name or description">
+                                <input id="addonSearch" class="form-control" type="search" placeholder="<fmt:message key="admin.addons.search" />">
                             </div>
                         </div>
                         <div class="col-sm-6 col-lg-2">
                             <select id="addonStatusFilter" class="form-select">
-                                <option value="">All status</option>
-                                <option value="available">Available</option>
-                                <option value="hidden">Hidden</option>
+                                <option value=""><fmt:message key="admin.common.filter.all.status" /></option>
+                                <option value="available"><fmt:message key="admin.common.available" /></option>
+                                <option value="hidden"><fmt:message key="admin.common.hidden" /></option>
                             </select>
                         </div>
                     </div>
@@ -87,11 +89,11 @@
                 <table class="table align-middle">
                     <thead>
                         <tr>
-                            <th>Image</th>
-                            <th>ID</th>
-                            <th>Service</th>
-                            <th>Price</th>
-                            <th>Status</th>
+                            <th><fmt:message key="admin.addons.col.image" /></th>
+                            <th><fmt:message key="admin.addons.col.id" /></th>
+                            <th><fmt:message key="admin.addons.col.service" /></th>
+                            <th><fmt:message key="admin.addons.col.price" /></th>
+                            <th><fmt:message key="admin.addons.col.status" /></th>
                             <th></th>
                         </tr>
                     </thead>
@@ -103,20 +105,20 @@
                                 <td>${addon.id}</td>
                                 <td><strong>${addon.serviceName}</strong><div class="small text-secondary">${addon.description}</div></td>
                                 <td><fmt:formatNumber value="${addon.price}" pattern="#,##0"/></td>
-                                <td><span class="badge ${addon.isAvailable ? 'text-bg-success' : 'text-bg-secondary'}">${addon.isAvailable ? 'Available' : 'Hidden'}</span></td>
+                                <td><span class="badge ${addon.isAvailable ? 'text-bg-success' : 'text-bg-secondary'}">${addon.isAvailable ? '<fmt:message key="admin.common.available" />' : '<fmt:message key="admin.common.hidden" />'}</span></td>
                                 <td class="text-end">
-                                    <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminAddonServices&id=${addon.id}">Edit</a>
-                                    <a class="btn btn-outline-secondary btn-sm" href="MainController?action=toggleAddonService&id=${addon.id}&enabled=${!addon.isAvailable}">${addon.isAvailable ? 'Hide' : 'Restore'}</a>
+                                    <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminAddonServices&id=${addon.id}"><fmt:message key="admin.addons.btn.edit" /></a>
+                                    <a class="btn btn-outline-secondary btn-sm" href="MainController?action=toggleAddonService&id=${addon.id}&enabled=${!addon.isAvailable}">${addon.isAvailable ? '<fmt:message key="admin.addons.btn.hide" />' : '<fmt:message key="admin.addons.btn.restore" />'}</a>
                                 </td>
                             </tr>
                         </c:forEach>
-                        <tr id="addonEmpty" class="d-none"><td colspan="6" class="text-center text-secondary py-5">No services match these filters.</td></tr>
+                        <tr id="addonEmpty" class="d-none"><td colspan="6" class="text-center text-secondary py-5"><fmt:message key="admin.addons.empty" /></td></tr>
                     </tbody>
                 </table>
             </div>
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mt-3">
                 <div id="addonPaginationText" class="small text-secondary"></div>
-                <div id="addonPagination" class="btn-group btn-group-sm" role="group" aria-label="Add-on pagination"></div>
+                <div id="addonPagination" class="btn-group btn-group-sm" role="group" aria-label="<fmt:message key="admin.addons.title" />"></div>
             </div>
         </div>
     </div>
@@ -128,10 +130,10 @@
         <div class="modal-content border-0 shadow">
             <div class="modal-header">
                 <div>
-                    <p class="text-uppercase text-secondary small mb-1">Confirm add-on service</p>
-                    <h5 class="modal-title" id="addonConfirmTitle">Review service</h5>
+                    <p class="text-uppercase text-secondary small mb-1"><fmt:message key="admin.addons.modal.confirm" /></p>
+                    <h5 class="modal-title" id="addonConfirmTitle"><fmt:message key="admin.addons.modal.review" /></h5>
                 </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<fmt:message key="admin.common.close" />"></button>
             </div>
             <div class="modal-body">
                 <div class="menu-confirm-summary mb-3">
@@ -141,18 +143,18 @@
                 </div>
                 <div class="row g-3 align-items-center">
                     <div class="col-12">
-                        <h3 id="addonConfirmName" class="h5 mb-1">New service</h3>
-                        <p id="addonConfirmText" class="text-secondary mb-2">No description yet.</p>
+                        <h3 id="addonConfirmName" class="h5 mb-1"><fmt:message key="admin.addons.preview.new" /></h3>
+                        <p id="addonConfirmText" class="text-secondary mb-2"><fmt:message key="admin.addons.preview.nodesc" /></p>
                         <div class="d-flex flex-wrap gap-2">
                             <span id="addonConfirmPrice" class="badge text-bg-light border text-dark">0</span>
-                            <span id="addonConfirmStatus" class="badge text-bg-success">Available</span>
+                            <span id="addonConfirmStatus" class="badge text-bg-success"><fmt:message key="admin.common.available" /></span>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Keep editing</button>
-                <button id="addonConfirmSave" type="button" class="btn btn-dark">Confirm save</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><fmt:message key="admin.addons.modal.keep" /></button>
+                <button id="addonConfirmSave" type="button" class="btn btn-dark"><fmt:message key="admin.addons.modal.save" /></button>
             </div>
         </div>
     </div>
@@ -202,7 +204,7 @@
             if (empty) empty.classList.toggle('d-none', visibleRows.length > 0);
             if (paginationText) {
                 var end = Math.min(start + pageSize, visibleRows.length);
-                paginationText.textContent = visibleRows.length ? ('Showing ' + (start + 1) + '-' + end + ' of ' + visibleRows.length) : 'No services';
+                paginationText.textContent = visibleRows.length ? ('Showing ' + (start + 1) + '-' + end + ' of ' + visibleRows.length) : '<fmt:message key="admin.common.pagination.no.items" />';
             }
             renderPagination(totalPages);
         }
@@ -238,10 +240,10 @@
         }
         function renderDraft() {
             if (!title || !imageWrap) return;
-            title.textContent = (name.value || '').trim() || 'New service';
-            text.textContent = (description.value || '').trim() || 'No description yet.';
+            title.textContent = (name.value || '').trim() || '<fmt:message key="admin.addons.preview.new" />';
+            text.textContent = (description.value || '').trim() || '<fmt:message key="admin.addons.preview.nodesc" />';
             priceLabel.textContent = money(price.value);
-            statusLabel.textContent = available.checked ? 'Available' : 'Hidden';
+            statusLabel.textContent = available.checked ? '<fmt:message key="admin.common.available" />' : '<fmt:message key="admin.common.hidden" />';
             statusLabel.className = available.checked ? 'badge text-bg-success' : 'badge text-bg-secondary';
             var src = imageSrc(image.value) || contextPath + '/assets/img/le-royal/Champagne Welcome Service.jpg';
             imageWrap.innerHTML = '<img class="rounded-3" src="' + src + '" alt="">';
@@ -283,7 +285,7 @@
                 renderConfirm();
                 if (window.bootstrap && modal) {
                     window.bootstrap.Modal.getOrCreateInstance(modal).show();
-                } else if (window.confirm('Review this service and save?')) {
+                } else if (window.confirm('<fmt:message key="admin.addons.modal.keep" />?')) {
                     confirmed = true;
                     form.submit();
                 }

@@ -1,6 +1,8 @@
 package service;
 
 import entity.Invoice;
+import entity.RankTopUp;
+import enums.TopUpType;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -28,6 +30,7 @@ public class VnPayService {
     private static final String DEFAULT_PAY_URL = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
     private static final String DEFAULT_TMN_CODE = "2QXUI4J4";
     private static final String DEFAULT_HASH_SECRET = "SECRETKEY";
+    public static final BigDecimal MIN_VNPAY_AMOUNT = new BigDecimal("1000");
 
     public String createPaymentUrl(HttpServletRequest request, Invoice invoice) {
         if (invoice == null || invoice.getId() == null) {
@@ -38,15 +41,17 @@ public class VnPayService {
         }
 
         ServletContext context = request.getServletContext();
-        String txnRef = buildTxnRef(invoice.getId());
-        String orderInfo = "Thanh toan hoa don Le Royal #" + invoice.getId();
+        String txnRef = buildTxnRef(invoice.getId(), "LR");
+        String orderInfo = "Thanh_toan_hoa_don_Le_Royal_" + invoice.getId();
         String amount = invoice.getTotalAmount()
                 .multiply(new BigDecimal("100"))
                 .setScale(0, RoundingMode.HALF_UP)
                 .toPlainString();
 
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
+        TimeZone vnTz = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
+        Calendar calendar = Calendar.getInstance(vnTz);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US);
+        formatter.setTimeZone(vnTz);
         String createDate = formatter.format(calendar.getTime());
         calendar.add(Calendar.MINUTE, 15);
         String expireDate = formatter.format(calendar.getTime());
@@ -62,7 +67,6 @@ public class VnPayService {
         params.put("vnp_OrderType", "other");
         params.put("vnp_Locale", "vn");
         params.put("vnp_ReturnUrl", buildBaseUrl(request) + request.getContextPath() + "/payment/vnpay-return");
-        params.put("vnp_IpnUrl", buildBaseUrl(request) + request.getContextPath() + "/payment/vnpay-ipn");
         params.put("vnp_IpAddr", clientIp(request));
         params.put("vnp_CreateDate", createDate);
         params.put("vnp_ExpireDate", expireDate);
@@ -100,23 +104,100 @@ public class VnPayService {
         return params;
     }
 
+    public static BigDecimal getActualVnPayAmount(RankTopUp topUp) {
+        return topUp.getFinalAmount().max(MIN_VNPAY_AMOUNT);
+    }
+
+    public String createTopUpPaymentUrl(HttpServletRequest request, RankTopUp topUp) {
+        if (topUp == null || topUp.getId() == null) {
+            throw new IllegalArgumentException("Không tìm thấy giao dịch nạp để thanh toán VNPay.");
+        }
+
+        BigDecimal vnpAmount = getActualVnPayAmount(topUp);
+
+        ServletContext context = request.getServletContext();
+        String txnRef = "TOPUP_" + topUp.getId();
+        String orderInfo = "Nap_" + (topUp.getTopupType() == TopUpType.RANK ? "hang" : "xu") + "_Le_Royal_" + topUp.getId();
+        String amount = vnpAmount
+                .multiply(new BigDecimal("100"))
+                .setScale(0, RoundingMode.HALF_UP)
+                .toPlainString();
+
+        TimeZone vnTz = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
+        Calendar calendar = Calendar.getInstance(vnTz);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US);
+        formatter.setTimeZone(vnTz);
+        String createDate = formatter.format(calendar.getTime());
+        calendar.add(Calendar.MINUTE, 15);
+        String expireDate = formatter.format(calendar.getTime());
+
+        Map<String, String> params = new HashMap<>();
+        params.put("vnp_Version", VERSION);
+        params.put("vnp_Command", COMMAND_PAY);
+        params.put("vnp_TmnCode", config(context, "vnpay.tmnCode", "VNPAY_TMN_CODE", DEFAULT_TMN_CODE));
+        params.put("vnp_Amount", amount);
+        params.put("vnp_CurrCode", "VND");
+        params.put("vnp_TxnRef", txnRef);
+        params.put("vnp_OrderInfo", orderInfo);
+        params.put("vnp_OrderType", "other");
+        params.put("vnp_Locale", "vn");
+        params.put("vnp_ReturnUrl", buildBaseUrl(request) + request.getContextPath() + "/payment/vnpay-return");
+        params.put("vnp_IpAddr", clientIp(request));
+        params.put("vnp_CreateDate", createDate);
+        params.put("vnp_ExpireDate", expireDate);
+
+        String hashData = buildHashData(params);
+        String query = buildQuery(params);
+        String secureHash = hmacSHA512(config(context, "vnpay.hashSecret", "VNPAY_HASH_SECRET", DEFAULT_HASH_SECRET), hashData);
+        return config(context, "vnpay.payUrl", "VNPAY_PAY_URL", DEFAULT_PAY_URL) + "?" + query + "&vnp_SecureHash=" + secureHash;
+    }
+
+    public Long topUpIdFromTxnRef(String txnRef) {
+        if (txnRef == null) return null;
+        String t = txnRef.trim();
+        if (t.startsWith("TOPUP_")) {
+            try {
+                return Long.valueOf(t.substring(6));
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    public String detectTxnRefPrefix(String txnRef) {
+        if (txnRef == null || txnRef.trim().isEmpty()) return null;
+        String t = txnRef.trim();
+        if (t.startsWith("TOPUP_")) return "TOPUP";
+        if (t.startsWith("LR")) return "LR";
+        return null;
+    }
+
+    public Long entityIdFromTxnRef(String txnRef) {
+        if (txnRef == null) return null;
+        String t = txnRef.trim();
+        if (t.startsWith("TOPUP_")) {
+            try { return Long.valueOf(t.substring(6)); }
+            catch (NumberFormatException e) { return null; }
+        }
+        if (t.startsWith("LR")) {
+            try { return Long.valueOf(t.substring(2)); }
+            catch (NumberFormatException e) { return null; }
+        }
+        return null;
+    }
+
+    public String buildTxnRef(Long entityId, String prefix) {
+        return prefix + entityId;
+    }
+
+    // Backward compatibility
     public Long invoiceIdFromTxnRef(String txnRef) {
-        if (txnRef == null) {
-            return null;
-        }
-        String normalized = txnRef.trim();
-        if (normalized.startsWith("LR")) {
-            normalized = normalized.substring(2);
-        }
-        try {
-            return Long.valueOf(normalized);
-        } catch (NumberFormatException e) {
-            return null;
-        }
+        return entityIdFromTxnRef(txnRef);
     }
 
     public String buildTxnRef(Long invoiceId) {
-        return "LR" + invoiceId;
+        return buildTxnRef(invoiceId, "LR");
     }
 
     private String buildHashData(Map<String, String> params) {
@@ -131,7 +212,7 @@ public class VnPayService {
             if (hash.length() > 0) {
                 hash.append('&');
             }
-            hash.append(key).append('=').append(value);
+            hash.append(key).append('=').append(urlEncode(value));
         }
         return hash.toString();
     }
@@ -171,7 +252,7 @@ public class VnPayService {
 
     private String urlEncode(String value) {
         try {
-            return URLEncoder.encode(value, StandardCharsets.UTF_8.name());
+            return URLEncoder.encode(value, StandardCharsets.US_ASCII.name());
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException(e);
         }
