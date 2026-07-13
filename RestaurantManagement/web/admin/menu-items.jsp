@@ -54,7 +54,7 @@
     <c:if test="${param.saved == '1'}"><div class="alert alert-success">Saved successfully.</div></c:if>
 
     <section id="menuItemFormPanel" class="collapse ${not empty editMenuItem ? 'show' : ''} mb-4">
-        <form id="menuItemEditorForm" class="card" method="post" action="MainController">
+        <form id="menuItemEditorForm" class="card" method="post" action="MainController" enctype="multipart/form-data">
             <div class="card-body p-4">
                 <input type="hidden" name="action" value="saveMenuItem">
                 <input type="hidden" name="id" value="${editMenuItem.id}">
@@ -95,6 +95,12 @@
                     <div class="col-md-6">
                         <label class="form-label">Image URL</label>
                         <input id="draftItemImage" class="form-control" name="imageUrl" value="${editMenuItem.imageUrl}">
+                        <div class="form-text">Paste an existing URL, or upload a new image below.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Upload image</label>
+                        <input id="draftItemImageFile" class="form-control" name="imageFile" type="file" accept="image/*">
+                        <div class="form-text">Cloudinary will store the image and save the returned link.</div>
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Base price</label>

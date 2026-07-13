@@ -22,9 +22,13 @@ import enums.MealTime;
 import enums.MenuCategoryType;
 import enums.RoomType;
 import enums.TableStatus;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
+import util.CloudinaryUtil;
 
 public class AdminRestaurantService {
     private final AreaDAO areaDAO = new AreaDAO();
@@ -117,7 +121,7 @@ public class AdminRestaurantService {
         item.setItemNameVi(itemNameVi);
         item.setDescription(description == null || description.isEmpty() ? descriptionVi : description);
         item.setDescriptionVi(descriptionVi);
-        item.setImageUrl(trim(request.getParameter("imageUrl")));
+        item.setImageUrl(resolveImageUrl(request, "menu-items", trim(request.getParameter("imageUrl"))));
         item.setBasePrice(nonNegativeMoney(request, "basePrice", "Base price"));
         item.setIsAvailable(paramBool(request, "isAvailable"));
         save(menuItemDAO, item, item.getId());
@@ -337,6 +341,18 @@ public class AdminRestaurantService {
 
     private String trim(String value) {
         return value == null ? null : value.trim();
+    }
+
+    private String resolveImageUrl(HttpServletRequest request, String folder, String fallbackUrl) {
+        try {
+            Part imagePart = request.getPart("imageFile");
+            String uploadedUrl = CloudinaryUtil.uploadImage(imagePart, "le-royal/" + folder);
+            return uploadedUrl == null || uploadedUrl.trim().isEmpty() ? fallbackUrl : uploadedUrl;
+        } catch (IllegalStateException e) {
+            throw new IllegalArgumentException("Image file is too large.");
+        } catch (IOException | ServletException e) {
+            throw new IllegalArgumentException("Could not read uploaded image.");
+        }
     }
 
     private Integer paramInt(HttpServletRequest request, String name) {
