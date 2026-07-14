@@ -13,7 +13,6 @@ d:\Github_Projects\PRJ301_DOANQUANLYNHAHANG\RestaurantManagement\src\java\contro
 d:\Github_Projects\PRJ301_DOANQUANLYNHAHANG\RestaurantManagement\src\java\controller\admin\ReviewModerationController.java
 d:\Github_Projects\PRJ301_DOANQUANLYNHAHANG\RestaurantManagement\src\java\controller\admin\StaffDashboardController.java
 d:\Github_Projects\PRJ301_DOANQUANLYNHAHANG\RestaurantManagement\src\java\controller\admin\SurchargeController.java
-d:\Github_Projects\PRJ301_DOANQUANLYNHAHANG\RestaurantManagement\src\java\controller\admin\TableController.java
 d:\Github_Projects\PRJ301_DOANQUANLYNHAHANG\RestaurantManagement\src\java\controller\admin\VoucherManagementController.java
 d:\Github_Projects\PRJ301_DOANQUANLYNHAHANG\RestaurantManagement\src\java\controller\admin\WalkinBookingController.java
 d:\Github_Projects\PRJ301_DOANQUANLYNHAHANG\RestaurantManagement\src\java\controller\customer\CustomerRankController.java

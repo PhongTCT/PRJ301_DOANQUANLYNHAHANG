@@ -34,7 +34,7 @@
     <c:if test="${param.saved == '1'}"><div class="alert alert-success"><fmt:message key="admin.common.saved.success" /></div></c:if>
     <div class="row g-4">
         <div id="addonFormPanel" class="col-lg-4 collapse ${not empty editAddon ? 'show' : ''}">
-            <form id="addonEditorForm" class="border rounded-3 p-4 bg-light" method="post" action="MainController">
+            <form id="addonEditorForm" class="border rounded-3 p-4 bg-light" method="post" action="MainController" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="saveAddonService">
                 <input type="hidden" name="id" value="${editAddon.id}">
                 <h2 class="h5 mb-3">${empty editAddon ? '<fmt:message key="admin.addons.editor.create" />' : '<fmt:message key="admin.addons.editor.edit" />'}</h2>
@@ -46,6 +46,8 @@
                 <input id="draftAddonPrice" class="form-control mb-3" name="price" type="number" min="0" step="1" value="${empty editAddon ? 0 : editAddon.price}">
                 <label class="form-label"><fmt:message key="admin.addons.label.image" /></label>
                 <input id="draftAddonImage" class="form-control mb-3" name="imageUrl" value="${editAddon.imageUrl}" placeholder="assets/img/le-royal/Private Live Pianist.jpg">
+                <label class="form-label">Upload image</label>
+                <input id="draftAddonImageFile" class="form-control mb-3" name="imageFile" type="file" accept="image/*">
                 <div class="form-check form-switch mb-3">
                     <input id="draftAddonAvailable" class="form-check-input" type="checkbox" name="isAvailable" value="true" ${empty editAddon || editAddon.isAvailable ? 'checked' : ''}>
                     <label class="form-check-label"><fmt:message key="admin.common.active.switch" /></label>
@@ -222,12 +224,14 @@
         var description = document.getElementById('draftAddonDescription');
         var price = document.getElementById('draftAddonPrice');
         var image = document.getElementById('draftAddonImage');
+        var imageFile = document.getElementById('draftAddonImageFile');
         var available = document.getElementById('draftAddonAvailable');
         var imageWrap = document.getElementById('draftAddonImageWrap');
         var title = document.getElementById('draftAddonTitle');
         var text = document.getElementById('draftAddonText');
         var priceLabel = document.getElementById('draftAddonPriceLabel');
         var statusLabel = document.getElementById('draftAddonStatusLabel');
+        var addonUploadPreviewUrl = '';
 
         function imageSrc(value) {
             value = (value || '').trim();
@@ -245,7 +249,7 @@
             priceLabel.textContent = money(price.value);
             statusLabel.textContent = available.checked ? '<fmt:message key="admin.common.available" />' : '<fmt:message key="admin.common.hidden" />';
             statusLabel.className = available.checked ? 'badge text-bg-success' : 'badge text-bg-secondary';
-            var src = imageSrc(image.value) || contextPath + '/assets/img/le-royal/Champagne Welcome Service.jpg';
+            var src = addonUploadPreviewUrl || imageSrc(image.value) || contextPath + '/assets/img/le-royal/Champagne Welcome Service.jpg';
             imageWrap.innerHTML = '<img class="rounded-3" src="' + src + '" alt="">';
         }
         [name, description, price, image, available].forEach(function (field) {
@@ -253,6 +257,15 @@
             field.addEventListener('input', renderDraft);
             field.addEventListener('change', renderDraft);
         });
+        if (imageFile) {
+            imageFile.addEventListener('change', function () {
+                if (addonUploadPreviewUrl) {
+                    URL.revokeObjectURL(addonUploadPreviewUrl);
+                }
+                addonUploadPreviewUrl = this.files && this.files[0] ? URL.createObjectURL(this.files[0]) : '';
+                renderDraft();
+            });
+        }
         renderDraft();
 
         var form = document.getElementById('addonEditorForm');
@@ -267,7 +280,7 @@
             var confirmPrice = document.getElementById('addonConfirmPrice');
             var confirmStatus = document.getElementById('addonConfirmStatus');
             if (confirmImage) {
-                var src = imageSrc(image.value) || contextPath + '/assets/img/le-royal/Champagne Welcome Service.jpg';
+                var src = addonUploadPreviewUrl || imageSrc(image.value) || contextPath + '/assets/img/le-royal/Champagne Welcome Service.jpg';
                 confirmImage.innerHTML = '<img style="width:100%; height:100%; object-fit:cover;" src="' + src + '" alt="">';
             }
             if (confirmName && title) confirmName.textContent = title.textContent;

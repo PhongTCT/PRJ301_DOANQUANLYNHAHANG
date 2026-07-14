@@ -62,8 +62,9 @@
     <section id="addTablePanel" class="collapse mb-4">
         <div class="card border-0 shadow-sm">
             <div class="card-body p-4">
-                <form action="${pageContext.request.contextPath}/admin/tables" method="post">
-                    <input type="hidden" name="action" value="add">
+                <form action="${pageContext.request.contextPath}/MainController" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="action" value="saveDiningTable">
+                    <input type="hidden" name="isActive" value="true">
                     <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
                         <div>
                             <div class="admin-section-label"><fmt:message key="admin.tables.editor" /></div>
@@ -109,6 +110,11 @@
                                 <div class="mb-0">
                                     <label class="form-label text-muted small fw-bold"><fmt:message key="admin.tables.label.image" /></label>
                                     <input id="draftTableImage" type="text" name="imageUrl" class="form-control form-control-lg" placeholder="assets/img/le-royal/seating/dining-room.jpg">
+                                    <div class="form-text">Paste an existing URL, or upload a new image below.</div>
+                                </div>
+                                <div class="mt-3">
+                                    <label class="form-label text-muted small fw-bold">UPLOAD IMAGE</label>
+                                    <input id="draftTableImageFile" type="file" name="imageFile" class="form-control form-control-lg" accept="image/*">
                                 </div>
                             </div>
                             <div class="col-lg-5">
@@ -230,9 +236,10 @@
     <div class="modal fade" id="editModal${t.id}" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow">
-                <form action="${pageContext.request.contextPath}/admin/tables" method="post">
-                    <input type="hidden" name="action" value="update">
+                <form action="${pageContext.request.contextPath}/MainController" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="action" value="saveDiningTable">
                     <input type="hidden" name="id" value="${t.id}">
+                    <input type="hidden" name="isActive" value="${t.isActive}">
                     <div class="modal-header border-0 pb-0">
                         <h5 class="modal-title fw-bold"><fmt:message key="admin.tables.modal.update" /> ${t.tableCode}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -273,6 +280,11 @@
                         <div class="mb-3">
                             <label class="form-label text-muted small fw-bold"><fmt:message key="admin.tables.label.image" /></label>
                             <input type="text" name="imageUrl" class="form-control form-control-lg" value="${t.imageUrl}" placeholder="assets/img/le-royal/seating/dining-room.jpg">
+                            <div class="form-text">Paste an existing URL, or upload a new image below.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-muted small fw-bold">UPLOAD IMAGE</label>
+                            <input type="file" name="imageFile" class="form-control form-control-lg" accept="image/*">
                         </div>
                     </div>
                     <div class="modal-footer border-0 pt-0">
@@ -287,9 +299,10 @@
     <div class="modal fade" id="deleteModal${t.id}" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow">
-                <form action="${pageContext.request.contextPath}/admin/tables" method="post">
-                    <input type="hidden" name="action" value="delete">
+                <form action="${pageContext.request.contextPath}/MainController" method="post">
+                    <input type="hidden" name="action" value="toggleDiningTable">
                     <input type="hidden" name="id" value="${t.id}">
+                    <input type="hidden" name="enabled" value="false">
                     <div class="modal-header border-0 pb-0">
                         <h5 class="modal-title fw-bold text-danger"><fmt:message key="admin.tables.modal.hide" /></h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -379,11 +392,13 @@
         var price = document.getElementById('draftTablePrice');
         var status = document.getElementById('draftTableStatus');
         var image = document.getElementById('draftTableImage');
+        var imageFile = document.getElementById('draftTableImageFile');
         var title = document.getElementById('draftTableTitle');
         var meta = document.getElementById('draftTableMeta');
         var imageWrap = document.getElementById('draftTableImageWrap');
         var statusBadge = document.getElementById('draftTableStatusBadge');
         var priceLabel = document.getElementById('draftTablePriceLabel');
+        var tableUploadPreviewUrl = '';
 
         function imageSrc(value) {
             value = (value || '').trim();
@@ -401,13 +416,22 @@
             priceLabel.textContent = money(price.value);
             statusBadge.textContent = status.options[status.selectedIndex] ? status.options[status.selectedIndex].text : '<fmt:message key="admin.tables.status.available" />';
             statusBadge.className = status.value === 'AVAILABLE' ? 'badge text-bg-success' : (status.value === 'RESERVED' ? 'badge text-bg-warning' : 'badge text-bg-secondary');
-            imageWrap.innerHTML = '<img style="width:100%; height:100%; object-fit:cover;" src="' + (imageSrc(image.value) || contextPath + '/assets/img/le-royal/seating/dining-room.jpg') + '" alt="">';
+            imageWrap.innerHTML = '<img style="width:100%; height:100%; object-fit:cover;" src="' + (tableUploadPreviewUrl || imageSrc(image.value) || contextPath + '/assets/img/le-royal/seating/dining-room.jpg') + '" alt="">';
         }
         [code, capacity, room, price, status, image].forEach(function (field) {
             if (!field) return;
             field.addEventListener('input', renderDraft);
             field.addEventListener('change', renderDraft);
         });
+        if (imageFile) {
+            imageFile.addEventListener('change', function () {
+                if (tableUploadPreviewUrl) {
+                    URL.revokeObjectURL(tableUploadPreviewUrl);
+                }
+                tableUploadPreviewUrl = this.files && this.files[0] ? URL.createObjectURL(this.files[0]) : '';
+                renderDraft();
+            });
+        }
         renderDraft();
     })();
 </script>

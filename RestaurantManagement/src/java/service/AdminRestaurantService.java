@@ -90,7 +90,7 @@ public class AdminRestaurantService {
         table.setTableCode(required(request, "tableCode", "Table code"));
         table.setCapacity(positiveInt(request, "capacity", "Capacity"));
         table.setBasePrice(nonNegativeMoney(request, "basePrice", "Base price"));
-        table.setImageUrl(trim(request.getParameter("imageUrl")));
+        table.setImageUrl(resolveImageUrl(request, "tables", trim(request.getParameter("imageUrl"))));
         table.setStatus(enumValue(TableStatus.class, request.getParameter("status"), "Status"));
         table.setIsActive(paramBool(request, "isActive"));
         save(diningTableDAO, table, table.getId());
@@ -151,7 +151,7 @@ public class AdminRestaurantService {
             set.setOriginalPrice(nonNegativeMoney(request, "originalPrice", "Original price"));
         }
         set.setDiscountedPrice(nonNegativeMoney(request, "discountedPrice", "Discounted price"));
-        set.setImageUrl(trim(request.getParameter("imageUrl")));
+        set.setImageUrl(resolveImageUrl(request, "menu-sets", trim(request.getParameter("imageUrl"))));
         set.setIsAvailable(paramBool(request, "isAvailable"));
         save(menuSetDAO, set, set.getId());
         return set;
@@ -220,7 +220,7 @@ public class AdminRestaurantService {
         addon.setServiceName(required(request, "serviceName", "Service name"));
         addon.setDescription(trim(request.getParameter("description")));
         addon.setPrice(nonNegativeMoney(request, "price", "Price"));
-        addon.setImageUrl(trim(request.getParameter("imageUrl")));
+        addon.setImageUrl(resolveImageUrl(request, "addon-services", trim(request.getParameter("imageUrl"))));
         addon.setIsAvailable(paramBool(request, "isAvailable"));
         save(addonServiceDAO, addon, addon.getId());
     }
@@ -344,6 +344,10 @@ public class AdminRestaurantService {
     }
 
     private String resolveImageUrl(HttpServletRequest request, String folder, String fallbackUrl) {
+        String contentType = request.getContentType();
+        if (contentType == null || !contentType.toLowerCase().startsWith("multipart/")) {
+            return fallbackUrl;
+        }
         try {
             Part imagePart = request.getPart("imageFile");
             String uploadedUrl = CloudinaryUtil.uploadImage(imagePart, "le-royal/" + folder);

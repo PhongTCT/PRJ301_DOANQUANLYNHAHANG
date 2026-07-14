@@ -407,6 +407,7 @@
         var category = document.getElementById('draftItemCategory');
         var price = document.getElementById('draftItemPrice');
         var image = document.getElementById('draftItemImage');
+        var imageFile = document.getElementById('draftItemImageFile');
         var available = document.getElementById('draftItemAvailable');
         var imageWrap = document.getElementById('draftItemImageWrap');
         var title = document.getElementById('draftItemTitle');
@@ -414,6 +415,7 @@
         var categoryLabel = document.getElementById('draftItemCategoryLabel');
         var priceLabel = document.getElementById('draftItemPriceLabel');
         var statusLabel = document.getElementById('draftItemStatusLabel');
+        var itemUploadPreviewUrl = '';
 
         function imageSrc(value) {
             value = (value || '').trim();
@@ -432,7 +434,7 @@
             priceLabel.textContent = money(price.value);
             statusLabel.textContent = available.checked ? '<fmt:message key="admin.common.available"/>' : '<fmt:message key="admin.common.hidden"/>';
             statusLabel.className = available.checked ? 'badge text-bg-success' : 'badge text-bg-secondary';
-            var src = imageSrc(image.value);
+            var src = itemUploadPreviewUrl || imageSrc(image.value);
             imageWrap.innerHTML = src
                     ? '<img class="rounded-3" src="' + src + '" alt="">'
                     : '<i class="fa-solid fa-bowl-food fa-2x"></i>';
@@ -442,6 +444,15 @@
             field.addEventListener('input', renderDraft);
             field.addEventListener('change', renderDraft);
         });
+        if (imageFile) {
+            imageFile.addEventListener('change', function () {
+                if (itemUploadPreviewUrl) {
+                    URL.revokeObjectURL(itemUploadPreviewUrl);
+                }
+                itemUploadPreviewUrl = this.files && this.files[0] ? URL.createObjectURL(this.files[0]) : '';
+                renderDraft();
+            });
+        }
         renderDraft();
 
         var form = document.getElementById('menuItemEditorForm');
@@ -457,7 +468,7 @@
             var confirmPrice = document.getElementById('menuItemConfirmPrice');
             var confirmStatus = document.getElementById('menuItemConfirmStatus');
             if (confirmImage) {
-                var src = imageSrc(image.value);
+                var src = itemUploadPreviewUrl || imageSrc(image.value);
                 confirmImage.innerHTML = src
                         ? '<img style="width:100%; height:100%; object-fit:cover;" src="' + src + '" alt="">'
                         : '<i class="fa-solid fa-bowl-food fa-2x"></i>';

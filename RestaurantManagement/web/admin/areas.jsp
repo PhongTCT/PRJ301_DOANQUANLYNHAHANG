@@ -3,66 +3,252 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
 <fmt:setBundle basename="i18n.messages" />
-<jsp:include page="/header.jsp" />
-<main class="container py-5">
-    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
-        <div>
-            <p class="text-uppercase text-secondary small mb-1"><fmt:message key="admin.dashboard.workspace.title" /></p>
-            <h1 class="h3 mb-0"><fmt:message key="admin.areas.title" /></h1>
-        </div>
-        <div class="btn-group flex-wrap">
-            <a class="btn btn-dark btn-sm" href="MainController?action=adminAreas"><fmt:message key="admin.areas.title" /></a>
-            <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminRooms"><fmt:message key="admin.rooms.title" /></a>
-            <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminTables"><fmt:message key="admin.tables.title" /></a>
-            <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminCategories"><fmt:message key="admin.categories.title" /></a>
-            <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminMenuItems"><fmt:message key="admin.menuitems.title" /></a>
-            <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminMenuItemSizes"><fmt:message key="admin.itemsizes.title" /></a>
-            <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminMenuSets"><fmt:message key="admin.menusets.title" /></a>
-            <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminAddonServices"><fmt:message key="admin.addons.title" /></a>
-        </div>
-    </div>
-    <c:if test="${not empty error}"><div class="alert alert-danger">${error}</div></c:if>
-    <c:if test="${param.saved == '1'}"><div class="alert alert-success"><fmt:message key="admin.common.saved.success" /></div></c:if>
-    <div class="row g-4">
-        <div class="col-lg-4">
-            <form class="border rounded-3 p-4 bg-light" method="post" action="MainController">
-                <input type="hidden" name="action" value="saveArea">
-                <input type="hidden" name="id" value="${editArea.id}">
-                <h2 class="h5 mb-3">${empty editArea ? '<fmt:message key="admin.areas.create" />' : '<fmt:message key="admin.areas.edit" />'}</h2>
-                <label class="form-label"><fmt:message key="admin.areas.label.name" /></label>
-                <input class="form-control mb-3" name="name" value="${editArea.name}" required>
-                <label class="form-label"><fmt:message key="admin.areas.label.desc" /></label>
-                <textarea class="form-control mb-3" name="description" rows="3">${editArea.description}</textarea>
-                <label class="form-label"><fmt:message key="admin.areas.label.modifier" /></label>
-                <input class="form-control mb-3" name="priceModifier" type="number" min="0" step="1" value="${empty editArea ? 0 : editArea.priceModifier}">
-                <div class="form-check form-switch mb-3">
-                    <input class="form-check-input" type="checkbox" name="isActive" value="true" ${empty editArea || editArea.isActive ? 'checked' : ''}>
-                    <label class="form-check-label"><fmt:message key="admin.common.active.switch" /></label>
+<c:set var="isEn" value="${sessionScope.lang == 'en'}" />
+<!DOCTYPE html>
+<html lang="${sessionScope.lang}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><fmt:message key="admin.areas.title" /> - Le Royal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/admin-royal.css">
+</head>
+<body class="admin-royal">
+<div class="d-flex">
+    <jsp:include page="/admin/sidebar.jsp">
+        <jsp:param name="active" value="areas"/>
+    </jsp:include>
+    <main class="flex-grow-1">
+        <div class="admin-shell">
+            <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+                <div>
+                    <p class="text-uppercase text-secondary small mb-1"><fmt:message key="admin.dashboard.workspace.title" /></p>
+                    <h1 class="h3 mb-1"><fmt:message key="admin.areas.title" /></h1>
+                    <p class="text-secondary mb-0"><fmt:message key="admin.areas.subtitle" /></p>
                 </div>
-                <button class="btn btn-dark w-100" type="submit"><fmt:message key="admin.common.save" /></button>
-            </form>
-        </div>
-        <div class="col-lg-8">
-            <div class="table-responsive">
-                <table class="table align-middle">
-                    <thead><tr><th><fmt:message key="admin.areas.col.id" /></th><th><fmt:message key="admin.areas.col.name" /></th><th><fmt:message key="admin.areas.col.modifier" /></th><th><fmt:message key="admin.areas.col.status" /></th><th></th></tr></thead>
-                    <tbody>
-                        <c:forEach items="${areaList}" var="area">
-                            <tr>
-                                <td>${area.id}</td>
-                                <td><strong>${area.name}</strong><div class="small text-secondary">${area.description}</div></td>
-                                <td><fmt:formatNumber value="${area.priceModifier}" pattern="#,##0"/></td>
-                                <td><span class="badge ${area.isActive ? 'text-bg-success' : 'text-bg-secondary'}">${area.isActive ? '<fmt:message key="admin.common.active" />' : '<fmt:message key="admin.common.inactive" />'}</span></td>
-                                <td class="text-end">
-                                    <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminAreas&id=${area.id}"><fmt:message key="admin.areas.btn.edit" /></a>
-                                    <a class="btn btn-outline-secondary btn-sm" href="MainController?action=toggleArea&id=${area.id}&enabled=${!area.isActive}">${area.isActive ? '<fmt:message key="admin.areas.btn.disable" />' : '<fmt:message key="admin.areas.btn.enable" />'}</a>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
+                <div class="d-flex flex-wrap gap-2">
+                    <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminRooms">
+                        <i class="fa-solid fa-door-open me-2"></i>${isEn ? 'Rooms' : 'Phòng'}
+                    </a>
+                    <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminTables">
+                        <i class="fa-solid fa-chair me-2"></i>${isEn ? 'Dining tables' : 'Bàn'}
+                    </a>
+                    <button class="btn btn-dark btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#areaFormPanel" aria-expanded="${not empty editArea ? 'true' : 'false'}">
+                        <i class="fa-solid fa-plus me-2"></i><fmt:message key="admin.areas.create" />
+                    </button>
+                </div>
             </div>
+
+            <c:if test="${not empty error}"><div class="alert alert-danger">${error}</div></c:if>
+            <c:if test="${param.saved == '1'}"><div class="alert alert-success"><fmt:message key="admin.common.saved.success" /></div></c:if>
+
+            <section id="areaFormPanel" class="collapse ${not empty editArea ? 'show' : ''} mb-4">
+                <form class="card" method="post" action="MainController">
+                    <div class="card-body p-4">
+                        <input type="hidden" name="action" value="saveArea">
+                        <input type="hidden" name="id" value="${editArea.id}">
+                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+                            <div>
+                                <div class="admin-section-label"><fmt:message key="admin.areas.editor.kicker" /></div>
+                                <h2 class="h5 mb-0">
+                                    <c:choose>
+                                        <c:when test="${empty editArea}"><fmt:message key="admin.areas.create" /></c:when>
+                                        <c:otherwise><fmt:message key="admin.areas.edit" /></c:otherwise>
+                                    </c:choose>
+                                </h2>
+                            </div>
+                            <c:if test="${not empty editArea}">
+                                <a class="btn btn-outline-secondary btn-sm" href="MainController?action=adminAreas">${isEn ? 'Clear' : 'Xóa chọn'}</a>
+                            </c:if>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-5">
+                                <label class="form-label"><fmt:message key="admin.areas.label.name" /></label>
+                                <input id="draftAreaName" class="form-control" name="name" value="${editArea.name}" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label"><fmt:message key="admin.areas.label.modifier" /></label>
+                                <input id="draftAreaModifier" class="form-control" name="priceModifier" type="number" min="0" step="1" value="${empty editArea ? 0 : editArea.priceModifier}">
+                            </div>
+                            <div class="col-md-4 d-flex align-items-end">
+                                <div class="form-check form-switch mb-2">
+                                    <input id="draftAreaActive" class="form-check-input" type="checkbox" name="isActive" value="true" ${empty editArea || editArea.isActive ? 'checked' : ''}>
+                                    <label class="form-check-label" for="draftAreaActive"><fmt:message key="admin.common.available" /></label>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <label class="form-label"><fmt:message key="admin.areas.label.desc" /></label>
+                                <textarea id="draftAreaDesc" class="form-control" name="description" rows="3">${editArea.description}</textarea>
+                            </div>
+                            <div class="col-md-4">
+                                <aside class="admin-draft-preview rounded-3 p-3 h-100">
+                                    <p class="text-uppercase text-secondary small mb-1"><fmt:message key="admin.areas.preview" /></p>
+                                    <h3 id="areaPreviewName" class="h5 mb-1">${empty editArea.name ? (isEn ? 'Main dining area' : 'Khu phòng chính') : editArea.name}</h3>
+                                    <p id="areaPreviewDesc" class="text-secondary small mb-2">${empty editArea.description ? (isEn ? 'Groups rooms and tables in one restaurant zone.' : 'Khu vực gom các phòng và bàn trong nhà hàng.') : editArea.description}</p>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <span class="badge text-bg-light border text-dark">
+                                            <fmt:message key="admin.areas.label.modifier" />:
+                                            <strong id="areaPreviewModifier"><fmt:formatNumber value="${empty editArea ? 0 : editArea.priceModifier}" pattern="#,##0"/></strong>
+                                        </span>
+                                        <span id="areaPreviewStatus" class="badge ${empty editArea || editArea.isActive ? 'text-bg-success' : 'text-bg-secondary'}">
+                                            ${empty editArea || editArea.isActive ? (isEn ? 'Available' : 'Hoạt động') : (isEn ? 'Hidden' : 'Đã ẩn')}
+                                        </span>
+                                    </div>
+                                </aside>
+                            </div>
+                            <div class="col-12 d-flex justify-content-end">
+                                <button class="btn btn-dark px-4" type="submit"><fmt:message key="admin.common.save" /></button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </section>
+
+            <section class="card">
+                <div class="card-body p-4">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+                        <div>
+                            <div class="admin-section-label"><fmt:message key="admin.areas.list" /></div>
+                            <h2 class="h5 mb-0"><fmt:message key="admin.areas.list.title" /></h2>
+                        </div>
+                    </div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-8">
+                            <input id="areaSearch" class="form-control" type="search" placeholder="<fmt:message key='admin.areas.search' />">
+                        </div>
+                        <div class="col-md-4">
+                            <select id="areaStatusFilter" class="form-select">
+                                <option value=""><fmt:message key="admin.common.filter.all.status" /></option>
+                                <option value="active"><fmt:message key="admin.common.available" /></option>
+                                <option value="inactive"><fmt:message key="admin.common.hidden" /></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th><fmt:message key="admin.areas.col.name" /></th>
+                                    <th><fmt:message key="admin.areas.col.modifier" /></th>
+                                    <th><fmt:message key="admin.areas.col.status" /></th>
+                                    <th class="text-end"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="areaRows">
+                                <c:forEach items="${areaList}" var="area">
+                                    <tr data-area-row data-search="${area.name} ${area.description}" data-status="${area.isActive ? 'active' : 'inactive'}">
+                                        <td>
+                                            <strong>${area.name}</strong>
+                                            <div class="small text-secondary">${area.description}</div>
+                                        </td>
+                                        <td><fmt:formatNumber value="${area.priceModifier}" pattern="#,##0"/></td>
+                                        <td>
+                                            <span class="badge ${area.isActive ? 'text-bg-success' : 'text-bg-secondary'}">
+                                                ${area.isActive ? (isEn ? 'Available' : 'Hoạt động') : (isEn ? 'Hidden' : 'Đã ẩn')}
+                                            </span>
+                                        </td>
+                                        <td class="text-end">
+                                            <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminAreas&id=${area.id}"><fmt:message key="admin.areas.btn.edit" /></a>
+                                            <a class="btn btn-outline-secondary btn-sm" href="MainController?action=toggleArea&id=${area.id}&enabled=${!area.isActive}">${area.isActive ? '<fmt:message key="admin.areas.btn.disable" />' : '<fmt:message key="admin.areas.btn.enable" />'}</a>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                                <tr id="areaEmptyRow" class="d-none">
+                                    <td colspan="4" class="text-center text-secondary py-5"><fmt:message key="admin.areas.empty" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div id="areaPageInfo" class="small text-secondary"></div>
+                        <div class="btn-group">
+                            <button id="areaPrev" type="button" class="btn btn-outline-secondary btn-sm">${isEn ? 'Previous' : 'Trước'}</button>
+                            <button id="areaNext" type="button" class="btn btn-outline-secondary btn-sm">${isEn ? 'Next' : 'Sau'}</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
-    </div>
-</main>
-<jsp:include page="/footer.jsp" />
+    </main>
+</div>
+
+<script>
+    (function () {
+        var isEn = ${isEn ? 'true' : 'false'};
+        var nameInput = document.getElementById('draftAreaName');
+        var descInput = document.getElementById('draftAreaDesc');
+        var modifierInput = document.getElementById('draftAreaModifier');
+        var activeInput = document.getElementById('draftAreaActive');
+        var previewName = document.getElementById('areaPreviewName');
+        var previewDesc = document.getElementById('areaPreviewDesc');
+        var previewModifier = document.getElementById('areaPreviewModifier');
+        var previewStatus = document.getElementById('areaPreviewStatus');
+
+        function updatePreview() {
+            if (previewName) previewName.textContent = (nameInput.value || '').trim() || (isEn ? 'Main dining area' : 'Khu phòng chính');
+            if (previewDesc) previewDesc.textContent = (descInput.value || '').trim() || (isEn ? 'Groups rooms and tables in one restaurant zone.' : 'Khu vực gom các phòng và bàn trong nhà hàng.');
+            if (previewModifier) previewModifier.textContent = new Intl.NumberFormat('en-US', {maximumFractionDigits: 0}).format(Number(modifierInput.value || 0));
+            if (previewStatus) {
+                previewStatus.textContent = activeInput.checked ? (isEn ? 'Available' : 'Hoạt động') : (isEn ? 'Hidden' : 'Đã ẩn');
+                previewStatus.className = activeInput.checked ? 'badge text-bg-success' : 'badge text-bg-secondary';
+            }
+        }
+        [nameInput, descInput, modifierInput, activeInput].forEach(function (field) {
+            if (field) field.addEventListener('input', updatePreview);
+            if (field) field.addEventListener('change', updatePreview);
+        });
+        updatePreview();
+
+        var search = document.getElementById('areaSearch');
+        var status = document.getElementById('areaStatusFilter');
+        var rows = Array.prototype.slice.call(document.querySelectorAll('[data-area-row]'));
+        var empty = document.getElementById('areaEmptyRow');
+        var pageInfo = document.getElementById('areaPageInfo');
+        var prev = document.getElementById('areaPrev');
+        var next = document.getElementById('areaNext');
+        var page = 1;
+        var perPage = 8;
+        var visibleRows = [];
+
+        function applyFilters() {
+            var query = (search.value || '').toLowerCase().trim();
+            var selectedStatus = status.value;
+            visibleRows = rows.filter(function (row) {
+                var matchesSearch = !query || (row.getAttribute('data-search') || '').toLowerCase().indexOf(query) >= 0;
+                var matchesStatus = !selectedStatus || row.getAttribute('data-status') === selectedStatus;
+                return matchesSearch && matchesStatus;
+            });
+            var maxPage = Math.max(1, Math.ceil(visibleRows.length / perPage));
+            if (page > maxPage) page = maxPage;
+            renderPage();
+        }
+
+        function renderPage() {
+            var maxPage = Math.max(1, Math.ceil(visibleRows.length / perPage));
+            rows.forEach(function (row) { row.classList.add('d-none'); });
+            visibleRows.slice((page - 1) * perPage, page * perPage).forEach(function (row) { row.classList.remove('d-none'); });
+            if (empty) empty.classList.toggle('d-none', visibleRows.length !== 0);
+            pageInfo.textContent = visibleRows.length ? (page + ' / ' + maxPage + ' - ' + visibleRows.length + ' ' + (isEn ? 'areas' : 'khu vực')) : '0 ' + (isEn ? 'areas' : 'khu vực');
+            prev.disabled = page <= 1;
+            next.disabled = page >= maxPage;
+        }
+
+        if (search) search.addEventListener('input', function () { page = 1; applyFilters(); });
+        if (status) status.addEventListener('change', function () { page = 1; applyFilters(); });
+        if (prev) prev.addEventListener('click', function () { if (page > 1) { page--; renderPage(); } });
+        if (next) next.addEventListener('click', function () {
+            var maxPage = Math.max(1, Math.ceil(visibleRows.length / perPage));
+            if (page < maxPage) { page++; renderPage(); }
+        });
+        applyFilters();
+    })();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

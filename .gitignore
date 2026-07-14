@@ -29,3 +29,5 @@ replay_pid*
 /RestaurantManagement/nbproject/private/
 /RestaurantManagement/build/
 /RestaurantManagement/dist/
+/RestaurantManagement/src/conf/cloudinary.properties
+/RestaurantManagement/src/java/cloudinary.properties

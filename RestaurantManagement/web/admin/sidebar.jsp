@@ -1,6 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<c:set var="sidebarIsEn" value="${sessionScope.lang == 'en'}" />
 <style>
     :root {
         --admin-scroll-thumb: rgba(145, 115, 55, 0.42);
@@ -206,6 +207,8 @@
 
     <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
         <div class="admin-sidebar__section"><fmt:message key="admin.sidebar.restaurant"/></div>
+        <a class="admin-sidebar__link ${param.active == 'areas' ? 'active' : ''}" href="${pageContext.request.contextPath}/MainController?action=adminAreas"><i class="fa-solid fa-map-location-dot"></i><span>${sidebarIsEn ? 'Areas' : 'Khu vực'}</span></a>
+        <a class="admin-sidebar__link ${param.active == 'rooms' ? 'active' : ''}" href="${pageContext.request.contextPath}/MainController?action=adminRooms"><i class="fa-solid fa-door-open"></i><span>${sidebarIsEn ? 'Rooms' : 'Phòng'}</span></a>
         <a class="admin-sidebar__link ${param.active == 'menu-items' ? 'active' : ''}" href="${pageContext.request.contextPath}/MainController?action=adminMenuItems"><i class="fa-solid fa-bowl-food"></i><span><fmt:message key="admin.sidebar.menuitems"/></span></a>
         <a class="admin-sidebar__link ${param.active == 'menu-sets' ? 'active' : ''}" href="${pageContext.request.contextPath}/MainController?action=adminMenuSets"><i class="fa-solid fa-layer-group"></i><span><fmt:message key="admin.sidebar.menusets"/></span></a>
         <a class="admin-sidebar__link ${param.active == 'tables' ? 'active' : ''}" href="${pageContext.request.contextPath}/MainController?action=adminTables"><i class="fa-solid fa-chair"></i><span><fmt:message key="admin.sidebar.tables"/></span></a>

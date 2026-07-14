@@ -41,7 +41,7 @@
 
     <c:if test="${empty selectedMenuSet || param.mode == 'details'}">
     <section id="setFormPanel" class="collapse ${not empty editMenuSet ? 'show' : ''} mb-4">
-        <form id="setEditorForm" class="card" method="post" action="MainController">
+        <form id="setEditorForm" class="card" method="post" action="MainController" enctype="multipart/form-data">
             <div class="card-body p-4">
                 <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
                     <div>
@@ -91,6 +91,12 @@
                     <div class="col-md-6">
                         <label class="form-label"><fmt:message key="admin.menusets.label.image" /></label>
                         <input id="setImageInput" class="form-control" name="imageUrl" value="${editMenuSet.imageUrl}">
+                        <div class="form-text">Paste an existing URL, or upload a new image below.</div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Upload image</label>
+                        <input id="setImageFileInput" class="form-control" name="imageFile" type="file" accept="image/*">
+                        <div class="form-text">Cloudinary will store the image and save the returned link.</div>
                     </div>
                     <div class="col-md-2 d-flex align-items-end">
                         <div class="form-check form-switch mb-2">
@@ -683,6 +689,7 @@
         var descriptionInput = document.getElementById('setDescriptionInput');
         var serviceInput = document.getElementById('setServiceInput');
         var imageInput = document.getElementById('setImageInput');
+        var imageFileInput = document.getElementById('setImageFileInput');
         var suggestedInput = document.getElementById('setSuggestedInput');
         var sellingInput = document.getElementById('setSellingInput');
         var availableInput = document.getElementById('setAvailableInput');
@@ -712,6 +719,7 @@
         var confirmMenuPriceButton = document.getElementById('confirmMenuPriceButton');
         var menuPreviewModal = document.getElementById('menuPreviewModal');
         var modalSellingPriceText = document.getElementById('modalSellingPriceText');
+        var setUploadPreviewUrl = '';
 
         function serviceLabel(value) {
             if (value === 'LUNCH') {
@@ -770,11 +778,20 @@
                 draftStatus.className = availableInput.checked ? 'badge text-bg-success' : 'badge text-bg-secondary';
             }
             if (draftImageWrap) {
-                var src = imageInput ? imageSrc(imageInput.value) : '';
+                var src = setUploadPreviewUrl || (imageInput ? imageSrc(imageInput.value) : '');
                 draftImageWrap.innerHTML = src
                         ? '<img class="rounded-3" src="' + src + '" alt="">'
                         : '<i class="fa-solid fa-layer-group fa-2x"></i>';
             }
+        }
+        if (imageFileInput) {
+            imageFileInput.addEventListener('change', function () {
+                if (setUploadPreviewUrl) {
+                    URL.revokeObjectURL(setUploadPreviewUrl);
+                }
+                setUploadPreviewUrl = this.files && this.files[0] ? URL.createObjectURL(this.files[0]) : '';
+                updatePreview();
+            });
         }
 
         function syncCourseBuilder() {

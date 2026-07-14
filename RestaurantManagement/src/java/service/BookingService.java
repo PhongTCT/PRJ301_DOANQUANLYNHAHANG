@@ -16,9 +16,13 @@ import entity.ReservationAddon;
 import dao.MenuItemDAO;
 import dao.MenuSetDAO;
 import dao.AddonServiceDAO;
+import dao.CustomerProfileDAO;
 import enums.ReservationStatus;
 import enums.TableStatus;
 import enums.PaymentMethod;
+import enums.RoomType;
+import entity.CustomerProfile;
+import entity.CustomerRankConfig;
 import entity.Invoice;
 import entity.Voucher;
 import java.sql.Time;
@@ -44,19 +48,22 @@ public class BookingService {
     private final MenuItemDAO menuItemDAO = new MenuItemDAO();
     private final MenuSetDAO menuSetDAO = new MenuSetDAO();
     private final AddonServiceDAO addonServiceDAO = new AddonServiceDAO();
+    private final CustomerProfileDAO customerProfileDAO = new CustomerProfileDAO();
     private final BillingService billingService = new BillingService();
 
     public List<DiningTable> getAvailableTables(BookingDraft draft, User currentUser) {
+        List<DiningTable> tables;
         if (draft != null && draft.getReservationDate() != null && draft.getReservationTime() != null) {
             java.sql.Time time = parseTime(draft.getReservationTime());
             int totalGuests = (draft.getAdultsCount() != null ? draft.getAdultsCount() : 0) 
                             + (draft.getChildrenCount() != null ? draft.getChildrenCount() : 0);
             if (totalGuests == 0) totalGuests = 1; // Safeguard
             Long currentUserId = currentUser != null ? currentUser.getId() : null;
-            return diningTableDAO.findAvailableTables(draft.getReservationDate(), time, totalGuests, currentUserId);
+            tables = diningTableDAO.findAvailableTables(draft.getReservationDate(), time, totalGuests, currentUserId);
+        } else {
+            tables = diningTableDAO.ListAll();
         }
-        // Fallback if no draft info
-        return diningTableDAO.ListAll();
+        return filterTablesByMembership(tables, currentUser);
     }
 
     public List<EventType> getActiveEventTypes() {
@@ -90,6 +97,9 @@ public class BookingService {
             for (Integer id : tableIds) {
                 DiningTable table = em.find(DiningTable.class, id);
                 if (table == null) continue;
+                if (!canBookTable(table, currentUser)) {
+                    throw new IllegalArgumentException(MessageFormat.format(messages.getString("error.table.membership"), table.getTableCode()));
+                }
                 
                 if (table.getStatus() == TableStatus.RESERVED || table.getStatus() == TableStatus.OCCUPIED) {
                     throw new OptimisticLockException(MessageFormat.format(messages.getString("error.table.reserved"), table.getTableCode()));
@@ -120,6 +130,44 @@ public class BookingService {
         } finally {
             em.close();
         }
+    }
+
+    private List<DiningTable> filterTablesByMembership(List<DiningTable> tables, User currentUser) {
+        List<DiningTable> allowed = new ArrayList<>();
+        if (tables == null) {
+            return allowed;
+        }
+        for (DiningTable table : tables) {
+            if (canBookTable(table, currentUser)) {
+                allowed.add(table);
+            }
+        }
+        return allowed;
+    }
+
+    private boolean canBookTable(DiningTable table, User currentUser) {
+        if (table == null || table.getRoom() == null || table.getRoom().getRoomType() == null) {
+            return true;
+        }
+        RoomType roomType = table.getRoom().getRoomType();
+        if (roomType == RoomType.STANDARD) {
+            return true;
+        }
+        if (currentUser == null || currentUser.getId() == null) {
+            return false;
+        }
+        CustomerProfile profile = customerProfileDAO.findByUserId(currentUser.getId());
+        CustomerRankConfig rank = profile == null ? null : profile.getCurrentRank();
+        if (rank == null || !Boolean.TRUE.equals(rank.getIsActive())) {
+            return false;
+        }
+        if (roomType == RoomType.VIP) {
+            return Boolean.TRUE.equals(rank.getCanBookVip()) || Boolean.TRUE.equals(rank.getCanBookVvip());
+        }
+        if (roomType == RoomType.VVIP) {
+            return Boolean.TRUE.equals(rank.getCanBookVvip());
+        }
+        return true;
     }
 
     public BookingDraft buildDraft(HttpServletRequest request) throws ParseException {

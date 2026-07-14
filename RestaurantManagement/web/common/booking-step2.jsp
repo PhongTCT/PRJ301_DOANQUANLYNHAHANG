@@ -91,6 +91,7 @@
                 <c:forEach items="${tables}" var="tb">
                     <c:set var="isAvail" value="true" />
                     <c:set var="tableImgUrl" value="${empty tb.imageUrl ? 'assets/img/le-royal/seating/dining-room.jpg' : tb.imageUrl}" />
+                    <c:set var="roomType" value="${tb.room.roomType}" />
                     
                     <div class="col">
                         <div class="card h-100 shadow-sm border-0 rounded-4 bg-white">
@@ -107,6 +108,20 @@
                                 <h6 class="card-subtitle mb-3 text-muted small"><i class="fa-solid fa-map-location-dot me-1"></i>${tb.room.roomName}</h6>
                                 
                                 <ul class="list-group list-group-flush small mb-3">
+                                    <li class="list-group-item px-0 d-flex justify-content-between align-items-center bg-transparent border-0 py-1">
+                                        <span class="text-muted"><i class="fa-solid fa-crown me-2"></i><fmt:message key="booking.membership"/></span>
+                                        <c:choose>
+                                            <c:when test="${roomType == 'VIP'}">
+                                                <span class="badge text-bg-warning"><fmt:message key="booking.membership.vip"/></span>
+                                            </c:when>
+                                            <c:when test="${roomType == 'VVIP'}">
+                                                <span class="badge text-bg-dark"><fmt:message key="booking.membership.vvip"/></span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="badge text-bg-light border"><fmt:message key="booking.membership.all"/></span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </li>
                                     <li class="list-group-item px-0 d-flex justify-content-between align-items-center bg-transparent border-0 py-1">
                                         <span class="text-muted"><i class="fa-solid fa-users me-2"></i><fmt:message key="booking.capacity"/></span>
                                         <span class="fw-medium">${tb.capacity} <fmt:message key="spaces.guests"/></span>

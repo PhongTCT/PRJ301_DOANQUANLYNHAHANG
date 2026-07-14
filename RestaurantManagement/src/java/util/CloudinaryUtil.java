@@ -9,10 +9,12 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Properties;
 import javax.servlet.http.Part;
 
 public class CloudinaryUtil {
     private static final long MAX_IMAGE_BYTES = 5L * 1024L * 1024L;
+    private static final Properties CONFIG = loadConfig();
 
     public static String uploadImage(Part imagePart, String folder) {
         if (imagePart == null || imagePart.getSize() <= 0) {
@@ -25,9 +27,9 @@ public class CloudinaryUtil {
             throw new IllegalArgumentException("Image must be 5MB or smaller.");
         }
 
-        String cloudName = requiredEnv("CLOUDINARY_CLOUD_NAME");
-        String apiKey = requiredEnv("CLOUDINARY_API_KEY");
-        String apiSecret = requiredEnv("CLOUDINARY_API_SECRET");
+        String cloudName = requiredSetting("CLOUDINARY_CLOUD_NAME", "cloudinary.cloud_name");
+        String apiKey = requiredSetting("CLOUDINARY_API_KEY", "cloudinary.api_key");
+        String apiSecret = requiredSetting("CLOUDINARY_API_SECRET", "cloudinary.api_secret");
         long timestamp = System.currentTimeMillis() / 1000L;
         String normalizedFolder = normalizeFolder(folder);
 
@@ -162,12 +164,27 @@ public class CloudinaryUtil {
         return contentType != null && contentType.toLowerCase().startsWith("image/");
     }
 
-    private static String requiredEnv(String name) {
-        String value = System.getenv(name);
+    private static String requiredSetting(String envName, String propertyName) {
+        String value = System.getenv(envName);
         if (value == null || value.trim().isEmpty()) {
-            throw new IllegalArgumentException("Missing Cloudinary setting: " + name + ".");
+            value = CONFIG.getProperty(propertyName);
+        }
+        if (value == null || value.trim().isEmpty()) {
+            throw new IllegalArgumentException("Missing Cloudinary setting: " + propertyName + ".");
         }
         return value.trim();
+    }
+
+    private static Properties loadConfig() {
+        Properties properties = new Properties();
+        try (InputStream input = CloudinaryUtil.class.getClassLoader().getResourceAsStream("cloudinary.properties")) {
+            if (input != null) {
+                properties.load(input);
+            }
+        } catch (IOException ignored) {
+            // Missing config is reported later only when an upload is attempted.
+        }
+        return properties;
     }
 
     private static String normalizeFolder(String folder) {
