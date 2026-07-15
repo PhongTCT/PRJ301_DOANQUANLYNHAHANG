@@ -61,14 +61,14 @@
         
         <c:if test="${not empty pageError}">
             <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
-                <i class="fa-solid fa-circle-exclamation me-2"></i><strong>Lỗi trang:</strong> ${pageError}
+                <i class="fa-solid fa-circle-exclamation me-2"></i><strong><fmt:message key="error.pageError" /></strong> ${pageError}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         </c:if>
 
         <c:if test="${not empty sessionScope.surchargeWarning}">
             <div class="alert alert-warning alert-dismissible fade show shadow-sm" role="alert">
-                <i class="fa-solid fa-triangle-exclamation me-2"></i><strong>Lưu ý Phụ thu:</strong> ${sessionScope.surchargeWarning}
+                <i class="fa-solid fa-triangle-exclamation me-2"></i><strong><fmt:message key="booking.surcharge.alert" /></strong> ${sessionScope.surchargeWarning}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         </c:if>
