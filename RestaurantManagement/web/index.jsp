@@ -85,16 +85,8 @@
                     <div class="journey-card">
                         <img src="assets/img/le-royal/Seasonal Tasting Set.jpg" alt="Seasonal tasting menu">
                         <div class="journey-copy">
-                            <c:choose>
-                                <c:when test="${sessionScope.lang == 'en'}">
-                                    <h3>Kh&#250;c d&#7841;o theo m&#249;a</h3>
-                                    <p>M&#7897;t chu&#7895;i m&#7903; &#273;&#7847;u &#273;i&#7873;m t&#297;nh v&#7899;i h&#7843;i s&#7843;n, th&#7843;o m&#7897;c v&#432;&#7901;n, n&#432;&#7899;c d&#249;ng &#7845;m v&#224; d&#432; v&#7883; t&#432;&#417;i.</p>
-                                </c:when>
-                                <c:otherwise>
-                                    <h3>Seasonal Prelude</h3>
-                                    <p>A quiet opening sequence shaped by seafood, garden herbs, warm broth, and a final fresh note.</p>
-                                </c:otherwise>
-                            </c:choose>
+                            <h3><fmt:message key="home.menu1.title" /></h3>
+                            <p><fmt:message key="home.menu1.copy" /></p>
                         </div>
                     </div>
                 </article>
@@ -127,16 +119,8 @@
                     <div class="journey-card">
                         <img src="assets/img/le-royal/seating/private-table.jpg" alt="Private dining table">
                         <div class="journey-copy">
-                            <c:choose>
-                                <c:when test="${sessionScope.lang == 'en'}">
-                                    <h3>Kh&#244;ng gian ri&#234;ng</h3>
-                                    <p>Ph&#242;ng ri&#234;ng, b&#224;n c&#7917;a s&#7893;, lounge v&#432;&#7901;n v&#224; qu&#7847;y b&#7871;p &#273;&#432;&#7907;c ch&#7885;n theo nh&#7883;p bu&#7893;i t&#7889;i.</p>
-                                </c:when>
-                                <c:otherwise>
-                                    <h3>Private dining</h3>
-                                    <p>Private rooms, window tables, garden lounge seating, and chef counter places are chosen around the rhythm of the evening.</p>
-                                </c:otherwise>
-                            </c:choose>
+                            <h3><fmt:message key="home.journey.seating.title" /></h3>
+                            <p><fmt:message key="home.journey.seating.copy" /></p>
                         </div>
                     </div>
                 </article>
@@ -152,16 +136,8 @@
                     <div class="journey-card">
                         <img src="assets/img/le-royal/Private Live Pianist.jpg" alt="Private live pianist service">
                         <div class="journey-copy">
-                            <c:choose>
-                                <c:when test="${sessionScope.lang == 'en'}">
-                                    <h3>Hoa, &#226;m nh&#7841;c v&#224; nghi th&#7913;c nh&#7887;</h3>
-                                    <p>K&#7871;t h&#7907;p bu&#7893;i t&#7889;i v&#7899;i ngh&#7879; s&#297; piano, hoa, nhi&#7871;p &#7843;nh ho&#7863;c m&#7897;t kho&#7843;nh kh&#7855;c ph&#7909;c v&#7909; t&#7841;i b&#224;n.</p>
-                                </c:when>
-                                <c:otherwise>
-                                    <h3>Flowers, music, and small rituals</h3>
-                                    <p>Pair the evening with a pianist, floral service, photography, or a quiet tableside moment.</p>
-                                </c:otherwise>
-                            </c:choose>
+                            <h3><fmt:message key="home.journey.service.title" /></h3>
+                            <p><fmt:message key="home.journey.service.copy" /></p>
                         </div>
                     </div>
                 </article>
@@ -177,16 +153,8 @@
                     <div class="journey-card">
                         <img src="assets/img/le-royal/seating/counter-seat.jpg" alt="Chef counter seating">
                         <div class="journey-copy">
-                            <c:choose>
-                                <c:when test="${sessionScope.lang == 'en'}">
-                                    <h3>Gh&#7871; qu&#7847;y b&#7871;p</h3>
-                                    <p>Ng&#7891;i g&#7847;n &#225;nh l&#7917;a, nghe nh&#7883;p dao v&#224; nh&#236;n m&#7897;t course &#273;&#432;&#7907;c ho&#224;n thi&#7879;n ngay tr&#432;&#7899;c m&#7855;t.</p>
-                                </c:when>
-                                <c:otherwise>
-                                    <h3>Chef counter</h3>
-                                    <p>Sit close to the pass, hear the rhythm of the kitchen, and watch one course finished just before it reaches the table.</p>
-                                </c:otherwise>
-                            </c:choose>
+                            <h3><fmt:message key="home.journey.counter.title" /></h3>
+                            <p><fmt:message key="home.journey.counter.copy" /></p>
                         </div>
                     </div>
                 </article>
@@ -202,16 +170,8 @@
                     <div class="journey-card">
                         <img src="assets/img/le-royal/menu/sommelier-candle.jpg" alt="Sommelier pairing detail">
                         <div class="journey-copy">
-                            <c:choose>
-                                <c:when test="${sessionScope.lang == 'en'}">
-                                    <h3>R&#432;&#7907;u v&#224; &#225;nh n&#7871;n</h3>
-                                    <p>C&#7863;p r&#432;&#7907;u, sparkling tea ho&#7863;c mocktail &#273;&#432;&#7907;c ch&#7885;n &#273;&#7875; l&#224;m m&#243;n &#259;n s&#226;u h&#417;n, kh&#244;ng l&#7845;n &#225;t.</p>
-                                </c:when>
-                                <c:otherwise>
-                                    <h3>Pairings by candlelight</h3>
-                                    <p>Wine, sparkling tea, or a quiet mocktail pairing is chosen to deepen each dish without overwhelming it.</p>
-                                </c:otherwise>
-                            </c:choose>
+                            <h3><fmt:message key="home.journey.pairing.title" /></h3>
+                            <p><fmt:message key="home.journey.pairing.copy" /></p>
                         </div>
                     </div>
                 </article>
@@ -227,16 +187,8 @@
                     <div class="journey-card">
                         <img src="assets/img/le-royal/Personalized Menu Card.jpg" alt="Personalized menu card">
                         <div class="journey-copy">
-                            <c:choose>
-                                <c:when test="${sessionScope.lang == 'en'}">
-                                    <h3>T&#7901; menu ri&#234;ng</h3>
-                                    <p>T&#234;n kh&#225;ch, l&#7901;i nh&#7855;n v&#224; nh&#7883;p course &#273;&#432;&#7907;c in th&#224;nh m&#7897;t t&#7901; menu nh&#7887; &#273;&#7875; gi&#7919; l&#7841;i sau b&#7919;a t&#7889;i.</p>
-                                </c:when>
-                                <c:otherwise>
-                                    <h3>Personal menu keepsake</h3>
-                                    <p>Guest names, a short note, and the evening's course rhythm can be printed as a small keepsake menu.</p>
-                                </c:otherwise>
-                            </c:choose>
+                            <h3><fmt:message key="home.journey.personal.title" /></h3>
+                            <p><fmt:message key="home.journey.personal.copy" /></p>
                         </div>
                     </div>
                     <svg class="journey-final-flourish" aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none" focusable="false">

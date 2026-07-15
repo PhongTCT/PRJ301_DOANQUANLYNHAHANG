@@ -4,7 +4,7 @@
 <fmt:setLocale value="${sessionScope.lang == 'vi' ? 'vi_VN' : 'en_US'}" />
 <fmt:setBundle basename="i18n.messages" />
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="${sessionScope.lang == 'en' ? 'en' : 'vi'}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

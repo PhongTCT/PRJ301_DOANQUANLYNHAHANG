@@ -150,6 +150,12 @@
                                     </label>
                                 </div>
                                 <div class="col-md-4">
+                                    <label class="border rounded-3 p-3 w-100 h-100">
+                                        <input type="radio" name="paymentMethod" value="XU" class="me-2"> <fmt:message key="booking.step4.payment.xu"/>
+                                        <span class="d-block small text-muted mt-1"><fmt:message key="booking.step4.payment.xu.desc"/> <fmt:formatNumber value="${coinBalance}" pattern="#,##0"/> Xu</span>
+                                    </label>
+                                </div>
+                                <div class="col-md-4">
                                     <label class="border rounded-3 p-3 w-100 h-100 text-muted">
                                         <input type="radio" name="paymentMethod" value="MOMO" class="me-2" disabled> MoMo
                                         <span class="d-block small mt-1"><fmt:message key="booking.step4.payment.momo.desc"/></span>

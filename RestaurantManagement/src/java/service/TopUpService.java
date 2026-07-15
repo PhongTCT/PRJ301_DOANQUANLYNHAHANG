@@ -1,8 +1,6 @@
 package service;
 
-import dao.CustomerProfileDAO;
 import dao.CustomerRankConfigDAO;
-import dao.LoyaltyTransactionDAO;
 import dao.RankTopUpDAO;
 import entity.CustomerProfile;
 import entity.CustomerRankConfig;
@@ -16,56 +14,69 @@ import enums.TopUpType;
 import enums.TransactionStatus;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.servlet.ServletContext;
 import util.JPAUtil;
 
 public class TopUpService {
 
+    public static final BigDecimal VND_PER_XU = new BigDecimal("1000");
+    public static final BigDecimal XU_BONUS_RATE = new BigDecimal("0.10");
     private static final Map<TopUpType, String> FREE_VOUCHER_CODES = new HashMap<>();
+
     static {
-        FREE_VOUCHER_CODES.put(TopUpType.RANK, "VipFree");
         FREE_VOUCHER_CODES.put(TopUpType.XU, "CoinFree");
     }
 
-    private static final BigDecimal RATE = new BigDecimal("10000");
     private final CustomerRankConfigDAO rankConfigDAO = new CustomerRankConfigDAO();
 
     private boolean isDevMode(ServletContext ctx) {
-        if (ctx == null) return true;
+        if (ctx == null) return false;
         String env = ctx.getInitParameter("app.env");
-        return env == null || "dev".equalsIgnoreCase(env.trim()) || "test".equalsIgnoreCase(env.trim());
+        return "dev".equalsIgnoreCase(env) || "test".equalsIgnoreCase(env);
     }
 
     public String applyVoucher(TopUpType type, String voucherCode, ServletContext ctx) {
         if (voucherCode == null || voucherCode.trim().isEmpty()) return null;
         String expected = FREE_VOUCHER_CODES.get(type);
-        if (expected == null) return null;
-        if (!expected.equalsIgnoreCase(voucherCode.trim())) return null;
-        if (!isDevMode(ctx)) return null;
+        if (expected == null || !expected.equalsIgnoreCase(voucherCode.trim()) || !isDevMode(ctx)) return null;
         return expected;
     }
 
     public BigDecimal calculateFinalAmount(TopUpType type, BigDecimal originalAmount, String voucherCode, ServletContext ctx) {
-        if (originalAmount == null || originalAmount.compareTo(BigDecimal.ZERO) <= 0) {
-            return BigDecimal.ZERO;
+        if (originalAmount == null || originalAmount.compareTo(BigDecimal.ZERO) <= 0) return BigDecimal.ZERO;
+        return applyVoucher(type, voucherCode, ctx) != null ? BigDecimal.ZERO : originalAmount;
+    }
+
+    public int calculateRankPoints(BigDecimal paidAmount) {
+        if (paidAmount == null || paidAmount.compareTo(BigDecimal.ZERO) <= 0) return 0;
+        return paidAmount.divide(VND_PER_XU, 0, RoundingMode.FLOOR).intValue();
+    }
+
+    public BigDecimal calculateXuCredit(BigDecimal paidAmount) {
+        if (paidAmount == null || paidAmount.compareTo(BigDecimal.ZERO) <= 0) return BigDecimal.ZERO;
+        BigDecimal purchasedXu = paidAmount.divide(VND_PER_XU, 0, RoundingMode.FLOOR);
+        return purchasedXu.multiply(BigDecimal.ONE.add(XU_BONUS_RATE)).setScale(0, RoundingMode.FLOOR);
+    }
+
+    public RankTopUp createTopUp(User user, TopUpType topupType, RankName ignoredTargetRank,
+            BigDecimal originalAmount, BigDecimal finalAmount, String voucherCode) {
+        if (topupType != TopUpType.XU) {
+            throw new IllegalArgumentException("Rank cannot be purchased directly. Please top up Xu instead.");
         }
-        String applied = applyVoucher(type, voucherCode, ctx);
-        return applied != null ? BigDecimal.ZERO : originalAmount;
-    }
+        if (originalAmount == null || originalAmount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Top-up amount must be positive.");
+        }
 
-    public int calculatePointsAndCoins(BigDecimal originalAmount) {
-        if (originalAmount == null || originalAmount.compareTo(BigDecimal.ZERO) <= 0) return 0;
-        return originalAmount.divide(RATE, RoundingMode.FLOOR).intValue();
-    }
-
-    public RankTopUp createTopUp(User user, TopUpType topupType, RankName targetRank,
-                                  BigDecimal originalAmount, BigDecimal finalAmount, String voucherCode) {
         RankTopUp topUp = new RankTopUp();
-        topUp.setTopupType(topupType);
+        topUp.setTopupType(TopUpType.XU);
         topUp.setUser(user);
-        topUp.setTargetRank(topupType == TopUpType.RANK ? targetRank : null);
+        topUp.setTargetRank(null);
         topUp.setOriginalAmount(originalAmount);
         topUp.setFinalAmount(finalAmount);
         topUp.setAmount(finalAmount);
@@ -80,60 +91,44 @@ public class TopUpService {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             em.getTransaction().begin();
-
             RankTopUp topUp = em.find(RankTopUp.class, topUpId);
             if (topUp == null || topUp.getStatus() == TransactionStatus.SUCCESS) {
                 if (em.getTransaction().isActive()) em.getTransaction().rollback();
                 return;
+            }
+            if (topUp.getTopupType() != TopUpType.XU) {
+                throw new IllegalStateException("Only Xu top-ups can be completed.");
             }
 
             topUp.setStatus(TransactionStatus.SUCCESS);
             topUp.setTransactionRef(transactionRef != null ? transactionRef : "FREE_VOUCHER");
             em.merge(topUp);
 
-            User user = topUp.getUser();
-            CustomerProfile profile = findProfile(em, user);
+            CustomerProfile profile = findProfile(em, topUp.getUser());
             if (profile == null) {
-                if (em.getTransaction().isActive()) em.getTransaction().rollback();
-                return;
+                throw new IllegalStateException("Customer profile was not found.");
             }
 
-            BigDecimal originalAmount = topUp.getOriginalAmount();
-            int earned = calculatePointsAndCoins(originalAmount);
+            BigDecimal paidAmount = topUp.getFinalAmount() == null ? BigDecimal.ZERO : topUp.getFinalAmount();
+            int rankPoints = calculateRankPoints(paidAmount);
+            BigDecimal xuCredit = calculateXuCredit(paidAmount);
 
-            profile.setLoyaltyPoints(profile.getLoyaltyPoints() + earned);
-            profile.setCoinBalance(profile.getCoinBalance().add(BigDecimal.valueOf(earned)));
-            profile.setTotalSpent(profile.getTotalSpent().add(originalAmount));
+            profile.setLoyaltyPoints(profile.getLoyaltyPoints() + rankPoints);
+            profile.setCoinBalance(profile.getCoinBalance().add(xuCredit));
             profile.setLastActivityAt(new Date());
             em.merge(profile);
 
-            String desc;
-            if (topUp.getTopupType() == TopUpType.RANK) {
-                desc = "Nap len hang " + topUp.getTargetRank() + ": +" + earned + " diem";
-            } else {
-                desc = "Nap xu +" + earned + " xu";
-            }
-            if (topUp.getFinalAmount() != null && topUp.getFinalAmount().compareTo(BigDecimal.ZERO) == 0
-                    && topUp.getVoucherCode() != null) {
-                desc += " (giao dich mien phi bang ma uu dai)";
-            }
-
             LoyaltyTransaction tx = new LoyaltyTransaction();
-            tx.setUser(user);
+            tx.setUser(topUp.getUser());
             tx.setType(LoyaltyTransactionType.TOPUP);
-            tx.setPointsDelta(earned);
-            tx.setAmountReference(originalAmount);
-            tx.setDescription(desc);
+            tx.setPointsDelta(rankPoints);
+            tx.setAmountReference(paidAmount);
+            tx.setDescription("Xu top-up: +" + xuCredit + " Xu, +" + rankPoints + " rank points");
             em.persist(tx);
-
             em.getTransaction().commit();
 
-            if (earned > 0) {
-                evaluateRankUpgrade(profile);
-            }
-
-            sendNotifications(user, earned, topUp);
-
+            if (rankPoints > 0) evaluateRankUpgrade(profile);
+            sendNotifications(topUp.getUser(), xuCredit, rankPoints);
         } catch (Exception e) {
             if (em.getTransaction().isActive()) em.getTransaction().rollback();
             throw new RuntimeException("completeTopUp failed: " + e.getMessage(), e);
@@ -145,13 +140,8 @@ public class TopUpService {
     private CustomerProfile findProfile(EntityManager em, User user) {
         List<CustomerProfile> results = em.createQuery(
                 "SELECT p FROM CustomerProfile p WHERE p.user.id = :uid", CustomerProfile.class)
-                .setParameter("uid", user.getId())
-                .setMaxResults(1)
-                .getResultList();
-        if (results.isEmpty()) return null;
-        CustomerProfile p = results.get(0);
-        if (p.getCurrentRank() != null) p.getCurrentRank().getId();
-        return p;
+                .setParameter("uid", user.getId()).setMaxResults(1).getResultList();
+        return results.isEmpty() ? null : results.get(0);
     }
 
     private void evaluateRankUpgrade(CustomerProfile profile) {
@@ -160,8 +150,7 @@ public class TopUpService {
 
         int points = profile.getLoyaltyPoints();
         CustomerRankConfig currentRank = profile.getCurrentRank();
-        Integer currentThreshold = (currentRank != null) ? currentRank.getMinPointThreshold() : -1;
-
+        int currentThreshold = currentRank == null ? -1 : currentRank.getMinPointThreshold();
         CustomerRankConfig newRank = null;
         for (CustomerRankConfig rank : ranks) {
             if (points >= rank.getMinPointThreshold() && rank.getMinPointThreshold() > currentThreshold) {
@@ -169,39 +158,31 @@ public class TopUpService {
                 currentThreshold = rank.getMinPointThreshold();
             }
         }
+        if (newRank == null) return;
 
-        if (newRank != null) {
-            EntityManager em = JPAUtil.getEntityManager();
-            try {
-                em.getTransaction().begin();
-                CustomerProfile managed = em.find(CustomerProfile.class, profile.getId());
-                managed.setCurrentRank(em.find(CustomerRankConfig.class, newRank.getId()));
-
-                LoyaltyTransaction tx = new LoyaltyTransaction();
-                tx.setUser(managed.getUser());
-                tx.setType(LoyaltyTransactionType.RANK_UPGRADE);
-                tx.setPointsDelta(0);
-                tx.setDescription("Upgraded to " + newRank.getRankName());
-                em.persist(tx);
-
-                em.getTransaction().commit();
-            } catch (Exception e) {
-                if (em.getTransaction().isActive()) em.getTransaction().rollback();
-            } finally {
-                em.close();
-            }
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            CustomerProfile managed = em.find(CustomerProfile.class, profile.getId());
+            managed.setCurrentRank(em.find(CustomerRankConfig.class, newRank.getId()));
+            LoyaltyTransaction tx = new LoyaltyTransaction();
+            tx.setUser(managed.getUser());
+            tx.setType(LoyaltyTransactionType.RANK_UPGRADE);
+            tx.setPointsDelta(0);
+            tx.setDescription("Upgraded to " + newRank.getRankName());
+            em.persist(tx);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
+        } finally {
+            em.close();
         }
     }
 
-    private void sendNotifications(User user, int earned, RankTopUp topUp) {
+    private void sendNotifications(User user, BigDecimal xuCredit, int rankPoints) {
         try {
-            String label = topUp.getTopupType() == TopUpType.RANK ? "điểm" : "xu";
-            String title = "Nạp " + label + " thành công";
-            String msg = "Bạn đã nạp +" + earned + " " + label + " thành công.";
-            if (topUp.getFinalAmount() != null && topUp.getFinalAmount().compareTo(BigDecimal.ZERO) == 0) {
-                msg += " (Giao dịch miễn phí bằng mã ưu đãi)";
-            }
-            new NotificationService().createNotification(user, title, msg);
+            new NotificationService().createNotification(user, "Nap Xu thanh cong",
+                    "Ban nhan duoc +" + xuCredit + " Xu (da bao gom 10% uu dai) va +" + rankPoints + " diem Rank.");
         } catch (Exception e) {
             System.err.println("Notification failed: " + e.getMessage());
         }

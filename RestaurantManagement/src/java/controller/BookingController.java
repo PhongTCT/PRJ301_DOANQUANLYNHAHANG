@@ -24,6 +24,7 @@ import javax.persistence.OptimisticLockException;
 import service.BookingService;
 import service.BillingService;
 import service.VnPayService;
+import service.LoyaltyService;
 import util.JPAUtil;
 
 public class BookingController extends HttpServlet {
@@ -31,6 +32,7 @@ public class BookingController extends HttpServlet {
     private final BookingService bookingService = new BookingService();
     private final BillingService billingService = new BillingService();
     private final VnPayService vnPayService = new VnPayService();
+    private final LoyaltyService loyaltyService = new LoyaltyService();
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -133,6 +135,10 @@ public class BookingController extends HttpServlet {
                 session.removeAttribute("bookingDraft");
                 session.setAttribute("lastReservation", reservation);
                 session.setAttribute("lastInvoice", reservation.getInvoice());
+
+                if (paymentMethod == PaymentMethod.XU) {
+                    loyaltyService.processPaidInvoice(reservation.getInvoice().getId());
+                }
                 
                 String lang = (String) session.getAttribute("lang");
                 if (lang == null) lang = "en";
@@ -237,6 +243,7 @@ public class BookingController extends HttpServlet {
             dao.CustomerProfileDAO profileDAO = new dao.CustomerProfileDAO();
             entity.CustomerProfile profile = profileDAO.findByUserId(user.getId());
             request.setAttribute("loyaltyPoints", profile == null || profile.getLoyaltyPoints() == null ? 0 : profile.getLoyaltyPoints());
+            request.setAttribute("coinBalance", profile == null || profile.getCoinBalance() == null ? BigDecimal.ZERO : profile.getCoinBalance());
 
             List<Voucher> vouchers = new dao.VoucherDAO().findAvailableForUser(user.getId(), new Date());
             request.setAttribute("availableVouchers", vouchers);

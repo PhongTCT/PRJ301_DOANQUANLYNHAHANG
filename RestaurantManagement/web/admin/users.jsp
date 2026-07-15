@@ -5,7 +5,7 @@
 <fmt:setLocale value="${sessionScope.lang == 'vi' ? 'vi_VN' : 'en_US'}" />
 <fmt:setBundle basename="i18n.messages" />
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="${sessionScope.lang == 'en' ? 'en' : 'vi'}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,8 +28,8 @@
         .admin-table{margin:0}.admin-table thead th{padding:1rem;background:#f8f3ea;border-bottom:1px solid var(--royal-line);white-space:nowrap}
         .admin-table tbody td{padding:1rem;border-color:#efe6d7;vertical-align:middle}
         .admin-table tbody tr:last-child td{border-bottom:0}
-        .admin-form .form-control,.admin-form .input-group-text{border-radius:0;border:1px solid #ded4c5;background:#fbfaf7;padding:.6rem .75rem;font-size:.9rem}
-        .admin-form .form-control:focus{border-color:#b99a52;box-shadow:0 0 0 .2rem rgba(185,154,82,.2)}
+        .admin-form .form-control,.admin-form .form-select,.admin-form .input-group-text{border-radius:0;border:1px solid #ded4c5;background:#fbfaf7;padding:.6rem .75rem;font-size:.9rem}
+        .admin-form .form-control:focus,.admin-form .form-select:focus{border-color:#b99a52;box-shadow:0 0 0 .2rem rgba(185,154,82,.2)}
         .admin-search{max-width:340px}.admin-search .input-group-text{background:#fbfaf7;border-right:0;color:#917337;padding:.6rem .75rem}
         .admin-search .form-control{border-left:0;padding-left:0}.admin-search .form-control:focus+.input-group-text,.admin-search .form-control:focus{border-color:#b99a52;box-shadow:0 0 0 .2rem rgba(185,154,82,.2)}
         .badge-role{font-weight:700;letter-spacing:.04em;padding:.25em .65em;border-radius:0}
@@ -81,7 +81,7 @@
                         <h2 class="h4 fw-semibold mb-0 mt-1"><fmt:message key="admin.users.list.sub" /> <span class="text-secondary fw-normal fs-6">(${fn:length(users)} <fmt:message key="admin.users.records" />)</span></h2>
                     </div>
                     <c:if test="${isAdmin || isStaff}">
-                        <button class="btn btn-dark btn-sm" style="border-radius:0" data-bs-toggle="modal" data-bs-target="#addCustomerModal">
+                        <button class="btn btn-dark btn-sm" style="border-radius:0" data-bs-toggle="modal" data-bs-target="#addUserModal">
                             <i class="fa-solid fa-plus me-1"></i><fmt:message key="admin.users.add" />
                         </button>
                     </c:if>
@@ -241,8 +241,8 @@
     </main>
 </div>
 
-<!-- Add Customer Modal -->
-<div class="modal fade admin-modal" id="addCustomerModal" tabindex="-1" aria-hidden="true">
+<!-- Add User Modal -->
+<div class="modal fade admin-modal" id="addUserModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -272,6 +272,16 @@
                         <label class="form-label small fw-bold"><fmt:message key="admin.users.add.phone" /></label>
                         <input type="text" name="phone" class="form-control">
                     </div>
+                    <c:if test="${isAdmin}">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold"><fmt:message key="admin.users.add.role" /> <span class="text-danger">*</span></label>
+                            <select name="role" class="form-select" required>
+                                <option value="CUSTOMER"><fmt:message key="admin.users.add.role.customer" /></option>
+                                <option value="STAFF"><fmt:message key="admin.users.add.role.staff" /></option>
+                                <option value="ADMIN"><fmt:message key="admin.users.add.role.admin" /></option>
+                            </select>
+                        </div>
+                    </c:if>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light border" data-bs-dismiss="modal" style="border-radius:0"><fmt:message key="admin.users.modal.cancel" /></button>

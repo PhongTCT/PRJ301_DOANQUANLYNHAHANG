@@ -68,6 +68,7 @@ public class AdminUserController extends HttpServlet {
                 String password = request.getParameter("password");
                 String fullName = request.getParameter("fullName");
                 String phone = request.getParameter("phone");
+                UserRole selectedRole = resolveNewUserRole(currentUser, request.getParameter("role"));
 
                 if (username == null || username.trim().isEmpty()) {
                     throw new IllegalArgumentException("Username is required.");
@@ -94,16 +95,16 @@ public class AdminUserController extends HttpServlet {
                 newUser.setPassword(BCryptUtil.hashPassword(password));
                 newUser.setFullName(fullName.trim());
                 newUser.setPhone(phone != null ? phone.trim() : null);
-                newUser.setRole(UserRole.CUSTOMER);
+                newUser.setRole(selectedRole);
                 newUser.setStatus(UserStatus.ACTIVE);
                 userDAO.insert(newUser);
 
                 newUser = userDAO.searchByUsername(username.trim());
-                if (newUser != null) {
+                if (newUser != null && selectedRole == UserRole.CUSTOMER) {
                     loyaltyService.getOrCreateProfile(newUser);
                 }
 
-                request.getSession().setAttribute("successMessage", "Customer created successfully.");
+                request.getSession().setAttribute("successMessage", "User created successfully.");
             } else {
                 if (currentUser.getRole() != UserRole.ADMIN) {
                     response.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -159,5 +160,15 @@ public class AdminUserController extends HttpServlet {
 
     private boolean isAdminOrStaff(User user) {
         return user.getRole() == UserRole.ADMIN || user.getRole() == UserRole.STAFF;
+    }
+    private UserRole resolveNewUserRole(User currentUser, String requestedRole) {
+        if (currentUser.getRole() == UserRole.STAFF) {
+            return UserRole.CUSTOMER;
+        }
+        try {
+            return UserRole.valueOf(requestedRole == null ? UserRole.CUSTOMER.name() : requestedRole.trim());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid user role.");
+        }
     }
 }

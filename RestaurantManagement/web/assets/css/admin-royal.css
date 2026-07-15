@@ -75,7 +75,7 @@ body.admin-royal {
         radial-gradient(circle at top right, rgba(185, 154, 82, 0.13), transparent 34rem),
         linear-gradient(180deg, var(--admin-paper) 0%, var(--admin-wash) 100%) !important;
     color: var(--admin-ink);
-    font-family: "Manrope", Arial, sans-serif !important;
+    font-family: "Manrope", "Noto Sans", "Segoe UI", Arial, sans-serif !important;
 }
 
 body.admin-royal h1,

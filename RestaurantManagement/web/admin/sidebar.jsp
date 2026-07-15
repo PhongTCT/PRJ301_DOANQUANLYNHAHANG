@@ -186,10 +186,13 @@
         margin: 18px 10px;
         border-color: rgba(255,255,255,.09);
     }
+    .admin-sidebar__language { display: flex; gap: 6px; margin: 0 10px 16px; }
+    .admin-sidebar__language a { flex: 1; padding: 7px 8px; border: 1px solid rgba(213, 188, 121, 0.28); color: rgba(248, 243, 234, 0.74); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; text-align: center; text-decoration: none; }
+    .admin-sidebar__language a:hover, .admin-sidebar__language a.active { border-color: #b99a52; background: rgba(185, 154, 82, 0.18); color: #fff; }
 </style>
 
 <aside class="admin-sidebar">
-    <a class="admin-sidebar__brand" href="${pageContext.request.contextPath}/admin/">
+    <a class="admin-sidebar__brand" href="${pageContext.request.contextPath}/MainController?action=home" aria-label="Le Royal Home">
         <span class="admin-sidebar__mark" aria-hidden="true">
             <svg viewBox="0 0 64 64" focusable="false">
                 <path class="brand-symbol-l" d="M25 10V54H43" />
@@ -199,6 +202,11 @@
         </span>
         <span class="admin-sidebar__brand-text">Le Royal<small>Admin</small></span>
     </a>
+
+    <div class="admin-sidebar__language" role="group" aria-label="<fmt:message key='admin.sidebar.language'/>">
+        <a class="${sessionScope.lang != 'en' ? 'active' : ''}" href="${pageContext.request.requestURI}?lang=vi">VI</a>
+        <a class="${sessionScope.lang == 'en' ? 'active' : ''}" href="${pageContext.request.requestURI}?lang=en">EN</a>
+    </div>
 
     <div class="admin-sidebar__section"><fmt:message key="admin.sidebar.service"/></div>
     <a class="admin-sidebar__link ${param.active == 'dashboard' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/"><i class="fa-solid fa-gauge-high"></i><span><fmt:message key="admin.sidebar.dashboard"/></span></a>

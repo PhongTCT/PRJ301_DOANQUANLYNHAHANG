@@ -177,6 +177,16 @@ public class BillingService {
         int maxPointsByAmount = payableAfterVoucher.divide(POINT_VALUE, 0, RoundingMode.DOWN).intValue();
         int actualPointsUsed = Math.max(0, Math.min(Math.min(requestedPoints, currentPoints), maxPointsByAmount));
         BigDecimal pointsDiscount = POINT_VALUE.multiply(BigDecimal.valueOf(actualPointsUsed));
+        BigDecimal totalAmount = gross.subtract(voucherDiscount).subtract(pointsDiscount).max(BigDecimal.ZERO);
+        boolean paidWithXu = method == PaymentMethod.XU;
+        BigDecimal xuRequired = paidWithXu
+                ? totalAmount.divide(POINT_VALUE, 0, RoundingMode.CEILING)
+                : BigDecimal.ZERO;
+
+        if (paidWithXu && (profile == null || profile.getCoinBalance() == null
+                || profile.getCoinBalance().compareTo(xuRequired) < 0)) {
+            throw new IllegalArgumentException("Insufficient Xu balance for this invoice.");
+        }
 
         Invoice invoice = new Invoice();
         invoice.setReservation(reservation);
@@ -186,16 +196,21 @@ public class BillingService {
         invoice.setSurchargeAmount(nullToZero(surcharge));
         invoice.setVoucherDiscount(voucherDiscount);
         invoice.setPointsDiscount(pointsDiscount);
-        invoice.setTotalAmount(gross.subtract(voucherDiscount).subtract(pointsDiscount).max(BigDecimal.ZERO));
+        invoice.setTotalAmount(totalAmount);
         invoice.setPaymentMethod(method == null ? PaymentMethod.CASH : method);
-        invoice.setPaymentStatus(paidNow ? PaymentStatus.PAID : PaymentStatus.PENDING);
-        invoice.setPaidAt(paidNow ? new Date() : null);
+        invoice.setPaymentStatus(paidNow || paidWithXu ? PaymentStatus.PAID : PaymentStatus.PENDING);
+        invoice.setPaidAt(paidNow || paidWithXu ? new Date() : null);
         invoice.setIssuedByStaff(staff);
         invoice.setTransactionRef("INV-" + System.currentTimeMillis());
         em.persist(invoice);
 
-        if (profile != null && actualPointsUsed > 0) {
-            profile.setLoyaltyPoints(currentPoints - actualPointsUsed);
+        if (profile != null) {
+            if (actualPointsUsed > 0) {
+                profile.setLoyaltyPoints(currentPoints - actualPointsUsed);
+            }
+            if (paidWithXu) {
+                profile.setCoinBalance(profile.getCoinBalance().subtract(xuRequired));
+            }
             em.merge(profile);
         }
 

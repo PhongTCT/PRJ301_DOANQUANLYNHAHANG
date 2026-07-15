@@ -4,7 +4,7 @@
 <fmt:setLocale value="${sessionScope.lang == 'vi' ? 'vi_VN' : 'en_US'}" />
 <fmt:setBundle basename="i18n.messages" />
 <!DOCTYPE html>
-<html lang="en">
+<html lang="${sessionScope.lang == 'en' ? 'en' : 'vi'}">
 <head>
     <meta charset="UTF-8">
     <title><fmt:message key="admin.createcustomer.title"/> - <fmt:message key="admin.createcustomer.sub"/></title>

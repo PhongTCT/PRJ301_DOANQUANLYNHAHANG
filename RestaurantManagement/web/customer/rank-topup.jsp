@@ -105,11 +105,8 @@
 </div>
 </div>
 </c:if>
-<div class="d-flex gap-2 mt-3">
-<button type="button" class="topup-btn topup-btn--gold flex-grow-1" data-bs-toggle="modal" data-bs-target="#rankTopUpModal">
-<i class="fa-solid fa-crown"></i><fmt:message key="rank.nav.rank"/>
-</button>
-<button type="button" class="topup-btn flex-grow-1" data-bs-toggle="modal" data-bs-target="#xuTopUpModal">
+<div class="mt-3">
+<button type="button" class="topup-btn w-100" data-bs-toggle="modal" data-bs-target="#xuTopUpModal">
 <i class="fa-solid fa-coins"></i><fmt:message key="rank.nav.xu"/>
 </button>
 </div>
@@ -177,82 +174,6 @@
 </div>
 </main>
 
-<div class="modal fade topup-modal" id="rankTopUpModal" tabindex="-1" aria-labelledby="rankTopUpModalTitle" aria-hidden="true">
-<div class="modal-dialog modal-dialog-centered modal-lg">
-<div class="modal-content">
-<div class="modal-header">
-<div>
-<div class="rank-kicker mb-1"><fmt:message key="rank.loyalty.program"/></div>
-<h5 class="modal-title fw-bold" id="rankTopUpModalTitle"><fmt:message key="rank.modal.title"/></h5>
-</div>
-<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-</div>
-<div class="modal-body">
-<div class="rank-meta-label mb-2"><fmt:message key="rank.modal.select.rank"/></div>
-<div class="d-flex flex-column gap-2 mb-3" id="rankTargetList">
-<c:set var="currentPts" value="${profile.loyaltyPoints}"/>
-<c:forEach items="${rankInfo.allRanks}" var="r">
-<c:if test="${r.rankName != 'BRONZE'}">
-<c:set var="gap" value="${r.minPointThreshold - currentPts}"/>
-<c:set var="amount" value="${gap * 10000}"/>
-<c:set var="disabled" value="${gap <= 0}"/>
-<label class="topup-radio-card ${amount == rankTopUpAmount ? 'selected' : ''} ${disabled ? 'disabled' : ''}" data-amount="${amount}" data-rank="${r.rankName}" data-gap="${gap}">
-<input type="radio" name="rankTarget" value="${r.rankName}" ${disabled ? 'disabled' : ''} data-amount="${amount}">
-<span class="rank">${r.rankName}</span>
-<span class="detail">
-<fmt:message key="rank.modal.threshold"><fmt:param><fmt:formatNumber value="${r.minPointThreshold}" pattern="#,###"/></fmt:param><fmt:param><fmt:formatNumber value="${currentPts}" pattern="#,###"/></fmt:param></fmt:message>
-<c:if test="${gap > 0}"> | <fmt:message key="rank.modal.gap"><fmt:param><fmt:formatNumber value="${gap}" pattern="#,###"/></fmt:param></fmt:message></c:if>
-<c:if test="${gap <= 0}"> | <span class="text-success"><fmt:message key="rank.modal.sufficient"/></span></c:if>
-</span>
-<span class="amount">
-<c:choose>
-<c:when test="${gap <= 0}"><fmt:message key="rank.modal.placeholder"/></c:when>
-<c:otherwise><fmt:formatNumber value="${amount}" pattern="#,##0"/>d</c:otherwise>
-</c:choose>
-</span>
-</label>
-</c:if>
-</c:forEach>
-</div>
-
-<div class="mb-3">
-<label class="rank-meta-label mb-1"><fmt:message key="rank.modal.voucher.label"/></label>
-<input type="text" class="form-control form-control-sm rounded-0" id="rankVoucherCode" value="VipFree" placeholder="<fmt:message key="rank.modal.voucher.placeholder"/>">
-</div>
-
-<div class="topup-preview-box" id="rankPreviewBox">
-<div class="preview-row">
-<span class="preview-label"><fmt:message key="rank.modal.preview.original"/></span>
-<span class="preview-value" id="rankOriginalAmount">0d</span>
-</div>
-<div class="preview-row">
-<span class="preview-label"><fmt:message key="rank.modal.preview.rank"/></span>
-<span class="preview-value" id="rankTargetName">-</span>
-</div>
-<div class="preview-row" id="rankDiscountRow">
-<span class="preview-label"><fmt:message key="rank.modal.preview.discount"/></span>
-<span class="preview-value text-success" id="rankDiscountAmount">0d</span>
-</div>
-<div class="preview-row fw-bold">
-<span class="preview-label"><fmt:message key="rank.modal.preview.total"/></span>
-<span class="preview-value" id="rankFinalAmount">0d</span>
-</div>
-<div class="small text-warning mt-2" id="rankSymbolicNotice" style="display:none">
-<i class="fa-solid fa-info-circle"></i>
-<fmt:message key="rank.modal.notice"/>
-</div>
-</div>
-</div>
-<div class="modal-footer">
-<button type="button" class="btn btn-secondary rounded-0" data-bs-dismiss="modal"><fmt:message key="rank.modal.cancel"/></button>
-<button type="button" class="topup-btn" id="rankCheckoutBtn" disabled>
-<i class="fa-solid fa-arrow-right"></i> <fmt:message key="rank.modal.checkout"/>
-</button>
-</div>
-</div>
-</div>
-</div>
-
 <div class="modal fade topup-modal" id="xuTopUpModal" tabindex="-1" aria-labelledby="xuTopUpModalTitle" aria-hidden="true">
 <div class="modal-dialog modal-dialog-centered">
 <div class="modal-content">
@@ -269,28 +190,28 @@
 <label class="topup-amount-card selected" data-amount="500000">
 <input type="radio" name="xuAmount" value="500000" checked>
 <div class="amount">500K</div>
-<div class="label"><fmt:message key="xu.modal.earnings"><fmt:param value="50"/><fmt:param value="50"/></fmt:message></div>
+<div class="label">550 Xu + 500 <fmt:message key="booking.payment.points"/></div>
 </label>
 <label class="topup-amount-card" data-amount="1000000">
 <input type="radio" name="xuAmount" value="1000000">
 <div class="amount">1M</div>
-<div class="label"><fmt:message key="xu.modal.earnings"><fmt:param value="100"/><fmt:param value="100"/></fmt:message></div>
+<div class="label">1,100 Xu + 1,000 <fmt:message key="booking.payment.points"/></div>
 </label>
 <label class="topup-amount-card" data-amount="2000000">
 <input type="radio" name="xuAmount" value="2000000">
 <div class="amount">2M</div>
-<div class="label"><fmt:message key="xu.modal.earnings"><fmt:param value="200"/><fmt:param value="200"/></fmt:message></div>
+<div class="label">2,200 Xu + 2,000 <fmt:message key="booking.payment.points"/></div>
 </label>
 <label class="topup-amount-card" data-amount="5000000">
 <input type="radio" name="xuAmount" value="5000000">
 <div class="amount">5M</div>
-<div class="label"><fmt:message key="xu.modal.earnings"><fmt:param value="500"/><fmt:param value="500"/></fmt:message></div>
+<div class="label">5,500 Xu + 5,000 <fmt:message key="booking.payment.points"/></div>
 </label>
 </div>
 
 <div class="mb-3">
 <label class="rank-meta-label mb-1"><fmt:message key="xu.modal.voucher.label"/></label>
-<input type="text" class="form-control form-control-sm rounded-0" id="xuVoucherCode" value="CoinFree" placeholder="<fmt:message key="xu.modal.voucher.placeholder"/>">
+<input type="text" class="form-control form-control-sm rounded-0" id="xuVoucherCode" value="" placeholder="<fmt:message key="xu.modal.voucher.placeholder"/>">
 </div>
 
 <div class="topup-preview-box" id="xuPreviewBox">
@@ -300,7 +221,7 @@
 </div>
 <div class="preview-row">
 <span class="preview-label"><fmt:message key="xu.modal.preview.receive"/></span>
-<span class="preview-value" id="xuCoinAmount">50 xu + 50 diem</span>
+<span class="preview-value" id="xuCoinAmount"><fmt:message key="xu.modal.preview.reward"><fmt:param value="550"/><fmt:param value="500"/></fmt:message></span>
 </div>
 <div class="preview-row" id="xuDiscountRow">
 <span class="preview-label"><fmt:message key="xu.modal.preview.discount"/></span>
@@ -334,7 +255,8 @@ var i18n = {
 freeBadge: '<span class="topup-free-badge"><fmt:message key="rank.modal.preview.free"/></span>',
 processing: '<i class="fa-solid fa-spinner fa-spin"></i> <fmt:message key="common.processing"/>',
 checkout: '<i class="fa-solid fa-arrow-right"></i> <fmt:message key="rank.modal.checkout"/>',
-errorPayment: '<fmt:message key="common.error.payment"/>'
+errorPayment: '<fmt:message key="common.error.payment"/>',
+rewardPattern: '<fmt:message key="xu.modal.preview.reward"><fmt:param value="{0}"/><fmt:param value="{1}"/></fmt:message>'
 };
 var locale = '${sessionScope.lang == 'en' ? 'en-US' : 'vi-VN'}';
 function fmt(n){return Number(n).toLocaleString(locale);}
@@ -357,36 +279,14 @@ xhr.ontimeout=function(){if(errCb)errCb('Yeu cau qua thoi gian cho.');else alert
 xhr.send(body+'&action='+action);
 }
 
-function updateRankPreview() {
-var sel = document.querySelector('#rankTargetList .selected');
-if (!sel) return;
-var amount = sel.getAttribute('data-amount');
-var rank = sel.getAttribute('data-rank');
-var voucher = document.getElementById('rankVoucherCode').value.trim();
-document.getElementById('rankTargetName').textContent = rank;
-document.getElementById('rankOriginalAmount').textContent = fmt(amount)+'d';
-post('applyVoucher','topupType=RANK&originalAmount='+amount+'&voucherCode='+encodeURIComponent(voucher), function(d){
-var discount = d.originalAmount - d.finalAmount;
-document.getElementById('rankDiscountAmount').textContent = '-'+fmt(discount)+'d';
-if(d.isFree){
-document.getElementById('rankFinalAmount').innerHTML=i18n.freeBadge;
-document.getElementById('rankSymbolicNotice').style.display='block';
-} else {
-document.getElementById('rankFinalAmount').textContent=fmt(d.finalAmount)+'d';
-document.getElementById('rankSymbolicNotice').style.display='none';
-}
-document.getElementById('rankCheckoutBtn').disabled=false;
-});
-}
-
 function updateXuPreview() {
 var sel = document.querySelector('#xuAmountGrid .selected');
 if (!sel) return;
 var amount = sel.getAttribute('data-amount');
 var voucher = document.getElementById('xuVoucherCode').value.trim();
 document.getElementById('xuOriginalAmount').textContent = fmt(amount)+'d';
-var earned = Math.floor(amount/10000);
-document.getElementById('xuCoinAmount').textContent = fmt(earned)+' xu + '+fmt(earned)+' diem';
+var rankPoints = Math.floor(amount / 1000);
+document.getElementById('xuCoinAmount').textContent = i18n.rewardPattern.replace('{0}', fmt(Math.floor(rankPoints * 1.1))).replace('{1}', fmt(rankPoints));
 post('applyVoucher','topupType=XU&originalAmount='+amount+'&voucherCode='+encodeURIComponent(voucher), function(d){
 var discount = d.originalAmount - d.finalAmount;
 document.getElementById('xuDiscountAmount').textContent = '-'+fmt(discount)+'d';
@@ -401,15 +301,6 @@ document.getElementById('xuCheckoutBtn').disabled=false;
 });
 }
 
-document.querySelectorAll('#rankTargetList .topup-radio-card').forEach(function(c){
-c.addEventListener('click',function(){
-if(this.classList.contains('disabled')) return;
-document.querySelectorAll('#rankTargetList .topup-radio-card').forEach(function(x){x.classList.remove('selected');});
-this.classList.add('selected');
-updateRankPreview();
-});
-});
-
 document.querySelectorAll('#xuAmountGrid .topup-amount-card').forEach(function(c){
 c.addEventListener('click',function(){
 document.querySelectorAll('#xuAmountGrid .topup-amount-card').forEach(function(x){x.classList.remove('selected');});
@@ -418,26 +309,8 @@ updateXuPreview();
 });
 });
 
-document.getElementById('rankVoucherCode').addEventListener('input', function(){
-if(document.querySelector('#rankTargetList .selected')) updateRankPreview();
-});
-document.getElementById('xuVoucherCode').addEventListener('input', updateXuPreview);
 
-document.getElementById('rankCheckoutBtn').addEventListener('click', function(){
-var sel = document.querySelector('#rankTargetList .selected');
-if(!sel) return;
-var amount = sel.getAttribute('data-amount');
-var rank = sel.getAttribute('data-rank');
-var voucher = document.getElementById('rankVoucherCode').value.trim();
-var btn = this;
-btn.disabled=true; btn.innerHTML=i18n.processing;
-post('checkoutRank','targetRank='+rank+'&originalAmount='+amount+'&voucherCode='+encodeURIComponent(voucher), function(d){
-btn.disabled=false; btn.innerHTML=i18n.checkout;
-if(d.error){alert(d.error);return;}
-if(d.paymentUrl){window.location.href=d.paymentUrl;}
-else{alert('Loi xu ly thanh toan.');}
-}, function(msg){btn.disabled=false; btn.innerHTML=i18n.checkout; alert(msg);});
-});
+document.getElementById('xuVoucherCode').addEventListener('input', updateXuPreview);
 
 document.getElementById('xuCheckoutBtn').addEventListener('click', function(){
 var sel = document.querySelector('#xuAmountGrid .selected');
@@ -454,10 +327,6 @@ else{alert(i18n.errorPayment);}
 }, function(msg){btn.disabled=false; btn.innerHTML=i18n.checkout; alert(msg);});
 });
 
-document.getElementById('rankTopUpModal').addEventListener('shown.bs.modal', function(){
-var first = document.querySelector('#rankTargetList .topup-radio-card:not(.disabled)');
-if(first){first.classList.add('selected');updateRankPreview();}
-});
 document.getElementById('xuTopUpModal').addEventListener('shown.bs.modal', updateXuPreview);
 })();
 </script>

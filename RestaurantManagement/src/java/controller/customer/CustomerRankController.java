@@ -62,9 +62,6 @@ public class CustomerRankController extends HttpServlet {
             case "applyVoucher":
                 handleApplyVoucher(request, response);
                 break;
-            case "checkoutRank":
-                handleCheckoutRank(request, response, user);
-                break;
             case "checkoutXu":
                 handleCheckoutXu(request, response, user);
                 break;
@@ -98,25 +95,6 @@ public class CustomerRankController extends HttpServlet {
         }
     }
 
-    private void handleCheckoutRank(HttpServletRequest request, HttpServletResponse response, User user) throws IOException {
-        try {
-            String targetRankStr = request.getParameter("targetRank");
-            String amountStr = request.getParameter("originalAmount");
-            String voucherCode = request.getParameter("voucherCode");
-
-            RankName targetRank = RankName.valueOf(targetRankStr);
-            BigDecimal originalAmount = new BigDecimal(amountStr != null ? amountStr : "0");
-            BigDecimal finalAmount = topUpService.calculateFinalAmount(TopUpType.RANK, originalAmount, voucherCode, getServletContext());
-
-            RankTopUp topUp = topUpService.createTopUp(user, TopUpType.RANK, targetRank,
-                    originalAmount, finalAmount, voucherCode);
-
-            String paymentUrl = request.getContextPath() + "/payment/vnpay-pay?type=topup&topUpId=" + topUp.getId();
-            response.getWriter().write("{\"success\":true,\"paymentUrl\":\"" + paymentUrl + "\"}");
-        } catch (Exception e) {
-            response.getWriter().write("{\"error\":" + JsonUtil.quote(e.getMessage()) + "}");
-        }
-    }
 
     private void handleCheckoutXu(HttpServletRequest request, HttpServletResponse response, User user) throws IOException {
         try {
@@ -124,6 +102,9 @@ public class CustomerRankController extends HttpServlet {
             String voucherCode = request.getParameter("voucherCode");
 
             BigDecimal originalAmount = new BigDecimal(amountStr != null ? amountStr : "0");
+            if (!isAllowedXuPackage(originalAmount)) {
+                throw new IllegalArgumentException("Invalid Xu top-up package.");
+            }
             BigDecimal finalAmount = topUpService.calculateFinalAmount(TopUpType.XU, originalAmount, voucherCode, getServletContext());
 
             RankTopUp topUp = topUpService.createTopUp(user, TopUpType.XU, null,
@@ -134,5 +115,11 @@ public class CustomerRankController extends HttpServlet {
         } catch (Exception e) {
             response.getWriter().write("{\"error\":" + JsonUtil.quote(e.getMessage()) + "}");
         }
+    }
+    private boolean isAllowedXuPackage(BigDecimal amount) {
+        return BigDecimal.valueOf(500000).compareTo(amount) == 0
+                || BigDecimal.valueOf(1000000).compareTo(amount) == 0
+                || BigDecimal.valueOf(2000000).compareTo(amount) == 0
+                || BigDecimal.valueOf(5000000).compareTo(amount) == 0;
     }
 }

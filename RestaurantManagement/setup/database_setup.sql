@@ -405,10 +405,10 @@ INSERT INTO customer_rank_config
     (rank_name, min_point_threshold, discount_percent, points_per_thousand_vnd, can_book_vip, can_book_vvip, is_active)
 VALUES
     ('BRONZE', 0, 0.00, 1, 0, 0, 1),
-    ('SILVER', 5000, 5.00, 1, 0, 0, 1),
-    ('GOLD', 20000, 10.00, 2, 1, 0, 1),
-    ('PLATINUM', 50000, 15.00, 3, 1, 1, 1),
-    ('DIAMOND', 100000, 20.00, 5, 1, 1, 1);
+    ('SILVER', 5000, 3.00, 1, 0, 0, 1),
+    ('GOLD', 20000, 5.00, 1, 1, 0, 1),
+    ('PLATINUM', 50000, 8.00, 1, 1, 1, 1),
+    ('DIAMOND', 100000, 10.00, 1, 1, 1, 1);
 
 IF NOT EXISTS (SELECT 1 FROM users WHERE username = 'admin')
 BEGIN
@@ -676,10 +676,10 @@ BEGIN
     INSERT INTO customer_rank_config (rank_name, min_point_threshold, discount_percent, points_per_thousand_vnd, can_book_vip, can_book_vvip, is_active)
     VALUES
         ('BRONZE', 0, 0, 1, 0, 0, 1),
-        ('SILVER', 5000, 5.00, 1, 0, 0, 1),
-        ('GOLD', 20000, 10.00, 2, 1, 0, 1),
-        ('PLATINUM', 50000, 15.00, 3, 1, 1, 1),
-        ('DIAMOND', 100000, 20.00, 5, 1, 1, 1);
+        ('SILVER', 5000, 3.00, 1, 0, 0, 1),
+        ('GOLD', 20000, 5.00, 1, 1, 0, 1),
+        ('PLATINUM', 50000, 8.00, 1, 1, 1, 1),
+        ('DIAMOND', 100000, 10.00, 1, 1, 1, 1);
 END
 GO
 

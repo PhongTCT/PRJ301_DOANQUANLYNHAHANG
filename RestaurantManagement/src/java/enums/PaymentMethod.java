@@ -3,5 +3,6 @@ package enums;
 public enum PaymentMethod {
     CASH,
     VNPAY,
-    MOMO
+    MOMO,
+    XU
 }

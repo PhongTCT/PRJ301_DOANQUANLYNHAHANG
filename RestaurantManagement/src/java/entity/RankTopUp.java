@@ -22,7 +22,7 @@ public class RankTopUp implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "topup_type", nullable = false, length = 20)
-    private TopUpType topupType = TopUpType.RANK;
+    private TopUpType topupType = TopUpType.XU;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "target_rank", length = 20)
