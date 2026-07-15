@@ -1,8 +1,8 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
+<fmt:setLocale value="${sessionScope.lang == 'vi' ? 'vi_VN' : 'en_US'}" />
 <fmt:setBundle basename="i18n.messages" />
 <!DOCTYPE html>
 <html lang="en">
@@ -126,7 +126,7 @@
                                         <img src="${pageContext.request.contextPath}/assets/img/le-royal/Seared Fish with Herb Puree.png" alt="${itemDisplayName}" class="menu-item-img">
                                     </c:when>
                                     <c:when test="${item.itemName == 'Bordeaux Red Wine'}">
-                                        <img src="${pageContext.request.contextPath}/assets/img/le-royal/Rosé Wine.jpg" alt="${itemDisplayName}" class="menu-item-img">
+                                        <img src="${pageContext.request.contextPath}/assets/img/le-royal/RosÃ© Wine.jpg" alt="${itemDisplayName}" class="menu-item-img">
                                     </c:when>
                                     <c:when test="${item.itemName == 'Fresh Orange Juice'}">
                                         <img src="${pageContext.request.contextPath}/assets/img/le-royal/Passion Fruit Fizz.jpg" alt="${itemDisplayName}" class="menu-item-img">
@@ -138,7 +138,7 @@
                                 <div class="menu-item-info">
                                     <div class="menu-item-name">${itemDisplayName}</div>
                                     <div class="d-flex justify-content-between align-items-end mt-auto">
-                                        <div class="menu-item-price"><fmt:formatNumber value="${item.basePrice}" pattern="#,##0"/> ₫</div>
+                                        <div class="menu-item-price"><fmt:formatNumber value="${item.basePrice}" pattern="#,##0"/> â‚«</div>
                                         <button type="button" class="btn btn-sm btn-outline-primary rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('${item.id}', `${fn:escapeXml(itemDisplayName)}`, ${item.basePrice}, 'item')">
                                             <i class="fa-solid fa-plus"></i>
                                         </button>
@@ -149,7 +149,7 @@
                         <!-- Combo Sets -->
                         <c:forEach items="${menuSets}" var="set">
                             <div class="menu-item-card" data-category="combo">
-                                <c:set var="setDisplayName" value="${not empty set.setNameVi ? set.setNameVi : set.setName}" />
+                                <c:set var="setDisplayName" value="${sessionScope.lang == 'vi' ? (not empty set.setNameVi ? set.setNameVi : set.setName) : (not empty set.setName ? set.setName : set.setNameVi)}" />
                                 <c:choose>
                                     <c:when test="${not empty set.imageUrl}">
                                         <c:choose>
@@ -171,7 +171,7 @@
                                         ${setDisplayName}
                                     </div>
                                     <div class="d-flex justify-content-between align-items-end mt-auto">
-                                        <div class="menu-item-price"><fmt:formatNumber value="${set.discountedPrice}" pattern="#,##0"/> ₫</div>
+                                        <div class="menu-item-price"><fmt:formatNumber value="${set.discountedPrice}" pattern="#,##0"/> â‚«</div>
                                         <button type="button" class="btn btn-sm btn-outline-primary rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('S_${set.id}', `${fn:escapeXml(setDisplayName)}`, ${set.discountedPrice}, 'set')">
                                             <i class="fa-solid fa-plus"></i>
                                         </button>
@@ -221,7 +221,7 @@
                                     <select class="form-select fw-medium" name="tableId" id="tableId" style="border-color: #cbd5e1;">
                                         <option value="" data-capacity="0"><fmt:message key="admin.quickbill.order.selecttable"/></option>
                                         <c:forEach items="${availableTables}" var="t">
-                                            <option value="${t.id}" data-price="${t.basePrice}" data-capacity="${t.capacity}">Table ${t.tableCode} (Cap: ${t.capacity}) - Base: <fmt:formatNumber value="${t.basePrice}" pattern="#,##0"/>₫</option>
+                                            <option value="${t.id}" data-price="${t.basePrice}" data-capacity="${t.capacity}">Table ${t.tableCode} (Cap: ${t.capacity}) - Base: <fmt:formatNumber value="${t.basePrice}" pattern="#,##0"/>â‚«</option>
                                         </c:forEach>
                                     </select>
                                 </div>
@@ -229,15 +229,19 @@
 
                             <div class="summary-row mt-3">
                                 <span><fmt:message key="admin.quickbill.order.subtotal"/></span>
-                                <span id="summarySubtotal" class="fw-bold text-dark">0 ₫</span>
+                                <span id="summarySubtotal" class="fw-bold text-dark">0 â‚«</span>
                             </div>
                             <div class="summary-row" id="tableFeeRow">
                                 <span><fmt:message key="admin.quickbill.order.tablefee"/></span>
-                                <span id="summaryTableFee" class="fw-bold text-dark">0 ₫</span>
+                                <span id="summaryTableFee" class="fw-bold text-dark">0 Ä‘</span>
+                            </div>
+                            <div class="summary-row text-danger fw-bold" id="surchargeRow" style="display: none;">
+                                <span><fmt:message key="admin.quickbill.order.surcharge" /> (${holidaySurchargePercent}%)</span>
+                                <span id="summarySurcharge">0 Ä‘</span>
                             </div>
                             <div class="summary-total">
                                 <span><fmt:message key="admin.quickbill.order.total"/></span>
-                                <span id="summaryTotal" class="text-primary">0 ₫</span>
+                                <span id="summaryTotal" class="text-primary">0 â‚«</span>
                             </div>
                             
                             <button type="button" class="btn btn-primary w-100 py-3 mt-3 fw-bold fs-5 shadow-sm" onclick="submitOrder()" style="border-radius: 10px;">
@@ -258,7 +262,7 @@
         
         // Format Currency
         const formatMoney = (amount) => {
-            return new Intl.NumberFormat('vi-VN').format(amount) + ' ₫';
+            return new Intl.NumberFormat('vi-VN').format(amount) + ' â‚«';
         };
 
         // Filter Menu Categories
@@ -429,7 +433,17 @@
             
             document.getElementById('summaryTableFee').innerText = formatMoney(tableFee);
             
-            const total = itemSubtotal + tableFee;
+            let total = itemSubtotal + tableFee;
+            let surchargePercent = ${holidaySurchargePercent != null ? holidaySurchargePercent : 0};
+            if (surchargePercent > 0) {
+                let surchargeAmt = total * (surchargePercent / 100.0);
+                document.getElementById('summarySurcharge').innerText = formatMoney(surchargeAmt);
+                document.getElementById('surchargeRow').style.display = 'flex';
+                total += surchargeAmt;
+            } else {
+                document.getElementById('surchargeRow').style.display = 'none';
+            }
+            
             document.getElementById('summaryTotal').innerText = formatMoney(total);
         }
         
@@ -529,3 +543,4 @@
     </script>
 </body>
 </html>
+

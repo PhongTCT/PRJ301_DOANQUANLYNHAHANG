@@ -1,8 +1,8 @@
-﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
+<fmt:setLocale value="${sessionScope.lang == 'vi' ? 'vi_VN' : 'en_US'}" />
 <fmt:setBundle basename="i18n.messages" />
 <jsp:include page="/header.jsp" />
 <style>
@@ -117,8 +117,8 @@
                                                 <span class="text-muted small">-</span>
                                             </c:if>
                                         </td>
-                                        <td class="invoice-amount"><fmt:formatNumber value="${i.totalAmount}" pattern="#,##0"/>₫</td>
-                                        <td class="invoice-discount"><fmt:formatNumber value="${i.voucherDiscount + i.pointsDiscount}" pattern="#,##0"/>₫</td>
+                                        <td class="invoice-amount"><fmt:formatNumber value="${i.totalAmount}" pattern="#,##0"/>?</td>
+                                        <td class="invoice-discount"><fmt:formatNumber value="${i.voucherDiscount + i.pointsDiscount}" pattern="#,##0"/>?</td>
                                         <td>
                                             <c:forEach items="${i.voucherRedemptions}" var="vr"><span class="invoice-voucher-tag">${vr.voucher.voucherCode}</span></c:forEach>
                                             <c:if test="${empty i.voucherRedemptions}"><span class="text-muted small">-</span></c:if>
@@ -135,7 +135,7 @@
                                                     <span class="invoice-paid-tag invoice-paid-tag--unpaid"><i class="fa-solid fa-ban"></i><fmt:message key="invoice.status.unpaid"/></span>
                                                 </c:otherwise>
                                             </c:choose>
-                                            <div class="text-muted small mt-1"><fmt:formatNumber value="${i.totalAmount}" pattern="#,##0"/>₫ - ${i.paymentMethod}</div>
+                                            <div class="text-muted small mt-1"><fmt:formatNumber value="${i.totalAmount}" pattern="#,##0"/>? - ${i.paymentMethod}</div>
                                         </td>
                                         <td class="invoice-date"><fmt:formatDate value="${i.createdAt}" pattern="dd/MM/yyyy HH:mm"/></td>
                                         <td class="text-end pe-4">

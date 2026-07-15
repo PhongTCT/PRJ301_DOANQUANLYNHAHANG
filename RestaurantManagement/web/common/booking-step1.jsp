@@ -1,7 +1,7 @@
 ﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<fmt:setLocale value="${sessionScope.lang != null ? sessionScope.lang : 'vi'}" scope="session" />
+<fmt:setLocale value="${sessionScope.lang != null ? sessionScope.lang : 'en'}" scope="session" />
 <fmt:setBundle basename="i18n.messages" scope="session" />
 
 <!DOCTYPE html>
@@ -92,7 +92,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-floating">
                                         <select class="form-select" id="reservationTime" name="reservationTime" required>
-                                            <option value="" disabled ${empty sessionScope.bookingDraft.reservationTime ? 'selected' : ''}>-- Chọn giờ --</option>
+                                            <option value="" disabled ${empty sessionScope.bookingDraft.reservationTime ? 'selected' : ''}><fmt:message key="booking.step1.time.placeholder"/></option>
                                             <option value="17:30" ${sessionScope.bookingDraft.reservationTime == '17:30' || sessionScope.bookingDraft.reservationTime == '17:30:00' ? 'selected' : ''}>17:30</option>
                                             <option value="18:00" ${sessionScope.bookingDraft.reservationTime == '18:00' || sessionScope.bookingDraft.reservationTime == '18:00:00' ? 'selected' : ''}>18:00</option>
                                             <option value="18:30" ${sessionScope.bookingDraft.reservationTime == '18:30' || sessionScope.bookingDraft.reservationTime == '18:30:00' ? 'selected' : ''}>18:30</option>
@@ -104,7 +104,7 @@
                                         </select>
                                         <label for="reservationTime"><fmt:message key="booking.time"/></label>
                                     </div>
-                                    <div class="form-text text-muted small mt-1"><i class="fa-regular fa-clock me-1"></i>Giờ nhận khách: 17:30 - 21:00</div>
+                                    <div class="form-text text-muted small mt-1"><i class="fa-regular fa-clock me-1"></i><fmt:message key="booking.step1.time.note"/></div>
                                 </div>
                             </div>
 
@@ -167,3 +167,5 @@
     </script>
 </body>
 </html>
+
+

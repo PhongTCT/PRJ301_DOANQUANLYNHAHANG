@@ -1,8 +1,8 @@
-﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
+<fmt:setLocale value="${sessionScope.lang == 'vi' ? 'vi_VN' : 'en_US'}" />
 <fmt:setBundle basename="i18n.messages" />
 <!DOCTYPE html>
 <html lang="vi">
@@ -464,16 +464,16 @@
                                         <div class="voucher-discount">
                                             <c:choose>
                                                 <c:when test="${not empty v.discountPercent}">${v.discountPercent}%</c:when>
-                                                <c:otherwise><fmt:formatNumber value="${v.discountAmount}" pattern="#,##0"/>đ</c:otherwise>
+                                                <c:otherwise><fmt:formatNumber value="${v.discountAmount}" pattern="#,##0"/>d</c:otherwise>
                                             </c:choose>
                                         </div>
                                         <c:if test="${not empty v.maxDiscount}">
-                                            <div class="voucher-discount-note"><fmt:message key="admin.vouchers.maxlabel" /> <fmt:formatNumber value="${v.maxDiscount}" pattern="#,##0"/>đ</div>
+                                            <div class="voucher-discount-note"><fmt:message key="admin.vouchers.maxlabel" /> <fmt:formatNumber value="${v.maxDiscount}" pattern="#,##0"/>d</div>
                                         </c:if>
                                     </td>
                                     <td>
                                         <div class="voucher-condition"><fmt:message key="admin.vouchers.minorder" /></div>
-                                        <div class="fw-semibold"><fmt:formatNumber value="${v.minOrderValue}" pattern="#,##0"/>đ</div>
+                                        <div class="fw-semibold"><fmt:formatNumber value="${v.minOrderValue}" pattern="#,##0"/>d</div>
                                     </td>
                                     <td>
                                         <div class="voucher-date"><fmt:formatDate value="${v.validFrom}" pattern="dd/MM/yyyy HH:mm"/></div>

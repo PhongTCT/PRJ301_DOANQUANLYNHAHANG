@@ -163,7 +163,7 @@ h5,
 .display-4,
 .display-5,
 .display-6 {
-    font-family: "Marcellus", Georgia, serif;
+    font-family: "Cormorant Garamond", Georgia, serif;
     font-weight: 500;
 }
 
@@ -670,7 +670,7 @@ section.py-5.bg-light:before {
 }
 
 .table-code {
-    font-family: "Marcellus", Georgia, serif;
+    font-family: "Cormorant Garamond", Georgia, serif;
     font-size: 2rem;
     font-weight: 600;
 }

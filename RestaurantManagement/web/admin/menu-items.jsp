@@ -1,7 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
+<fmt:setLocale value="${sessionScope.lang == 'vi' ? 'vi_VN' : 'en_US'}" />
 <fmt:setBundle basename="i18n.messages" />
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <c:if test="${param.embed != '1'}">
@@ -79,7 +79,7 @@
                         <label class="form-label"><fmt:message key="admin.menuitems.label.category" /></label>
                         <select id="draftItemCategory" class="form-select" name="categoryId" required>
                             <c:forEach items="${categories}" var="cat">
-                                <option value="${cat.id}" ${not empty editMenuItem && editMenuItem.category.id == cat.id ? 'selected' : ''}>${not empty cat.categoryNameVi ? cat.categoryNameVi : cat.categoryName}</option>
+                                <option value="${cat.id}" ${not empty editMenuItem && editMenuItem.category.id == cat.id ? 'selected' : ''}>${sessionScope.lang == 'vi' ? (not empty cat.categoryNameVi ? cat.categoryNameVi : cat.categoryName) : (not empty cat.categoryName ? cat.categoryName : cat.categoryNameVi)}</option>
                             </c:forEach>
                         </select>
                     </div>
@@ -205,7 +205,7 @@
                     <select id="menuCategoryFilter" class="form-select">
                         <option value=""><fmt:message key="admin.common.filter.all.categories" /></option>
                         <c:forEach items="${categories}" var="cat">
-                            <option value="${cat.id}">${not empty cat.categoryNameVi ? cat.categoryNameVi : cat.categoryName}</option>
+                            <option value="${cat.id}">${sessionScope.lang == 'vi' ? (not empty cat.categoryNameVi ? cat.categoryNameVi : cat.categoryName) : (not empty cat.categoryName ? cat.categoryName : cat.categoryNameVi)}</option>
                         </c:forEach>
                     </select>
                 </div>
@@ -265,13 +265,16 @@
                                             </c:otherwise>
                                         </c:choose>
                                         <div>
-                                            <strong>${not empty item.itemNameVi ? item.itemNameVi : item.itemName}</strong>
-                                            <c:if test="${not empty item.itemName}"><div class="small text-secondary">${item.itemName}</div></c:if>
-                                            <div class="small text-secondary">${not empty item.descriptionVi ? item.descriptionVi : item.description}</div>
+                                            <c:set var="mainName" value="${sessionScope.lang == 'vi' ? (not empty item.itemNameVi ? item.itemNameVi : item.itemName) : (not empty item.itemName ? item.itemName : item.itemNameVi)}" />
+                                            <c:set var="subName" value="${sessionScope.lang == 'vi' ? item.itemName : item.itemNameVi}" />
+                                            <c:set var="mainDesc" value="${sessionScope.lang == 'vi' ? (not empty item.descriptionVi ? item.descriptionVi : item.description) : (not empty item.description ? item.description : item.descriptionVi)}" />
+                                            <strong>${mainName}</strong>
+                                            <c:if test="${not empty subName}"><div class="small text-secondary">${subName}</div></c:if>
+                                            <div class="small text-secondary">${mainDesc}</div>
                                         </div>
                                     </div>
                                 </td>
-                                <td>${not empty item.category.categoryNameVi ? item.category.categoryNameVi : item.category.categoryName}</td>
+                                <td>${sessionScope.lang == 'vi' ? (not empty item.category.categoryNameVi ? item.category.categoryNameVi : item.category.categoryName) : (not empty item.category.categoryName ? item.category.categoryName : item.category.categoryNameVi)}</td>
                                 <td><span class="badge bg-light">${item.category.categoryType}</span></td>
                                 <td><fmt:formatNumber value="${item.basePrice}" pattern="#,##0"/></td>
                                 <td><span class="badge ${item.isAvailable ? 'text-bg-success' : 'text-bg-secondary'}">

@@ -1,8 +1,8 @@
-﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
+<fmt:setLocale value="${sessionScope.lang == 'vi' ? 'vi_VN' : 'en_US'}" />
 <fmt:setBundle basename="i18n.messages" />
 <c:if test="${param.embed != '1'}">
 <!DOCTYPE html>
@@ -124,10 +124,10 @@
                                     </div>
                                     <p class="text-uppercase text-secondary small mb-1">Draft preview</p>
                                     <h3 id="draftTableTitle" class="h5 mb-1"><fmt:message key="admin.tables.preview.new" /></h3>
-                                    <p id="draftTableMeta" class="text-secondary mb-2">2 guests · Room</p>
+                                    <p id="draftTableMeta" class="text-secondary mb-2">2 guests � Room</p>
                                     <div class="d-flex flex-wrap gap-2">
                                         <span id="draftTableStatusBadge" class="badge text-bg-success"><fmt:message key="admin.tables.status.available" /></span>
-                                        <span id="draftTablePriceLabel" class="badge text-bg-light border text-dark">0đ</span>
+                                        <span id="draftTablePriceLabel" class="badge text-bg-light border text-dark">0d</span>
                                     </div>
                                 </aside>
                             </div>
@@ -198,7 +198,7 @@
                             </td>
                             <td>${sessionScope.lang == 'en' ? t.room.roomNameEn : t.room.roomName}</td>
                             <td><i class="fa-solid fa-user-group me-1 text-muted"></i> ${t.capacity}</td>
-                            <td><fmt:formatNumber value="${t.basePrice}" pattern="#,##0"/>đ</td>
+                            <td><fmt:formatNumber value="${t.basePrice}" pattern="#,##0"/>d</td>
                             <td>
                                 <c:choose>
                                     <c:when test="${t.status == 'AVAILABLE'}"><span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1"><fmt:message key="admin.tables.status.available" /></span></c:when>
@@ -407,12 +407,12 @@
         }
         function money(value) {
             var number = Number(value || 0);
-            return (isNaN(number) ? 0 : number).toLocaleString('vi-VN') + 'đ';
+            return (isNaN(number) ? 0 : number).toLocaleString('vi-VN') + 'd';
         }
         function renderDraft() {
             if (!title || !imageWrap) return;
             title.textContent = (code.value || '').trim() || '<fmt:message key="admin.tables.preview.new" />';
-            meta.textContent = (capacity.value || '2') + ' guests · ' + (room.options[room.selectedIndex] ? room.options[room.selectedIndex].text : 'Room');
+            meta.textContent = (capacity.value || '2') + ' guests � ' + (room.options[room.selectedIndex] ? room.options[room.selectedIndex].text : 'Room');
             priceLabel.textContent = money(price.value);
             statusBadge.textContent = status.options[status.selectedIndex] ? status.options[status.selectedIndex].text : '<fmt:message key="admin.tables.status.available" />';
             statusBadge.className = status.value === 'AVAILABLE' ? 'badge text-bg-success' : (status.value === 'RESERVED' ? 'badge text-bg-warning' : 'badge text-bg-secondary');

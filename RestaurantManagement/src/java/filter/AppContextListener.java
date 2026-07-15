@@ -44,6 +44,24 @@ public class AppContextListener implements ServletContextListener {
                     }
                     System.out.println("[Auto-Cancellation] Marked " + noShows.size() + " reservations as NO_SHOW.");
                 }
+
+                // Auto-complete past CHECKED_IN reservations
+                java.util.List<Reservation> pastCheckedIn = resDao.findPastCheckedInCandidates();
+                if (!pastCheckedIn.isEmpty()) {
+                    for (Reservation r : pastCheckedIn) {
+                        r.setStatus(ReservationStatus.COMPLETED);
+                        resDao.update(r);
+                        
+                        // Free the tables
+                        for (ReservationTable rt : r.getReservationTables()) {
+                            if (rt.getDiningTable() != null) {
+                                rt.getDiningTable().setStatus(TableStatus.AVAILABLE);
+                                tableDao.update(rt.getDiningTable());
+                            }
+                        }
+                    }
+                    System.out.println("[Auto-Cancellation] Marked " + pastCheckedIn.size() + " past reservations as COMPLETED.");
+                }
             } catch (Exception e) {
                 System.err.println("[Auto-Cancellation] Error executing task: " + e.getMessage());
             }

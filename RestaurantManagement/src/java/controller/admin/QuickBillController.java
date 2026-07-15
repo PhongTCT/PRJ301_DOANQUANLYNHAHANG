@@ -49,6 +49,15 @@ public class QuickBillController extends HttpServlet {
         java.util.List<entity.MenuSet> menuSets = menuSetDAO.findActiveSets();
         request.setAttribute("menuSets", menuSets);
 
+        // Check for Holiday Surcharge today
+        dao.HolidaySurchargeDAO hsDAO = new dao.HolidaySurchargeDAO();
+        entity.HolidaySurcharge todayHoliday = hsDAO.findByDate(new java.util.Date());
+        if (todayHoliday != null) {
+            request.setAttribute("holidaySurchargePercent", todayHoliday.getSurchargePercent());
+        } else {
+            request.setAttribute("holidaySurchargePercent", 0);
+        }
+
         request.getRequestDispatcher("/admin/quick-bill.jsp").forward(request, response);
     }
 
@@ -165,12 +174,24 @@ public class QuickBillController extends HttpServlet {
                 }
             }
 
-            // 4. Create Invoice
+            // 4. Calculate Holiday Surcharge
+            dao.HolidaySurchargeDAO hsDAO = new dao.HolidaySurchargeDAO();
+            entity.HolidaySurcharge holiday = hsDAO.findByDate(res.getReservationDate());
+            java.math.BigDecimal totalAmount = subtotal.add(tableFee);
+            java.math.BigDecimal surchargeAmt = java.math.BigDecimal.ZERO;
+            if (holiday != null) {
+                java.math.BigDecimal percent = holiday.getSurchargePercent().divide(new java.math.BigDecimal(100));
+                surchargeAmt = totalAmount.multiply(percent);
+                totalAmount = totalAmount.add(surchargeAmt);
+            }
+
+            // 5. Create Invoice
             entity.Invoice invoice = new entity.Invoice();
             invoice.setReservation(res);
             invoice.setGuestName(res.getGuestName());
             invoice.setSubtotal(subtotal.add(tableFee));
-            invoice.setTotalAmount(subtotal.add(tableFee)); // assuming no tax/surcharge for quick bill for now
+            invoice.setSurchargeAmount(surchargeAmt);
+            invoice.setTotalAmount(totalAmount);
             invoice.setPaymentStatus(enums.PaymentStatus.PAID);
             invoice.setPaymentMethod(enums.PaymentMethod.CASH);
             invoice.setPaidAt(new java.util.Date());

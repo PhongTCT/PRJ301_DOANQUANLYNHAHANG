@@ -145,4 +145,31 @@ public class ReservationDAO extends AbstractDAO<Reservation, Long> {
             em.close();
         }
     }
+
+    public java.util.List<Reservation> findPastCheckedInCandidates() {
+        javax.persistence.EntityManager em = util.JPAUtil.getEntityManager();
+        try {
+            String jpql = "SELECT r FROM Reservation r WHERE r.status = :status";
+            java.util.List<Reservation> allCheckedIn = em.createQuery(jpql, Reservation.class)
+                     .setParameter("status", enums.ReservationStatus.CHECKED_IN)
+                     .getResultList();
+                     
+            java.util.List<Reservation> pastCheckedIn = new java.util.ArrayList<>();
+            java.util.Calendar cal = java.util.Calendar.getInstance();
+            cal.set(java.util.Calendar.HOUR_OF_DAY, 0);
+            cal.set(java.util.Calendar.MINUTE, 0);
+            cal.set(java.util.Calendar.SECOND, 0);
+            cal.set(java.util.Calendar.MILLISECOND, 0);
+            java.util.Date todayMidnight = cal.getTime();
+            
+            for (Reservation r : allCheckedIn) {
+                if (r.getReservationDate() != null && r.getReservationDate().before(todayMidnight)) {
+                    pastCheckedIn.add(r);
+                }
+            }
+            return pastCheckedIn;
+        } finally {
+            em.close();
+        }
+    }
 }

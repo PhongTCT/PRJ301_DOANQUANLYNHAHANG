@@ -1,7 +1,7 @@
-﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
+<fmt:setLocale value="${sessionScope.lang == 'vi' ? 'vi_VN' : 'en_US'}" />
 <fmt:setBundle basename="i18n.messages" />
 <!DOCTYPE html>
 <html lang="vi">
@@ -11,7 +11,7 @@
     <title><fmt:message key="admin.dashboard.title" /> - Le Royal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant Garamond&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/assets/css/admin-royal.css" rel="stylesheet">
 </head>
 <body class="admin-royal">
@@ -46,14 +46,14 @@
                     <div class="col-md-3">
                         <div class="metric h-100">
                             <div class="admin-section-label"><fmt:message key="admin.dashboard.paid.revenue" /></div>
-                            <div class="fs-4 fw-bold"><fmt:formatNumber value="${summary[0]}" pattern="#,##0"/>đ</div>
+                            <div class="fs-4 fw-bold"><fmt:formatNumber value="${summary[0]}" pattern="#,##0"/>d</div>
                             <div class="text-muted small mt-2"><fmt:message key="admin.dashboard.paid.revenue.desc" /></div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="metric h-100">
                             <div class="admin-section-label"><fmt:message key="admin.dashboard.topup.revenue" /></div>
-                            <div class="fs-4 fw-bold"><fmt:formatNumber value="${topUpSummary[0]}" pattern="#,##0"/>đ</div>
+                            <div class="fs-4 fw-bold"><fmt:formatNumber value="${topUpSummary[0]}" pattern="#,##0"/>d</div>
                             <div class="text-muted small mt-2">${topUpSummary[1]} <fmt:message key="admin.dashboard.topup.revenue.desc" /></div>
                         </div>
                     </div>

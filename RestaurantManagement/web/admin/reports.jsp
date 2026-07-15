@@ -1,7 +1,7 @@
-﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
+<fmt:setLocale value="${sessionScope.lang == 'vi' ? 'vi_VN' : 'en_US'}" />
 <fmt:setBundle basename="i18n.messages" />
 <!DOCTYPE html>
 <html lang="vi">
@@ -36,10 +36,10 @@
             </section>
 
             <div class="row g-3 mb-4">
-                <div class="col-md-3"><div class="metric"><div class="admin-section-label"><fmt:message key="admin.reports.revenue"/></div><div class="fs-4 fw-bold"><fmt:formatNumber value="${summary[0]}" pattern="#,##0"/>đ</div></div></div>
+                <div class="col-md-3"><div class="metric"><div class="admin-section-label"><fmt:message key="admin.reports.revenue"/></div><div class="fs-4 fw-bold"><fmt:formatNumber value="${summary[0]}" pattern="#,##0"/>d</div></div></div>
                 <div class="col-md-3"><div class="metric"><div class="admin-section-label"><fmt:message key="admin.reports.invoicecount"/></div><div class="fs-4 fw-bold">${summary[1]}</div></div></div>
-                <div class="col-md-3"><div class="metric"><div class="admin-section-label"><fmt:message key="admin.reports.voucherdiscount"/></div><div class="fs-4 fw-bold"><fmt:formatNumber value="${summary[2]}" pattern="#,##0"/>đ</div></div></div>
-                <div class="col-md-3"><div class="metric"><div class="admin-section-label"><fmt:message key="admin.reports.pointsdiscount"/></div><div class="fs-4 fw-bold"><fmt:formatNumber value="${summary[3]}" pattern="#,##0"/>đ</div></div></div>
+                <div class="col-md-3"><div class="metric"><div class="admin-section-label"><fmt:message key="admin.reports.voucherdiscount"/></div><div class="fs-4 fw-bold"><fmt:formatNumber value="${summary[2]}" pattern="#,##0"/>d</div></div></div>
+                <div class="col-md-3"><div class="metric"><div class="admin-section-label"><fmt:message key="admin.reports.pointsdiscount"/></div><div class="fs-4 fw-bold"><fmt:formatNumber value="${summary[3]}" pattern="#,##0"/>d</div></div></div>
             </div>
 
             <div class="card mb-4">
@@ -59,7 +59,7 @@
                                 <c:forEach items="${revenueRows}" var="r">
                                     <tr>
                                         <td class="ps-4 fw-semibold">${r[0]}</td>
-                                        <td class="fw-bold"><fmt:formatNumber value="${r[1]}" pattern="#,##0"/>đ</td>
+                                        <td class="fw-bold"><fmt:formatNumber value="${r[1]}" pattern="#,##0"/>d</td>
                                         <td>${r[2]}</td>
                                     </tr>
                                 </c:forEach>
@@ -82,7 +82,7 @@ const values = [<c:forEach items="${revenueRows}" var="r" varStatus="s">${r[1]}$
 new Chart(document.getElementById('revenueChart'), {
     type: 'bar',
     data: { labels: labels, datasets: [{ label: '<fmt:message key="admin.reports.chart"/>', data: values, backgroundColor: '#b99a52' }] },
-    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: v => new Intl.NumberFormat('vi-VN').format(v) + 'đ' } } } }
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: v => new Intl.NumberFormat('vi-VN').format(v) + 'd' } } } }
 });
 </script>
 </body>

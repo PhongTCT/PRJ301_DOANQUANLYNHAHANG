@@ -1,4 +1,4 @@
-﻿:root {
+:root {
     --admin-ink: #171410;
     --admin-muted: #70675b;
     --admin-gold: #b99a52;
@@ -84,7 +84,7 @@ body.admin-royal .admin-display,
 body.admin-royal .metric .fs-4,
 body.admin-royal .voucher-discount,
 body.admin-royal .table-code {
-    font-family: "Marcellus", Georgia, serif;
+    font-family: "Cormorant Garamond", Georgia, serif;
     font-weight: 600;
 }
 
@@ -174,7 +174,7 @@ body.admin-royal main > .d-flex h2,
 body.admin-royal .flex-grow-1.p-5 > .d-flex h2,
 body.admin-royal .flex-grow-1.p-5 > h2 {
     margin: 0.3rem 0 0.4rem;
-    font-family: "Marcellus", Georgia, serif;
+    font-family: "Cormorant Garamond", Georgia, serif;
     font-size: clamp(2rem, 3.5vw, 3.2rem);
     font-weight: 600 !important;
     line-height: 0.95;
@@ -315,7 +315,7 @@ body.admin-royal .modal-footer {
 }
 
 body.admin-royal .modal-title {
-    font-family: "Marcellus", Georgia, serif;
+    font-family: "Cormorant Garamond", Georgia, serif;
     font-size: 1.85rem;
     font-weight: 600 !important;
     color: var(--admin-ink);

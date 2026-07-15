@@ -87,7 +87,7 @@ public class BookingService {
         if (currentUser == null || currentUser.getId() == null) throw new IllegalArgumentException("User not logged in");
 
         String lang = (String) request.getSession().getAttribute("lang");
-        if (lang == null) lang = "vi";
+        if (lang == null) lang = "en";
         ResourceBundle messages = ResourceBundle.getBundle("i18n.messages", new Locale(lang));
 
         EntityManager em = JPAUtil.getEntityManager();
@@ -181,7 +181,7 @@ public class BookingService {
             entity.HolidaySurcharge holiday = hsDAO.findByDate(draft.getReservationDate());
             
             String lang = (String) request.getSession().getAttribute("lang");
-            if (lang == null) lang = "vi";
+            if (lang == null) lang = "en";
             ResourceBundle messages = ResourceBundle.getBundle("i18n.messages", new Locale(lang));
 
             if (holiday != null) {
@@ -503,6 +503,14 @@ public class BookingService {
                 
                 if (minute != 0 && minute != 30) {
                     throw new IllegalArgumentException("Time must be in 30-minute intervals (e.g., 17:30, 18:00).");
+                }
+                
+                if (draft.getReservationDate().getTime() == cal.getTimeInMillis()) {
+                    java.util.Calendar now = java.util.Calendar.getInstance();
+                    if (hour < now.get(java.util.Calendar.HOUR_OF_DAY) || 
+                        (hour == now.get(java.util.Calendar.HOUR_OF_DAY) && minute < now.get(java.util.Calendar.MINUTE))) {
+                        throw new IllegalArgumentException("Reservation time cannot be in the past.");
+                    }
                 }
                 
                 boolean isDinner = (hour >= 18 && hour <= 20) || (hour == 17 && minute == 30) || (hour == 21 && minute == 0);

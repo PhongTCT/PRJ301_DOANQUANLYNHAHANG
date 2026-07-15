@@ -1,6 +1,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<fmt:setLocale value="${sessionScope.lang == 'vi' ? 'vi_VN' : 'en_US'}" />
+<fmt:setBundle basename="i18n.messages" />
 <c:set var="sidebarIsEn" value="${sessionScope.lang == 'en'}" />
 <style>
     :root {
@@ -231,3 +233,5 @@
     <hr class="admin-sidebar__divider">
     <a class="admin-sidebar__link" href="${pageContext.request.contextPath}/"><i class="fa-solid fa-arrow-left"></i><span><fmt:message key="admin.sidebar.back"/></span></a>
 </aside>
+
+

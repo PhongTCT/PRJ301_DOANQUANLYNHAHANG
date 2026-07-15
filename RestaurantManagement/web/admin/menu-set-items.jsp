@@ -1,7 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
+<fmt:setLocale value="${sessionScope.lang == 'vi' ? 'vi_VN' : 'en_US'}" />
 <fmt:setBundle basename="i18n.messages" />
 <jsp:include page="/header.jsp" />
 <main class="container py-5">
@@ -86,7 +86,7 @@
                             <tr>
                                 <td>${setItem.id}</td>
                                 <td><strong>${not empty setItem.menuSet.setNameVi ? setItem.menuSet.setNameVi : setItem.menuSet.setName}</strong></td>
-                                <td>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : setItem.menuItem.itemName)}</td>
+                                <td>${sessionScope.lang == 'vi' ? (not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : setItem.menuItem.itemName)) : (not empty setItem.courseName ? setItem.courseName : (not empty setItem.menuItem.itemName ? setItem.menuItem.itemName : setItem.menuItem.itemNameVi))}</td>
                                 <td><c:choose><c:when test="${empty setItem.defaultSize}"><fmt:message key="admin.menusetitems.none"/></c:when><c:otherwise><c:out value="${setItem.defaultSize.sizeName}"/></c:otherwise></c:choose></td>
                                 <td>${setItem.quantity}</td>
                                 <td class="text-end">
