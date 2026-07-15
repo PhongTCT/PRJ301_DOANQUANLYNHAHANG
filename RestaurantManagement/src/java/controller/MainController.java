@@ -14,6 +14,14 @@ public class MainController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
 
+        javax.servlet.http.HttpSession session = request.getSession();
+        String langParam = request.getParameter("lang");
+        if (langParam != null && (langParam.equals("en") || langParam.equals("vi"))) {
+            session.setAttribute("lang", langParam);
+        } else if (session.getAttribute("lang") == null) {
+            session.setAttribute("lang", "en");
+        }
+
         String action = request.getParameter("action");
         if (action == null) {
             action = "home";

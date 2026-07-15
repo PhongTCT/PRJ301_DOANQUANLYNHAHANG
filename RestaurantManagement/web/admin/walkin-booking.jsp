@@ -1,7 +1,7 @@
-﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
+<fmt:setLocale value="${sessionScope.lang == 'vi' ? 'vi_VN' : 'en_US'}" />
 <fmt:setBundle basename="i18n.messages" />
 <!DOCTYPE html>
 <html lang="en">
@@ -174,7 +174,7 @@
                                             <div class="table-card" onclick="selectCard(this)">
                                                 <h5 class="mb-1 fw-bold">${t.tableCode}</h5>
                                                 <small>${t.capacity} <fmt:message key="admin.walkin.table.seats"/></small><br>
-                                                <small class="fw-bold text-success"><fmt:formatNumber value="${t.basePrice}" pattern="#,##0"/>đ</small>
+                                                <small class="fw-bold text-success"><fmt:formatNumber value="${t.basePrice}" pattern="#,##0"/>d</small>
                                             </div>
                                         </label>
                                     </div>

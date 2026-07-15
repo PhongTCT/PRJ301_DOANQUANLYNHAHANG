@@ -18,6 +18,14 @@ public class AdminRestaurantController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
 
+        javax.servlet.http.HttpSession session = request.getSession();
+        String langParam = request.getParameter("lang");
+        if (langParam != null && (langParam.equals("en") || langParam.equals("vi"))) {
+            session.setAttribute("lang", langParam);
+        } else if (session.getAttribute("lang") == null) {
+            session.setAttribute("lang", "en");
+        }
+
         if (!isRestaurantAdmin(request)) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;

@@ -88,7 +88,18 @@ public class InvoiceLookupController extends HttpServlet {
                     throw new IllegalArgumentException("Đơn này đã có hóa đơn.");
                 }
                 java.math.BigDecimal subtotal = billingService.calculateReservationSubtotal(reservation);
-                billingService.createInvoiceForReservation(em, reservation, reservation.getUser(), em.find(User.class, user.getId()), subtotal, java.math.BigDecimal.ZERO, null, 0, enums.PaymentMethod.CASH, false);
+                
+                java.math.BigDecimal surcharge = java.math.BigDecimal.ZERO;
+                if (reservation.getReservationDate() != null) {
+                    dao.HolidaySurchargeDAO hsDAO = new dao.HolidaySurchargeDAO();
+                    entity.HolidaySurcharge holiday = hsDAO.findByDate(reservation.getReservationDate());
+                    if (holiday != null) {
+                        java.math.BigDecimal percent = holiday.getSurchargePercent().divide(new java.math.BigDecimal(100));
+                        surcharge = subtotal.multiply(percent);
+                    }
+                }
+                
+                billingService.createInvoiceForReservation(em, reservation, reservation.getUser(), em.find(User.class, user.getId()), subtotal, surcharge, null, 0, enums.PaymentMethod.CASH, false);
                 request.getSession().setAttribute("successMessage", "Đã tạo hóa đơn cho khách hàng.");
             }
             tx.commit();

@@ -1,7 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
+<fmt:setLocale value="${sessionScope.lang == 'vi' ? 'vi_VN' : 'en_US'}" />
 <fmt:setBundle basename="i18n.messages" />
 <c:if test="${param.embed != '1'}">
 <!DOCTYPE html>
@@ -196,8 +196,10 @@
                                 data-type="${cat.categoryType}"
                                 data-status="${cat.isActive ? 'active' : 'hidden'}">
                                 <td>
-                                    <strong>${not empty cat.categoryNameVi ? cat.categoryNameVi : cat.categoryName}</strong>
-                                    <c:if test="${not empty cat.categoryName}"><div class="small text-secondary">${cat.categoryName}</div></c:if>
+                                    <c:set var="mainCatName" value="${sessionScope.lang == 'vi' ? (not empty cat.categoryNameVi ? cat.categoryNameVi : cat.categoryName) : (not empty cat.categoryName ? cat.categoryName : cat.categoryNameVi)}" />
+                                    <c:set var="subCatName" value="${sessionScope.lang == 'vi' ? cat.categoryName : cat.categoryNameVi}" />
+                                    <strong>${mainCatName}</strong>
+                                    <c:if test="${not empty subCatName}"><div class="small text-secondary">${subCatName}</div></c:if>
                                 </td>
                                 <td>
                                     <fmt:message key="admin.menusets.label.service.dinner" />

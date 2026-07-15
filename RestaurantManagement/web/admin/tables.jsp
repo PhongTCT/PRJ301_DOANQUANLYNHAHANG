@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
+<fmt:setLocale value="${sessionScope.lang == 'vi' ? 'vi_VN' : 'en_US'}" />
 <fmt:setBundle basename="i18n.messages" />
 <c:if test="${param.embed != '1'}">
 <!DOCTYPE html>
@@ -127,7 +127,7 @@
                                     <p id="draftTableMeta" class="text-secondary mb-2">2 <fmt:message key="admin.tables.preview.guests" /> · <fmt:message key="admin.tables.preview.room" /></p>
                                     <div class="d-flex flex-wrap gap-2">
                                         <span id="draftTableStatusBadge" class="badge text-bg-success"><fmt:message key="admin.tables.status.available" /></span>
-                                        <span id="draftTablePriceLabel" class="badge text-bg-light border text-dark">0đ</span>
+                                        <span id="draftTablePriceLabel" class="badge text-bg-light border text-dark">0d</span>
                                     </div>
                                 </aside>
                             </div>
@@ -420,7 +420,7 @@
         }
         function money(value) {
             var number = Number(value || 0);
-            return (isNaN(number) ? 0 : number).toLocaleString('vi-VN') + 'đ';
+            return (isNaN(number) ? 0 : number).toLocaleString('vi-VN') + 'd';
         }
         function renderDraft() {
             if (!title || !imageWrap) return;

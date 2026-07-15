@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
+<fmt:setLocale value="${sessionScope.lang == 'vi' ? 'vi_VN' : 'en_US'}" />
 <fmt:setBundle basename="i18n.messages" />
 <fmt:message key="reservation.cancel.confirm" var="cancelConfirmText"/>
 <fmt:message key="reservation.modal.close" var="modalCloseLabel"/>
@@ -195,7 +195,7 @@
                     <c:forEach items="${res.reservationTables}" var="rt">
                         <div class="reserve-detail-item">
                             <span><fmt:message key="booking.table"/> ${rt.diningTable.tableCode} <span class="text-muted small">(<fmt:message key="reservation.table.capacity"><fmt:param value="${rt.diningTable.capacity}"/></fmt:message>)</span></span>
-                            <span class="fw-bold"><fmt:formatNumber value="${rt.diningTable.basePrice}" pattern="#,##0"/>đ</span>
+                            <span class="fw-bold"><fmt:formatNumber value="${rt.diningTable.basePrice}" pattern="#,##0"/>d</span>
                         </div>
                     </c:forEach>
                     <c:if test="${empty res.reservationTables}">
@@ -206,7 +206,7 @@
                     <c:forEach items="${res.reservationMenuItems}" var="rmi">
                         <div class="reserve-detail-item">
                             <span>${not empty rmi.menuItem ? (not empty rmi.menuItem.itemNameVi ? rmi.menuItem.itemNameVi : rmi.menuItem.itemName) : (not empty rmi.menuSet.setNameVi ? rmi.menuSet.setNameVi : rmi.menuSet.setName)} <span class="badge bg-secondary ms-1">x${rmi.quantity}</span></span>
-                            <span class="fw-bold"><fmt:formatNumber value="${rmi.unitPrice * rmi.quantity}" pattern="#,##0"/>đ</span>
+                            <span class="fw-bold"><fmt:formatNumber value="${rmi.unitPrice * rmi.quantity}" pattern="#,##0"/>d</span>
                         </div>
                     </c:forEach>
                     <c:if test="${empty res.reservationMenuItems}">

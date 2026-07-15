@@ -2,7 +2,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<fmt:setLocale value="${sessionScope.lang != null ? sessionScope.lang : 'vi'}" scope="session" />
+<fmt:setLocale value="${sessionScope.lang != null ? sessionScope.lang : 'en'}" scope="session" />
 <fmt:setBundle basename="i18n.messages" scope="session" />
 
 <!DOCTYPE html>

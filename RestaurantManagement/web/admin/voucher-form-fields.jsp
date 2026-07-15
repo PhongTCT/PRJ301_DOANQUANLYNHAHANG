@@ -1,7 +1,8 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-
+<fmt:setLocale value="${sessionScope.lang == 'vi' ? 'vi_VN' : 'en_US'}" />
+<fmt:setBundle basename="i18n.messages" />
 <div class="row g-3">
     <div class="col-12">
         <div class="admin-fieldset-title"><fmt:message key="admin.voucherfield.section.info"/></div>
@@ -60,3 +61,4 @@
         <input type="datetime-local" name="validTo" class="form-control" required>
     </div>
 </div>
+

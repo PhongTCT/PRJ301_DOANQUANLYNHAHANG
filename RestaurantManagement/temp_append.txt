@@ -1,0 +1,6 @@
+﻿admin.menusets.title=Set menu
+admin.menusets.library.title=Tất cả set menu
+admin.tables.title=Quản lý bàn
+admin.tables.list=Danh sách bàn
+admin.surcharges.title=Quản lý ngày lễ
+admin.surcharges.list=Danh sách phụ thu ngày lễ

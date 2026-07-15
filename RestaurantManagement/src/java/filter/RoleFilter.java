@@ -35,7 +35,7 @@ public class RoleFilter implements Filter {
                         && !uri.contains("/admin/walkin") && !uri.contains("/admin/reservations") && !uri.contains("/admin/quick-bill")
                         && !uri.contains("/admin/invoices") && !uri.contains("/admin/vouchers")
                         && !uri.contains("/admin/reviews") && !uri.contains("/admin/reports")
-                        && !uri.contains("/admin/users")) {
+                        && !uri.contains("/admin/users") && !uri.contains("/admin/timeline")) {
                     httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
                     return;
                 }

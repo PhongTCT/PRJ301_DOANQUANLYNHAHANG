@@ -3,7 +3,7 @@
 <%@page import="entity.Reservation"%>
 <%@page import="enums.ReservationStatus"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
+<fmt:setLocale value="${sessionScope.lang == 'vi' ? 'vi_VN' : 'en_US'}" />
 <fmt:setBundle basename="i18n.messages" />
 <%
     javax.persistence.EntityManager em = util.JPAUtil.getEntityManager();

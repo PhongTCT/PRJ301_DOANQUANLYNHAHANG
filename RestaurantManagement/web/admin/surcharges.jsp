@@ -1,7 +1,7 @@
-﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
+<fmt:setLocale value="${sessionScope.lang == 'vi' ? 'vi_VN' : 'en_US'}" />
 <fmt:setBundle basename="i18n.messages" />
 <!DOCTYPE html>
 <html lang="vi">
@@ -68,7 +68,7 @@
                             <c:forEach items="${surcharges}" var="s">
                                 <tr>
                                     <td class="ps-4">${s.id}</td>
-                                    <td class="fw-bold">${s.holidayName}</td>
+                                    <td class="fw-bold">${sessionScope.lang == 'vi' ? s.holidayName : s.holidayNameEn}</td>
                                     <td><fmt:formatDate value="${s.surchargeDate}" pattern="dd/MM/yyyy" /></td>
                                     <td><span class="badge bg-danger rounded-pill px-3 py-2 fs-6">+<fmt:formatNumber value="${s.surchargePercent}" pattern="0.00"/>%</span></td>
                                     <td>
@@ -91,7 +91,7 @@
                                                 <input type="hidden" name="action" value="update">
                                                 <input type="hidden" name="id" value="${s.id}">
                                                 <div class="modal-header border-0 pb-0">
-                                                    <h5 class="modal-title fw-bold"><fmt:message key="admin.surcharges.modal.update" /> ${s.holidayName}</h5>
+                                                    <h5 class="modal-title fw-bold"><fmt:message key="admin.surcharges.modal.update" /> ${sessionScope.lang == 'vi' ? s.holidayName : s.holidayNameEn}</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                 </div>
                                                 <div class="modal-body py-4">
@@ -138,7 +138,7 @@
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                 </div>
                                                 <div class="modal-body py-4">
-                                                    <fmt:message key="admin.surcharges.modal.delete.confirm" /> <strong class="text-danger">${s.holidayName}</strong>?<br>
+                                                    <fmt:message key="admin.surcharges.modal.delete.confirm" /> <strong class="text-danger">${sessionScope.lang == 'vi' ? s.holidayName : s.holidayNameEn}</strong>?<br>
                                                     <fmt:message key="admin.surcharges.modal.delete.note" />
                                                 </div>
                                                 <div class="modal-footer border-0 pt-0">

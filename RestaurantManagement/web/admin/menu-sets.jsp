@@ -1,7 +1,7 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
+<fmt:setLocale value="${sessionScope.lang == 'vi' ? 'vi_VN' : 'en_US'}" />
 <fmt:setBundle basename="i18n.messages" />
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
@@ -133,7 +133,7 @@
                         <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
                             <div>
                                 <p class="text-uppercase text-secondary small mb-1"><fmt:message key="admin.menusets.label.selected" /></p>
-                                <h2 id="setPreviewName" class="h4 mb-1">${not empty selectedMenuSet.setNameVi ? selectedMenuSet.setNameVi : selectedMenuSet.setName}</h2>
+                                <h2 id="setPreviewName" class="h4 mb-1">${sessionScope.lang == 'vi' ? (not empty selectedMenuSet.setNameVi ? selectedMenuSet.setNameVi : selectedMenuSet.setName) : (not empty selectedMenuSet.setName ? selectedMenuSet.setName : selectedMenuSet.setNameVi)}</h2>
                                 <p id="setPreviewDescription" class="text-secondary mb-0">${not empty selectedMenuSet.descriptionVi ? selectedMenuSet.descriptionVi : selectedMenuSet.description}</p>
                             </div>
                             <span id="setPreviewStatus" class="badge ${selectedMenuSet.isAvailable ? 'text-bg-success' : 'text-bg-secondary'}"><c:choose><c:when test="${selectedMenuSet.isAvailable}"><fmt:message key="admin.common.available"/></c:when><c:otherwise><fmt:message key="admin.common.hidden"/></c:otherwise></c:choose></span>
@@ -249,7 +249,7 @@
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
                 <div>
                     <p class="text-uppercase text-secondary small mb-1"><fmt:message key="admin.menusets.coursesetup" /></p>
-                    <h2 class="h5 mb-0">${not empty selectedMenuSet.setNameVi ? selectedMenuSet.setNameVi : selectedMenuSet.setName}</h2>
+                    <h2 class="h5 mb-0">${sessionScope.lang == 'vi' ? (not empty selectedMenuSet.setNameVi ? selectedMenuSet.setNameVi : selectedMenuSet.setName) : (not empty selectedMenuSet.setName ? selectedMenuSet.setName : selectedMenuSet.setNameVi)}</h2>
                 </div>
                 <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminMenuSets&id=${selectedMenuSet.id}&mode=details"><fmt:message key="admin.menusets.coursesetup.back" /></a>
             </div>
@@ -325,7 +325,7 @@
             <form id="menuPriceForm" class="row g-3 align-items-end" method="post" action="MainController">
                 <input type="hidden" name="action" value="saveMenuSet">
                 <input type="hidden" name="id" value="${selectedMenuSet.id}">
-                <input type="hidden" name="setNameVi" value="${not empty selectedMenuSet.setNameVi ? selectedMenuSet.setNameVi : selectedMenuSet.setName}">
+                <input type="hidden" name="setNameVi" value="${sessionScope.lang == 'vi' ? (not empty selectedMenuSet.setNameVi ? selectedMenuSet.setNameVi : selectedMenuSet.setName) : (not empty selectedMenuSet.setName ? selectedMenuSet.setName : selectedMenuSet.setNameVi)}">
                 <input type="hidden" name="setName" value="${selectedMenuSet.setName}">
                 <input type="hidden" name="descriptionVi" value="${selectedMenuSet.descriptionVi}">
                 <input type="hidden" name="description" value="${selectedMenuSet.description}">
@@ -355,7 +355,7 @@
             <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
                 <div>
                     <p class="text-uppercase text-secondary small mb-1"><fmt:message key="admin.menusets.preview.title" /></p>
-                    <h2 id="setPreviewName" class="h4 mb-1">${not empty selectedMenuSet.setNameVi ? selectedMenuSet.setNameVi : selectedMenuSet.setName}</h2>
+                    <h2 id="setPreviewName" class="h4 mb-1">${sessionScope.lang == 'vi' ? (not empty selectedMenuSet.setNameVi ? selectedMenuSet.setNameVi : selectedMenuSet.setName) : (not empty selectedMenuSet.setName ? selectedMenuSet.setName : selectedMenuSet.setNameVi)}</h2>
                     <p id="setPreviewDescription" class="text-secondary mb-0">${not empty selectedMenuSet.descriptionVi ? selectedMenuSet.descriptionVi : selectedMenuSet.description}</p>
                 </div>
                 <span id="setPreviewStatus" class="badge ${selectedMenuSet.isAvailable ? 'text-bg-success' : 'text-bg-secondary'}"><c:choose><c:when test="${selectedMenuSet.isAvailable}"><fmt:message key="admin.common.available"/></c:when><c:otherwise><fmt:message key="admin.common.hidden"/></c:otherwise></c:choose></span>
@@ -467,7 +467,7 @@
                     <div class="modal-header">
                         <div>
                             <p class="text-uppercase text-secondary small mb-1"><fmt:message key="admin.menusets.modal.confirm" /></p>
-                            <h5 class="modal-title" id="menuPreviewModalTitle">${not empty selectedMenuSet.setNameVi ? selectedMenuSet.setNameVi : selectedMenuSet.setName}</h5>
+                            <h5 class="modal-title" id="menuPreviewModalTitle">${sessionScope.lang == 'vi' ? (not empty selectedMenuSet.setNameVi ? selectedMenuSet.setNameVi : selectedMenuSet.setName) : (not empty selectedMenuSet.setName ? selectedMenuSet.setName : selectedMenuSet.setNameVi)}</h5>
                         </div>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<fmt:message key="admin.common.close" />"></button>
                     </div>
@@ -477,10 +477,10 @@
                             <div class="menu-confirm-hero" style="width:280px; height:110px; max-width:100%; margin:0 auto;">
                                 <c:choose>
                                     <c:when test="${fn:startsWith(modalSetImage, 'http') || fn:startsWith(modalSetImage, '/')}">
-                                        <img style="width:100%; height:100%; object-fit:cover;" src="${modalSetImage}" alt="${not empty selectedMenuSet.setNameVi ? selectedMenuSet.setNameVi : selectedMenuSet.setName}">
+                                        <img style="width:100%; height:100%; object-fit:cover;" src="${modalSetImage}" alt="${sessionScope.lang == 'vi' ? (not empty selectedMenuSet.setNameVi ? selectedMenuSet.setNameVi : selectedMenuSet.setName) : (not empty selectedMenuSet.setName ? selectedMenuSet.setName : selectedMenuSet.setNameVi)}">
                                     </c:when>
                                     <c:otherwise>
-                                        <img style="width:100%; height:100%; object-fit:cover;" src="${pageContext.request.contextPath}/${modalSetImage}" alt="${not empty selectedMenuSet.setNameVi ? selectedMenuSet.setNameVi : selectedMenuSet.setName}">
+                                        <img style="width:100%; height:100%; object-fit:cover;" src="${pageContext.request.contextPath}/${modalSetImage}" alt="${sessionScope.lang == 'vi' ? (not empty selectedMenuSet.setNameVi ? selectedMenuSet.setNameVi : selectedMenuSet.setName) : (not empty selectedMenuSet.setName ? selectedMenuSet.setName : selectedMenuSet.setNameVi)}">
                                     </c:otherwise>
                                 </c:choose>
                             </div>
@@ -495,31 +495,31 @@
                             <div class="border rounded-3 p-3">
                                 <div class="small text-uppercase text-secondary mb-2"><fmt:message key="admin.menusets.courses.course1" /></div>
                                 <c:set var="hasModalAppetizer" value="false" />
-                                <c:forEach items="${selectedMenuSetItems}" var="setItem"><c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'APPETIZER'}"><c:set var="hasModalAppetizer" value="true" /><div>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</div></c:if></c:forEach>
+                                <c:forEach items="${selectedMenuSetItems}" var="setItem"><c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'APPETIZER'}"><c:set var="hasModalAppetizer" value="true" /><div>${sessionScope.lang == 'vi' ? (not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))) : (not empty setItem.courseName ? setItem.courseName : (not empty setItem.menuItem.itemName ? setItem.menuItem.itemName : (not empty setItem.courseNameVi ? setItem.courseNameVi : setItem.menuItem.itemNameVi)))}</div></c:if></c:forEach>
                                 <c:if test="${!hasModalAppetizer}"><div class="text-secondary small"><fmt:message key="admin.menusets.courses.empty1" /></div></c:if>
                             </div>
                             <div class="border rounded-3 p-3">
                                 <div class="small text-uppercase text-secondary mb-2"><fmt:message key="admin.menusets.courses.course2" /></div>
                                 <c:set var="hasModalSoup" value="false" />
-                                <c:forEach items="${selectedMenuSetItems}" var="setItem"><c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'SOUP'}"><c:set var="hasModalSoup" value="true" /><div>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</div></c:if></c:forEach>
+                                <c:forEach items="${selectedMenuSetItems}" var="setItem"><c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'SOUP'}"><c:set var="hasModalSoup" value="true" /><div>${sessionScope.lang == 'vi' ? (not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))) : (not empty setItem.courseName ? setItem.courseName : (not empty setItem.menuItem.itemName ? setItem.menuItem.itemName : (not empty setItem.courseNameVi ? setItem.courseNameVi : setItem.menuItem.itemNameVi)))}</div></c:if></c:forEach>
                                 <c:if test="${!hasModalSoup}"><div class="text-secondary small"><fmt:message key="admin.menusets.courses.empty2" /></div></c:if>
                             </div>
                             <div class="border rounded-3 p-3">
                                 <div class="small text-uppercase text-secondary mb-2"><fmt:message key="admin.menusets.courses.course3" /></div>
                                 <c:set var="hasModalMain" value="false" />
-                                <c:forEach items="${selectedMenuSetItems}" var="setItem"><c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'MAIN'}"><c:set var="hasModalMain" value="true" /><div>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</div></c:if></c:forEach>
+                                <c:forEach items="${selectedMenuSetItems}" var="setItem"><c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'MAIN'}"><c:set var="hasModalMain" value="true" /><div>${sessionScope.lang == 'vi' ? (not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))) : (not empty setItem.courseName ? setItem.courseName : (not empty setItem.menuItem.itemName ? setItem.menuItem.itemName : (not empty setItem.courseNameVi ? setItem.courseNameVi : setItem.menuItem.itemNameVi)))}</div></c:if></c:forEach>
                                 <c:if test="${!hasModalMain}"><div class="text-secondary small"><fmt:message key="admin.menusets.courses.empty3" /></div></c:if>
                             </div>
                             <div class="border rounded-3 p-3">
                                 <div class="small text-uppercase text-secondary mb-2"><fmt:message key="admin.menusets.courses.course4" /></div>
                                 <c:set var="hasModalDessert" value="false" />
-                                <c:forEach items="${selectedMenuSetItems}" var="setItem"><c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'DESSERT'}"><c:set var="hasModalDessert" value="true" /><div>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</div></c:if></c:forEach>
+                                <c:forEach items="${selectedMenuSetItems}" var="setItem"><c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'DESSERT'}"><c:set var="hasModalDessert" value="true" /><div>${sessionScope.lang == 'vi' ? (not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))) : (not empty setItem.courseName ? setItem.courseName : (not empty setItem.menuItem.itemName ? setItem.menuItem.itemName : (not empty setItem.courseNameVi ? setItem.courseNameVi : setItem.menuItem.itemNameVi)))}</div></c:if></c:forEach>
                                 <c:if test="${!hasModalDessert}"><div class="text-secondary small"><fmt:message key="admin.menusets.courses.empty4" /></div></c:if>
                             </div>
                             <div class="border rounded-3 p-3">
                                 <div class="small text-uppercase text-secondary mb-2"><fmt:message key="admin.menusets.courses.course5" /></div>
                                 <c:set var="hasModalDrink" value="false" />
-                                <c:forEach items="${selectedMenuSetItems}" var="setItem"><c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'DRINK'}"><c:set var="hasModalDrink" value="true" /><div>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</div></c:if></c:forEach>
+                                <c:forEach items="${selectedMenuSetItems}" var="setItem"><c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'DRINK'}"><c:set var="hasModalDrink" value="true" /><div>${sessionScope.lang == 'vi' ? (not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))) : (not empty setItem.courseName ? setItem.courseName : (not empty setItem.menuItem.itemName ? setItem.menuItem.itemName : (not empty setItem.courseNameVi ? setItem.courseNameVi : setItem.menuItem.itemNameVi)))}</div></c:if></c:forEach>
                                 <c:if test="${!hasModalDrink}"><div class="text-secondary small"><fmt:message key="admin.menusets.courses.empty5" /></div></c:if>
                             </div>
                         </div>
@@ -583,18 +583,21 @@
                                 <c:set var="setImage" value="${empty set.imageUrl ? 'assets/img/le-royal/menu/lotus-stem-salad.jpg' : set.imageUrl}" />
                                 <c:choose>
                                     <c:when test="${fn:startsWith(setImage, 'http') || fn:startsWith(setImage, '/')}">
-                                        <img class="admin-menu-thumb rounded-2" src="${setImage}" alt="${not empty set.setNameVi ? set.setNameVi : set.setName}">
+                                        <img class="admin-menu-thumb rounded-2" src="${setImage}" alt="${sessionScope.lang == 'vi' ? (not empty set.setNameVi ? set.setNameVi : set.setName) : (not empty set.setName ? set.setName : set.setNameVi)}">
                                     </c:when>
                                     <c:otherwise>
-                                        <img class="admin-menu-thumb rounded-2" src="${pageContext.request.contextPath}/${setImage}" alt="${not empty set.setNameVi ? set.setNameVi : set.setName}">
+                                        <img class="admin-menu-thumb rounded-2" src="${pageContext.request.contextPath}/${setImage}" alt="${sessionScope.lang == 'vi' ? (not empty set.setNameVi ? set.setNameVi : set.setName) : (not empty set.setName ? set.setName : set.setNameVi)}">
                                     </c:otherwise>
                                 </c:choose>
                             </td>
                             <td>${set.id}</td>
                             <td>
-                                <strong>${not empty set.setNameVi ? set.setNameVi : set.setName}</strong>
-                                <c:if test="${not empty set.setName}"><div class="small text-secondary">${set.setName}</div></c:if>
-                                <div class="small text-secondary">${not empty set.descriptionVi ? set.descriptionVi : set.description}</div>
+                                <c:set var="mainSetName" value="${sessionScope.lang == 'vi' ? (not empty set.setNameVi ? set.setNameVi : set.setName) : (not empty set.setName ? set.setName : set.setNameVi)}" />
+                                <c:set var="subSetName" value="${sessionScope.lang == 'vi' ? set.setName : set.setNameVi}" />
+                                <c:set var="mainSetDesc" value="${sessionScope.lang == 'vi' ? (not empty set.descriptionVi ? set.descriptionVi : set.description) : (not empty set.description ? set.description : set.descriptionVi)}" />
+                                <strong>${mainSetName}</strong>
+                                <c:if test="${not empty subSetName}"><div class="small text-secondary">${subSetName}</div></c:if>
+                                <div class="small text-secondary">${mainSetDesc}</div>
                             </td>
                             <td><fmt:message key="admin.menusets.label.service.dinner" /></td>
                             <td><fmt:formatNumber value="${set.originalPrice}" pattern="#,##0"/></td>

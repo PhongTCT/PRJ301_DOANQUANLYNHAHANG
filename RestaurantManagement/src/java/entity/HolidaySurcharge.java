@@ -38,16 +38,19 @@ public class HolidaySurcharge implements Serializable {
 
     public String getHolidayNameEn() {
         if (holidayName == null) return "";
-        if (holidayName.contains("Tết Dương Lịch")) return "New Year's Day";
-        if (holidayName.contains("Mùng 1 Tết Nguyên Đán")) return "Lunar New Year (1st Day)";
-        if (holidayName.contains("Mùng 2 Tết Nguyên Đán")) return "Lunar New Year (2nd Day)";
-        if (holidayName.contains("Mùng 3 Tết Nguyên Đán")) return "Lunar New Year (3rd Day)";
-        if (holidayName.contains("Tết Nguyên Đán")) return "Lunar New Year";
-        if (holidayName.contains("Quốc tế Phụ nữ")) return "International Women's Day";
-        if (holidayName.contains("Giỗ Tổ Hùng Vương")) return "Hung Kings' Commemoration Day";
-        if (holidayName.contains("Giải phóng Miền Nam")) return "Reunification Day";
-        if (holidayName.contains("Quốc tế Lao động")) return "International Workers' Day";
-        if (holidayName.contains("Quốc khánh Việt Nam") || holidayName.contains("Quốc khánh")) return "National Day";
+        String lower = holidayName.toLowerCase();
+        if (lower.contains("tết dương lịch") || lower.contains("tt dng l<ch")) return "New Year's Day";
+        if (lower.contains("mùng 1 tết nguyên đán") || lower.contains("mA1ng 1")) return "Lunar New Year (1st Day)";
+        if (lower.contains("mùng 2 tết nguyên đán") || lower.contains("mA1ng 2")) return "Lunar New Year (2nd Day)";
+        if (lower.contains("mùng 3 tết nguyên đán") || lower.contains("mA1ng 3")) return "Lunar New Year (3rd Day)";
+        if (lower.contains("tết nguyên đán") || lower.contains("tt nguyAn")) return "Lunar New Year";
+        if (lower.contains("quốc tế phụ nữ") || lower.contains("qu`c t ph n_")) return "International Women's Day";
+        if (lower.contains("phụ nữ việt nam") || lower.contains("ph n_ vit nam")) return "Vietnamese Women's Day";
+        if (lower.contains("giỗ tổ hùng vương") || lower.contains("gi- t")) return "Hung Kings' Commemoration Day";
+        if (lower.contains("giải phóng miền nam") || lower.contains("gii phA3ng")) return "Reunification Day";
+        if (lower.contains("quốc tế lao động") || lower.contains("lao `Tng")) return "International Workers' Day";
+        if (lower.contains("quốc khánh") || lower.contains("qu`c khAnh")) return "National Day";
+        if (lower.contains("giáng sinh") || lower.contains("noel") || lower.contains("giAng sinh")) return "Christmas Day";
         return holidayName;
     }
 }

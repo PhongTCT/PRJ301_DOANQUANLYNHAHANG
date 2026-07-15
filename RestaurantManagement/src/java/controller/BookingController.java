@@ -62,7 +62,7 @@ public class BookingController extends HttpServlet {
 
         if ("dobooking".equals(action)) {
             String lang = (String) session.getAttribute("lang");
-            if (lang == null) lang = "vi";
+            if (lang == null) lang = "en";
             ResourceBundle messages = ResourceBundle.getBundle("i18n.messages", new Locale(lang));
             
             try {
@@ -105,7 +105,7 @@ public class BookingController extends HttpServlet {
                 step = 2;
             } catch (Exception e) {
                 String lang = (String) session.getAttribute("lang");
-                if (lang == null) lang = "vi";
+                if (lang == null) lang = "en";
                 ResourceBundle messages = ResourceBundle.getBundle("i18n.messages", new Locale(lang));
                 request.setAttribute("error", e.getMessage() == null ? messages.getString("error.booking.selectTables") : e.getMessage());
                 step = 2;
@@ -135,7 +135,7 @@ public class BookingController extends HttpServlet {
                 session.setAttribute("lastInvoice", reservation.getInvoice());
                 
                 String lang = (String) session.getAttribute("lang");
-                if (lang == null) lang = "vi";
+                if (lang == null) lang = "en";
                 ResourceBundle messages = ResourceBundle.getBundle("i18n.messages", new Locale(lang));
                 session.setAttribute("successMessage", MessageFormat.format(messages.getString("booking.success"), reservation.getId()));
                 
@@ -147,7 +147,7 @@ public class BookingController extends HttpServlet {
                 return;
             } catch (Exception e) {
                 String lang = (String) session.getAttribute("lang");
-                if (lang == null) lang = "vi";
+                if (lang == null) lang = "en";
                 ResourceBundle messages = ResourceBundle.getBundle("i18n.messages", new Locale(lang));
                 request.setAttribute("error", e.getMessage() == null ? messages.getString("error.booking.finalize") : e.getMessage());
                 step = 4;
@@ -167,7 +167,7 @@ public class BookingController extends HttpServlet {
                 return;
             } catch (Exception e) {
                 String lang = (String) session.getAttribute("lang");
-                if (lang == null) lang = "vi";
+                if (lang == null) lang = "en";
                 ResourceBundle messages = ResourceBundle.getBundle("i18n.messages", new Locale(lang));
                 request.setAttribute("error", e.getMessage() == null ? messages.getString("error.booking.saveMenu") : e.getMessage());
                 step = 3;
@@ -200,7 +200,7 @@ public class BookingController extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             String lang = (String) session.getAttribute("lang");
-            if (lang == null) lang = "vi";
+            if (lang == null) lang = "en";
             ResourceBundle messages = ResourceBundle.getBundle("i18n.messages", new Locale(lang));
             request.setAttribute("pageError", MessageFormat.format(messages.getString("error.booking.unavailable"), e.getMessage()));
         }
