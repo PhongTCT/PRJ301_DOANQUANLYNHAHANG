@@ -102,12 +102,12 @@
                     <div class="col-md-6">
                         <label class="form-label"><fmt:message key="admin.menuitems.label.image" /></label>
                         <input id="draftItemImage" class="form-control" name="imageUrl" value="${editMenuItem.imageUrl}">
-                        <div class="form-text">Paste an existing URL, or upload a new image below.</div>
+                        <div class="form-text"><fmt:message key="admin.menuitems.label.image.help" /></div>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Upload image</label>
+                        <label class="form-label"><fmt:message key="admin.menuitems.label.upload" /></label>
                         <input id="draftItemImageFile" class="form-control" name="imageFile" type="file" accept="image/*">
-                        <div class="form-text">Cloudinary will store the image and save the returned link.</div>
+                        <div class="form-text"><fmt:message key="admin.menuitems.label.upload.help" /></div>
                     </div>
                     <div class="col-md-3">
                         <label class="form-label"><fmt:message key="admin.menuitems.label.baseprice" /></label>
@@ -191,7 +191,7 @@
                     <div class="admin-section-label"><fmt:message key="admin.menuitems.library.title" /></div>
                     <h2 class="h5 mb-0"><fmt:message key="admin.menuitems.library.sub" /></h2>
                 </div>
-                <div class="small text-secondary"><span id="menuItemResultCount">${menuItemList.size()}</span> items</div>
+                <div class="small text-secondary"><span id="menuItemResultCount">${menuItemList.size()}</span> <fmt:message key="admin.menuitems.library.count" /></div>
             </div>
 
             <div class="row g-2 mb-3">
@@ -272,7 +272,18 @@
                                     </div>
                                 </td>
                                 <td>${not empty item.category.categoryNameVi ? item.category.categoryNameVi : item.category.categoryName}</td>
-                                <td><span class="badge bg-light">${item.category.categoryType}</span></td>
+                                <td>
+                                    <span class="badge bg-light">
+                                        <c:choose>
+                                            <c:when test="${item.category.categoryType == 'APPETIZER'}"><fmt:message key="admin.menuitems.type.appetizer" /></c:when>
+                                            <c:when test="${item.category.categoryType == 'SOUP'}"><fmt:message key="admin.menuitems.type.soup" /></c:when>
+                                            <c:when test="${item.category.categoryType == 'MAIN'}"><fmt:message key="admin.menuitems.type.main" /></c:when>
+                                            <c:when test="${item.category.categoryType == 'DESSERT'}"><fmt:message key="admin.menuitems.type.dessert" /></c:when>
+                                            <c:when test="${item.category.categoryType == 'DRINK'}"><fmt:message key="admin.menuitems.type.drink" /></c:when>
+                                            <c:otherwise>${item.category.categoryType}</c:otherwise>
+                                        </c:choose>
+                                    </span>
+                                </td>
                                 <td><fmt:formatNumber value="${item.basePrice}" pattern="#,##0"/></td>
                                 <td><span class="badge ${item.isAvailable ? 'text-bg-success' : 'text-bg-secondary'}">
                                     <c:choose>
@@ -361,7 +372,7 @@
             }
             if (paginationText) {
                 var end = Math.min(start + pageSize, visibleRows.length);
-                paginationText.textContent = visibleRows.length ? ('<fmt:message key="admin.common.pagination.show"><fmt:param value="' + (start + 1) + '"/><fmt:param value="' + end + '"/><fmt:param value="' + visibleRows.length + '"/></fmt:message>') : '<fmt:message key="admin.common.pagination.no.items"/>';
+                paginationText.textContent = visibleRows.length ? ((start + 1) + '-' + end + ' / ' + visibleRows.length) : '<fmt:message key="admin.common.pagination.no.items"/>';
             }
             renderPagination(totalPages);
         }

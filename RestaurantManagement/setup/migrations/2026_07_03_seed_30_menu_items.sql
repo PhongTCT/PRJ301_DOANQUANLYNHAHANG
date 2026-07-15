@@ -2,25 +2,25 @@ USE RestaurantManagement;
 GO
 
 IF NOT EXISTS (SELECT 1 FROM menu_category WHERE category_type = 'APPETIZER')
-    INSERT INTO menu_category (category_name, meal_time, category_type, sort_order) VALUES (N'Appetizers', 'ALL_DAY', 'APPETIZER', 1);
+    INSERT INTO menu_category (category_name, meal_time, category_type, sort_order) VALUES (N'Appetizers', 'DINNER', 'APPETIZER', 1);
 
 IF NOT EXISTS (SELECT 1 FROM menu_category WHERE category_type = 'SOUP')
-    INSERT INTO menu_category (category_name, meal_time, category_type, sort_order) VALUES (N'Soups', 'ALL_DAY', 'SOUP', 2);
+    INSERT INTO menu_category (category_name, meal_time, category_type, sort_order) VALUES (N'Soups', 'DINNER', 'SOUP', 2);
 
 IF NOT EXISTS (SELECT 1 FROM menu_category WHERE category_type = 'MAIN')
-    INSERT INTO menu_category (category_name, meal_time, category_type, sort_order) VALUES (N'Main Courses', 'ALL_DAY', 'MAIN', 3);
+    INSERT INTO menu_category (category_name, meal_time, category_type, sort_order) VALUES (N'Main Courses', 'DINNER', 'MAIN', 3);
 
 IF NOT EXISTS (SELECT 1 FROM menu_category WHERE category_type = 'DESSERT')
-    INSERT INTO menu_category (category_name, meal_time, category_type, sort_order) VALUES (N'Desserts', 'ALL_DAY', 'DESSERT', 4);
+    INSERT INTO menu_category (category_name, meal_time, category_type, sort_order) VALUES (N'Desserts', 'DINNER', 'DESSERT', 4);
 
 IF NOT EXISTS (SELECT 1 FROM menu_category WHERE category_type = 'DRINK')
-    INSERT INTO menu_category (category_name, meal_time, category_type, sort_order) VALUES (N'Drinks', 'ALL_DAY', 'DRINK', 5);
+    INSERT INTO menu_category (category_name, meal_time, category_type, sort_order) VALUES (N'Drinks', 'DINNER', 'DRINK', 5);
 
-UPDATE menu_category SET category_name = N'Appetizers', meal_time = 'ALL_DAY', sort_order = 1, is_active = 1 WHERE category_type = 'APPETIZER';
-UPDATE menu_category SET category_name = N'Soups', meal_time = 'ALL_DAY', sort_order = 2, is_active = 1 WHERE category_type = 'SOUP';
-UPDATE menu_category SET category_name = N'Main Courses', meal_time = 'ALL_DAY', sort_order = 3, is_active = 1 WHERE category_type = 'MAIN';
-UPDATE menu_category SET category_name = N'Desserts', meal_time = 'ALL_DAY', sort_order = 4, is_active = 1 WHERE category_type = 'DESSERT';
-UPDATE menu_category SET category_name = N'Drinks', meal_time = 'ALL_DAY', sort_order = 5, is_active = 1 WHERE category_type = 'DRINK';
+UPDATE menu_category SET category_name = N'Appetizers', meal_time = 'DINNER', sort_order = 1, is_active = 1 WHERE category_type = 'APPETIZER';
+UPDATE menu_category SET category_name = N'Soups', meal_time = 'DINNER', sort_order = 2, is_active = 1 WHERE category_type = 'SOUP';
+UPDATE menu_category SET category_name = N'Main Courses', meal_time = 'DINNER', sort_order = 3, is_active = 1 WHERE category_type = 'MAIN';
+UPDATE menu_category SET category_name = N'Desserts', meal_time = 'DINNER', sort_order = 4, is_active = 1 WHERE category_type = 'DESSERT';
+UPDATE menu_category SET category_name = N'Drinks', meal_time = 'DINNER', sort_order = 5, is_active = 1 WHERE category_type = 'DRINK';
 GO
 
 MERGE menu_item AS target

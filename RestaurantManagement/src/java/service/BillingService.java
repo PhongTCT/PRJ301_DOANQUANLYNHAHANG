@@ -35,7 +35,7 @@ public class BillingService {
             for (Integer tableId : draft.getSelectedTableIds()) {
                 DiningTable table = em.find(DiningTable.class, tableId);
                 if (table != null && table.getBasePrice() != null) {
-                    subtotal = subtotal.add(table.getBasePrice());
+                    subtotal = subtotal.add(table.getBookingFee());
                 }
             }
         }
@@ -81,7 +81,7 @@ public class BillingService {
         if (reservation.getReservationTables() != null) {
             for (ReservationTable rt : reservation.getReservationTables()) {
                 if (rt.getDiningTable() != null && rt.getDiningTable().getBasePrice() != null) {
-                    subtotal = subtotal.add(rt.getDiningTable().getBasePrice());
+                    subtotal = subtotal.add(rt.getDiningTable().getBookingFee());
                 }
             }
         }

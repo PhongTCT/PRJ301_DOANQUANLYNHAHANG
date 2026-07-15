@@ -21,7 +21,7 @@ public class MenuCategory implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "meal_time", nullable = false, length = 20)
-    private MealTime mealTime = MealTime.ALL_DAY;
+    private MealTime mealTime = MealTime.DINNER;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category_type", nullable = false, length = 20)

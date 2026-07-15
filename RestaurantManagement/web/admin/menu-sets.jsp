@@ -45,7 +45,7 @@
             <div class="card-body p-4">
                 <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
                     <div>
-                        <div class="admin-section-label">Set menu editor</div>
+                        <div class="admin-section-label"><fmt:message key="admin.menusets.editor.title" /></div>
                         <h2 class="h5 mb-0">
                             <c:choose>
                                 <c:when test="${empty editMenuSet}"><fmt:message key="admin.menusets.editor.create" /></c:when>
@@ -82,21 +82,19 @@
                     </div>
                     <div class="col-md-4">
                         <label class="form-label"><fmt:message key="admin.menusets.label.service" /></label>
-                        <select id="setServiceInput" class="form-select" name="mealTime">
-                            <option value="LUNCH" ${editMenuSet.mealTime == 'LUNCH' ? 'selected' : ''}><fmt:message key="admin.menusets.label.service.lunch" /></option>
-                            <option value="DINNER" ${empty editMenuSet || editMenuSet.mealTime == 'DINNER' || editMenuSet.mealTime == 'BREAKFAST' ? 'selected' : ''}><fmt:message key="admin.menusets.label.service.dinner" /></option>
-                            <option value="ALL_DAY" ${editMenuSet.mealTime == 'ALL_DAY' ? 'selected' : ''}><fmt:message key="admin.menusets.label.service.all" /></option>
-                        </select>
+                        <input id="setServiceInput" class="form-control" value="<fmt:message key="admin.menusets.label.service.dinner" />" readonly>
+                        <input type="hidden" name="mealTime" value="DINNER">
+                        <div class="form-text"><fmt:message key="admin.menusets.label.service.dinner.note" /></div>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label"><fmt:message key="admin.menusets.label.image" /></label>
                         <input id="setImageInput" class="form-control" name="imageUrl" value="${editMenuSet.imageUrl}">
-                        <div class="form-text">Paste an existing URL, or upload a new image below.</div>
+                        <div class="form-text"><fmt:message key="admin.menusets.label.image.help" /></div>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Upload image</label>
+                        <label class="form-label"><fmt:message key="admin.menusets.label.upload" /></label>
                         <input id="setImageFileInput" class="form-control" name="imageFile" type="file" accept="image/*">
-                        <div class="form-text">Cloudinary will store the image and save the returned link.</div>
+                        <div class="form-text"><fmt:message key="admin.menusets.label.upload.help" /></div>
                     </div>
                     <div class="col-md-2 d-flex align-items-end">
                         <div class="form-check form-switch mb-2">
@@ -144,7 +142,7 @@
                             <div class="col-sm-4">
                                 <div class="border rounded-3 p-3">
                                     <div class="small text-secondary"><fmt:message key="admin.menusets.label.service.label" /></div>
-                                    <strong id="setPreviewService"><c:choose><c:when test="${selectedMenuSet.mealTime == 'LUNCH'}"><fmt:message key="admin.menusets.label.service.lunch" /></c:when><c:when test="${selectedMenuSet.mealTime == 'ALL_DAY'}"><fmt:message key="admin.menusets.label.service.all" /></c:when><c:otherwise><fmt:message key="admin.menusets.label.service.dinner" /></c:otherwise></c:choose></strong>
+                                    <strong id="setPreviewService"><fmt:message key="admin.menusets.label.service.dinner" /></strong>
                                 </div>
                             </div>
                             <div class="col-sm-4">
@@ -174,7 +172,7 @@
                                             <c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'APPETIZER'}">
                                                 <c:set var="hasAppetizer" value="true" />
                                                 <div class="d-flex justify-content-between gap-3 py-2 border-top">
-                                                    <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:choose><c:when test="${empty setItem.defaultSize}"><fmt:message key="admin.menusets.courses.nodesize"/></c:when><c:otherwise><c:out value="${setItem.defaultSize.sizeName}"/></c:otherwise></c:choose> - Qty ${setItem.quantity}</div></div>
+                                                    <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:choose><c:when test="${empty setItem.defaultSize}"><fmt:message key="admin.menusets.courses.nodesize"/></c:when><c:otherwise><c:out value="${setItem.defaultSize.sizeName}"/></c:otherwise></c:choose> - <fmt:message key="admin.menusets.coursesetup.qty" /> ${setItem.quantity}</div></div>
                                                     <a class="btn btn-outline-danger btn-sm align-self-center" href="MainController?action=deleteMenuSetItem&id=${setItem.id}&returnTo=adminMenuSets&menuSetId=${selectedMenuSet.id}" onclick="return confirm('<fmt:message key="admin.menusets.courses.remove"/>')"><fmt:message key="admin.menusets.courses.remove" /></a>
                                                 </div>
                                             </c:if>
@@ -188,7 +186,7 @@
                                             <c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'SOUP'}">
                                                 <c:set var="hasSoup" value="true" />
                                                 <div class="d-flex justify-content-between gap-3 py-2 border-top">
-                                                    <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:choose><c:when test="${empty setItem.defaultSize}"><fmt:message key="admin.menusets.courses.nodesize"/></c:when><c:otherwise><c:out value="${setItem.defaultSize.sizeName}"/></c:otherwise></c:choose> - Qty ${setItem.quantity}</div></div>
+                                                    <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:choose><c:when test="${empty setItem.defaultSize}"><fmt:message key="admin.menusets.courses.nodesize"/></c:when><c:otherwise><c:out value="${setItem.defaultSize.sizeName}"/></c:otherwise></c:choose> - <fmt:message key="admin.menusets.coursesetup.qty" /> ${setItem.quantity}</div></div>
                                                     <a class="btn btn-outline-danger btn-sm align-self-center" href="MainController?action=deleteMenuSetItem&id=${setItem.id}&returnTo=adminMenuSets&menuSetId=${selectedMenuSet.id}" onclick="return confirm('<fmt:message key="admin.menusets.courses.remove"/>')"><fmt:message key="admin.menusets.courses.remove" /></a>
                                                 </div>
                                             </c:if>
@@ -202,7 +200,7 @@
                                             <c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'MAIN'}">
                                                 <c:set var="hasMain" value="true" />
                                                 <div class="d-flex justify-content-between gap-3 py-2 border-top">
-                                                    <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:choose><c:when test="${empty setItem.defaultSize}"><fmt:message key="admin.menusets.courses.nodesize"/></c:when><c:otherwise><c:out value="${setItem.defaultSize.sizeName}"/></c:otherwise></c:choose> - Qty ${setItem.quantity}</div></div>
+                                                    <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:choose><c:when test="${empty setItem.defaultSize}"><fmt:message key="admin.menusets.courses.nodesize"/></c:when><c:otherwise><c:out value="${setItem.defaultSize.sizeName}"/></c:otherwise></c:choose> - <fmt:message key="admin.menusets.coursesetup.qty" /> ${setItem.quantity}</div></div>
                                                     <a class="btn btn-outline-danger btn-sm align-self-center" href="MainController?action=deleteMenuSetItem&id=${setItem.id}&returnTo=adminMenuSets&menuSetId=${selectedMenuSet.id}" onclick="return confirm('<fmt:message key="admin.menusets.courses.remove"/>')"><fmt:message key="admin.menusets.courses.remove" /></a>
                                                 </div>
                                             </c:if>
@@ -216,7 +214,7 @@
                                             <c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'DESSERT'}">
                                                 <c:set var="hasDessert" value="true" />
                                                 <div class="d-flex justify-content-between gap-3 py-2 border-top">
-                                                    <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:choose><c:when test="${empty setItem.defaultSize}"><fmt:message key="admin.menusets.courses.nodesize"/></c:when><c:otherwise><c:out value="${setItem.defaultSize.sizeName}"/></c:otherwise></c:choose> - Qty ${setItem.quantity}</div></div>
+                                                    <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:choose><c:when test="${empty setItem.defaultSize}"><fmt:message key="admin.menusets.courses.nodesize"/></c:when><c:otherwise><c:out value="${setItem.defaultSize.sizeName}"/></c:otherwise></c:choose> - <fmt:message key="admin.menusets.coursesetup.qty" /> ${setItem.quantity}</div></div>
                                                     <a class="btn btn-outline-danger btn-sm align-self-center" href="MainController?action=deleteMenuSetItem&id=${setItem.id}&returnTo=adminMenuSets&menuSetId=${selectedMenuSet.id}" onclick="return confirm('<fmt:message key="admin.menusets.courses.remove"/>')"><fmt:message key="admin.menusets.courses.remove" /></a>
                                                 </div>
                                             </c:if>
@@ -230,7 +228,7 @@
                                             <c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'DRINK'}">
                                                 <c:set var="hasDrink" value="true" />
                                                 <div class="d-flex justify-content-between gap-3 py-2 border-top">
-                                                    <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:choose><c:when test="${empty setItem.defaultSize}"><fmt:message key="admin.menusets.courses.nodesize"/></c:when><c:otherwise><c:out value="${setItem.defaultSize.sizeName}"/></c:otherwise></c:choose> - Qty ${setItem.quantity}</div></div>
+                                                    <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:choose><c:when test="${empty setItem.defaultSize}"><fmt:message key="admin.menusets.courses.nodesize"/></c:when><c:otherwise><c:out value="${setItem.defaultSize.sizeName}"/></c:otherwise></c:choose> - <fmt:message key="admin.menusets.coursesetup.qty" /> ${setItem.quantity}</div></div>
                                                     <a class="btn btn-outline-danger btn-sm align-self-center" href="MainController?action=deleteMenuSetItem&id=${setItem.id}&returnTo=adminMenuSets&menuSetId=${selectedMenuSet.id}" onclick="return confirm('<fmt:message key="admin.menusets.courses.remove"/>')"><fmt:message key="admin.menusets.courses.remove" /></a>
                                                 </div>
                                             </c:if>
@@ -270,23 +268,26 @@
                     <label class="form-label"><fmt:message key="admin.menusets.coursesetup.item" /></label>
                     <select id="courseMenuItemInput" class="form-select" name="menuItemId" required>
                         <c:forEach items="${categories}" var="category">
-                            <optgroup label="${category.categoryName}">
+                            <c:set var="categoryDisplayName" value="${sessionScope.lang == 'en' ? (empty category.categoryName ? category.categoryNameVi : category.categoryName) : (empty category.categoryNameVi ? category.categoryName : category.categoryNameVi)}" />
+                            <optgroup label="${categoryDisplayName}">
                                 <c:forEach items="${menuItems}" var="item">
                                     <c:if test="${not empty item.category && item.category.id == category.id}">
-                                        <option value="${item.id}" data-course="${item.category.categoryType}">${item.itemName}</option>
+                                        <c:set var="courseItemDisplayName" value="${sessionScope.lang == 'en' ? (empty item.itemName ? item.itemNameVi : item.itemName) : (empty item.itemNameVi ? item.itemName : item.itemNameVi)}" />
+                                        <option value="${item.id}" data-course="${item.category.categoryType}">${courseItemDisplayName}</option>
                                     </c:if>
                                 </c:forEach>
                             </optgroup>
                         </c:forEach>
                     </select>
-                    <div id="courseEmptyMessage" class="form-text d-none">No dishes are available for this course. You can leave it empty.</div>
+                    <div id="courseEmptyMessage" class="form-text d-none"><fmt:message key="admin.menusets.coursesetup.noitems" /></div>
                 </div>
                 <div class="col-lg-3">
                     <label class="form-label"><fmt:message key="admin.menusets.coursesetup.size" /></label>
                     <select id="courseSizeInput" class="form-select" name="defaultSizeId">
                         <option value=""><fmt:message key="admin.menusets.courses.nodesize" /></option>
                         <c:forEach items="${menuItems}" var="item">
-                            <optgroup label="${item.itemName}">
+                            <c:set var="sizeItemDisplayName" value="${sessionScope.lang == 'en' ? (empty item.itemName ? item.itemNameVi : item.itemName) : (empty item.itemNameVi ? item.itemName : item.itemNameVi)}" />
+                            <optgroup label="${sizeItemDisplayName}">
                                 <c:forEach items="${sizes}" var="size">
                                     <c:if test="${not empty size.menuItem && size.menuItem.id == item.id}">
                                         <option value="${size.id}" data-menu-item="${item.id}">${size.sizeName}</option>
@@ -363,7 +364,7 @@
                 <div class="col-sm-4">
                     <div class="border rounded-3 p-3">
                         <div class="small text-secondary"><fmt:message key="admin.menusets.label.service.label" /></div>
-                        <strong id="setPreviewService"><c:choose><c:when test="${selectedMenuSet.mealTime == 'LUNCH'}"><fmt:message key="admin.menusets.label.service.lunch" /></c:when><c:when test="${selectedMenuSet.mealTime == 'ALL_DAY'}"><fmt:message key="admin.menusets.label.service.all" /></c:when><c:otherwise><fmt:message key="admin.menusets.label.service.dinner" /></c:otherwise></c:choose></strong>
+                        <strong id="setPreviewService"><fmt:message key="admin.menusets.label.service.dinner" /></strong>
                     </div>
                 </div>
                 <div class="col-sm-4">
@@ -393,7 +394,7 @@
                                 <c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'APPETIZER'}">
                                     <c:set var="hasAppetizerPreview" value="true" />
                                     <div class="d-flex justify-content-between gap-3 py-2 border-top">
-                                        <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:choose><c:when test="${empty setItem.defaultSize}"><fmt:message key="admin.menusets.courses.nodesize"/></c:when><c:otherwise><c:out value="${setItem.defaultSize.sizeName}"/></c:otherwise></c:choose> - Qty ${setItem.quantity}</div></div>
+                                        <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:choose><c:when test="${empty setItem.defaultSize}"><fmt:message key="admin.menusets.courses.nodesize"/></c:when><c:otherwise><c:out value="${setItem.defaultSize.sizeName}"/></c:otherwise></c:choose> - <fmt:message key="admin.menusets.coursesetup.qty" /> ${setItem.quantity}</div></div>
                                         <a class="btn btn-outline-danger btn-sm align-self-center" href="MainController?action=deleteMenuSetItem&id=${setItem.id}&returnTo=adminMenuSets&menuSetId=${selectedMenuSet.id}" onclick="return confirm('<fmt:message key="admin.menusets.courses.remove"/>')"><fmt:message key="admin.menusets.courses.remove" /></a>
                                     </div>
                                 </c:if>
@@ -407,7 +408,7 @@
                                 <c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'SOUP'}">
                                     <c:set var="hasSoupPreview" value="true" />
                                     <div class="d-flex justify-content-between gap-3 py-2 border-top">
-                                        <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:choose><c:when test="${empty setItem.defaultSize}"><fmt:message key="admin.menusets.courses.nodesize"/></c:when><c:otherwise><c:out value="${setItem.defaultSize.sizeName}"/></c:otherwise></c:choose> - Qty ${setItem.quantity}</div></div>
+                                        <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:choose><c:when test="${empty setItem.defaultSize}"><fmt:message key="admin.menusets.courses.nodesize"/></c:when><c:otherwise><c:out value="${setItem.defaultSize.sizeName}"/></c:otherwise></c:choose> - <fmt:message key="admin.menusets.coursesetup.qty" /> ${setItem.quantity}</div></div>
                                         <a class="btn btn-outline-danger btn-sm align-self-center" href="MainController?action=deleteMenuSetItem&id=${setItem.id}&returnTo=adminMenuSets&menuSetId=${selectedMenuSet.id}" onclick="return confirm('<fmt:message key="admin.menusets.courses.remove"/>')"><fmt:message key="admin.menusets.courses.remove" /></a>
                                     </div>
                                 </c:if>
@@ -421,7 +422,7 @@
                                 <c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'MAIN'}">
                                     <c:set var="hasMainPreview" value="true" />
                                     <div class="d-flex justify-content-between gap-3 py-2 border-top">
-                                        <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:choose><c:when test="${empty setItem.defaultSize}"><fmt:message key="admin.menusets.courses.nodesize"/></c:when><c:otherwise><c:out value="${setItem.defaultSize.sizeName}"/></c:otherwise></c:choose> - Qty ${setItem.quantity}</div></div>
+                                        <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:choose><c:when test="${empty setItem.defaultSize}"><fmt:message key="admin.menusets.courses.nodesize"/></c:when><c:otherwise><c:out value="${setItem.defaultSize.sizeName}"/></c:otherwise></c:choose> - <fmt:message key="admin.menusets.coursesetup.qty" /> ${setItem.quantity}</div></div>
                                         <a class="btn btn-outline-danger btn-sm align-self-center" href="MainController?action=deleteMenuSetItem&id=${setItem.id}&returnTo=adminMenuSets&menuSetId=${selectedMenuSet.id}" onclick="return confirm('<fmt:message key="admin.menusets.courses.remove"/>')"><fmt:message key="admin.menusets.courses.remove" /></a>
                                     </div>
                                 </c:if>
@@ -435,7 +436,7 @@
                                 <c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'DESSERT'}">
                                     <c:set var="hasDessertPreview" value="true" />
                                     <div class="d-flex justify-content-between gap-3 py-2 border-top">
-                                        <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:choose><c:when test="${empty setItem.defaultSize}"><fmt:message key="admin.menusets.courses.nodesize"/></c:when><c:otherwise><c:out value="${setItem.defaultSize.sizeName}"/></c:otherwise></c:choose> - Qty ${setItem.quantity}</div></div>
+                                        <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:choose><c:when test="${empty setItem.defaultSize}"><fmt:message key="admin.menusets.courses.nodesize"/></c:when><c:otherwise><c:out value="${setItem.defaultSize.sizeName}"/></c:otherwise></c:choose> - <fmt:message key="admin.menusets.coursesetup.qty" /> ${setItem.quantity}</div></div>
                                         <a class="btn btn-outline-danger btn-sm align-self-center" href="MainController?action=deleteMenuSetItem&id=${setItem.id}&returnTo=adminMenuSets&menuSetId=${selectedMenuSet.id}" onclick="return confirm('<fmt:message key="admin.menusets.courses.remove"/>')"><fmt:message key="admin.menusets.courses.remove" /></a>
                                     </div>
                                 </c:if>
@@ -449,7 +450,7 @@
                                 <c:if test="${not empty setItem.menuItem.category && setItem.menuItem.category.categoryType == 'DRINK'}">
                                     <c:set var="hasDrinkPreview" value="true" />
                                     <div class="d-flex justify-content-between gap-3 py-2 border-top">
-                                        <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:choose><c:when test="${empty setItem.defaultSize}"><fmt:message key="admin.menusets.courses.nodesize"/></c:when><c:otherwise><c:out value="${setItem.defaultSize.sizeName}"/></c:otherwise></c:choose> - Qty ${setItem.quantity}</div></div>
+                                        <div><strong>${not empty setItem.courseNameVi ? setItem.courseNameVi : (not empty setItem.menuItem.itemNameVi ? setItem.menuItem.itemNameVi : (not empty setItem.courseName ? setItem.courseName : setItem.menuItem.itemName))}</strong><div class="small text-secondary"><c:choose><c:when test="${empty setItem.defaultSize}"><fmt:message key="admin.menusets.courses.nodesize"/></c:when><c:otherwise><c:out value="${setItem.defaultSize.sizeName}"/></c:otherwise></c:choose> - <fmt:message key="admin.menusets.coursesetup.qty" /> ${setItem.quantity}</div></div>
                                         <a class="btn btn-outline-danger btn-sm align-self-center" href="MainController?action=deleteMenuSetItem&id=${setItem.id}&returnTo=adminMenuSets&menuSetId=${selectedMenuSet.id}" onclick="return confirm('<fmt:message key="admin.menusets.courses.remove"/>')"><fmt:message key="admin.menusets.courses.remove" /></a>
                                     </div>
                                 </c:if>
@@ -486,7 +487,7 @@
                             <p class="text-secondary mb-0">${not empty selectedMenuSet.descriptionVi ? selectedMenuSet.descriptionVi : selectedMenuSet.description}</p>
                         </div>
                         <div class="row g-3 mb-4">
-                            <div class="col-sm-4"><div class="border rounded-3 p-3"><div class="small text-secondary"><fmt:message key="admin.menusets.label.service.label" /></div><strong><c:choose><c:when test="${selectedMenuSet.mealTime == 'LUNCH'}"><fmt:message key="admin.menusets.label.service.lunch" /></c:when><c:when test="${selectedMenuSet.mealTime == 'ALL_DAY'}"><fmt:message key="admin.menusets.label.service.all" /></c:when><c:otherwise><fmt:message key="admin.menusets.label.service.dinner" /></c:otherwise></c:choose></strong></div></div>
+                            <div class="col-sm-4"><div class="border rounded-3 p-3"><div class="small text-secondary"><fmt:message key="admin.menusets.label.service.label" /></div><strong><fmt:message key="admin.menusets.label.service.dinner" /></strong></div></div>
                             <div class="col-sm-4"><div class="border rounded-3 p-3"><div class="small text-secondary"><fmt:message key="admin.menusets.label.suggested" /></div><strong><fmt:formatNumber value="${selectedMenuSet.originalPrice}" pattern="#,##0"/></strong></div></div>
                             <div class="col-sm-4"><div class="border rounded-3 p-3"><div class="small text-secondary"><fmt:message key="admin.menusets.label.selling" /></div><strong id="modalSellingPriceText"><fmt:formatNumber value="${selectedMenuSet.discountedPrice}" pattern="#,##0"/></strong></div></div>
                         </div>
@@ -546,14 +547,7 @@
                             <input id="setSearch" class="form-control" type="search" placeholder="<fmt:message key="admin.menusets.search" />">
                         </div>
                     </div>
-                    <div class="col-sm-6 col-lg-3">
-                        <select id="setServiceFilter" class="form-select">
-                            <option value=""><fmt:message key="admin.common.filter.all.services" /></option>
-                            <option value="LUNCH"><fmt:message key="admin.menusets.label.service.lunch" /></option>
-                            <option value="DINNER"><fmt:message key="admin.menusets.label.service.dinner" /></option>
-                            <option value="ALL_DAY"><fmt:message key="admin.menusets.label.service.all" /></option>
-                        </select>
-                    </div>
+                    <input id="setServiceFilter" type="hidden" value="">
                     <div class="col-sm-6 col-lg-2">
                         <select id="setStatusFilter" class="form-select">
                             <option value=""><fmt:message key="admin.common.filter.all.status" /></option>
@@ -602,7 +596,7 @@
                                 <c:if test="${not empty set.setName}"><div class="small text-secondary">${set.setName}</div></c:if>
                                 <div class="small text-secondary">${not empty set.descriptionVi ? set.descriptionVi : set.description}</div>
                             </td>
-                            <td><c:choose><c:when test="${set.mealTime == 'LUNCH'}"><fmt:message key="admin.menusets.label.service.lunch" /></c:when><c:when test="${set.mealTime == 'ALL_DAY'}"><fmt:message key="admin.menusets.label.service.all" /></c:when><c:otherwise><fmt:message key="admin.menusets.label.service.dinner" /></c:otherwise></c:choose></td>
+                            <td><fmt:message key="admin.menusets.label.service.dinner" /></td>
                             <td><fmt:formatNumber value="${set.originalPrice}" pattern="#,##0"/></td>
                             <td><fmt:formatNumber value="${set.discountedPrice}" pattern="#,##0"/></td>
                             <td><span class="badge ${set.isAvailable ? 'text-bg-success' : 'text-bg-secondary'}"><c:choose><c:when test="${set.isAvailable}"><fmt:message key="admin.common.available"/></c:when><c:otherwise><fmt:message key="admin.common.hidden"/></c:otherwise></c:choose></span></td>
@@ -672,7 +666,7 @@
             if (empty) empty.classList.toggle('d-none', visibleRows.length > 0);
             if (paginationText) {
                 var end = Math.min(start + pageSize, visibleRows.length);
-                paginationText.textContent = visibleRows.length ? ('<fmt:message key="admin.common.pagination.show"><fmt:param value="' + (start + 1) + '"/><fmt:param value="' + end + '"/><fmt:param value="' + visibleRows.length + '"/></fmt:message>') : '<fmt:message key="admin.common.pagination.no.items"/>';
+                paginationText.textContent = visibleRows.length ? ((start + 1) + '-' + end + ' / ' + visibleRows.length) : '<fmt:message key="admin.common.pagination.no.items"/>';
             }
             renderPagination(totalPages);
         }
@@ -722,12 +716,6 @@
         var setUploadPreviewUrl = '';
 
         function serviceLabel(value) {
-            if (value === 'LUNCH') {
-                return '<fmt:message key="admin.menusets.label.service.lunch"/>';
-            }
-            if (value === 'ALL_DAY') {
-                return '<fmt:message key="admin.menusets.label.service.all"/>';
-            }
             return '<fmt:message key="admin.menusets.label.service.dinner"/>';
         }
 
@@ -896,7 +884,7 @@
             item.className = 'list-group-item d-flex justify-content-between align-items-start gap-3';
             item.setAttribute('data-pending-item', row);
             var details = document.createElement('div');
-            details.innerHTML = '<strong>' + selectedItem.text + '</strong><div class="small text-secondary">' + courseLabel(courseTypeInput.value) + ' - ' + (selectedSize ? selectedSize.text : '<fmt:message key="admin.menusets.courses.nodesize"/>') + ' - Qty ' + quantity + '</div>';
+            details.innerHTML = '<strong>' + selectedItem.text + '</strong><div class="small text-secondary">' + courseLabel(courseTypeInput.value) + ' - ' + (selectedSize ? selectedSize.text : '<fmt:message key="admin.menusets.courses.nodesize"/>') + ' - <fmt:message key="admin.menusets.coursesetup.qty"/> ' + quantity + '</div>';
             var remove = document.createElement('button');
             remove.type = 'button';
             remove.className = 'btn btn-outline-danger btn-sm';

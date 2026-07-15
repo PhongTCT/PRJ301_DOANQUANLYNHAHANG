@@ -4,6 +4,10 @@
 <fmt:setLocale value="${sessionScope.lang == 'en' ? 'en_US' : 'vi_VN'}" />
 <fmt:setBundle basename="i18n.messages" />
 <c:set var="isEn" value="${sessionScope.lang == 'en'}" />
+<fmt:message key="admin.areas.preview.default.name" var="defaultAreaName" />
+<fmt:message key="admin.areas.preview.default.desc" var="defaultAreaDesc" />
+<fmt:message key="admin.common.available" var="availableText" />
+<fmt:message key="admin.common.hidden" var="hiddenText" />
 <!DOCTYPE html>
 <html lang="${sessionScope.lang}">
 <head>
@@ -30,10 +34,10 @@
                 </div>
                 <div class="d-flex flex-wrap gap-2">
                     <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminRooms">
-                        <i class="fa-solid fa-door-open me-2"></i>${isEn ? 'Rooms' : 'Phòng'}
+                        <i class="fa-solid fa-door-open me-2"></i><fmt:message key="admin.rooms.title" />
                     </a>
                     <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminTables">
-                        <i class="fa-solid fa-chair me-2"></i>${isEn ? 'Dining tables' : 'Bàn'}
+                        <i class="fa-solid fa-chair me-2"></i><fmt:message key="admin.sidebar.tables" />
                     </a>
                     <button class="btn btn-dark btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#areaFormPanel" aria-expanded="${not empty editArea ? 'true' : 'false'}">
                         <i class="fa-solid fa-plus me-2"></i><fmt:message key="admin.areas.create" />
@@ -60,41 +64,49 @@
                                 </h2>
                             </div>
                             <c:if test="${not empty editArea}">
-                                <a class="btn btn-outline-secondary btn-sm" href="MainController?action=adminAreas">${isEn ? 'Clear' : 'Xóa chọn'}</a>
+                                <a class="btn btn-outline-secondary btn-sm" href="MainController?action=adminAreas"><fmt:message key="admin.common.clear" /></a>
                             </c:if>
                         </div>
 
                         <div class="row g-3">
-                            <div class="col-md-5">
-                                <label class="form-label"><fmt:message key="admin.areas.label.name" /></label>
-                                <input id="draftAreaName" class="form-control" name="name" value="${editArea.name}" required>
+                            <div class="col-md-4">
+                                <label class="form-label"><fmt:message key="admin.areas.label.name.vi" /></label>
+                                <input id="draftAreaName" class="form-control" name="nameVi" value="${not empty editArea.nameVi ? editArea.nameVi : editArea.name}" required>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
+                                <label class="form-label"><fmt:message key="admin.areas.label.name.en" /></label>
+                                <input class="form-control" name="name" value="${editArea.name}">
+                            </div>
+                            <div class="col-md-4">
                                 <label class="form-label"><fmt:message key="admin.areas.label.modifier" /></label>
                                 <input id="draftAreaModifier" class="form-control" name="priceModifier" type="number" min="0" step="1" value="${empty editArea ? 0 : editArea.priceModifier}">
                             </div>
-                            <div class="col-md-4 d-flex align-items-end">
-                                <div class="form-check form-switch mb-2">
+                            <div class="col-md-6">
+                                <label class="form-label"><fmt:message key="admin.areas.label.desc.vi" /></label>
+                                <textarea id="draftAreaDesc" class="form-control" name="descriptionVi" rows="3">${not empty editArea.descriptionVi ? editArea.descriptionVi : editArea.description}</textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label"><fmt:message key="admin.areas.label.desc.en" /></label>
+                                <textarea class="form-control" name="description" rows="3">${editArea.description}</textarea>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check form-switch">
                                     <input id="draftAreaActive" class="form-check-input" type="checkbox" name="isActive" value="true" ${empty editArea || editArea.isActive ? 'checked' : ''}>
                                     <label class="form-check-label" for="draftAreaActive"><fmt:message key="admin.common.available" /></label>
                                 </div>
                             </div>
-                            <div class="col-md-8">
-                                <label class="form-label"><fmt:message key="admin.areas.label.desc" /></label>
-                                <textarea id="draftAreaDesc" class="form-control" name="description" rows="3">${editArea.description}</textarea>
-                            </div>
-                            <div class="col-md-4">
-                                <aside class="admin-draft-preview rounded-3 p-3 h-100">
+                            <div class="col-12">
+                                <aside class="admin-draft-preview rounded-3 p-3">
                                     <p class="text-uppercase text-secondary small mb-1"><fmt:message key="admin.areas.preview" /></p>
-                                    <h3 id="areaPreviewName" class="h5 mb-1">${empty editArea.name ? (isEn ? 'Main dining area' : 'Khu phòng chính') : editArea.name}</h3>
-                                    <p id="areaPreviewDesc" class="text-secondary small mb-2">${empty editArea.description ? (isEn ? 'Groups rooms and tables in one restaurant zone.' : 'Khu vực gom các phòng và bàn trong nhà hàng.') : editArea.description}</p>
+                                    <h3 id="areaPreviewName" class="h5 mb-1">${empty editArea ? defaultAreaName : (isEn ? (not empty editArea.name ? editArea.name : editArea.nameVi) : (not empty editArea.nameVi ? editArea.nameVi : editArea.name))}</h3>
+                                    <p id="areaPreviewDesc" class="text-secondary small mb-2">${empty editArea ? defaultAreaDesc : (isEn ? (not empty editArea.description ? editArea.description : editArea.descriptionVi) : (not empty editArea.descriptionVi ? editArea.descriptionVi : editArea.description))}</p>
                                     <div class="d-flex flex-wrap gap-2">
                                         <span class="badge text-bg-light border text-dark">
                                             <fmt:message key="admin.areas.label.modifier" />:
                                             <strong id="areaPreviewModifier"><fmt:formatNumber value="${empty editArea ? 0 : editArea.priceModifier}" pattern="#,##0"/></strong>
                                         </span>
                                         <span id="areaPreviewStatus" class="badge ${empty editArea || editArea.isActive ? 'text-bg-success' : 'text-bg-secondary'}">
-                                            ${empty editArea || editArea.isActive ? (isEn ? 'Available' : 'Hoạt động') : (isEn ? 'Hidden' : 'Đã ẩn')}
+                                            ${empty editArea || editArea.isActive ? availableText : hiddenText}
                                         </span>
                                     </div>
                                 </aside>
@@ -141,20 +153,27 @@
                             </thead>
                             <tbody id="areaRows">
                                 <c:forEach items="${areaList}" var="area">
-                                    <tr data-area-row data-search="${area.name} ${area.description}" data-status="${area.isActive ? 'active' : 'inactive'}">
+                                    <c:set var="areaName" value="${isEn ? (not empty area.name ? area.name : area.nameVi) : (not empty area.nameVi ? area.nameVi : area.name)}" />
+                                    <c:set var="areaDesc" value="${isEn ? (not empty area.description ? area.description : area.descriptionVi) : (not empty area.descriptionVi ? area.descriptionVi : area.description)}" />
+                                    <tr data-area-row data-search="${area.name} ${area.nameVi} ${area.description} ${area.descriptionVi}" data-status="${area.isActive ? 'active' : 'inactive'}">
                                         <td>
-                                            <strong>${area.name}</strong>
-                                            <div class="small text-secondary">${area.description}</div>
+                                            <strong>${areaName}</strong>
+                                            <div class="small text-secondary">${areaDesc}</div>
                                         </td>
                                         <td><fmt:formatNumber value="${area.priceModifier}" pattern="#,##0"/></td>
                                         <td>
                                             <span class="badge ${area.isActive ? 'text-bg-success' : 'text-bg-secondary'}">
-                                                ${area.isActive ? (isEn ? 'Available' : 'Hoạt động') : (isEn ? 'Hidden' : 'Đã ẩn')}
+                                                ${area.isActive ? availableText : hiddenText}
                                             </span>
                                         </td>
                                         <td class="text-end">
                                             <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminAreas&id=${area.id}"><fmt:message key="admin.areas.btn.edit" /></a>
-                                            <a class="btn btn-outline-secondary btn-sm" href="MainController?action=toggleArea&id=${area.id}&enabled=${!area.isActive}">${area.isActive ? '<fmt:message key="admin.areas.btn.disable" />' : '<fmt:message key="admin.areas.btn.enable" />'}</a>
+                                            <a class="btn btn-outline-secondary btn-sm" href="MainController?action=toggleArea&id=${area.id}&enabled=${!area.isActive}">
+                                                <c:choose>
+                                                    <c:when test="${area.isActive}"><fmt:message key="admin.areas.btn.disable" /></c:when>
+                                                    <c:otherwise><fmt:message key="admin.areas.btn.enable" /></c:otherwise>
+                                                </c:choose>
+                                            </a>
                                         </td>
                                     </tr>
                                 </c:forEach>
@@ -168,8 +187,8 @@
                     <div class="d-flex justify-content-between align-items-center mt-3">
                         <div id="areaPageInfo" class="small text-secondary"></div>
                         <div class="btn-group">
-                            <button id="areaPrev" type="button" class="btn btn-outline-secondary btn-sm">${isEn ? 'Previous' : 'Trước'}</button>
-                            <button id="areaNext" type="button" class="btn btn-outline-secondary btn-sm">${isEn ? 'Next' : 'Sau'}</button>
+                            <button id="areaPrev" type="button" class="btn btn-outline-secondary btn-sm"><fmt:message key="admin.common.prev" /></button>
+                            <button id="areaNext" type="button" class="btn btn-outline-secondary btn-sm"><fmt:message key="admin.common.next" /></button>
                         </div>
                     </div>
                 </div>
@@ -180,7 +199,10 @@
 
 <script>
     (function () {
-        var isEn = ${isEn ? 'true' : 'false'};
+        var defaultAreaName = '<fmt:message key="admin.areas.preview.default.name" />';
+        var defaultAreaDesc = '<fmt:message key="admin.areas.preview.default.desc" />';
+        var availableText = '<fmt:message key="admin.common.available" />';
+        var hiddenText = '<fmt:message key="admin.common.hidden" />';
         var nameInput = document.getElementById('draftAreaName');
         var descInput = document.getElementById('draftAreaDesc');
         var modifierInput = document.getElementById('draftAreaModifier');
@@ -191,11 +213,11 @@
         var previewStatus = document.getElementById('areaPreviewStatus');
 
         function updatePreview() {
-            if (previewName) previewName.textContent = (nameInput.value || '').trim() || (isEn ? 'Main dining area' : 'Khu phòng chính');
-            if (previewDesc) previewDesc.textContent = (descInput.value || '').trim() || (isEn ? 'Groups rooms and tables in one restaurant zone.' : 'Khu vực gom các phòng và bàn trong nhà hàng.');
-            if (previewModifier) previewModifier.textContent = new Intl.NumberFormat('en-US', {maximumFractionDigits: 0}).format(Number(modifierInput.value || 0));
+            if (previewName) previewName.textContent = (nameInput.value || '').trim() || defaultAreaName;
+            if (previewDesc) previewDesc.textContent = (descInput.value || '').trim() || defaultAreaDesc;
+            if (previewModifier) previewModifier.textContent = new Intl.NumberFormat('vi-VN', {maximumFractionDigits: 0}).format(Number(modifierInput.value || 0));
             if (previewStatus) {
-                previewStatus.textContent = activeInput.checked ? (isEn ? 'Available' : 'Hoạt động') : (isEn ? 'Hidden' : 'Đã ẩn');
+                previewStatus.textContent = activeInput.checked ? availableText : hiddenText;
                 previewStatus.className = activeInput.checked ? 'badge text-bg-success' : 'badge text-bg-secondary';
             }
         }
@@ -234,7 +256,7 @@
             rows.forEach(function (row) { row.classList.add('d-none'); });
             visibleRows.slice((page - 1) * perPage, page * perPage).forEach(function (row) { row.classList.remove('d-none'); });
             if (empty) empty.classList.toggle('d-none', visibleRows.length !== 0);
-            pageInfo.textContent = visibleRows.length ? (page + ' / ' + maxPage + ' - ' + visibleRows.length + ' ' + (isEn ? 'areas' : 'khu vực')) : '0 ' + (isEn ? 'areas' : 'khu vực');
+            pageInfo.textContent = visibleRows.length ? (page + ' / ' + maxPage + ' - ' + visibleRows.length) : '0';
             prev.disabled = page <= 1;
             next.disabled = page >= maxPage;
         }

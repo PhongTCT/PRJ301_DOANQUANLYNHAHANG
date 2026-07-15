@@ -21,7 +21,6 @@
             </div>
             <div class="col-sm-6 col-lg-2">
                 <div class="footer-heading small text-uppercase mb-3"><fmt:message key="footer.hours"/></div>
-                <p class="text-secondary mb-1"><fmt:message key="footer.lunch"/></p>
                 <p class="text-secondary mb-0"><fmt:message key="footer.dinner"/></p>
             </div>
             <div class="col-lg-2">

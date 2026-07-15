@@ -72,10 +72,10 @@
                 <div class="card shadow-sm border-0 rounded-4 mb-4">
                     <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
                         <div class="category-tabs">
-                            <button class="cat-btn active" onclick="filterCategory('ALL', this)"><fmt:message key="booking.step3.tab.all" /></button>
+                            <button class="cat-btn active" onclick="filterCategory('ALL', this)"><i class="fa-solid fa-utensils me-1"></i><fmt:message key="booking.step3.tab.all" /></button>
                             <button class="cat-btn" onclick="filterCategory('combo', this)"><i class="fa-solid fa-layer-group me-1"></i><fmt:message key="booking.step3.tab.combo"/></button>
                             <c:forEach items="${categories}" var="cat">
-                                <button class="cat-btn" onclick="filterCategory('${cat.id}', this)">${sessionScope.lang == 'en' ? cat.categoryNameEn : cat.categoryName}</button>
+                                <button class="cat-btn" onclick="filterCategory('${cat.id}', this)"><i class="fa-solid fa-bowl-food me-1"></i>${sessionScope.lang == 'en' ? (empty cat.categoryName ? cat.categoryNameVi : cat.categoryName) : (empty cat.categoryNameVi ? cat.categoryName : cat.categoryNameVi)}</button>
                             </c:forEach>
                             <button class="cat-btn" onclick="filterCategory('service', this)"><fmt:message key="booking.step3.tab.service"/></button>
                         </div>
@@ -86,7 +86,7 @@
                             
                             <!-- COMBO SETS -->
                             <c:forEach items="${menuSets}" var="set">
-                                <c:set var="setDisplayName" value="${not empty set.setName ? set.setName : set.setNameVi}" />
+                                <c:set var="setDisplayName" value="${sessionScope.lang == 'en' ? (empty set.setName ? set.setNameVi : set.setName) : (empty set.setNameVi ? set.setName : set.setNameVi)}" />
                                 <div class="filter-item" data-category="combo">
                                     <div class="menu-item-card">
                                         <c:choose>
@@ -122,7 +122,7 @@
 
                             <!-- MENU ITEMS -->
                             <c:forEach items="${menuItems}" var="item">
-                                <c:set var="itemDisplayName" value="${not empty item.itemName ? item.itemName : item.itemNameVi}" />
+                                <c:set var="itemDisplayName" value="${sessionScope.lang == 'en' ? (empty item.itemName ? item.itemNameVi : item.itemName) : (empty item.itemNameVi ? item.itemName : item.itemNameVi)}" />
                                 <div class="filter-item" data-category="${item.category.id}">
                                     <div class="menu-item-card">
                                         <c:choose>
@@ -173,15 +173,23 @@
 
                             <!-- SERVICES / ADDONS -->
                             <c:forEach items="${addons}" var="addon">
+                                <c:set var="addonName" value="${sessionScope.lang == 'en' ? addon.serviceName : (empty addon.serviceNameVi ? addon.serviceName : addon.serviceNameVi)}" />
                                 <div class="filter-item" data-category="service">
                                     <div class="menu-item-card">
                                         <c:set var="addonImgUrl" value="${addon.imageUrl != null ? addon.imageUrl : 'assets/img/le-royal/Champagne Welcome Service.jpg'}" />
-                                        <img src="${addonImgUrl}" class="menu-item-img" alt="Addon">
+                                        <c:choose>
+                                            <c:when test="${fn:startsWith(addonImgUrl, 'http') || fn:startsWith(addonImgUrl, '/')}">
+                                                <img src="${addonImgUrl}" class="menu-item-img" alt="${addonName}">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <img src="${pageContext.request.contextPath}/${addonImgUrl}" class="menu-item-img" alt="${addonName}">
+                                            </c:otherwise>
+                                        </c:choose>
                                         <div class="menu-item-info">
-                                            <div class="menu-item-name">${addon.serviceName}</div>
+                                            <div class="menu-item-name">${addonName}</div>
                                             <div class="d-flex justify-content-between align-items-end mt-auto">
                                                 <div class="menu-item-price"><fmt:formatNumber value="${addon.price}" pattern="#,##0"/> ₫</div>
-                                                <button type="button" class="btn btn-sm btn-outline-primary rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('addon', ${addon.id}, this.getAttribute('data-name'), ${addon.price})" data-name="${fn:escapeXml(addon.serviceName)}">
+                                                <button type="button" class="btn btn-sm btn-outline-primary rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; padding: 0;" onclick="addToCart('addon', ${addon.id}, this.getAttribute('data-name'), ${addon.price})" data-name="${fn:escapeXml(addonName)}">
                                                     <i class="fa-solid fa-plus"></i>
                                                 </button>
                                             </div>
@@ -206,7 +214,7 @@
                             <ul class="list-group list-group-flush" id="cartItemsList">
                                 <li class="list-group-item p-4 text-center text-muted" id="emptyCartMsg">
                                     <i class="fa-solid fa-cart-arrow-down fa-3x mb-3 text-light"></i>
-                                    <p class="mb-0">Chưa có món nào được chọn</p>
+                                    <p class="mb-0"><fmt:message key="booking.step3.cart.empty" /></p>
                                 </li>
                             </ul>
                             
@@ -215,13 +223,13 @@
                                 <li class="list-group-item p-3 bg-light">
                                     <div class="d-flex justify-content-between mb-1">
                                         <span class="text-muted small"><fmt:message key="booking.step3.cart.deposit"/></span>
-                                        <span class="fw-medium">Tùy thuộc quy định</span>
+                                        <span class="fw-medium"><fmt:message key="booking.step3.cart.deposit.tbd" /></span>
                                     </div>
                                 </li>
                                 <c:if test="${sessionScope.bookingDraft.hasSurcharge}">
                                 <li class="list-group-item p-3 bg-warning bg-opacity-10 border-warning border-opacity-25">
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <span class="fw-medium text-warning-emphasis"><i class="fa-solid fa-bolt me-1"></i>Phụ thu lễ (${sessionScope.bookingDraft.surchargePercent}%)</span>
+                                        <span class="fw-medium text-warning-emphasis"><i class="fa-solid fa-bolt me-1"></i><fmt:message key="booking.step3.cart.surcharge" /> (${sessionScope.bookingDraft.surchargePercent}%)</span>
                                         <span class="fw-bold text-warning-emphasis" id="cartSurcharge">0đ</span>
                                     </div>
                                 </li>

@@ -225,16 +225,16 @@
                         <circle class="journey-core" cx="36" cy="35" r="3.4" />
                     </svg>
                     <div class="journey-card">
-                        <img src="assets/img/le-royal/Personalized Menu Card.jpg" alt="Personalized menu card">
+                        <img src="assets/img/le-royal/seating/event-long-table.jpg" alt="Guests sharing a fine dining evening">
                         <div class="journey-copy">
                             <c:choose>
                                 <c:when test="${sessionScope.lang == 'vi'}">
-                                    <h3>T&#7901; menu ri&#234;ng</h3>
-                                    <p>T&#234;n kh&#225;ch, l&#7901;i nh&#7855;n v&#224; nh&#7883;p course &#273;&#432;&#7907;c in th&#224;nh m&#7897;t t&#7901; menu nh&#7887; &#273;&#7875; gi&#7919; l&#7841;i sau b&#7919;a t&#7889;i.</p>
+                                    <h3>Kho&#7843;nh kh&#7855;c tr&#7885;n v&#7865;n</h3>
+                                    <p>M&#7897;t b&#224;n ti&#7879;c &#273;&#432;&#7907;c chu&#7849;n b&#7883; &#273;&#7911; m&#243;n, r&#432;&#7907;u, &#225;nh n&#7871;n v&#224; nh&#7883;p ph&#7909;c v&#7909; &#273;&#7875; bu&#7893;i t&#7889;i tr&#242;n &#273;&#7847;y h&#417;n.</p>
                                 </c:when>
                                 <c:otherwise>
-                                    <h3>Personal menu keepsake</h3>
-                                    <p>Guest names, a short note, and the evening's course rhythm can be printed as a small keepsake menu.</p>
+                                    <h3>A complete evening</h3>
+                                    <p>A table shaped by food, wine, candlelight, and quiet service so the night feels whole from first pour to final course.</p>
                                 </c:otherwise>
                             </c:choose>
                         </div>

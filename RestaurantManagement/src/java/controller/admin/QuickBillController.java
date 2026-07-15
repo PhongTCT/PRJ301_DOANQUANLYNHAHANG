@@ -122,9 +122,7 @@ public class QuickBillController extends HttpServlet {
                     rt.setDiningTable(table);
                     em.persist(rt);
                     
-                    if (table.getBasePrice() != null) {
-                        tableFee = table.getBasePrice();
-                    }
+                    tableFee = table.getBookingFee();
                 }
             }
 

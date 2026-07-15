@@ -96,14 +96,21 @@
                     <div class="col">
                         <div class="card h-100 shadow-sm border-0 rounded-4 bg-white">
                             <div class="position-relative">
-                                <img src="${tableImgUrl}" class="card-img-top rounded-top-4" alt="${tb.tableCode}" style="height: 160px; object-fit: cover;">
+                                <c:choose>
+                                    <c:when test="${fn:startsWith(tableImgUrl, 'http') || fn:startsWith(tableImgUrl, '/')}">
+                                        <img src="${tableImgUrl}" class="card-img-top rounded-top-4" alt="${tb.tableCode}" style="height: 160px; object-fit: cover;">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <img src="${pageContext.request.contextPath}/${tableImgUrl}" class="card-img-top rounded-top-4" alt="${tb.tableCode}" style="height: 160px; object-fit: cover;">
+                                    </c:otherwise>
+                                </c:choose>
                                 <span class="badge bg-success position-absolute top-0 end-0 m-2">
                                     <fmt:message key="booking.status.available"/>
                                 </span>
                             </div>
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h5 class="card-title fw-bold mb-0">Bàn ${tb.tableCode}</h5>
+                                    <h5 class="card-title fw-bold mb-0"><fmt:message key="admin.tables.col.table" /> ${tb.tableCode}</h5>
                                 </div>
                                 <h6 class="card-subtitle mb-3 text-muted small"><i class="fa-solid fa-map-location-dot me-1"></i>${tb.room.roomName}</h6>
                                 
@@ -128,7 +135,7 @@
                                     </li>
                                     <li class="list-group-item px-0 d-flex justify-content-between align-items-center bg-transparent border-0 py-1">
                                         <span class="text-muted"><i class="fa-solid fa-tag me-2"></i><fmt:message key="booking.baseprice"/></span>
-                                        <span class="fw-bold text-success"><fmt:formatNumber value="${tb.basePrice}" pattern="#,##0"/> đ</span>
+                                        <span class="fw-bold text-success"><fmt:formatNumber value="${tb.bookingFee}" pattern="#,##0"/> đ</span>
                                     </li>
                                 </ul>
                             </div>
