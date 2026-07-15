@@ -66,6 +66,18 @@ public class DiningTable implements Serializable {
     public void setCapacity(Integer capacity) { this.capacity = capacity; }
     public BigDecimal getBasePrice() { return basePrice; }
     public void setBasePrice(BigDecimal basePrice) { this.basePrice = basePrice; }
+    public BigDecimal getBookingFee() {
+        BigDecimal total = basePrice != null ? basePrice : BigDecimal.ZERO;
+        if (room != null) {
+            if (room.getPricePerSession() != null) {
+                total = total.add(room.getPricePerSession());
+            }
+            if (room.getArea() != null && room.getArea().getPriceModifier() != null) {
+                total = total.add(room.getArea().getPriceModifier());
+            }
+        }
+        return total;
+    }
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
     public TableStatus getStatus() { return status; }

@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -110,10 +110,10 @@
                                 <div class="mb-0">
                                     <label class="form-label text-muted small fw-bold"><fmt:message key="admin.tables.label.image" /></label>
                                     <input id="draftTableImage" type="text" name="imageUrl" class="form-control form-control-lg" placeholder="assets/img/le-royal/seating/dining-room.jpg">
-                                    <div class="form-text">Paste an existing URL, or upload a new image below.</div>
+                                    <div class="form-text"><fmt:message key="admin.tables.label.image.help" /></div>
                                 </div>
                                 <div class="mt-3">
-                                    <label class="form-label text-muted small fw-bold">UPLOAD IMAGE</label>
+                                    <label class="form-label text-muted small fw-bold"><fmt:message key="admin.tables.label.upload" /></label>
                                     <input id="draftTableImageFile" type="file" name="imageFile" class="form-control form-control-lg" accept="image/*">
                                 </div>
                             </div>
@@ -122,9 +122,9 @@
                                     <div id="draftTableImageWrap" class="menu-confirm-hero mb-3" style="width:280px; height:110px; max-width:100%; margin:0 auto;">
                                         <i class="fa-solid fa-chair fa-2x"></i>
                                     </div>
-                                    <p class="text-uppercase text-secondary small mb-1">Draft preview</p>
+                                    <p class="text-uppercase text-secondary small mb-1"><fmt:message key="admin.tables.preview.title" /></p>
                                     <h3 id="draftTableTitle" class="h5 mb-1"><fmt:message key="admin.tables.preview.new" /></h3>
-                                    <p id="draftTableMeta" class="text-secondary mb-2">2 guests � Room</p>
+                                    <p id="draftTableMeta" class="text-secondary mb-2">2 <fmt:message key="admin.tables.preview.guests" /> · <fmt:message key="admin.tables.preview.room" /></p>
                                     <div class="d-flex flex-wrap gap-2">
                                         <span id="draftTableStatusBadge" class="badge text-bg-success"><fmt:message key="admin.tables.status.available" /></span>
                                         <span id="draftTablePriceLabel" class="badge text-bg-light border text-dark">0d</span>
@@ -196,9 +196,22 @@
                                     <strong class="text-primary">${t.tableCode}</strong>
                                 </div>
                             </td>
-                            <td>${sessionScope.lang == 'en' ? t.room.roomNameEn : t.room.roomName}</td>
+                            <td>
+                                <div class="fw-semibold">${sessionScope.lang == 'en' ? t.room.roomNameEn : t.room.roomName}</div>
+                                <c:if test="${not empty t.room.area}">
+                                    <div class="small text-secondary">
+                                        <i class="fa-solid fa-map-location-dot me-1"></i>
+                                        ${sessionScope.lang == 'en' ? (not empty t.room.area.name ? t.room.area.name : t.room.area.nameVi) : (not empty t.room.area.nameVi ? t.room.area.nameVi : t.room.area.name)}
+                                    </div>
+                                </c:if>
+                            </td>
                             <td><i class="fa-solid fa-user-group me-1 text-muted"></i> ${t.capacity}</td>
-                            <td><fmt:formatNumber value="${t.basePrice}" pattern="#,##0"/>d</td>
+                            <td>
+                                <div class="fw-semibold"><fmt:formatNumber value="${t.bookingFee}" pattern="#,##0"/>đ</div>
+                                <div class="small text-secondary">
+                                    <fmt:formatNumber value="${t.room.area.priceModifier}" pattern="#,##0"/> + <fmt:formatNumber value="${t.room.pricePerSession}" pattern="#,##0"/> + <fmt:formatNumber value="${t.basePrice}" pattern="#,##0"/>
+                                </div>
+                            </td>
                             <td>
                                 <c:choose>
                                     <c:when test="${t.status == 'AVAILABLE'}"><span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1"><fmt:message key="admin.tables.status.available" /></span></c:when>
@@ -280,10 +293,10 @@
                         <div class="mb-3">
                             <label class="form-label text-muted small fw-bold"><fmt:message key="admin.tables.label.image" /></label>
                             <input type="text" name="imageUrl" class="form-control form-control-lg" value="${t.imageUrl}" placeholder="assets/img/le-royal/seating/dining-room.jpg">
-                            <div class="form-text">Paste an existing URL, or upload a new image below.</div>
+                            <div class="form-text"><fmt:message key="admin.tables.label.image.help" /></div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label text-muted small fw-bold">UPLOAD IMAGE</label>
+                            <label class="form-label text-muted small fw-bold"><fmt:message key="admin.tables.label.upload" /></label>
                             <input type="file" name="imageFile" class="form-control form-control-lg" accept="image/*">
                         </div>
                     </div>
@@ -371,7 +384,7 @@
             if (empty) empty.classList.toggle('d-none', visibleRows.length > 0);
             if (paginationText) {
                 var end = Math.min(start + pageSize, visibleRows.length);
-                paginationText.textContent = visibleRows.length ? ('Showing ' + (start + 1) + '-' + end + ' of ' + visibleRows.length) : '<fmt:message key="admin.common.pagination.no.items" />';
+                paginationText.textContent = visibleRows.length ? ((start + 1) + '-' + end + ' / ' + visibleRows.length) : '<fmt:message key="admin.common.pagination.no.items" />';
             }
             renderPagination(totalPages);
         }
@@ -412,7 +425,7 @@
         function renderDraft() {
             if (!title || !imageWrap) return;
             title.textContent = (code.value || '').trim() || '<fmt:message key="admin.tables.preview.new" />';
-            meta.textContent = (capacity.value || '2') + ' guests � ' + (room.options[room.selectedIndex] ? room.options[room.selectedIndex].text : 'Room');
+            meta.textContent = (capacity.value || '2') + ' <fmt:message key="admin.tables.preview.guests" /> · ' + (room.options[room.selectedIndex] ? room.options[room.selectedIndex].text : '<fmt:message key="admin.tables.preview.room" />');
             priceLabel.textContent = money(price.value);
             statusBadge.textContent = status.options[status.selectedIndex] ? status.options[status.selectedIndex].text : '<fmt:message key="admin.tables.status.available" />';
             statusBadge.className = status.value === 'AVAILABLE' ? 'badge text-bg-success' : (status.value === 'RESERVED' ? 'badge text-bg-warning' : 'badge text-bg-secondary');

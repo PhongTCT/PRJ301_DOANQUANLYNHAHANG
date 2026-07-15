@@ -185,7 +185,7 @@
                         <circle class="journey-core" cx="36" cy="35" r="3.4" />
                     </svg>
                     <div class="journey-card">
-                        <img src="assets/img/le-royal/Personalized Menu Card.jpg" alt="Personalized menu card">
+                        <img src="assets/img/le-royal/seating/event-long-table.jpg" alt="Guests sharing a fine dining evening">
                         <div class="journey-copy">
                             <h3><fmt:message key="home.journey.personal.title" /></h3>
                             <p><fmt:message key="home.journey.personal.copy" /></p>

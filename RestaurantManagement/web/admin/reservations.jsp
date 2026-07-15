@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -219,9 +219,10 @@
                                                                     <h6 class="fw-bold border-bottom pb-2"><i class="fa-solid fa-star me-2"></i><fmt:message key="admin.reservations.modal.addons" /></h6>
                                                                     <ul class="list-group list-group-flush">
                                                                         <c:forEach items="${res.reservationAddons}" var="ra">
+                                                                            <c:set var="addonDisplayName" value="${sessionScope.lang == 'en' ? ra.addonService.serviceName : (empty ra.addonService.serviceNameVi ? ra.addonService.serviceName : ra.addonService.serviceNameVi)}" />
                                                                             <li class="list-group-item px-0 d-flex justify-content-between">
-                                                                                <span>${ra.addonService.serviceName} <span class="badge bg-secondary ms-1">x${ra.quantity}</span></span>
-                                                                                <span class="text-success fw-bold"><fmt:formatNumber value="${ra.unitPrice * ra.quantity}" pattern="#,##0" />d</span>
+                                                                                <span>${addonDisplayName} <span class="badge bg-secondary ms-1">x${ra.quantity}</span></span>
+                                                                                <span class="text-success fw-bold"><fmt:formatNumber value="${ra.unitPrice * ra.quantity}" pattern="#,##0" />đ</span>
                                                                             </li>
                                                                         </c:forEach>
                                                                         <c:if test="${empty res.reservationAddons}">

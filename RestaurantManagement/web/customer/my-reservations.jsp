@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -215,9 +215,10 @@
 
                     <div class="reserve-detail-label mt-4 mb-2"><i class="fa-solid fa-star me-2"></i><fmt:message key="reservation.modal.addons"/></div>
                     <c:forEach items="${res.reservationAddons}" var="ra">
+                        <c:set var="addonDisplayName" value="${sessionScope.lang == 'en' ? ra.addonService.serviceName : (empty ra.addonService.serviceNameVi ? ra.addonService.serviceName : ra.addonService.serviceNameVi)}" />
                         <div class="reserve-detail-item">
-                            <span>${ra.addonService.serviceName} <span class="badge bg-secondary ms-1">x${ra.quantity}</span></span>
-                            <span class="fw-bold"><fmt:formatNumber value="${ra.unitPrice * ra.quantity}" pattern="#,##0"/>d</span>
+                            <span>${addonDisplayName} <span class="badge bg-secondary ms-1">x${ra.quantity}</span></span>
+                            <span class="fw-bold"><fmt:formatNumber value="${ra.unitPrice * ra.quantity}" pattern="#,##0"/>đ</span>
                         </div>
                     </c:forEach>
                     <c:if test="${empty res.reservationAddons}">

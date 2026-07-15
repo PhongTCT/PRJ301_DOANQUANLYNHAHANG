@@ -41,7 +41,7 @@
         </div>
         <div class="d-flex flex-wrap gap-2">
             <a class="btn btn-outline-dark btn-sm" href="MainController?action=adminMenuItems${param.embed == '1' ? '&embed=1' : ''}">
-                <i class="fa-solid fa-bowl-food me-2"></i>Back to menu items
+                <i class="fa-solid fa-bowl-food me-2"></i><fmt:message key="admin.categories.back.menuitems" />
             </a>
             <button class="btn btn-dark btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#categoryFormPanel" aria-expanded="${not empty editCategory ? 'true' : 'false'}">
                 <i class="fa-solid fa-plus me-2"></i><fmt:message key="admin.categories.btn.add" />
@@ -60,7 +60,7 @@
                 <c:if test="${param.embed == '1'}"><input type="hidden" name="embed" value="1"></c:if>
                 <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
                     <div>
-                        <div class="admin-section-label">Dish group editor</div>
+                        <div class="admin-section-label"><fmt:message key="admin.categories.editor.title" /></div>
                         <h2 class="h5 mb-0">
                             <c:choose>
                                 <c:when test="${empty editCategory}"><fmt:message key="admin.categories.editor.create" /></c:when>
@@ -83,11 +83,9 @@
                     </div>
                     <div class="col-md-4">
                         <label class="form-label"><fmt:message key="admin.categories.label.service" /></label>
-                        <select id="categoryMealTimeInput" class="form-select" name="mealTime">
-                            <option value="LUNCH" ${editCategory.mealTime == 'LUNCH' ? 'selected' : ''}><fmt:message key="admin.menusets.label.service.lunch" /></option>
-                            <option value="DINNER" ${editCategory.mealTime == 'DINNER' ? 'selected' : ''}><fmt:message key="admin.menusets.label.service.dinner" /></option>
-                            <option value="ALL_DAY" ${empty editCategory || editCategory.mealTime == 'ALL_DAY' || editCategory.mealTime == 'BREAKFAST' ? 'selected' : ''}><fmt:message key="admin.menusets.label.service.all" /></option>
-                        </select>
+                        <input id="categoryMealTimeInput" class="form-control" value="<fmt:message key="admin.menusets.label.service.dinner" />" readonly>
+                        <input type="hidden" name="mealTime" value="DINNER">
+                        <div class="form-text"><fmt:message key="admin.menusets.label.service.dinner.note" /></div>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label"><fmt:message key="admin.categories.label.coursetype" /></label>
@@ -131,7 +129,7 @@
                     <h3 id="categoryConfirmName" class="h5 mb-2"><fmt:message key="admin.categories.preview.new" /></h3>
                     <p id="categoryConfirmEnglish" class="text-secondary mb-3"><fmt:message key="admin.categories.preview.noen" /></p>
                     <div class="d-flex flex-wrap gap-2">
-                        <span id="categoryConfirmService" class="badge text-bg-light border text-dark"><fmt:message key="admin.menusets.label.service.all" /></span>
+                        <span id="categoryConfirmService" class="badge text-bg-light border text-dark"><fmt:message key="admin.menusets.label.service.dinner" /></span>
                         <span id="categoryConfirmType" class="badge text-bg-light border text-dark"><fmt:message key="admin.menuitems.type.appetizer" /></span>
                         <span id="categoryConfirmOrder" class="badge text-bg-light border text-dark"><fmt:message key="admin.categories.label.sort" /> 1</span>
                         <span id="categoryConfirmStatus" class="badge text-bg-success"><fmt:message key="admin.common.active" /></span>
@@ -152,7 +150,7 @@
                     <div class="admin-section-label"><fmt:message key="admin.categories.library.title" /></div>
                     <h2 class="h5 mb-0"><fmt:message key="admin.categories.library.sub" /></h2>
                 </div>
-                <div class="small text-secondary">${categoryList.size()} groups</div>
+                <div class="small text-secondary">${categoryList.size()} <fmt:message key="admin.categories.library.count" /></div>
             </div>
             <div class="row g-2 mb-3">
                 <div class="col-lg-6">
@@ -204,13 +202,20 @@
                                     <c:if test="${not empty subCatName}"><div class="small text-secondary">${subCatName}</div></c:if>
                                 </td>
                                 <td>
-                                    <c:choose>
-                                        <c:when test="${cat.mealTime == 'LUNCH'}"><fmt:message key="admin.menusets.label.service.lunch" /></c:when>
-                                        <c:when test="${cat.mealTime == 'DINNER'}"><fmt:message key="admin.menusets.label.service.dinner" /></c:when>
-                                        <c:otherwise><fmt:message key="admin.menusets.label.service.all" /></c:otherwise>
-                                    </c:choose>
+                                    <fmt:message key="admin.menusets.label.service.dinner" />
                                 </td>
-                                <td><span class="badge bg-light">${cat.categoryType}</span></td>
+                                <td>
+                                    <span class="badge bg-light">
+                                        <c:choose>
+                                            <c:when test="${cat.categoryType == 'APPETIZER'}"><fmt:message key="admin.menuitems.type.appetizer" /></c:when>
+                                            <c:when test="${cat.categoryType == 'SOUP'}"><fmt:message key="admin.menuitems.type.soup" /></c:when>
+                                            <c:when test="${cat.categoryType == 'MAIN'}"><fmt:message key="admin.menuitems.type.main" /></c:when>
+                                            <c:when test="${cat.categoryType == 'DESSERT'}"><fmt:message key="admin.menuitems.type.dessert" /></c:when>
+                                            <c:when test="${cat.categoryType == 'DRINK'}"><fmt:message key="admin.menuitems.type.drink" /></c:when>
+                                            <c:otherwise>${cat.categoryType}</c:otherwise>
+                                        </c:choose>
+                                    </span>
+                                </td>
                                 <td>${cat.sortOrder}</td>
                                 <td><span class="badge ${cat.isActive ? 'text-bg-success' : 'text-bg-secondary'}">
                                     <c:choose>
@@ -293,7 +298,7 @@
             if (empty) empty.classList.toggle('d-none', visibleRows.length > 0);
             if (paginationText) {
                 var end = Math.min(start + pageSize, visibleRows.length);
-                paginationText.textContent = visibleRows.length ? ('<fmt:message key="admin.common.pagination.show"><fmt:param value="' + (start + 1) + '"/><fmt:param value="' + end + '"/><fmt:param value="' + visibleRows.length + '"/></fmt:message>') : '<fmt:message key="admin.categories.empty.filter"/>';
+                paginationText.textContent = visibleRows.length ? ((start + 1) + '-' + end + ' / ' + visibleRows.length) : '<fmt:message key="admin.categories.empty.filter"/>';
             }
             renderPagination(totalPages);
         }
@@ -329,7 +334,7 @@
             var statusLabel = document.getElementById('categoryConfirmStatus');
             if (title) title.textContent = (nameVi.value || '').trim() || '<fmt:message key="admin.categories.preview.new"/>';
             if (english) english.textContent = (nameEn.value || '').trim() || '<fmt:message key="admin.categories.preview.noen"/>';
-            if (serviceLabel) serviceLabel.textContent = selectedText(service, '<fmt:message key="admin.menusets.label.service.all"/>');
+            if (serviceLabel) serviceLabel.textContent = selectedText(service, '<fmt:message key="admin.menusets.label.service.dinner"/>');
             if (typeLabel) typeLabel.textContent = selectedText(type, '<fmt:message key="admin.menuitems.type.appetizer"/>');
             if (orderLabel) orderLabel.textContent = '' + '<fmt:message key="admin.categories.label.sort"/> ' + (sortOrder.value || '1');
             if (statusLabel) {

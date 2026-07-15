@@ -157,7 +157,7 @@ IF NOT EXISTS (
 BEGIN
     ALTER TABLE menu_set
     ADD CONSTRAINT CK_menu_set_meal_time
-    CHECK (meal_time IN ('BREAKFAST','LUNCH','DINNER','ALL_DAY'));
+    CHECK (meal_time = 'DINNER');
 END;
 GO
 

@@ -20,8 +20,8 @@ END;
 
 ALTER TABLE menu_set
 ADD CONSTRAINT CK_menu_set_meal_time
-CHECK (meal_time IN ('BREAKFAST','LUNCH','DINNER','ALL_DAY'));
+CHECK (meal_time = 'DINNER');
 GO
 
-PRINT 'Updated menu_set meal_time to allow ALL_DAY.';
+PRINT 'Updated menu_set meal_time for dinner-only service.';
 GO

@@ -165,12 +165,10 @@ public class RestaurantApiController extends HttpServlet {
     }
 
     private List<MenuCategory> activeCategories(String mealTimeParam) {
-        MealTime mealTime = optionalMealTime(mealTimeParam);
         List<MenuCategory> result = new ArrayList<>();
         for (MenuCategory category : categoryDAO.ListAll()) {
             boolean active = Boolean.TRUE.equals(category.getIsActive());
-            boolean mealMatches = mealTime == null || category.getMealTime() == MealTime.ALL_DAY || category.getMealTime() == mealTime;
-            if (active && mealMatches) {
+            if (active && category.getMealTime() == MealTime.DINNER) {
                 result.add(category);
             }
         }
@@ -179,15 +177,10 @@ public class RestaurantApiController extends HttpServlet {
 
     private List<MenuItem> activeItems(String categoryIdParam, String mealTimeParam) {
         Integer categoryId = optionalInt(categoryIdParam, "categoryId");
-        MealTime mealTime = optionalMealTime(mealTimeParam);
         List<MenuItem> result = new ArrayList<>();
         for (MenuItem item : itemDAO.ListAll()) {
             boolean categoryMatches = categoryId == null || (item.getCategory() != null && categoryId.equals(item.getCategory().getId()));
-            boolean mealMatches = true;
-            if (mealTime != null) {
-                MealTime categoryMealTime = item.getCategory() == null ? null : item.getCategory().getMealTime();
-                mealMatches = categoryMealTime == MealTime.ALL_DAY || categoryMealTime == mealTime;
-            }
+            boolean mealMatches = item.getCategory() != null && item.getCategory().getMealTime() == MealTime.DINNER;
             if (Boolean.TRUE.equals(item.getIsAvailable()) && categoryMatches && mealMatches) {
                 result.add(item);
             }
@@ -196,11 +189,9 @@ public class RestaurantApiController extends HttpServlet {
     }
 
     private List<MenuSet> activeSets(String mealTimeParam) {
-        MealTime mealTime = optionalMealTime(mealTimeParam);
         List<MenuSet> result = new ArrayList<>();
         for (MenuSet set : setDAO.findActiveSets()) {
-            boolean mealMatches = mealTime == null || set.getMealTime() == MealTime.ALL_DAY || set.getMealTime() == mealTime;
-            if (mealMatches) {
+            if (set.getMealTime() == MealTime.DINNER) {
                 result.add(set);
             }
         }
@@ -398,7 +389,9 @@ public class RestaurantApiController extends HttpServlet {
             if (i > 0) json.append(',');
             json.append("{\"id\":").append(addon.getId())
                     .append(",\"serviceName\":").append(q(addon.getServiceName()))
+                    .append(",\"serviceNameVi\":").append(q(addon.getServiceNameVi()))
                     .append(",\"description\":").append(q(addon.getDescription()))
+                    .append(",\"descriptionVi\":").append(q(addon.getDescriptionVi()))
                     .append(",\"price\":").append(num(addon.getPrice()))
                     .append(",\"imageUrl\":").append(q(addon.getImageUrl()))
                     .append(",\"available\":").append(Boolean.TRUE.equals(addon.getIsAvailable()))
@@ -475,14 +468,7 @@ public class RestaurantApiController extends HttpServlet {
     }
 
     private MealTime optionalMealTime(String value) {
-        if (value == null || value.trim().isEmpty()) {
-            return null;
-        }
-        try {
-            return MealTime.valueOf(value.trim());
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("mealTime is invalid.");
-        }
+        return MealTime.DINNER;
     }
 
     private Integer intValue(HttpServletRequest request, String body, String name) {

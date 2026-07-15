@@ -64,8 +64,14 @@ public class AdminRestaurantService {
 
     public void saveArea(HttpServletRequest request) {
         Area area = getOrNewArea(paramInt(request, "id"));
-        area.setName(required(request, "name", "Area name"));
-        area.setDescription(trim(request.getParameter("description")));
+        String nameVi = required(request, "nameVi", "Area name (VI)");
+        String nameEn = trim(request.getParameter("name"));
+        String descVi = trim(request.getParameter("descriptionVi"));
+        String descEn = trim(request.getParameter("description"));
+        area.setNameVi(nameVi);
+        area.setName(nameEn != null ? nameEn : nameVi);
+        area.setDescriptionVi(descVi);
+        area.setDescription(descEn != null ? descEn : descVi);
         area.setPriceModifier(nonNegativeMoney(request, "priceModifier", "Price modifier"));
         area.setIsActive(paramBool(request, "isActive"));
         save(areaDAO, area, area.getId());
@@ -102,7 +108,7 @@ public class AdminRestaurantService {
         String categoryName = trim(request.getParameter("categoryName"));
         category.setCategoryName(categoryName == null || categoryName.isEmpty() ? categoryNameVi : categoryName);
         category.setCategoryNameVi(categoryNameVi);
-        category.setMealTime(enumValue(MealTime.class, request.getParameter("mealTime"), "Meal time"));
+        category.setMealTime(MealTime.DINNER);
         category.setCategoryType(enumValue(MenuCategoryType.class, request.getParameter("categoryType"), "Category type"));
         category.setSortOrder(positiveInt(request, "sortOrder", "Sort order"));
         category.setIsActive(paramBool(request, "isActive"));
@@ -146,7 +152,7 @@ public class AdminRestaurantService {
         set.setSetNameVi(setNameVi);
         set.setDescription(description == null || description.isEmpty() ? descriptionVi : description);
         set.setDescriptionVi(descriptionVi);
-        set.setMealTime(enumValue(MealTime.class, request.getParameter("mealTime"), "Meal time"));
+        set.setMealTime(MealTime.DINNER);
         if (set.getId() == null || menuSetItemDAO.findByMenuSet(set.getId()).isEmpty()) {
             set.setOriginalPrice(nonNegativeMoney(request, "originalPrice", "Original price"));
         }
@@ -217,8 +223,14 @@ public class AdminRestaurantService {
 
     public void saveAddonService(HttpServletRequest request) {
         AddonService addon = getOrNewAddonService(paramInt(request, "id"));
-        addon.setServiceName(required(request, "serviceName", "Service name"));
-        addon.setDescription(trim(request.getParameter("description")));
+        String serviceNameVi = required(request, "serviceNameVi", "Service name (VI)");
+        String serviceName = trim(request.getParameter("serviceName"));
+        String descriptionVi = trim(request.getParameter("descriptionVi"));
+        String description = trim(request.getParameter("description"));
+        addon.setServiceName(serviceName == null || serviceName.isEmpty() ? serviceNameVi : serviceName);
+        addon.setServiceNameVi(serviceNameVi);
+        addon.setDescription(description == null || description.isEmpty() ? descriptionVi : description);
+        addon.setDescriptionVi(descriptionVi);
         addon.setPrice(nonNegativeMoney(request, "price", "Price"));
         addon.setImageUrl(resolveImageUrl(request, "addon-services", trim(request.getParameter("imageUrl"))));
         addon.setIsAvailable(paramBool(request, "isAvailable"));
